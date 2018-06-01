@@ -14,11 +14,12 @@ import java.io.IOException;
 
 import org.lwjgl.glfw.GLFW;
 
+import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.Scene;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.SplitPane;
@@ -64,18 +65,23 @@ public class SplitPaneExample {
 
 	private static void addComponents(Scene scene) {
 		StackPane pane = new StackPane();
-		scene.getChildren().add(pane);
+		pane.setFillToParentWidth(true);
+		pane.setFillToParentHeight(true);
+		scene.setRoot(pane);
 		
 		VBox box = new VBox();
+		box.setFillToParentHeight(true);
+		box.setFillToParentWidth(true);
 		pane.getChildren().add(box);
 		
 		Label b = new Label("Split Pane Test");
+		b.setFontSize(32);
 		box.getChildren().add(b);
 		
 		SplitPane split = new SplitPane();
 		split.setFillToParentHeight(true);
 		split.setFillToParentWidth(true);
-		split.setOrientation(Orientation.HORIZONTAL);
+		split.setOrientation(Orientation.VERTICAL);
 		box.getChildren().add(split);
 		
 		for (int i = 0; i < 3; i++) {

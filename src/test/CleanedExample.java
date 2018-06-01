@@ -16,8 +16,8 @@ import org.lwjgl.opengl.GL11;
 import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.Scene;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.TestNode;
@@ -40,7 +40,7 @@ public class CleanedExample {
 		StackPane pane = new StackPane();
 		pane.setAlignment(Pos.BOTTOM_RIGHT);
 		pane.getChildren().add(new TestNode());
-		scene.getChildren().add(pane);
+		scene.setRoot(pane);
 		
 		// Render loop
 		while (!GLFW.glfwWindowShouldClose(window)) {

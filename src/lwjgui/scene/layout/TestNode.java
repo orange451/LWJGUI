@@ -4,7 +4,7 @@ import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
 import lwjgui.Context;
-import lwjgui.geometry.Node;
+import lwjgui.scene.Node;
 
 public class TestNode extends Node {
 	

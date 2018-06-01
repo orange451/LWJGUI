@@ -15,10 +15,10 @@ import org.lwjgl.glfw.GLFW;
 import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.Scene;
 import lwjgui.event.ButtonEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.HBox;
@@ -63,20 +63,18 @@ public class ButtonExample2 {
 	}
 
 	private static void addComponents(Scene scene) {
+		// Create background pane
 		StackPane pane = new StackPane();
-		pane.setPadding(new Insets(8,8,8,8));
-		pane.setAlignment(Pos.CENTER);
-		scene.getChildren().add(pane);
+		scene.setRoot(pane);
 		
+		// Create a horizontal layout
 		HBox hbox = new HBox();
-		hbox.setFillToParentWidth(true);
 		hbox.setSpacing(4);
 		pane.getChildren().add(hbox);
 		
+		// Fill the horizontal layout with 3 buttons
 		for (int i = 0; i < 3; i++) {
 			VBox vbox = new VBox();
-			vbox.setFillToParentWidth(false);
-			vbox.setBackground(Color.WHITE);
 			vbox.setSpacing(8);
 			vbox.setPadding(new Insets(4,4,4,4));
 			vbox.setAlignment(Pos.CENTER);

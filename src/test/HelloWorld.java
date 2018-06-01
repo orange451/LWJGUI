@@ -13,9 +13,10 @@ import java.io.IOException;
 import org.lwjgl.glfw.GLFW;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.Scene;
+import lwjgui.scene.Scene;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
+import lwjgui.scene.layout.VBox;
 
 public class HelloWorld {
 	public static final int WIDTH   = 320;
@@ -59,7 +60,7 @@ public class HelloWorld {
 		StackPane pane = new StackPane();
 		
 		// Add the pane to the scene
-		scene.getChildren().add(pane);
+		scene.setRoot(pane);
 		
 		// Put a label in the pane
 		pane.getChildren().add(new Label("Hello World!"));

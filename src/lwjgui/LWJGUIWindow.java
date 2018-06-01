@@ -5,7 +5,8 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
 
-import lwjgui.geometry.Node;
+import lwjgui.scene.Node;
+import lwjgui.scene.Scene;
 
 public class LWJGUIWindow {
 	private Context context;
@@ -51,10 +52,9 @@ public class LWJGUIWindow {
 		GL11.glViewport(0, 0, (int)(width*ratio), (int)(height*ratio));
 		NanoVG.nvgBeginFrame(context.getNVG(), (int)width, (int)height, ratio);
 		
-		scene.setMinWidth(width);
-		scene.setMinHeight(height);
-		scene.setMaxWidth(width);
-		scene.setMaxHeight(height);
+		scene.setMinSize(width, height);
+		scene.setPrefSize(width, height);
+		scene.setMaxSize(width, height);
 		scene.render(context);
 		
         NanoVG.nvgRestore(context.getNVG());

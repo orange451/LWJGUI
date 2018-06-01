@@ -8,6 +8,7 @@ import java.util.List;
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.popup.LWJGLGUIPopupWindow;
+import lwjgui.scene.Scene;
 
 public class LWJGUI {
 	private static HashMap<Long, LWJGUIWindow> windows;

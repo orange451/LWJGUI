@@ -17,9 +17,9 @@ import lwjgui.Color;
 import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.Scene;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
@@ -61,11 +61,13 @@ public class PanesInPanes {
 
 	private static void addComponents(Scene scene) {
 		StackPane background = new StackPane();
+		background.setFillToParentHeight(true);
+		background.setFillToParentWidth(true);
 		background.setPadding(new Insets(4,4,4,4));
-		scene.getChildren().add(background);
+		scene.setRoot(background);
 		
 		StackPane pane = new StackPane();
-		pane.setFillToParentWidth(false);
+		pane.setFillToParentHeight(true);
 		pane.setPrefWidth(150);
 		pane.setMinWidth(100);
 		pane.setPadding(new Insets(4,4,4,4));
@@ -74,8 +76,6 @@ public class PanesInPanes {
 		background.getChildren().add(pane);
 		
 		StackPane pane2 = new StackPane();
-		pane2.setFillToParentHeight(false);
-		pane2.setFillToParentWidth(false);
 		pane2.setAlignment(Pos.BOTTOM_RIGHT);
 		pane2.setPrefSize(200, 100);
 		pane2.setPadding(new Insets(4,4,4,4));
@@ -85,5 +85,9 @@ public class PanesInPanes {
 		Label label = new Label("Hello World!");
 		label.setTextFill(Color.WHITE_SMOKE);
 		pane2.getChildren().add(label);
+		
+		LWJGUI.runLater(() -> {
+			System.out.println(pane2.getWidth());
+		});
 	}
 }

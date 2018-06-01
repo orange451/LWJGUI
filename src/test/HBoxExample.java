@@ -13,9 +13,10 @@ import java.io.IOException;
 import org.lwjgl.glfw.GLFW;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.Scene;
+import lwjgui.scene.Scene;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.HBox;
+import lwjgui.scene.layout.StackPane;
 
 public class HBoxExample {
 	public static final int WIDTH   = 320;
@@ -32,12 +33,7 @@ public class HBoxExample {
 		Scene scene = LWJGUI.initialize(window);
 		
 		// Add some components
-		HBox box = new HBox();
-		box.setSpacing(8);
-		box.getChildren().add(new Label("Label 1"));
-		box.getChildren().add(new Label("Label 2"));
-		box.getChildren().add(new Label("Label 3"));
-		scene.getChildren().add(box);
+		addComponents(scene);
 		
 		while (!GLFW.glfwWindowShouldClose(window)) {
 			// Clear screen
@@ -53,5 +49,21 @@ public class HBoxExample {
 		
 		glfwDestroyWindow(window);
 		glfwTerminate();
+	}
+
+	private static void addComponents(Scene scene) {
+		// Create background pane
+		StackPane background = new StackPane();
+		scene.setRoot(background);
+		
+		// Create horizontal layout
+		HBox box = new HBox();
+		box.setSpacing(8);
+		background.getChildren().add(box);
+		
+		// Add some components to it
+		box.getChildren().add(new Label("Label 1"));
+		box.getChildren().add(new Label("Label 2"));
+		box.getChildren().add(new Label("Label 3"));
 	}
 }

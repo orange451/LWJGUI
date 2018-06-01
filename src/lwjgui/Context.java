@@ -10,8 +10,11 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.nanovg.NanoVGGL3;
 
-import lwjgui.geometry.Node;
-import lwjgui.geometry.ObservableList;
+import lwjgui.collections.ObservableList;
+import lwjgui.scene.Node;
+import lwjgui.scene.Parent;
+import lwjgui.scene.Region;
+import lwjgui.scene.Scene;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.layout.Pane;
 
@@ -63,16 +66,25 @@ public class Context {
 	}
 	
 	protected Node calculateHover(Node parent, Node root) {
+		// Use scene as an entry point into nodes
+		if ( parent == null && root instanceof Scene ) {
+			root = ((Scene)root).getRoot();
+		}
+		
+		// Ignore if unclickable
 		if ( root.isMouseTransparent() ) {
 			return parent;
 		}
+		
+		// If mouse is out of our bounds, we're not clickable
 		if ( mouseX < root.getAbsoluteX() || mouseX > root.getAbsoluteX() + root.getWidth() )
 			return parent;
 		if ( mouseY < root.getAbsoluteY() || mouseY > root.getAbsoluteY() + root.getHeight() )
 			return parent;
 		
-		if ( root instanceof Pane ) {
-			ObservableList<Node> children = ((Pane)root).getChildren();
+		// Check children
+		if ( root instanceof Parent ) {
+			ObservableList<Node> children = ((Parent)root).getChildren();
 			for (int i = 0; i < children.size(); i++) {
 				Node ret = calculateHover( root, children.get(i));
 				if ( ret != null && ! ret.equals(root)) {

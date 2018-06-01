@@ -1,16 +1,12 @@
 package lwjgui.scene.layout;
 
-import org.lwjgl.nanovg.NanoVG;
-
-import lwjgui.Context;
-import lwjgui.geometry.Node;
-
 public abstract class DirectionalBox extends Pane {
 	protected float spacing;
 	
 	public DirectionalBox() {
-		this.setFillToParentHeight(true);
-		this.setFillToParentWidth(true);
+		//this.setFillToParentHeight(true);
+		//this.setFillToParentWidth(true);
+		this.setPrefSize(0, 0);
 	}
 	
 	public void setSpacing(double d) {

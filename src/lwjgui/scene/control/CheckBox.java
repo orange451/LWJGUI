@@ -2,9 +2,6 @@ package lwjgui.scene.control;
 
 import java.awt.Point;
 
-import org.lwjgl.nanovg.NanoVG;
-
-import lwjgui.Color;
 import lwjgui.Context;
 import lwjgui.event.ButtonEvent;
 import lwjgui.geometry.Insets;
@@ -18,12 +15,14 @@ public class CheckBox extends ButtonBase {
 	
 	private int size = 18;
 	private int spacing = 4;
+	
+	private static final String checkmark = "\u2713";
 
 	public CheckBox(String name) {
 		super(name);
 
-		this.internalLabel = new Label("\u2713");
-		this.internalLabel2 = new Label("\u2713");
+		this.internalLabel = new Label(checkmark);
+		this.internalLabel2 = new Label(checkmark);
 		this.internalLabel2.setTextFill(Theme.currentTheme().getButton());
 		this.cornerRadius = 3;
 
@@ -59,19 +58,23 @@ public class CheckBox extends ButtonBase {
 			this.setAlignment(Pos.CENTER_LEFT);
 
 			// Update the size of the checkmark
-			internalLabel.setFontSize(size*2);
-			internalLabel2.setFontSize(size*2);
+			internalLabel.setFontSize((float) (size*1.4));
+			internalLabel2.setFontSize((float) (size*1.4));
 			
 			// Position the checkmark inside the box
 			internalLabel.position(this);
 			internalLabel2.position(this);
 			
 			// Offset a little bit
-			internalLabel.offset(1, -2);
-			internalLabel2.offset(1, -1);
+			double diffX = this.size - internalLabel.getWidth();
+			double diffY = this.size - internalLabel.getHeight();
+			double ox = Math.ceil(diffX/2f);
+			double oy = Math.ceil(diffY/2f)+1;
+			internalLabel.offset(ox, oy);
+			internalLabel2.offset(ox, oy+1);
 			
 			// Render checkmark
-			internalLabel2.render(context);
+			//internalLabel2.render(context);
 			internalLabel.render(context);
 		}
 	}

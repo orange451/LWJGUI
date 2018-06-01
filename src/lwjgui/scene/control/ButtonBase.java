@@ -57,7 +57,7 @@ public abstract class ButtonBase extends Labeled {
 
 	@Override
 	public void render(Context context) {
-		clip(context, 16);
+		clip(context, 2);
 		
 		NanoVG.nvgTranslate(context.getNVG(), (int)getAbsoluteX(), (int)getAbsoluteY());		
 			long vg = context.getNVG();
@@ -65,7 +65,7 @@ public abstract class ButtonBase extends Labeled {
 			int w = p.x;
 			int h = p.y;
 			
-			// Draw dropped button outline
+			// Draw dropped down button outline
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRoundedRect(context.getNVG(), 0, 1, w, h, (float) cornerRadius);
 			NanoVG.nvgFillColor(context.getNVG(), Theme.currentTheme().getButton().getNVG());
@@ -73,9 +73,9 @@ public abstract class ButtonBase extends Labeled {
 			
 			// Selection graphic
 			if ( context.isSelected(this) ) {
-				int feather = 16; // Smoothing
-				float ind = feather/3.25f; // Inset
-				NVGPaint paint = NanoVG.nvgBoxGradient(vg, ind,ind, w-ind*2,h-ind*2,0, feather, Theme.currentTheme().getSelection().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+				int feather = 4;//(int) (cornerRadius*2); // Smoothing
+				float ind = 0; // Inset
+				NVGPaint paint = NanoVG.nvgBoxGradient(vg, ind,ind, w-ind*2,h-ind*2,(float)cornerRadius, feather, Theme.currentTheme().getSelection().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 				NanoVG.nvgBeginPath(vg);
 				NanoVG.nvgRect(vg, -feather,-feather, w+feather*2,h+feather*2);
 				NanoVG.nvgFillPaint(vg, paint);

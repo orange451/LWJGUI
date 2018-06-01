@@ -223,7 +223,7 @@ public abstract class Node implements Resizable {
 		LayoutBounds clipBoundsTemp = new LayoutBounds((int)getAbsoluteX()-padding, (int)getAbsoluteY()-padding, (int)getAbsoluteX()+(int)getWidth()+padding, (int)getAbsoluteY()+(int)getHeight()+padding);
 		Node par = parent;
 		while (par != null) {
-			LayoutBounds tempBounds = new LayoutBounds((int)par.getAbsoluteX(), (int)par.getAbsoluteY(), (int)Math.ceil(par.getAbsoluteX()+par.getWidth()), (int)Math.ceil(par.getAbsoluteY()+par.getHeight()));
+			LayoutBounds tempBounds = new LayoutBounds((int)par.getAbsoluteX()-padding, (int)par.getAbsoluteY()-padding, (int)Math.ceil(par.getAbsoluteX()+par.getWidth()+padding), (int)Math.ceil(par.getAbsoluteY()+par.getHeight()+padding));
 			if ( tempBounds.minX > clipBoundsTemp.minX )
 				clipBoundsTemp.minX = tempBounds.minX;
 			if ( tempBounds.minY > clipBoundsTemp.minY )

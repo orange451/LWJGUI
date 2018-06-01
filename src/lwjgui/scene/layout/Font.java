@@ -108,8 +108,9 @@ public class Font {
 			bufs.add(buf);
 			
 			// Fallback emoji font
-			addFallback(vg, fontCallback, "entypo.ttf");
+			addFallback(vg, fontCallback, "Arial-Unicode.ttf");
 			addFallback(vg, fontCallback, "NotoEmoji-Regular.ttf");
+			addFallback(vg, fontCallback, "entypo.ttf");
 			
 		} catch (Exception e) {
 			e.printStackTrace();

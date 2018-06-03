@@ -9,14 +9,16 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
+
 import java.io.IOException;
+
 import org.lwjgl.glfw.GLFW;
+
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.scene.Scene;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
-import lwjgui.scene.layout.VBox;
 
 public class HelloWorld {
 	public static final int WIDTH   = 320;

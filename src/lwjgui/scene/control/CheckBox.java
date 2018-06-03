@@ -16,7 +16,7 @@ public class CheckBox extends ButtonBase {
 	private int size = 18;
 	private int spacing = 4;
 	
-	private static final String checkmark = "\u2713";
+	private String checkmark = "\u2713";
 
 	public CheckBox(String name) {
 		super(name);
@@ -24,7 +24,6 @@ public class CheckBox extends ButtonBase {
 		this.internalLabel = new Label(checkmark);
 		this.internalLabel2 = new Label(checkmark);
 		this.internalLabel2.setTextFill(Theme.currentTheme().getButton());
-		this.cornerRadius = 3;
 
 		this.setPadding(Insets.EMPTY);
 
@@ -38,7 +37,8 @@ public class CheckBox extends ButtonBase {
 	
 	@Override
 	protected void resize() {
-		this.setMinWidth(size + this.inside.holder.getWidth() + spacing);
+		this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
+		this.setMinHeight(size);
 		super.resize();
 	}
 	
@@ -49,8 +49,8 @@ public class CheckBox extends ButtonBase {
 
 	@Override
 	public void render(Context context) {
-		this.inside.offset.x = size + spacing;
-		this.inside.alignment = Pos.CENTER_LEFT;
+		this.graphicLabel.offset.x = size + spacing;
+		this.graphicLabel.alignment = Pos.CENTER_LEFT;
 		
 		super.render(context);
 
@@ -58,8 +58,8 @@ public class CheckBox extends ButtonBase {
 			this.setAlignment(Pos.CENTER_LEFT);
 
 			// Update the size of the checkmark
-			internalLabel.setFontSize((float) (size*1.4));
-			internalLabel2.setFontSize((float) (size*1.4));
+			internalLabel.setFontSize((float) (size*1.2));
+			internalLabel2.setFontSize((float) (size*1.2));
 			
 			// Position the checkmark inside the box
 			internalLabel.position(this);
@@ -68,18 +68,38 @@ public class CheckBox extends ButtonBase {
 			// Offset a little bit
 			double diffX = this.size - internalLabel.getWidth();
 			double diffY = this.size - internalLabel.getHeight();
-			double ox = Math.ceil(diffX/2f);
-			double oy = Math.ceil(diffY/2f)+1;
+			int ox = (int) (diffX/2f)+1;
+			int oy = (int) (diffY/2f)-1;
 			internalLabel.offset(ox, oy);
 			internalLabel2.offset(ox, oy+1);
 			
 			// Render checkmark
-			//internalLabel2.render(context);
+			internalLabel2.render(context);
 			internalLabel.render(context);
 		}
 	}
 
+	/**
+	 * Sets whether or not this checkbox is checked.
+	 * @param b
+	 */
 	public void setChecked(boolean b) {
 		this.checked = b;
+	}
+	
+	/**
+	 * 
+	 * @return Returns whether or not the checkbox is checked.
+	 */
+	public boolean isChecked() {
+		return this.checked;
+	}
+	
+	/**
+	 * Sets the character used as the checkmark for this checkbox.
+	 * @param c
+	 */
+	public void setCheckCharacter(String c) {
+		this.checkmark = c;
 	}
 }

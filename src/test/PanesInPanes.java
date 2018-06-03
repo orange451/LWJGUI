@@ -11,19 +11,14 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import java.io.IOException;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
-
 import lwjgui.Color;
-import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
 import lwjgui.scene.control.Label;
-import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
-import lwjgui.scene.layout.TestNode;
 
 public class PanesInPanes {
 	public static final int WIDTH   = 320;

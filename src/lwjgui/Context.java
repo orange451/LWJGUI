@@ -4,19 +4,13 @@ import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
-import java.util.ArrayList;
-
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.nanovg.NanoVGGL3;
 
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.Node;
 import lwjgui.scene.Parent;
-import lwjgui.scene.Region;
 import lwjgui.scene.Scene;
-import lwjgui.scene.control.Button;
-import lwjgui.scene.layout.Pane;
 
 public class Context {
 	private long windowHandle;
@@ -31,12 +25,17 @@ public class Context {
 	
 	private double mouseX;
 	private double mouseY;
+	protected boolean focused;
 	
 	public Context( long window ) {
 		windowHandle = window;
 		
         int flags = NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS;
         nvgContext = NanoVGGL3.nvgCreate(flags);
+	}
+	
+	public boolean isFocused() {
+		return focused;
 	}
 	
 	protected void updateContext() {

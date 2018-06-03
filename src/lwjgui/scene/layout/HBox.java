@@ -1,6 +1,5 @@
 package lwjgui.scene.layout;
 
-import lwjgui.Color;
 import lwjgui.scene.Node;
 
 public class HBox extends DirectionalBox {

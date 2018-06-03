@@ -2,6 +2,7 @@ package lwjgui;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWWindowFocusCallbackI;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
 
@@ -33,6 +34,13 @@ public class LWJGUIWindow {
 				}
 			}
         });
+        
+		GLFW.glfwSetWindowFocusCallback(context.getWindowHandle(), new GLFWWindowFocusCallbackI() {
+			@Override
+			public void invoke(long window, boolean focus) {
+				context.focused = focus;
+			}
+		});
 	}
 	
 	protected static LWJGUIWindow newWindow(Context context, Scene scene) {

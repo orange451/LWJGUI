@@ -11,7 +11,6 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.geometry.Resizable;
 import lwjgui.geometry.VPos;
-import lwjgui.scene.layout.VBox;
 
 public abstract class Node implements Resizable {
 	protected ObservableList<Node> children = new ObservableList<Node>();
@@ -28,6 +27,7 @@ public abstract class Node implements Resizable {
 	protected MouseEvent mouseReleasedEvent;
 	
 	private boolean mouseTransparent = false;
+	protected boolean flag_clip = false;
 	
 	public void setLocalPosition(Node parent, double x, double y) {
 		double changex = x-this.getX();
@@ -95,9 +95,13 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
+	/**
+	 * Return a vector containing the available size derived from the parent nodes.
+	 * @return Vector2d
+	 */
 	public Vector2d getAvailableSize() {
-		float availableWidth = (float) getMaxWidth();
-		float availableHeight = (float) getMaxHeight();
+		//float availableWidth = (float) getMaxWidth();
+		//float availableHeight = (float) getMaxHeight();
 		return new Vector2d(getMaxPotentialWidth(), getMaxPotentialHeight());
 	}
 	
@@ -211,6 +215,10 @@ public abstract class Node implements Resizable {
 		return runningY;
 	}
 	
+	/**
+	 * Return the parent node.
+	 * @return
+	 */
 	public Node getParent() {
 		return this.parent;
 	}
@@ -220,40 +228,64 @@ public abstract class Node implements Resizable {
 	}
 	
 	protected void clip( Context context, int padding ) {
-		LayoutBounds clipBoundsTemp = new LayoutBounds((int)getAbsoluteX()-padding, (int)getAbsoluteY()-padding, (int)getAbsoluteX()+(int)getWidth()+padding, (int)getAbsoluteY()+(int)getHeight()+padding);
-		Node par = parent;
-		while (par != null) {
-			LayoutBounds tempBounds = new LayoutBounds((int)par.getAbsoluteX()-padding, (int)par.getAbsoluteY()-padding, (int)Math.ceil(par.getAbsoluteX()+par.getWidth()+padding), (int)Math.ceil(par.getAbsoluteY()+par.getHeight()+padding));
-			if ( tempBounds.minX > clipBoundsTemp.minX )
-				clipBoundsTemp.minX = tempBounds.minX;
-			if ( tempBounds.minY > clipBoundsTemp.minY )
-				clipBoundsTemp.minY = tempBounds.minY;
-			if ( tempBounds.maxX < clipBoundsTemp.maxX )
-				clipBoundsTemp.maxX = tempBounds.maxX;
-			if ( tempBounds.maxY < clipBoundsTemp.maxY )
-				clipBoundsTemp.maxY = tempBounds.maxY;
+		LayoutBounds clipBoundsTemp = new LayoutBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+		
+		Node par = this.parent;
+		while ( par != null ) {
+			if ( par.flag_clip ) {
+				LayoutBounds tempBounds = new LayoutBounds((int)par.getAbsoluteX(), (int)par.getAbsoluteY(), (int)Math.ceil(par.getAbsoluteX()+par.getWidth()), (int)Math.ceil(par.getAbsoluteY()+par.getHeight()));
+				if ( tempBounds.minX > clipBoundsTemp.minX )
+					clipBoundsTemp.minX = tempBounds.minX;
+				if ( tempBounds.minY > clipBoundsTemp.minY )
+					clipBoundsTemp.minY = tempBounds.minY;
+				if ( tempBounds.maxX < clipBoundsTemp.maxX )
+					clipBoundsTemp.maxX = tempBounds.maxX;
+				if ( tempBounds.maxY < clipBoundsTemp.maxY )
+					clipBoundsTemp.maxY = tempBounds.maxY;
+			}
+			
 			par = par.parent;
 		}
 		
 		NanoVG.nvgScissor(context.getNVG(), clipBoundsTemp.minX, clipBoundsTemp.minY, clipBoundsTemp.getWidth(), clipBoundsTemp.getHeight());
 	}
 	
+	/**
+	 * Return a bounds fit to the size of the node.
+	 * @return
+	 */
 	public LayoutBounds getInnerBounds() {
 		return new LayoutBounds(0, 0, (int)getWidth(), (int)getHeight());
 	}
 	
+	/**
+	 * Return the current width of the node.
+	 * @return
+	 */
 	public double getWidth() {
 		return size.x;
 	}
 	
+	/**
+	 * Return the current height of the node.
+	 * @return
+	 */
 	public double getHeight() {
 		return size.y;
 	}
 	
+	/**
+	 * Set the layout alignment.
+	 * @param pos
+	 */
 	public void setAlignment(Pos pos) {
 		this.alignment = pos;
 	}
 	
+	/**
+	 * Return the current layout alignment.
+	 * @return
+	 */
 	public Pos getAlignment() {
 		Pos useAlignment = Pos.CENTER;
 		if ( parent != null ) {
@@ -268,57 +300,116 @@ public abstract class Node implements Resizable {
 		return useAlignment;
 	}
 	
+	/**
+	 * Return the modifiable list of children.
+	 * @return
+	 */
 	protected ObservableList<Node> getChildren() {
 		return this.children;
 	}
 	
+	/**
+	 * Return the local offset x of this node.
+	 * @return
+	 */
 	public double getX() {
 		return localPosition.x;
 	}
 	
+	/**
+	 * Return the local offset y of this node.
+	 * @return
+	 */
 	public double getY() {
 		return localPosition.y;
 	}
 
+	/**
+	 * Return the absolute x position of this node.
+	 * @return
+	 */
 	public double getAbsoluteX() {
 		return absolutePosition.x;
 	}
 	
+	/**
+	 * Return the absolute y position of this node.
+	 * @return
+	 */
 	public double getAbsoluteY() {
 		return absolutePosition.y;
 	}
 	
+	/**
+	 * Return the minimum width of this node.
+	 * @return
+	 */
 	public double getMinWidth() {
 		return layoutBounds.minX;
 	}
 	
+	/**
+	 * Return the minimum height of this node.
+	 * @return
+	 */
 	public double getMinHeight() {
 		return layoutBounds.minY;
 	}
 	
+	/**
+	 * Return the maximum width of this node.
+	 * @return
+	 */
 	public double getMaxWidth() {
 		return layoutBounds.maxX;
 	}
 	
+	/**
+	 * Return the maximum height of this node.
+	 * @return
+	 */
 	public double getMaxHeight() {
 		return layoutBounds.maxY;
 	}
 	
+	/**
+	 * Set the preferred size of this node.
+	 * <br>
+	 * This size is not guaranteed.
+	 * @param width
+	 * @param height
+	 */
 	public void setPrefSize( double width, double height ) {
 		setPrefWidth( width );
 		setPrefHeight( height );
 	}
 	
+	/**
+	 * Set the absolute minimum size of this node.
+	 * @param width
+	 * @param height
+	 */
 	public void setMinSize( double width, double height ) {
 		setMinWidth(width);
 		setMinHeight(height);
 	}
 	
+	/**
+	 * Set the absolute maximum size of this node.
+	 * @param width
+	 * @param height
+	 */
 	public void setMaxSize( double width, double height ) {
 		setMaxWidth(width);
 		setMaxHeight(height);
 	}
 	
+	/**
+	 * Set the preferred width of this node.
+	 * <br>
+	 * This size is not guaranteed.
+	 * @param width
+	 */
 	public void setPrefWidth( double width ) {
 		this.prefsize.x = width;
 		if (this.getMinWidth() > 0) {
@@ -327,6 +418,12 @@ public abstract class Node implements Resizable {
 		this.size.x = width;
 	}
 	
+	/**
+	 * Set the preferred height of this node.
+	 * <br>
+	 * This size is not guaranteed.
+	 * @param width
+	 */
 	public void setPrefHeight( double height ) {
 		this.prefsize.y = height;
 		if ( this.getMinHeight() > 0 ) {
@@ -335,32 +432,56 @@ public abstract class Node implements Resizable {
 		this.size.y = height;
 	}
 	
+	/**
+	 * Returns the preferred width of this node.
+	 * @return
+	 */
 	public double getPrefWidth() {
 		return prefsize.x;
 	}
 	
+	/**
+	 * Returns the preferred height of this node.
+	 * @return
+	 */
 	public double getPrefHeight() {
 		return prefsize.y;
 	}
 	
+	/**
+	 * Set the minimum width of this node.
+	 * @param width
+	 */
 	public void setMinWidth( double width ) {
 		layoutBounds.minX = (int)width;
 		if ( size.x < (int)width )
 			size.x = (int)width;
 	}
 	
+	/**
+	 * Set the minimum height of this node.
+	 * @param height
+	 */
 	public void setMinHeight( double height ) {
 		layoutBounds.minY = (int)height;
 		if ( size.y < (int)height )
 			size.y = (int)height;
 	}
 	
+	/**
+	 * Set the maximum width of this node.
+	 * @param width
+	 */
 	public void setMaxWidth( double width ) {
 		layoutBounds.maxX = (int)width;
 		if ( size.x > (int)width )
 			size.x = (int)width;
 	}
 	
+	/**
+	 * Set the maxmimum height of this node.
+	 * @param height
+	 */
 	public void setMaxHeight( double height ) {
 		layoutBounds.maxY = (int)height;
 		if ( size.y > (int)height )
@@ -380,18 +501,34 @@ public abstract class Node implements Resizable {
 			this.maxY = maxY;
 		}
 
+		/**
+		 * Returns the height of the padding of this node.
+		 * @return
+		 */
 		public double getPadHeight() {
 			return minY + (Node.this.getHeight()-maxY);
 		}
 
+		/**
+		 * Returns the width of the padding of this node.
+		 * @return
+		 */
 		public double getPadWidth() {
 			return minX + (Node.this.getWidth()-maxX);
 		}
 
+		/**
+		 * Returns the internal width of this node.
+		 * @return
+		 */
 		public float getWidth() {
 			return maxX - minX;
 		}
 		
+		/**
+		 * Returns the internal height of this node.
+		 * @return
+		 */
 		public float getHeight() {
 			return maxY - minY;
 		}
@@ -411,10 +548,18 @@ public abstract class Node implements Resizable {
 
 	public abstract void render(Context context);
 
+	/**
+	 * Returns whether or not this node (and all of hits children) will ignore the mouse.
+	 * @return
+	 */
 	public boolean isMouseTransparent() {
 		return this.mouseTransparent;
 	}
 	
+	/**
+	 * Flag that controls whether this node (and all of its children) ignore the mouse.
+	 * @param t
+	 */
 	public void setMouseTransparent(boolean t ) {
 		this.mouseTransparent = t;
 	}

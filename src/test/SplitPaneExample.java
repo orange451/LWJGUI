@@ -14,7 +14,6 @@ import java.io.IOException;
 
 import org.lwjgl.glfw.GLFW;
 
-import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Orientation;
@@ -64,26 +63,29 @@ public class SplitPaneExample {
 	}
 
 	private static void addComponents(Scene scene) {
+		// Create background pane
 		StackPane pane = new StackPane();
-		pane.setFillToParentWidth(true);
-		pane.setFillToParentHeight(true);
 		scene.setRoot(pane);
 		
+		// Create vertical layout
 		VBox box = new VBox();
 		box.setFillToParentHeight(true);
 		box.setFillToParentWidth(true);
 		pane.getChildren().add(box);
 		
+		// Title label
 		Label b = new Label("Split Pane Test");
 		b.setFontSize(32);
 		box.getChildren().add(b);
 		
+		// Create split pane
 		SplitPane split = new SplitPane();
 		split.setFillToParentHeight(true);
 		split.setFillToParentWidth(true);
 		split.setOrientation(Orientation.VERTICAL);
 		box.getChildren().add(split);
 		
+		// Add some content
 		for (int i = 0; i < 3; i++) {
 			StackPane p = new StackPane();
 			p.setAlignment(Pos.CENTER);

@@ -13,12 +13,11 @@ import lwjgui.Context;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
-import lwjgui.geometry.Pos;
 import lwjgui.theme.Theme;
 
 public abstract class ButtonBase extends Labeled {
 	private ButtonEvent buttonEvent;
-	protected double cornerRadius = 4.0f;
+	protected double cornerRadius = 3.0f;
 	
 	public ButtonBase(String name) {
 		super(name);
@@ -57,7 +56,7 @@ public abstract class ButtonBase extends Labeled {
 
 	@Override
 	public void render(Context context) {
-		clip(context, 2);
+		clip(context, 4);
 		
 		NanoVG.nvgTranslate(context.getNVG(), (int)getAbsoluteX(), (int)getAbsoluteY());		
 			long vg = context.getNVG();
@@ -72,7 +71,7 @@ public abstract class ButtonBase extends Labeled {
 			NanoVG.nvgFill(context.getNVG());
 			
 			// Selection graphic
-			if ( context.isSelected(this) ) {
+			if ( context.isSelected(this) && context.isFocused() ) {
 				int feather = 4;//(int) (cornerRadius*2); // Smoothing
 				float ind = 0; // Inset
 				NVGPaint paint = NanoVG.nvgBoxGradient(vg, ind,ind, w-ind*2,h-ind*2,(float)cornerRadius, feather, Theme.currentTheme().getSelection().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
@@ -84,7 +83,7 @@ public abstract class ButtonBase extends Labeled {
 			}
 			
 			// Draw button outline
-			Color outlineColor = context.isSelected(this)?Theme.currentTheme().getSelection():Theme.currentTheme().getButtonOutline();
+			Color outlineColor = (context.isSelected(this)&&context.isFocused())?Theme.currentTheme().getSelection():Theme.currentTheme().getButtonOutline();
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRoundedRect(context.getNVG(), 0, 0, w, h, (float) cornerRadius);
 			NanoVG.nvgFillColor(context.getNVG(), outlineColor.getNVG());
@@ -112,9 +111,9 @@ public abstract class ButtonBase extends Labeled {
 			NanoVG.nvgStroke(vg);
 			
 			// internal selection graphic
-			if ( context.isSelected(this) ) {
+			if ( context.isSelected(this) && context.isFocused() ) {
 				Color sel = Theme.currentTheme().getSelection();
-				Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 48);
+				Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);
 				NanoVG.nvgBeginPath(vg);
 				float inset = 1.33f;
 				NanoVG.nvgRoundedRect(vg, inset, inset, w-inset*2,h-inset*2, (float) cornerRadius-inset);
@@ -127,9 +126,9 @@ public abstract class ButtonBase extends Labeled {
 			
 		NanoVG.nvgTranslate(context.getNVG(), (int)-getAbsoluteX(), (int)-getAbsoluteY());
 		
-		if ( inside != null ) {
-			this.setAlignment(inside.alignment);
-			inside.render(this, context);
+		if ( graphicLabel != null ) {
+			this.setAlignment(graphicLabel.alignment);
+			graphicLabel.render(this, context);
 		}
 	}
 

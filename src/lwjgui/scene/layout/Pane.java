@@ -11,8 +11,8 @@ import lwjgui.theme.Theme;
 
 public class Pane extends Region {
 	private Color backgroundColor;
-	private boolean scrollableX;
-	private boolean scrollableY;
+	//private boolean scrollableX;
+	//private boolean scrollableY;
 	
 	public Pane() {
 		this.backgroundColor = Theme.currentTheme().getPane();
@@ -32,10 +32,10 @@ public class Pane extends Region {
 	public void position(Node parent) {
 		super.position(parent);
 
-		float maxWidthInside = (float) getMaxElementWidth();
-		float maxHeightInside = (float) getMaxElementHeight();
-		scrollableX = maxWidthInside > this.getAbsoluteX() + this.getWidth();
-		scrollableY = maxHeightInside > this.getAbsoluteY() + this.getHeight();
+		//float maxWidthInside = (float) getMaxElementWidth();
+		//float maxHeightInside = (float) getMaxElementHeight();
+		//scrollableX = maxWidthInside > this.getAbsoluteX() + this.getWidth();
+		//scrollableY = maxHeightInside > this.getAbsoluteY() + this.getHeight();
 	}
 	
 	public void render(Context context) {

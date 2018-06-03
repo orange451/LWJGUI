@@ -1,23 +1,8 @@
 package lwjgui.scene.control;
 
 import org.joml.Vector2d;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.nanovg.NVGPaint;
-import org.lwjgl.nanovg.NanoVG;
-
-import lwjgui.Color;
-import lwjgui.Context;
 import lwjgui.LWJGUI;
-import lwjgui.collections.ObservableList;
-import lwjgui.event.ButtonEvent;
-import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
-import lwjgui.geometry.Pos;
-import lwjgui.scene.Node;
-import lwjgui.scene.layout.FontStyle;
-import lwjgui.scene.layout.HBox;
-import lwjgui.theme.Theme;
 
 public class Button extends ButtonBase {
 	
@@ -56,7 +41,7 @@ public class Button extends ButtonBase {
 	
 	private void update() {
 		LWJGUI.runLater(() -> {
-			this.setPrefWidth(inside.getMaximumPotentialWidth()+this.getPadding().getWidth());
+			this.setPrefWidth(graphicLabel.getMaximumPotentialWidth()+this.getPadding().getWidth());
 		});
 	}
 }

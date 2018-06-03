@@ -20,6 +20,7 @@ public class Label extends Control {
 	public Label(String text) {
 		setText(text);
 		textColor = Theme.currentTheme().getText();
+		this.flag_clip = false;
 	}
 
 	public Label() {
@@ -113,28 +114,16 @@ public class Label extends Control {
 		NanoVG.nvgFillColor(vg, Color.RED.getNVG());
 		NanoVG.nvgFill(vg);*/
 
-		//ByteBuffer textBuffer = null;
-		//try {
-		//textBuffer = MemoryUtil.memUTF8(text, false);
-		//long start = MemoryUtil.memAddress(textBuffer);
-		//long end = start + textBuffer.remaining();
-
-		// Draw
+		// Setup font
 		NanoVG.nvgFontSize(vg, fontSize);
 		NanoVG.nvgFontFace(vg, Font.SANS.getFont(fontStyle));
 		NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
 
+		// Draw
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgFontBlur(vg,0);
 		NanoVG.nvgFillColor(vg, textColor.getNVG());
-		//NanoVG.nnvgText(vg, absX, absY, start, end);
-		//NanoVG.nvgText(vg, absX, absY, cpToUTF8(0x2713));
 		NanoVG.nvgText(vg, absX, absY, text);
-		//} finally {
-		//if (textBuffer != null) {
-		//MemoryUtil.memFree(textBuffer);
-		//}
-		//}
 	}
 
 	public void setTextFill(Color color) {

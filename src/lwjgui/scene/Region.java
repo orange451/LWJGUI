@@ -2,30 +2,43 @@ package lwjgui.scene;
 
 import org.joml.Vector2d;
 
-import lwjgui.Color;
 import lwjgui.geometry.Insets;
-import lwjgui.scene.layout.VBox;
-import lwjgui.theme.Theme;
 
 public abstract class Region extends Parent {
 	private boolean fillToParentHeight;
 	private boolean fillToParentWidth;
 	private Insets padding = Insets.EMPTY;
 	
+	/**
+	 * Flag that controls whether this parent will stretch to the width of its parent.
+	 * @param fill
+	 */
 	public void setFillToParentWidth( boolean fill ) {
 		this.fillToParentWidth = fill;
 	}
 
+	/**
+	 * Flag that controls whether this parent will stretch to the height of its parent.
+	 * @param fill
+	 */
+	public void setFillToParentHeight( boolean fill ) {
+		this.fillToParentHeight = fill;
+	}
+	
+	/**
+	 * 
+	 * @return Returns if this node will fit to its parents width.
+	 */
 	public boolean isFillToParentWidth() {
 		return this.fillToParentWidth;
 	}
 
+	/**
+	 * 
+	 * @return Returns if this node will fit to its parents height.
+	 */
 	public boolean isFillToParentHeight() {
 		return this.fillToParentHeight;
-	}
-	
-	public void setFillToParentHeight( boolean fill ) {
-		this.fillToParentHeight = fill;
 	}
 	
 	/*@Override
@@ -84,7 +97,16 @@ public abstract class Region extends Parent {
 		super.position(parent);
 	}
 	
+	/**
+	 * Set the padding insets of this node. All child nodes will be offset based on the insets.
+	 * @param value
+	 */
     public final void setPadding(Insets value) { padding = value; }
+    
+    /**
+     * 
+     * @return Return the padding insets of this node.
+     */
     public final Insets getPadding() { return padding; }
 	
 	@Override

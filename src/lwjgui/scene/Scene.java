@@ -4,11 +4,6 @@ import lwjgui.Context;
 
 public class Scene extends Region {
 	private Node root;
-	
-	public Scene() {
-		//this.setFillToParentWidth(true);
-		//this.setFillToParentHeight(true);
-	}
 
 	@Override
 	public double getAbsoluteX() {
@@ -53,6 +48,7 @@ public class Scene extends Region {
 			((Region) root).setFillToParentWidth(true);
 		}
 		
+		this.flag_clip = true;
 		position(null);
 		root.position(this);
 		root.render(context);

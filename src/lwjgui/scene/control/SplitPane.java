@@ -388,6 +388,7 @@ public class SplitPane extends Control {
 			this.getChildren().add(node);
 			this.setFillToParentWidth(true);
 			this.setFillToParentHeight(true);
+			this.flag_clip = true;
 		}
 
 		@Override

@@ -7,6 +7,7 @@ Simple library to add a user interface in LWJGL3.
 - CheckBox
 - RadioButton
 - Label
+- Pane/StackPane
 - SplitPane
 - HBox
 - VBox

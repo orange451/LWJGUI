@@ -46,7 +46,7 @@ public class ContextMenu extends PopupWindow {
 		for (int i = 0; i < 8; i++) {
 			internalBox.position(this);
 		}
-		resize(internalBox.getWidth(), internalBox.getHeight());
+		resize(internalBox.getWidth(), internalBox.getHeight());		
 	}
 
 	public ContextMenu getChild() {
@@ -74,16 +74,28 @@ public class ContextMenu extends PopupWindow {
 
 	@Override
 	public void render(Context context) {
+		// Position the menu
 		this.position(this.getScene());
 		this.setAbsolutePosition( absoluteX, absoluteY );
+		
+		// Position internal box inside menu
 		this.setAlignment(Pos.TOP_LEFT);
 		internalBox.position(this);
 		
+		// Get my width, and resize internal buttons so that they match the width of the box
+		double innerWidth = this.getInnerBounds().getWidth();
+		for (int i = 0; i < items.size(); i++) {
+			items.get(i).setPrefWidth(innerWidth);
+			items.get(i).setMinWidth(innerWidth);
+		}
+		
+		// If the mouse is ontop of me, then set the mouse entered flag to true
+		// This is used to autohide the menu when the mouse leaves (if flag set)
 		if ( context.isHovered(this) ) {
 			this.mouseEntered = true;
 		}
 		
-		// Drop Shadow
+		// Draw Drop Shadow
 		long vg = context.getNVG();
 		int x = (int) getAbsoluteX();
 		int y = (int) getAbsoluteY();
@@ -98,7 +110,7 @@ public class ContextMenu extends PopupWindow {
 		NanoVG.nvgFillPaint(vg, paint);
 		NanoVG.nvgFill(vg);
 		
-		// Outline
+		// Draw Outline
 		NanoVG.nvgBeginPath(context.getNVG());
 		NanoVG.nvgRect(context.getNVG(), (int)x-1, (int)y-1, (int)w+2, (int)h+2);
 		NanoVG.nvgFillColor(context.getNVG(), Theme.currentTheme().getButtonOutline().getNVG());

@@ -10,9 +10,9 @@ public class ThemeWhite extends Theme {
 	public static Color selectColorPassive	= Color.LIGHT_GRAY;
 	public static Color shadow				= new Color(32, 32, 32, 100);
 	public static Color textColor			= Color.DARK_GRAY;
-	public static Color buttonColor			= Color.WHITE_SMOKE;
-	public static Color buttonHoverColor	= Color.WHITE;
-	public static Color buttonOutlineColor	= Color.SILVER;
+	public static Color buttonColor			= new Color(240, 240, 240);
+	public static Color buttonHoverColor		= Color.WHITE;
+	public static Color buttonOutlineColor	= Color.DIM_GRAY;
 
 	@Override
 	public Color getBackground() {

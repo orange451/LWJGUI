@@ -17,7 +17,7 @@ import lwjgui.theme.Theme;
 
 public abstract class ButtonBase extends Labeled {
 	private ButtonEvent buttonEvent;
-	protected double cornerRadius = 3.0f;
+	protected double cornerRadius = 2.0f;
 	
 	public ButtonBase(String name) {
 		super(name);

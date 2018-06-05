@@ -11,6 +11,7 @@ import lwjgui.collections.ObservableList;
 import lwjgui.scene.Node;
 import lwjgui.scene.Parent;
 import lwjgui.scene.Scene;
+import lwjgui.scene.control.PopupWindow;
 
 public class Context {
 	private long windowHandle;
@@ -59,39 +60,65 @@ public class Context {
 		mouseX = mousePosX[0];
 		mouseY = mousePosY[0];
 		
-		LWJGUIWindow window = LWJGUI.getWindowFromContext(windowHandle);
-		Scene scene = window.getScene();
-		hovered = calculateHover(null, scene);
+		mouseHover();
 	}
 	
-	protected Node calculateHover(Node parent, Node root) {
-		// Use scene as an entry point into nodes
-		if ( parent == null && root instanceof Scene ) {
-			root = ((Scene)root).getRoot();
+	private void mouseHover() {
+		// Get scene
+		LWJGUIWindow window = LWJGUI.getWindowFromContext(windowHandle);
+		Scene scene = window.getScene();
+		
+		// Calculate current hover
+		hovered = calculateHoverRecursive(null, scene);
+		Node last = hovered;
+		hovered = calculateHoverPopups(scene);
+		
+		// Not hovering over popups
+		if ( last != null && last.equals(hovered ) ) {
+			for (int i = 0; i < scene.getPopups().size(); i++) {
+				PopupWindow popup = scene.getPopups().get(i);
+				popup.weakClose();
+			}
 		}
+	}
+
+	private Node calculateHoverPopups(Scene scene) {
+		ObservableList<PopupWindow> popups = scene.getPopups();
+		for (int i = 0; i < popups.size(); i++) {
+			PopupWindow popup = popups.get(i);
+			if ( popup.contains(mouseX, mouseY) ) {
+				return calculateHoverRecursive(null, popup);
+			}
+		}
+		
+		return hovered;
+	}
+
+	protected Node calculateHoverRecursive(Node parent, Node root) {
+		// Use scene as an entry point into nodes
+		if ( parent == null && root instanceof Scene ) 
+			root = ((Scene)root).getRoot();
 		
 		// Ignore if unclickable
-		if ( root.isMouseTransparent() ) {
+		if ( root.isMouseTransparent() )
 			return parent;
-		}
 		
 		// If mouse is out of our bounds, we're not clickable
-		if ( mouseX < root.getAbsoluteX() || mouseX > root.getAbsoluteX() + root.getWidth() )
+		if ( mouseX <= root.getAbsoluteX() || mouseX > root.getAbsoluteX() + root.getWidth() )
 			return parent;
-		if ( mouseY < root.getAbsoluteY() || mouseY > root.getAbsoluteY() + root.getHeight() )
+		if ( mouseY <= root.getAbsoluteY() || mouseY > root.getAbsoluteY() + root.getHeight() )
 			return parent;
 		
 		// Check children
 		if ( root instanceof Parent ) {
 			ObservableList<Node> children = ((Parent)root).getChildren();
 			for (int i = 0; i < children.size(); i++) {
-				Node ret = calculateHover( root, children.get(i));
+				Node ret = calculateHoverRecursive( root, children.get(i));
 				if ( ret != null && ! ret.equals(root)) {
 					return ret;
 				}
 			}
 		}
-		
 		return root;
 	}
 

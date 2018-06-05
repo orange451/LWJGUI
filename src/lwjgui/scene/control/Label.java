@@ -12,7 +12,7 @@ import lwjgui.theme.Theme;
 
 public class Label extends Control {
 	private String text = "";
-	private float fontSize = 16;
+	private float fontSize = 18;
 	private FontStyle fontStyle = FontStyle.REGULAR;
 	private Color textColor;
 	private boolean updated = true;

@@ -8,7 +8,12 @@ public class Rectangle extends Shape {
 	private float corderRadius = 0;
 	
 	public Rectangle() {
-		//
+		this(0);
+	}
+	
+	public Rectangle( float radius ) {
+		this.setPrefSize(16, 16);
+		this.setCornerRadius(radius);
 	}
 	
 	public void setCornerRadius( float radius ) {

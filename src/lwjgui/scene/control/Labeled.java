@@ -15,14 +15,14 @@ public abstract class Labeled extends Control {
 	class GraphicLabel {
 		protected HBox holder;
 		protected Point offset = new Point();
-		private Label label;
+		protected Label label;
 		public Pos alignment;
 		
 		GraphicLabel() {
 			alignment = Pos.CENTER;
 			
 			holder = new HBox();
-			holder.setSpacing(2);
+			holder.setSpacing(4);
 			holder.setFillToParentWidth(false);
 			
 			label = new Label("Label");
@@ -38,7 +38,14 @@ public abstract class Labeled extends Control {
 		}
 
 		public double getMaximumPotentialWidth() {
-			return label.getWidth(); 
+			double x = Labeled.this.getPadding().getWidth();
+			if ( holder.getChildren().size() == 2 )
+				x += holder.getChildren().get(0).getPrefWidth();
+			return label.getWidth() + (holder.getSpacing()*holder.getChildren().size()-1) + x; 
+		}
+
+		public double getMaximumPotentialHeight() {
+			return label.getHeight(); 
 		}
 		
 		protected void update() {
@@ -56,6 +63,19 @@ public abstract class Labeled extends Control {
 	public Labeled(String name) {
 		this.graphicLabel = new GraphicLabel();
 		this.setText(name);
+	}
+	
+	@Override
+	protected void position( Node parent ) {
+		this.setPrefWidth(this.graphicLabel.getMaximumPotentialWidth());
+		this.setPrefHeight(this.graphicLabel.getMaximumPotentialHeight());
+		super.position(parent);
+		this.graphicLabel.holder.position(this);
+	}
+	
+	@Override
+	public void render(Context context) {
+		this.graphicLabel.render(this, context);
 	}
 	
 	public void setGraphic( Node graphic ) {

@@ -30,7 +30,10 @@ public class LWJGUIWindow {
 					if ( hovered != null ) {
 						hovered.onMouseReleased(button);
 					}
-					context.setSelected(hovered);
+					
+					if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
+						context.setSelected(hovered);
+					}
 				}
 			}
         });

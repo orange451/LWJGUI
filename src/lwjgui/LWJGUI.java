@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
-import lwjgui.popup.LWJGLGUIPopupWindow;
 import lwjgui.scene.Scene;
 
 public class LWJGUI {
@@ -26,10 +25,6 @@ public class LWJGUI {
 		windows.put(window, LWJGUIWindow.newWindow(context, scene));
 		
 		return scene;
-	}
-	
-	public static void newPopupWindow(LWJGLGUIPopupWindow window) {
-		// TODO Make this do something.
 	}
 
 	public static void render() {

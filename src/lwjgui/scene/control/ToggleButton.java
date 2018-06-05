@@ -41,8 +41,8 @@ public abstract class ToggleButton extends ButtonBase implements Toggle {
 	public void setSelected(boolean b) {
 		this.selected = b;
 		
-		if ( this.toggleGroup != null && b ) {
-			this.toggleGroup.select(this);
+		if ( this.toggleGroup != null && b && (this.toggleGroup.getCurrectSelected()==null || !this.toggleGroup.getCurrectSelected().equals(this)) ) {
+			this.toggleGroup.selectToggle(this);
 		}
 	}
 	

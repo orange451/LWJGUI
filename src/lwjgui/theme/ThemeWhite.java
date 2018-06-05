@@ -9,7 +9,7 @@ public class ThemeWhite extends Theme {
 	public static Color selectColor			= Color.AQUA;
 	public static Color selectColorPassive	= Color.LIGHT_GRAY;
 	public static Color shadow				= new Color(32, 32, 32, 100);
-	public static Color textColor			= Color.DARK_GRAY.brighter();
+	public static Color textColor			= Color.DARK_GRAY;
 	public static Color buttonColor			= Color.WHITE_SMOKE;
 	public static Color buttonHoverColor	= Color.WHITE;
 	public static Color buttonOutlineColor	= Color.SILVER;

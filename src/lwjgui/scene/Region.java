@@ -74,7 +74,7 @@ public abstract class Region extends Parent {
 	//}
 	
 	@Override
-	public void position(Node parent) {
+	protected void position(Node parent) {
 		if ( fillToParentWidth ) {
 			LayoutBounds bounds = parent.getInnerBounds();
 			double potential = 0;

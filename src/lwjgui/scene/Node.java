@@ -96,6 +96,23 @@ public abstract class Node implements Resizable {
 	}
 	
 	/**
+	 * Returns the scene that contains this node.
+	 * @return
+	 */
+	public Scene getScene() {
+		Node p = this;
+		while ( p != null ) {
+			if ( p instanceof Scene ) {
+				return (Scene)p;
+			}
+			
+			p = p.parent;
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Return a vector containing the available size derived from the parent nodes.
 	 * @return Vector2d
 	 */

@@ -68,9 +68,10 @@ public class ContextMenuTest {
 		
 		// Create context menu
 		ContextMenu menu = new ContextMenu();
-		menu.getItems().add(new MenuItem("Option 1", new Circle()));
-		menu.getItems().add(new MenuItem("Option 2", new Rectangle()));
-		menu.getItems().add(new MenuItem("Option 3", new Rectangle(5)));
+		menu.getItems().add(new MenuItem("Option 1", new Rectangle()));
+		menu.getItems().add(new MenuItem("Option 2", new Rectangle(4)));
+		menu.getItems().add(new MenuItem("Option 3", new Circle()));
+		menu.setAutoHide(false);
 		
 		// Create context node
 		Label l = new Label("Don't right click me");

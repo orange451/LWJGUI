@@ -8,7 +8,7 @@ public abstract class PopupWindow extends Control {
 	protected double absoluteY;
 	
 	protected boolean mouseEntered;
-	protected boolean autoHide = true;
+	protected boolean autoHide;
 	
 	public abstract void render(Context context);
 
@@ -27,6 +27,10 @@ public abstract class PopupWindow extends Control {
 	
 	public void close() {
 		this.getScene().closePopup(this);
+	}
+	
+	public void setAutoHide(boolean autoHide) {
+		this.autoHide = autoHide;
 	}
 
 	public boolean contains(double x, double y) {

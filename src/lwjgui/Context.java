@@ -63,15 +63,22 @@ public class Context {
 		mouseHover();
 	}
 	
+	protected boolean hoveringOverPopup;
 	private void mouseHover() {
 		// Get scene
 		LWJGUIWindow window = LWJGUI.getWindowFromContext(windowHandle);
 		Scene scene = window.getScene();
 		
 		// Calculate current hover
+		hoveringOverPopup = false;
 		hovered = calculateHoverRecursive(null, scene);
 		Node last = hovered;
 		hovered = calculateHoverPopups(scene);
+		
+		// Check if hovering over a popup
+		if ( last != null && !last.equals(hovered) ) {
+			hoveringOverPopup = true;
+		}
 		
 		// Not hovering over popups
 		if ( last != null && last.equals(hovered ) ) {
@@ -169,5 +176,18 @@ public class Context {
 
 	public Node getHovered() {
 		return hovered;
+	}
+
+	protected ObservableList<PopupWindow> getPopups() {
+		LWJGUIWindow window = LWJGUI.getWindowFromContext(windowHandle);
+		Scene scene = window.getScene();
+		return scene.getPopups();
+	}
+
+	protected void closePopups() {
+		ObservableList<PopupWindow> popups = getPopups();
+		while (popups.size() > 0 ) {
+			popups.get(0).close();
+		}
 	}
 }

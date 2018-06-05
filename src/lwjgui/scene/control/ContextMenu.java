@@ -18,6 +18,7 @@ public class ContextMenu extends PopupWindow {
 	private ObservableList<MenuItem> items = new ObservableList<MenuItem>();
 	
 	public ContextMenu() {
+		this.setAutoHide(true);
 		this.internalBox = new VBox();
 		this.children.add(this.internalBox);
 		

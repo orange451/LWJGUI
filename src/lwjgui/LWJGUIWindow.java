@@ -21,11 +21,17 @@ public class LWJGUIWindow {
 			@Override
 			public void invoke(long window, int button, int downup, int modifier) {
 				if ( downup == 1 ) {
+					if ( !context.hoveringOverPopup && context.getPopups().size() > 0 ) {
+						context.closePopups();
+						return;
+					}
+					
 					Node hovered = context.getHovered();
 					if ( hovered != null ) {
 						hovered.onMousePressed(button);
 					}
 				} else {
+					
 					Node hovered = context.getHovered();
 					if ( hovered != null ) {
 						hovered.onMouseReleased(button);

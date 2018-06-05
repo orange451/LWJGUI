@@ -2,11 +2,15 @@ package lwjgui.scene.control;
 
 import java.awt.Point;
 
+import org.lwjgl.nanovg.NanoVG;
+
+import lwjgui.Color;
 import lwjgui.Context;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.FontStyle;
 import lwjgui.scene.layout.HBox;
+import lwjgui.theme.Theme;
 
 public abstract class Labeled extends Control {
 	protected GraphicLabel graphicLabel;
@@ -31,8 +35,8 @@ public abstract class Labeled extends Control {
 			holder.setBackground(null);
 		}
 
-		public void render(Node parent, Context context) {
-			holder.position(parent);
+		public void render(Context context) {
+			holder.position(Labeled.this);
 			holder.offset(offset.x, offset.y);
 			holder.render(context);
 		}
@@ -69,13 +73,14 @@ public abstract class Labeled extends Control {
 	protected void position( Node parent ) {
 		this.setPrefWidth(this.graphicLabel.getMaximumPotentialWidth());
 		this.setPrefHeight(this.graphicLabel.getMaximumPotentialHeight());
-		super.position(parent);
 		this.graphicLabel.holder.position(this);
+		this.graphicLabel.holder.offset(graphicLabel.offset.x, graphicLabel.offset.y);
+		super.position(parent);
 	}
 	
 	@Override
 	public void render(Context context) {
-		this.graphicLabel.render(this, context);
+		this.graphicLabel.render(context);
 	}
 	
 	public void setGraphic( Node graphic ) {

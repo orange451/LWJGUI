@@ -80,25 +80,6 @@ public class Label extends Control {
 
 		super.position(parent);
 	}
-	
-	public double getTextWidth() {
-		Context context = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext();
-		long vg = context.getNVG();
-		
-		float[] bounds = new float[4];
-		
-		if ( text != null ) {
-			NanoVG.nvgFontSize(vg, fontSize);
-			NanoVG.nvgFontFace(vg, Font.SANS.getFont(fontStyle));
-			NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
-			NanoVG.nvgTextBounds(vg, 0, 0, text, bounds);
-		}
-
-		double wid = (bounds[2] - bounds[0]);
-		//double hei = (bounds[3] - bounds[1]);
-		
-		return wid;
-	}
 
 	@Override
 	public void render(Context context) {

@@ -13,6 +13,7 @@ import lwjgui.Context;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
+import lwjgui.geometry.Pos;
 import lwjgui.theme.Theme;
 
 public abstract class ButtonBase extends Labeled {
@@ -128,7 +129,7 @@ public abstract class ButtonBase extends Labeled {
 		
 		if ( graphicLabel != null ) {
 			this.setAlignment(graphicLabel.alignment);
-			graphicLabel.render(this, context);
+			graphicLabel.render(context);
 		}
 	}
 

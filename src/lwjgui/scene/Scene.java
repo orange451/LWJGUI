@@ -2,10 +2,9 @@ package lwjgui.scene;
 
 import lwjgui.Context;
 import lwjgui.collections.ObservableList;
-import lwjgui.scene.control.ContextMenu;
 import lwjgui.scene.control.PopupWindow;
 
-public class Scene extends Region {
+public class Scene extends Node {
 	private Node root;
 	
 	private ObservableList<PopupWindow> popups = new ObservableList<PopupWindow>();

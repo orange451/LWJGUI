@@ -2,24 +2,20 @@ package test;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
 import java.io.IOException;
-
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.event.ButtonEvent;
-import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
-import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 
-public class ButtonExample2 {
+public class PopupWindowExample {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
@@ -38,7 +34,7 @@ public class ButtonExample2 {
 		
 		// Game Loop
 		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUI
+			// Render GUIs
 			LWJGUI.render();
 		}
 		
@@ -47,37 +43,54 @@ public class ButtonExample2 {
 	}
 
 	private static void addComponents(Scene scene) {
-		// Create background pane
+		// Add background pane
 		StackPane pane = new StackPane();
 		scene.setRoot(pane);
 		
-		// Create a horizontal layout
-		HBox hbox = new HBox();
-		hbox.setSpacing(4);
-		pane.getChildren().add(hbox);
+		// Create vertical box
+		VBox vbox = new VBox();
+		vbox.setSpacing(8);
+		vbox.setAlignment(Pos.CENTER);
+		pane.getChildren().add(vbox);
+
+		// Create the button for the box
+		Button button = new Button("Click Me!");
+		button.setOnAction(new ButtonEvent() {
+			@Override
+			public void onEvent() {
+				popup("Test Popup");
+			}
+		});
 		
-		// Fill the horizontal layout with 3 buttons
-		for (int i = 0; i < 3; i++) {
-			VBox vbox = new VBox();
-			vbox.setSpacing(8);
-			vbox.setPadding(new Insets(4,4,4,4));
-			vbox.setAlignment(Pos.CENTER);
-			hbox.getChildren().add(vbox);
-	
-			final Label label = new Label("");
-			label.setAlignment(Pos.BOTTOM_CENTER);
-			
-			Button button = new Button("No Click");
-			button.setOnAction(new ButtonEvent() {
-				@Override
-				public void onEvent() {
-					label.setText("No Means No!!");
-				}
-			});
-			
-			vbox.getChildren().add(button);
-			vbox.getChildren().add(label); // Needs to be added after button so its underneath
-		}
+		// Add the components
+		vbox.getChildren().add(button);
+	}
+
+	protected static void popup(String popup) {
+		// Create a popup window
+		long pWin = LWJGUIUtil.createOpenGLCoreWindow(popup, 300, 200);
+		Scene scene = LWJGUI.initialize(pWin);
 		
+		// Create root pane
+		StackPane root = new StackPane();
+		scene.setRoot(root);
+		
+		// Create a vertical layout
+		VBox vbox = new VBox();
+		root.getChildren().add(vbox);
+		
+		// Create a label
+		Label l = new Label("Congratulations, You've won!");
+		vbox.getChildren().add(l);
+		
+		// Create a button
+		Button b = new Button("Claim prize");
+		vbox.getChildren().add(b);
+		b.setOnAction(new ButtonEvent() {
+			@Override
+			public void onEvent() {
+				GLFW.glfwSetWindowShouldClose(pWin, true);
+			}
+		});
 	}
 }

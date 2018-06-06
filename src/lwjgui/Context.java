@@ -106,6 +106,10 @@ public class Context {
 		if ( parent == null && root instanceof Scene ) 
 			root = ((Scene)root).getRoot();
 		
+		// If there's no root. then there's nothing to hover
+		if ( root == null )
+			return null;
+		
 		// Ignore if unclickable
 		if ( root.isMouseTransparent() )
 			return parent;

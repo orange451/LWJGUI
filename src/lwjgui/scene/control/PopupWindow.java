@@ -1,9 +1,10 @@
 package lwjgui.scene.control;
 
 import lwjgui.Context;
+import lwjgui.scene.Region;
 import lwjgui.scene.Scene;
 
-public abstract class PopupWindow extends Control {
+public abstract class PopupWindow extends Region {
 	protected double absoluteX;
 	protected double absoluteY;
 	

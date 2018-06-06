@@ -17,6 +17,8 @@ import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 public class LWJGUIUtil {
@@ -42,6 +44,16 @@ public class LWJGUIUtil {
 		glfwSwapInterval(0);
 		glfwShowWindow(window);
 		GL.createCapabilities();
+		
+		// Get the resolution of the primary monitor
+		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+		
+		// Center the window
+		GLFW.glfwSetWindowPos(
+			window,
+			(vidmode.width() - width) / 2,
+			(vidmode.height() - height) / 2
+		);
 		
 		return window;
 	}

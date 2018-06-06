@@ -2,15 +2,11 @@ package lwjgui.scene.control;
 
 import java.awt.Point;
 
-import org.lwjgl.nanovg.NanoVG;
-
-import lwjgui.Color;
 import lwjgui.Context;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.FontStyle;
 import lwjgui.scene.layout.HBox;
-import lwjgui.theme.Theme;
 
 public abstract class Labeled extends Control {
 	protected GraphicLabel graphicLabel;

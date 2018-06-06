@@ -54,10 +54,7 @@ public class RadioButton extends ToggleButton {
 			int yy = (int) (this.getAbsoluteY()+this.size/2f);
 			
 			NanoVG.nvgBeginPath(nvg);
-<<<<<<< HEAD
 			NanoVG.nvgShapeAntiAlias(nvg, true);
-=======
->>>>>>> 567b5e317077847329cf53dbb35f745f46051def
 			NanoVG.nvgCircle(nvg, xx, yy, size*0.2f);
 			NanoVG.nvgFillColor(nvg, Theme.currentTheme().getText().getNVG());
 			NanoVG.nvgFill(nvg);

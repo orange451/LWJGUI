@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Context;
 import lwjgui.LWJGUI;
@@ -21,6 +22,7 @@ import lwjgui.LWJGUIWindow;
 
 public class Font {
 	public static Font SANS = new Font("sans", "Roboto-Regular.ttf", "Roboto-Bold.ttf", "Roboto-Light.ttf");
+	public static Font ARIAL = new Font("arial", "Arial-Unicode.ttf");
 
 	
 	
@@ -37,6 +39,11 @@ public class Font {
 		this.fontNameNormal = normal;
 		this.fontNameBold = bold;
 		this.fontNameLight = light;
+		this.name = name;
+	}	
+	
+	private Font(String name, String normal ) {
+		this.fontNameNormal = normal;
 		this.name = name;
 	}
 
@@ -88,15 +95,37 @@ public class Font {
 		LWJGUIWindow window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
 		Context context = window.getContext();
 		long vg = context.getNVG();
+		int fontCallback;
 		
 		try {
+			String fontName = name+suffix;
 			String path = "lwjgui/scene/layout/" + loadName;
+			
+			// Create normal font
 			ByteBuffer buf = resourceToByteBuffer(path);
-			nvgCreateFontMem(vg, name+suffix, buf, 0);
-			map.put(vg,name+suffix);
+			fontCallback = nvgCreateFontMem(vg, fontName, buf, 0);
+			map.put(vg,fontName);
 			bufs.add(buf);
+			
+			// Fallback emoji font
+			addFallback(vg, fontCallback, "OpenSansEmoji.ttf");
+			addFallback(vg, fontCallback, "NotoEmoji-Regular.ttf");
+			addFallback(vg, fontCallback, "Arial-Unicode.ttf");
+			addFallback(vg, fontCallback, "entypo.ttf");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void addFallback(long vg, int fontCallback, String fontName) {
+		ByteBuffer tb;
+		try {
+			tb = resourceToByteBuffer("lwjgui/scene/layout/" + fontName);
+			NanoVG.nvgAddFallbackFontId(vg, fontCallback, nvgCreateFontMem(vg, "emoji", tb, 0));
+			bufs.add(tb);
+		} catch (IOException e) {
+			//
 		}
 	}
 

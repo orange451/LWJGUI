@@ -13,16 +13,16 @@ import lwjgui.Color;
 import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIWindow;
+import lwjgui.collections.ObservableList;
 import lwjgui.event.ChangeEvent;
 import lwjgui.event.MouseEvent;
-import lwjgui.geometry.Node;
-import lwjgui.geometry.ObservableList;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Node;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.theme.Theme;
 
-public class SplitPane extends StackPane {
+public class SplitPane extends Control {
 	private Orientation orientation;
 	private ArrayList<Divider> dividers = new ArrayList<Divider>();
 	private ArrayList<DividerNode> divider_nodes = new ArrayList<DividerNode>();
@@ -38,8 +38,10 @@ public class SplitPane extends StackPane {
 		this.setAlignment(Pos.TOP_LEFT);
 		
 		this.divider_holder = new StackPane();
+		this.divider_holder.setFillToParentHeight(true);
+		this.divider_holder.setFillToParentWidth(true);
 		this.divider_holder.setBackground(Color.TRANSPARENT);
-		this.getChildren().add(divider_holder);
+		this.children.add(divider_holder);
 		
 		this.items.setAddCallback(new ChangeEvent<Node>() {
 			@Override
@@ -68,7 +70,6 @@ public class SplitPane extends StackPane {
 	@Override
 	public void position(Node parent) {
 		super.position(parent);
-		//System.out.println(this.getWidth() + " / " + parent.getWidth() + " / " + parent.getClass().getName());
 		
 		grabDividers();
 	}
@@ -145,7 +146,7 @@ public class SplitPane extends StackPane {
 		double my = context.getMouseY() - mouseGrabLocation.y;
 		
 		// If we're holding onto a divider
-		double pChange = pixelSpaceToDividerSpace((int) mx);
+		double pChange = pixelSpaceToDividerSpace(mx);
 		if ( this.orientation == Orientation.HORIZONTAL ) 
 			pChange = pixelSpaceToDividerSpace((int) my);
 		
@@ -184,14 +185,19 @@ public class SplitPane extends StackPane {
 			double len = ((right-left)*maxLen) - subt;
 			double t = Math.ceil(len-0.25); // Round up to eliminate rounding issues.
 			
+			if ( d.getChildren().size() > 0 )
+				d.setAlignment(d.getChildren().get(0).getAlignment());
+			
 			// Set size
 			if ( this.orientation.equals(Orientation.VERTICAL) ) {
 				d.setFillToParentWidth(false);
+				d.setFillToParentHeight(true);
 				d.setPrefWidth(t);
 				d.setMinWidth(t);
 				d.setMaxWidth(t);
 				d.setLocalPosition(divider_holder, filledLen, 0);
 			} else {
+				d.setFillToParentWidth(true);
 				d.setFillToParentHeight(false);
 				d.setPrefHeight(t);
 				d.setMinHeight(t);
@@ -234,53 +240,6 @@ public class SplitPane extends StackPane {
 		
 		return new Vector4d(dividerX, dividerY, dividerWidth, dividerHeight);
 	}
-
-	@Override
-	public void render(Context context) {
-		long vg = context.getNVG();
-
-		super.render(context);
-		
-		//System.out.println(getHeight());
-
-		clip(context);
-		for (int i = 0; i < dividers.size(); i++) {
-			Divider divider = dividers.get(i);
-			Vector4d bounds = getDividerBounds(divider);
-			
-			// Main bar
-			hovered = getDividerUnderMouse();
-			Color col = divider.equals(hovered)?Theme.currentTheme().getSelectionPassive():Theme.currentTheme().getButtonOutline();
-			NanoVG.nnvgBeginPath(vg);
-			NanoVG.nvgFillColor(vg, col.getNVG());
-			NanoVG.nvgRect(vg, (int)bounds.x, (int)bounds.y, (int)bounds.z, (int)bounds.w);
-			NanoVG.nvgFill(vg);
-			
-			// Inner Gradient
-			NanoVG.nvgTranslate(vg, (int)bounds.x, (int)bounds.y);
-				if ( this.orientation.equals(Orientation.VERTICAL) ) {
-					NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, (int)bounds.z, 0, Theme.currentTheme().getButtonHover().getNVG(), Theme.currentTheme().getButtonOutline().getNVG(), NVGPaint.calloc());
-					NanoVG.nvgBeginPath(vg);
-					NanoVG.nvgRect(vg, 1, 0, (int)bounds.z-2,(int)bounds.w);
-					NanoVG.nvgFillPaint(vg, bg);
-					NanoVG.nvgFill(vg);
-				} else {
-					NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (int)bounds.w, Theme.currentTheme().getButtonHover().getNVG(), Theme.currentTheme().getButtonOutline().getNVG(), NVGPaint.calloc());
-					NanoVG.nvgBeginPath(vg);
-					NanoVG.nvgRect(vg, 0, 1, (int)bounds.z,(int)bounds.w-2);
-					NanoVG.nvgFillPaint(vg, bg);
-					NanoVG.nvgFill(vg);
-				}
-			NanoVG.nvgTranslate(vg, (int)-bounds.x, (int)-bounds.y);
-		}
-		
-		Color outlineColor = Theme.currentTheme().getButtonOutline();
-		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, (int)this.getAbsoluteX(), (int)this.getAbsoluteY(), (int)getWidth(), (int)getHeight());
-		NanoVG.nvgStrokeColor(vg, outlineColor.getNVG());
-		NanoVG.nvgStrokeWidth(vg, 1f);
-		NanoVG.nvgStroke(vg);
-	}
 	
 	private void recalculateDividers() {
 		this.divider_cache.clear();
@@ -316,6 +275,66 @@ public class SplitPane extends StackPane {
 		this.divider_cache = n;*/
 	}
 	
+    private double pixelSpaceToDividerSpace(double mx) {
+    		double maxLen = getWidth();
+    		if ( this.orientation.equals(Orientation.HORIZONTAL) )
+    			maxLen = getHeight();
+    		
+    		return mx/maxLen;
+	}
+
+	@Override
+	public void render(Context context) {
+		long vg = context.getNVG();
+		
+		for (int i = 0; i < children.size(); i++) {
+			// Clip to my bounds
+			clip(context);
+			
+			// Draw child
+			Node child = children.get(i);
+			child.render(context);
+		}
+
+		clip(context);
+		for (int i = 0; i < dividers.size(); i++) {
+			Divider divider = dividers.get(i);
+			Vector4d bounds = getDividerBounds(divider);
+			
+			// Main bar
+			hovered = getDividerUnderMouse();
+			Color col = Theme.currentTheme().getButtonOutline();
+			NanoVG.nnvgBeginPath(vg);
+			NanoVG.nvgFillColor(vg, col.getNVG());
+			NanoVG.nvgRect(vg, (int)bounds.x, (int)bounds.y, (int)bounds.z, (int)bounds.w);
+			NanoVG.nvgFill(vg);
+			
+			// Inner Gradient
+			NanoVG.nvgTranslate(vg, (int)bounds.x, (int)bounds.y);
+				if ( this.orientation.equals(Orientation.VERTICAL) ) {
+					NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, (int)bounds.z, 0, Theme.currentTheme().getButtonHover().getNVG(), Theme.currentTheme().getButtonOutline().getNVG(), NVGPaint.calloc());
+					NanoVG.nvgBeginPath(vg);
+					NanoVG.nvgRect(vg, 1, 0, (int)bounds.z-2,(int)bounds.w);
+					NanoVG.nvgFillPaint(vg, bg);
+					NanoVG.nvgFill(vg);
+				} else {
+					NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (int)bounds.w, Theme.currentTheme().getButtonHover().getNVG(), Theme.currentTheme().getButtonOutline().getNVG(), NVGPaint.calloc());
+					NanoVG.nvgBeginPath(vg);
+					NanoVG.nvgRect(vg, 0, 1, (int)bounds.z,(int)bounds.w-2);
+					NanoVG.nvgFillPaint(vg, bg);
+					NanoVG.nvgFill(vg);
+				}
+			NanoVG.nvgTranslate(vg, (int)-bounds.x, (int)-bounds.y);
+		}
+		
+		Color outlineColor = Theme.currentTheme().getButtonOutline();
+		NanoVG.nvgBeginPath(vg);
+		NanoVG.nvgRect(vg, (int)this.getAbsoluteX(), (int)this.getAbsoluteY(), (int)getWidth(), (int)getHeight());
+		NanoVG.nvgStrokeColor(vg, outlineColor.getNVG());
+		NanoVG.nvgStrokeWidth(vg, 1f);
+		NanoVG.nvgStroke(vg);
+	}
+	
 	public void setDividerPosition( int index, double position ) {
 		Divider d = dividers.get(index);
 		
@@ -347,14 +366,6 @@ public class SplitPane extends StackPane {
 		// Reposition divider nodes
 		resize();
 	}
-	
-    private double pixelSpaceToDividerSpace(int offset) {
-    		double maxLen = getWidth();
-    		if ( this.orientation.equals(Orientation.HORIZONTAL) )
-    			maxLen = getHeight();
-    		
-    		return offset/maxLen;
-	}
 
 	/**
      * Represents a single divider in the SplitPane.
@@ -375,6 +386,9 @@ public class SplitPane extends StackPane {
     	
 		public DividerNode(Node node) {
 			this.getChildren().add(node);
+			this.setFillToParentWidth(true);
+			this.setFillToParentHeight(true);
+			this.flag_clip = true;
 		}
 
 		@Override

@@ -4,17 +4,20 @@ import org.joml.Vector4f;
 import org.lwjgl.nanovg.NVGColor;
 
 public class Color {
-    public final static Color white     = new Color(255, 255, 255);
-    public final static Color WHITE 	= white;
+    public final static Color white		= new Color(255, 255, 255);
+    public final static Color WHITE 		= white;
 
     public final static Color lightGray  = new Color(211, 211, 211);
     public final static Color LIGHT_GRAY = lightGray;
     
     public final static Color silver = new Color(192, 192, 192);
     public final static Color SILVER = silver;
-    
-    public final static Color gray      = new Color(128, 128, 128);
+
+    public final static Color gray 		= new Color(128, 128, 128);
     public final static Color GRAY 		= gray;
+
+    public final static Color dimgray	= new Color(169, 169, 169);
+    public final static Color DIM_GRAY	= dimgray;
     
     public final static Color darkGray  = new Color(64, 64, 64);
     public final static Color DARK_GRAY = darkGray;

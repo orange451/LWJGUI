@@ -4,16 +4,14 @@ import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
-import java.util.ArrayList;
-
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.nanovg.NanoVGGL3;
 
-import lwjgui.geometry.Node;
-import lwjgui.geometry.ObservableList;
-import lwjgui.scene.control.Button;
-import lwjgui.scene.layout.Pane;
+import lwjgui.collections.ObservableList;
+import lwjgui.scene.Node;
+import lwjgui.scene.Parent;
+import lwjgui.scene.Scene;
+import lwjgui.scene.control.PopupWindow;
 
 public class Context {
 	private long windowHandle;
@@ -28,12 +26,17 @@ public class Context {
 	
 	private double mouseX;
 	private double mouseY;
+	protected boolean focused;
 	
 	public Context( long window ) {
 		windowHandle = window;
 		
         int flags = NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS;
         nvgContext = NanoVGGL3.nvgCreate(flags);
+	}
+	
+	public boolean isFocused() {
+		return focused;
 	}
 	
 	protected void updateContext() {
@@ -57,30 +60,72 @@ public class Context {
 		mouseX = mousePosX[0];
 		mouseY = mousePosY[0];
 		
-		LWJGUIWindow window = LWJGUI.getWindowFromContext(windowHandle);
-		Scene scene = window.getScene();
-		hovered = calculateHover(null, scene);
+		mouseHover();
 	}
 	
-	protected Node calculateHover(Node parent, Node root) {
-		if ( root.isMouseTransparent() ) {
-			return parent;
+	protected boolean hoveringOverPopup;
+	private void mouseHover() {
+		// Get scene
+		LWJGUIWindow window = LWJGUI.getWindowFromContext(windowHandle);
+		Scene scene = window.getScene();
+		
+		// Calculate current hover
+		hoveringOverPopup = false;
+		hovered = calculateHoverRecursive(null, scene);
+		Node last = hovered;
+		hovered = calculateHoverPopups(scene);
+		
+		// Check if hovering over a popup
+		if ( last != null && !last.equals(hovered) ) {
+			hoveringOverPopup = true;
 		}
-		if ( mouseX < root.getAbsoluteX() || mouseX > root.getAbsoluteX() + root.getWidth() )
-			return parent;
-		if ( mouseY < root.getAbsoluteY() || mouseY > root.getAbsoluteY() + root.getHeight() )
+		
+		// Not hovering over popups
+		if ( last != null && last.equals(hovered ) ) {
+			for (int i = 0; i < scene.getPopups().size(); i++) {
+				PopupWindow popup = scene.getPopups().get(i);
+				popup.weakClose();
+			}
+		}
+	}
+
+	private Node calculateHoverPopups(Scene scene) {
+		ObservableList<PopupWindow> popups = scene.getPopups();
+		for (int i = 0; i < popups.size(); i++) {
+			PopupWindow popup = popups.get(i);
+			if ( popup.contains(mouseX, mouseY) ) {
+				return calculateHoverRecursive(null, popup);
+			}
+		}
+		
+		return hovered;
+	}
+
+	protected Node calculateHoverRecursive(Node parent, Node root) {
+		// Use scene as an entry point into nodes
+		if ( parent == null && root instanceof Scene ) 
+			root = ((Scene)root).getRoot();
+		
+		// Ignore if unclickable
+		if ( root.isMouseTransparent() )
 			return parent;
 		
-		if ( root instanceof Pane ) {
-			ObservableList<Node> children = ((Pane)root).getChildren();
+		// If mouse is out of our bounds, we're not clickable
+		if ( mouseX <= root.getAbsoluteX() || mouseX > root.getAbsoluteX() + root.getWidth() )
+			return parent;
+		if ( mouseY <= root.getAbsoluteY() || mouseY > root.getAbsoluteY() + root.getHeight() )
+			return parent;
+		
+		// Check children
+		if ( root instanceof Parent ) {
+			ObservableList<Node> children = ((Parent)root).getChildren();
 			for (int i = 0; i < children.size(); i++) {
-				Node ret = calculateHover( root, children.get(i));
+				Node ret = calculateHoverRecursive( root, children.get(i));
 				if ( ret != null && ! ret.equals(root)) {
 					return ret;
 				}
 			}
 		}
-		
 		return root;
 	}
 
@@ -131,5 +176,18 @@ public class Context {
 
 	public Node getHovered() {
 		return hovered;
+	}
+
+	protected ObservableList<PopupWindow> getPopups() {
+		LWJGUIWindow window = LWJGUI.getWindowFromContext(windowHandle);
+		Scene scene = window.getScene();
+		return scene.getPopups();
+	}
+
+	protected void closePopups() {
+		ObservableList<PopupWindow> popups = getPopups();
+		while (popups.size() > 0 ) {
+			popups.get(0).close();
+		}
 	}
 }

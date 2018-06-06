@@ -12,13 +12,11 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import java.io.IOException;
 import org.lwjgl.glfw.GLFW;
 
-import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.Scene;
 import lwjgui.event.ButtonEvent;
-import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
@@ -63,16 +61,18 @@ public class ButtonExample {
 	}
 
 	private static void addComponents(Scene scene) {
+		// Add background pane
 		StackPane pane = new StackPane();
-		pane.setAlignment(Pos.CENTER);
-		scene.getChildren().add(pane);
+		scene.setRoot(pane);
 		
+		// Create vertical box
 		VBox vbox = new VBox();
 		vbox.setSpacing(8);
 		vbox.setAlignment(Pos.CENTER);
 		pane.getChildren().add(vbox);
 
-		Label label = new Label();
+		// Create the button for the box
+		final Label label = new Label();
 		Button button = new Button("Click Me!");
 		button.setOnAction(new ButtonEvent() {
 			@Override
@@ -80,9 +80,12 @@ public class ButtonExample {
 				label.setText("Please don't press me :(");
 			}
 		});
-		vbox.getChildren().add(button);
 		
-		label.setAlignment(Pos.BOTTOM_CENTER);
-		vbox.getChildren().add(label);
+		// Add the components
+		vbox.getChildren().add(button);
+		vbox.getChildren().add(label); 	// The reason we add the label here and not in the event
+										// Is because that will affect the layout of the button.
+										// Stylistically, we don't want the button to move when 
+										// the text comes onto the screen.
 	}
 }

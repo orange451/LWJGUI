@@ -11,16 +11,13 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import java.io.IOException;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
-
-import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.Scene;
 import lwjgui.geometry.Pos;
-import lwjgui.scene.control.Label;
+import lwjgui.scene.Scene;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.TestNode;
+import lwjgui.scene.shape.Circle;
 
 public class CleanedExample {
 	public static final int WIDTH   = 320;
@@ -39,8 +36,8 @@ public class CleanedExample {
 		// Add some components
 		StackPane pane = new StackPane();
 		pane.setAlignment(Pos.BOTTOM_RIGHT);
-		pane.getChildren().add(new TestNode());
-		scene.getChildren().add(pane);
+		pane.getChildren().add(new Circle());
+		scene.setRoot(pane);
 		
 		// Render loop
 		while (!GLFW.glfwWindowShouldClose(window)) {

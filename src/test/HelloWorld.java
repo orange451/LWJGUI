@@ -9,11 +9,14 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
+
 import java.io.IOException;
+
 import org.lwjgl.glfw.GLFW;
+
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.Scene;
+import lwjgui.scene.Scene;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
 
@@ -59,7 +62,7 @@ public class HelloWorld {
 		StackPane pane = new StackPane();
 		
 		// Add the pane to the scene
-		scene.getChildren().add(pane);
+		scene.setRoot(pane);
 		
 		// Put a label in the pane
 		pane.getChildren().add(new Label("Hello World!"));

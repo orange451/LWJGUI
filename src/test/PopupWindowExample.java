@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
+import lwjgui.LWJGUIWindow;
 import lwjgui.event.ButtonEvent;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
@@ -24,10 +25,11 @@ public class PopupWindowExample {
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT);
+		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT, false);
 		
 		// Initialize lwjgui for this window
-		Scene scene = LWJGUI.initialize(window);
+		LWJGUIWindow newWindow = LWJGUI.initialize(window);
+		Scene scene = newWindow.getScene();
 		
 		// Add some components
 		addComponents(scene);
@@ -68,8 +70,10 @@ public class PopupWindowExample {
 
 	protected static void popup(String popup) {
 		// Create a popup window
-		long pWin = LWJGUIUtil.createOpenGLCoreWindow(popup, 300, 200);
-		Scene scene = LWJGUI.initialize(pWin);
+		long pWin = LWJGUIUtil.createOpenGLCoreWindow(popup, 300, 200, true);
+		LWJGUIWindow newWindow = LWJGUI.initialize(pWin);
+		newWindow.setCanUserClose(false); // Prevent user from xing out of window
+		Scene scene = newWindow.getScene();
 		
 		// Create root pane
 		StackPane root = new StackPane();

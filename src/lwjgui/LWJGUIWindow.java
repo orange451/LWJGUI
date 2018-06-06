@@ -13,6 +13,7 @@ import lwjgui.scene.Scene;
 public class LWJGUIWindow {
 	private Context context;
 	private Scene scene;
+	private boolean canUserClose = true;
 	
 	private LWJGUIWindow(final Context context, Scene scene) {
 		this.context = context;
@@ -55,7 +56,7 @@ public class LWJGUIWindow {
 		GLFW.glfwSetWindowCloseCallback(context.getWindowHandle(), new GLFWWindowCloseCallbackI() {
 			@Override
 			public void invoke(long arg0) {
-				GLFW.glfwSetWindowShouldClose(context.getWindowHandle(), true);
+				GLFW.glfwSetWindowShouldClose(context.getWindowHandle(), canUserClose);
 			}
 		});
 		
@@ -92,5 +93,9 @@ public class LWJGUIWindow {
 
 	public Scene getScene() {
 		return this.scene;
+	}
+
+	public void setCanUserClose(boolean close) {
+		this.canUserClose = close;
 	}
 }

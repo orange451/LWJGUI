@@ -22,12 +22,13 @@ public class LWJGUI {
 	private static HashMap<Long, LWJGUIWindow> windows = new HashMap<Long, LWJGUIWindow>();
 	private static List<Runnable> runnables = Collections.synchronizedList(new ArrayList<Runnable>());
 	
-	public static Scene initialize(long window) {
+	public static LWJGUIWindow initialize(long window) {
 		Context context = new Context(window);
 		Scene scene = new Scene();
-		windows.put(window, LWJGUIWindow.newWindow(context, scene));
+		LWJGUIWindow wind = LWJGUIWindow.newWindow(context, scene);
+		windows.put(window, wind);
 		
-		return scene;
+		return wind;
 	}
 
 	public static void render() {

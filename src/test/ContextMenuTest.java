@@ -9,6 +9,7 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
+import lwjgui.LWJGUIWindow;
 import lwjgui.scene.Scene;
 import lwjgui.scene.control.ContextMenu;
 import lwjgui.scene.control.Label;
@@ -26,10 +27,11 @@ public class ContextMenuTest {
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT);
+		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT, false);
 		
 		// Initialize lwjgui for this window
-		Scene scene = LWJGUI.initialize(window);
+		LWJGUIWindow newWindow = LWJGUI.initialize(window);
+		Scene scene = newWindow.getScene();
 		
 		// Add some components
 		addComponents(scene);

@@ -50,10 +50,13 @@ public class LWJGUIWindow {
 				context.focused = focus;
 			}
 		});
+<<<<<<< HEAD
 		
 		// Hack to get window to focus on windows. Often using Windows 10 a GLFW window will not have focus when it's first on the screen...
 		GLFW.glfwHideWindow(context.getWindowHandle());
 		GLFW.glfwShowWindow(context.getWindowHandle());
+=======
+>>>>>>> 567b5e317077847329cf53dbb35f745f46051def
 	}
 	
 	protected static LWJGUIWindow newWindow(Context context, Scene scene) {

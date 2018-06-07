@@ -21,6 +21,7 @@ Simple library to add a user interface in LWJGL3.
 ![PicHBox](https://i.imgur.com/TV2J7B6.png)
 ![PicNoMeansNo](https://i.imgur.com/jqRl6NY.png)
 ![ContextMenu](https://i.imgur.com/VTQHcR4.png)
+![MenuBar](https://i.imgur.com/RdKJJJA.png)
 
 # Required Libraries
 - [LWJGL3](https://www.lwjgl.org/)

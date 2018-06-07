@@ -25,5 +25,5 @@ Simple library to add a user interface in LWJGL3.
 
 # Required Libraries
 - [LWJGL3](https://www.lwjgl.org/)
-- [JOML](https://github.com/JOML-CI/JOML) (Can also come with LWJGL)
-- [NanoVG](https://github.com/memononen/nanovg) (Can also come with LWJGL)
+- [JOML](https://github.com/JOML-CI/JOML) (Can download with LWJGL)
+- [NanoVG](https://github.com/memononen/nanovg) (Can download with LWJGL)

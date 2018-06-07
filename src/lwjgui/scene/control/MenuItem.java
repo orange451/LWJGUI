@@ -12,7 +12,7 @@ import lwjgui.scene.Node;
 import lwjgui.theme.Theme;
 
 public class MenuItem extends Node {
-	private ButtonEvent buttonEvent;
+	protected ButtonEvent buttonEvent;
 	private Labeled internalLabel;
 	private static final int prefHeight = 24;
 	private static final int padding = 4;
@@ -63,7 +63,7 @@ public class MenuItem extends Node {
 		}
 		
 		// Render text on menu item
-		this.internalLabel.graphicLabel.label.setTextFill(context.isHovered(this)?Theme.currentTheme().getButtonHover():Theme.currentTheme().getText());
+		this.internalLabel.graphicLabel.label.setTextFill(context.isHovered(this)?Theme.currentTheme().getControlHover():Theme.currentTheme().getText());
 		this.internalLabel.render(context);
 	}
 	

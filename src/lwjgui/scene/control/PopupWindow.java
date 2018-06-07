@@ -10,6 +10,7 @@ public abstract class PopupWindow extends Region {
 	
 	protected boolean mouseEntered;
 	protected boolean autoHide;
+	private boolean open;
 	
 	public abstract void render(Context context);
 
@@ -24,10 +25,16 @@ public abstract class PopupWindow extends Region {
 		this.setAbsolutePosition(absoluteX, absoluteY);
 		scene.showPopup(this);
 		mouseEntered = false;
+		this.open = true;
+	}
+	
+	public boolean isOpen() {
+		return open;
 	}
 	
 	public void close() {
 		this.getScene().closePopup(this);
+		this.open = false;
 	}
 	
 	public void setAutoHide(boolean autoHide) {

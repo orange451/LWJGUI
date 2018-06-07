@@ -38,6 +38,7 @@ public class HelloWorld {
 			LWJGUI.render();
 		}
 		
+		// Stop GLFW
 		glfwTerminate();
 	}
 
@@ -45,7 +46,7 @@ public class HelloWorld {
 		// Create a simple pane
 		StackPane pane = new StackPane();
 		
-		// Add the pane to the scene
+		// Set the pane as the scenes root
 		scene.setRoot(pane);
 		
 		// Put a label in the pane

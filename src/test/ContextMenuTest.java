@@ -10,11 +10,15 @@ import org.lwjgl.glfw.GLFW;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.LWJGUIWindow;
+import lwjgui.scene.Parent;
 import lwjgui.scene.Scene;
 import lwjgui.scene.control.ContextMenu;
 import lwjgui.scene.control.Label;
+import lwjgui.scene.control.Menu;
+import lwjgui.scene.control.MenuBar;
 import lwjgui.scene.control.MenuItem;
 import lwjgui.scene.layout.StackPane;
+import lwjgui.scene.layout.VBox;
 import lwjgui.scene.shape.Circle;
 import lwjgui.scene.shape.Rectangle;
 
@@ -51,6 +55,25 @@ public class ContextMenuTest {
 		StackPane background = new StackPane();
 		scene.setRoot(background);
 		
+		// Create vertical layout
+		VBox container = new VBox();
+		container.setFillToParentHeight(true);
+		background.getChildren().add(container);
+		
+		// Create Menu Bar
+		menuBar(container);
+		
+		// Create a center layout, for the label below
+		StackPane center = new StackPane();
+		center.setFillToParentHeight(true);
+		center.setFillToParentWidth(true);
+		container.getChildren().add(center);
+		
+		// Create context menu
+		contextText(center);
+	}
+
+	private static void contextText(Parent center) {
 		// Create context menu
 		ContextMenu menu = new ContextMenu();
 		menu.getItems().add(new MenuItem("Option 1", new Rectangle()));
@@ -61,6 +84,25 @@ public class ContextMenuTest {
 		// Create context node
 		Label l = new Label("Don't right click me");
 		l.setContextMenu(menu);
-		background.getChildren().add(l);
+		center.getChildren().add(l);
+	}
+
+	private static void menuBar(Parent container) {
+		// Create Menu Bar
+		MenuBar bar = new MenuBar();
+		container.getChildren().add(bar);
+
+		// Create File Menu
+		Menu file = new Menu("File");
+		file.getItems().add(new MenuItem("New"));
+		file.getItems().add(new MenuItem("Open"));
+		file.getItems().add(new MenuItem("Save"));
+		bar.getItems().add(file);
+		
+		// Create Edit Menu
+		Menu edit = new Menu("Edit");
+		edit.getItems().add(new MenuItem("Undo"));
+		edit.getItems().add(new MenuItem("Redo"));
+		bar.getItems().add(edit);
 	}
 }

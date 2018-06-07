@@ -9,6 +9,7 @@ public class VBox extends DirectionalBox {
 		super.position(parent);
 		
 		double totalHeight = getMinimumPotentialHeight();
+		//double probableHeight = this.getAvailableSize().y;
 		
 		float mult = 0;
 		/*if ( getAlignment().getVpos() == VPos.CENTER)

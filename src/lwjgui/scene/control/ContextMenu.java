@@ -113,7 +113,7 @@ public class ContextMenu extends PopupWindow {
 		// Draw Outline
 		NanoVG.nvgBeginPath(context.getNVG());
 		NanoVG.nvgRect(context.getNVG(), (int)x-1, (int)y-1, (int)w+2, (int)h+2);
-		NanoVG.nvgFillColor(context.getNVG(), Theme.currentTheme().getButtonOutline().getNVG());
+		NanoVG.nvgFillColor(context.getNVG(), Theme.currentTheme().getControlOutline().getNVG());
 		NanoVG.nvgFill(context.getNVG());
 		
 		// Render insides

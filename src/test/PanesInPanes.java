@@ -41,6 +41,7 @@ public class PanesInPanes {
 			LWJGUI.render();
 		}
 		
+		// Stop GLFW
 		glfwTerminate();
 	}
 

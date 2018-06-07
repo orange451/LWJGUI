@@ -23,7 +23,7 @@ public class CheckBox extends ButtonBase {
 
 		this.internalLabel = new Label(checkmark);
 		this.internalLabel2 = new Label(checkmark);
-		this.internalLabel2.setTextFill(Theme.currentTheme().getButton());
+		this.internalLabel2.setTextFill(Theme.currentTheme().getControl());
 
 		this.setPadding(Insets.EMPTY);
 

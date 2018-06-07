@@ -18,6 +18,8 @@ import lwjgui.scene.control.Label;
 import lwjgui.scene.control.SplitPane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
+import lwjgui.theme.Theme;
+import lwjgui.theme.ThemeDark;
 
 public class SplitPaneExample {
 	public static final int WIDTH   = 320;
@@ -35,6 +37,7 @@ public class SplitPaneExample {
 		Scene scene = newWindow.getScene();
 		
 		// Add some components
+		Theme.setTheme(new ThemeDark());
 		addComponents(scene);
 		
 		// Game Loop

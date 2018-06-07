@@ -67,7 +67,7 @@ public abstract class ButtonBase extends Labeled {
 			// Draw dropped down button outline
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRoundedRect(context.getNVG(), 0, 1, w, h, (float) cornerRadius);
-			NanoVG.nvgFillColor(context.getNVG(), Theme.currentTheme().getButton().getNVG());
+			NanoVG.nvgFillColor(context.getNVG(), Theme.currentTheme().getControl().getNVG());
 			NanoVG.nvgFill(context.getNVG());
 			
 			// Selection graphic
@@ -83,7 +83,7 @@ public abstract class ButtonBase extends Labeled {
 			}
 			
 			// Draw button outline
-			Color outlineColor = (context.isSelected(this)&&context.isFocused())?Theme.currentTheme().getSelection():Theme.currentTheme().getButtonOutline();
+			Color outlineColor = (context.isSelected(this)&&context.isFocused())?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRoundedRect(context.getNVG(), 0, 0, w, h, (float) cornerRadius);
 			NanoVG.nvgFillColor(context.getNVG(), outlineColor.getNVG());
@@ -91,7 +91,7 @@ public abstract class ButtonBase extends Labeled {
 			
 			// Draw main background
 			float hDist = context.isHovered(this) ? 3 : 2.5f;
-			Color buttonColor = context.isHovered(this) ? (GLFW.glfwGetMouseButton(context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS?Theme.currentTheme().getButtonOutline():Theme.currentTheme().getButtonHover()):Theme.currentTheme().getButton();
+			Color buttonColor = context.isHovered(this) ? (GLFW.glfwGetMouseButton(context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS?Theme.currentTheme().getControlOutline():Theme.currentTheme().getControlHover()):Theme.currentTheme().getControl();
 			NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, -hDist/2f, 0, h*hDist, buttonColor.getNVG(), Theme.currentTheme().getShadow().getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRoundedRect(vg, 1,1, w-2,h-2, (float) cornerRadius-1.0f);
@@ -103,7 +103,7 @@ public abstract class ButtonBase extends Labeled {
 			// Draw inset outline
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRoundedRect(vg, 1,1, w-2,h-2, (float) cornerRadius-1);
-			NVGColor c1 = Theme.currentTheme().getButtonHover().getNVG();
+			NVGColor c1 = Theme.currentTheme().getControlHover().getNVG();
 			if ( context.isHovered(this) && GLFW.glfwGetMouseButton(context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS)
 				c1 = Theme.currentTheme().getShadow().getNVG();
 			NanoVG.nvgStrokePaint(vg, NanoVG.nvgLinearGradient(vg, 0, 0, 0, h, c1, Theme.currentTheme().getSelectionPassive().getNVG(), NVGPaint.calloc()));

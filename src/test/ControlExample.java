@@ -1,8 +1,8 @@
 package test;
 
-import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
+
 import java.io.IOException;
 
 import org.lwjgl.glfw.GLFW;
@@ -44,7 +44,7 @@ public class ControlExample {
 			LWJGUI.render();
 		}
 		
-		glfwDestroyWindow(window);
+		// Stop GLFW
 		glfwTerminate();
 	}
 	

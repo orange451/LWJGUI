@@ -267,7 +267,7 @@ public class Color {
         return value;
     }
 
-    private static final double FACTOR = 0.7;
+    private static final double FACTOR = 0.9;
 
     /**
      * Creates a new <code>Color</code> that is a brighter version of this

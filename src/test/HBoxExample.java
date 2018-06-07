@@ -1,10 +1,12 @@
 package test;
 
-import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
+
 import java.io.IOException;
+
 import org.lwjgl.glfw.GLFW;
+
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.LWJGUIWindow;
@@ -37,7 +39,7 @@ public class HBoxExample {
 			LWJGUI.render();
 		}
 		
-		glfwDestroyWindow(window);
+		// Stop GLFW
 		glfwTerminate();
 	}
 

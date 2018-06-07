@@ -56,4 +56,8 @@ public class ObservableList<E> {
 	public void clear() {
 		this.internal.clear();
 	}
+
+	public boolean contains(E element) {
+		return internal.contains(element);
+	}
 }

@@ -2,18 +2,18 @@ package lwjgui.theme;
 
 import lwjgui.Color;
 
-public class ThemeWhite extends Theme {
+public class ThemeDark extends Theme {
 
-	public static Color backgroundColor		= Color.WHITE;
-	public static Color paneColor			= Color.WHITE_SMOKE;
+	public static Color backgroundColor		= Color.BLACK;
+	public static Color paneColor			= new Color(45,45,45);
 	public static Color selectColor			= Color.AQUA;
-	public static Color selectColorPassive	= Color.LIGHT_GRAY;
-	public static Color shadow				= new Color(32, 32, 32, 100);
-	public static Color textColor			= Color.DARK_GRAY;
-	public static Color controlColor			= new Color(240, 240, 240);
-	public static Color controlColorAlt		= controlColor.darker();
-	public static Color controlHoverColor	= Color.WHITE;
-	public static Color controlOutlineColor	= Color.DIM_GRAY;
+	public static Color selectColorPassive	= Color.DARK_GRAY;
+	public static Color shadow				= new Color(12, 12, 12, 100);
+	public static Color textColor			= Color.WHITE_SMOKE;
+	public static Color controlColor			= new Color(40,40,40);
+	public static Color controlColorAlt		= controlColor.brighter();
+	public static Color controlHoverColor	= new Color(60,60,60);
+	public static Color controlOutlineColor	= new Color(20,20,20);
 
 	@Override
 	public Color getBackground() {

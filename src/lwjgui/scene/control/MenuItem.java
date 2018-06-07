@@ -3,7 +3,6 @@ package lwjgui.scene.control;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.event.ButtonEvent;
@@ -64,7 +63,7 @@ public class MenuItem extends Node {
 			
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRect(context.getNVG(), (int)getAbsoluteX(), (int)getAbsoluteY(), (int)getWidth(), (int)getHeight());
-			NanoVG.nvgFillColor(context.getNVG(), Color.AQUA.getNVG());
+			NanoVG.nvgFillColor(context.getNVG(), Theme.currentTheme().getSelection().getNVG());
 			NanoVG.nvgFill(context.getNVG());
 		}
 		

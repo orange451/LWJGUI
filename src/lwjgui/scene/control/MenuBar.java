@@ -8,6 +8,7 @@ import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ChangeEvent;
+import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
 import lwjgui.scene.Region;
@@ -27,6 +28,8 @@ public class MenuBar extends Region {
 		this.setFillToParentWidth(true);
 		this.setMinHeight(24);
 		this.setMaxHeight(24);
+		
+		this.setPadding(new Insets(0, 6, 0, 6));
 		
 		this.internalBox = new HBox();
 		this.internalBox.setBackground(null);

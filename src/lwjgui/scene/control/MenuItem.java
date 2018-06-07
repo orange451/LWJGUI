@@ -1,9 +1,11 @@
 package lwjgui.scene.control;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
 import lwjgui.Context;
+import lwjgui.LWJGUI;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
@@ -46,12 +48,16 @@ public class MenuItem extends Node {
 		this.resize(internalLabel.graphicLabel.getMaximumPotentialWidth(), prefHeight);
 		internalLabel.position(this);
 	}
+	
+	protected boolean isSelected() {
+		return LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext().isHovered(this);
+	}
 
 	@Override
 	public void render(Context context) {
 		
 		// Outline
-		if ( context.isHovered(this) ) {
+		if ( isSelected() ) {
 			if ( this.parent.getParent() instanceof ContextMenu ) {
 				((ContextMenu) this.parent.getParent()).mouseEntered = true;
 			}
@@ -63,7 +69,7 @@ public class MenuItem extends Node {
 		}
 		
 		// Render text on menu item
-		this.internalLabel.graphicLabel.label.setTextFill(context.isHovered(this)?Theme.currentTheme().getControlHover():Theme.currentTheme().getText());
+		this.internalLabel.graphicLabel.label.setTextFill(isSelected()?Theme.currentTheme().getControlHover():Theme.currentTheme().getText());
 		this.internalLabel.render(context);
 	}
 	

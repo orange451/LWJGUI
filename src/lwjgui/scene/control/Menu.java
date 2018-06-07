@@ -49,10 +49,13 @@ public class Menu extends MenuItem {
 	}
 	
 	@Override
+	protected boolean isSelected() {
+		return super.isSelected() || this.isOpen();
+	}
+	
+	@Override
 	public void render(Context context) {
 		super.render(context);
-		
-		//System.out.println(context.getHovered());
 	}
 
 	public void open() {

@@ -22,7 +22,7 @@ import lwjgui.scene.layout.VBox;
 import lwjgui.scene.shape.Circle;
 import lwjgui.scene.shape.Rectangle;
 
-public class ContextMenuTest {
+public class ContextMenuExample {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
@@ -91,7 +91,7 @@ public class ContextMenuTest {
 		// Create Menu Bar
 		MenuBar bar = new MenuBar();
 		container.getChildren().add(bar);
-
+		
 		// Create File Menu
 		Menu file = new Menu("File");
 		file.getItems().add(new MenuItem("New"));

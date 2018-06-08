@@ -95,18 +95,18 @@ public class ContextMenu extends PopupWindow {
 			this.mouseEntered = true;
 		}
 		
-		// Draw Drop Shadow
+		// Setup rendering info
 		long vg = context.getNVG();
 		int x = (int) getAbsoluteX();
 		int y = (int) getAbsoluteY();
 		int w = (int) getWidth();
 		int h = (int) getHeight();
-		float r = 4;
-		float feather = 12;
-		float yOff = 1;
-		NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+2,y+yOff+1, w-4,h+yOff,r, feather, Theme.currentTheme().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
+		
+		// Draw Drop Shadow
+		this.clip(context,16);
+		NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+1,y+3, w,h, 4, 12, Theme.currentTheme().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
 		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, x-feather*2,y-feather*2, w+feather*4,h+feather*4);
+		NanoVG.nvgRect(vg, x-16,y-16, w+32,h+32);
 		NanoVG.nvgFillPaint(vg, paint);
 		NanoVG.nvgFill(vg);
 		

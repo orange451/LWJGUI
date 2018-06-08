@@ -29,7 +29,7 @@ public class Pane extends Region {
 	}
 	
 	@Override
-	public void position(Node parent) {
+	protected void position(Node parent) {
 		super.position(parent);
 
 		//float maxWidthInside = (float) getMaxElementWidth();

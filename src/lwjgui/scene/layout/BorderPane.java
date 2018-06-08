@@ -1,6 +1,7 @@
 package lwjgui.scene.layout;
 
 import lwjgui.Context;
+import lwjgui.collections.ObservableList;
 import lwjgui.scene.Node;
 
 public class BorderPane extends Pane {
@@ -21,6 +22,7 @@ public class BorderPane extends Pane {
 		this.internalVBox.setBackground(null);
 		this.internalVBox.setFillToParentHeight(true);
 		this.internalVBox.setFillToParentWidth(true);
+		this.children.add(this.internalVBox);
 		
 		this.internalHBox = new HBox();
 		this.internalHBox.setBackground(null);
@@ -31,19 +33,8 @@ public class BorderPane extends Pane {
 	}
 	
 	@Override
-	protected void position(Node parent) {
-		super.position(parent);
-		layoutChildren();
-	}
-	
-	protected void layoutChildren() {
-		this.internalVBox.position(this);
-	}
-	
-	@Override
-	public void render(Context context) {
-		super.render(context);
-		this.internalVBox.render(context);
+	public ObservableList<Node> getChildren() {
+		return new ObservableList<Node>(children);
 	}
 	
 	public void setTop(Node node) {

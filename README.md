@@ -9,8 +9,9 @@ Simple library to add a user interface in LWJGL3.
 - ContextMenu
 - MenuBar
 - Label
-- Pane/StackPane
 - SplitPane
+- Pane/StackPane
+- BorderPane
 - HBox
 - VBox
 - Font

@@ -10,7 +10,6 @@ import org.lwjgl.glfw.GLFW;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.LWJGUIWindow;
-import lwjgui.scene.Parent;
 import lwjgui.scene.Scene;
 import lwjgui.scene.control.ContextMenu;
 import lwjgui.scene.control.Label;
@@ -18,8 +17,6 @@ import lwjgui.scene.control.Menu;
 import lwjgui.scene.control.MenuBar;
 import lwjgui.scene.control.MenuItem;
 import lwjgui.scene.layout.BorderPane;
-import lwjgui.scene.layout.StackPane;
-import lwjgui.scene.layout.VBox;
 import lwjgui.scene.shape.Circle;
 import lwjgui.scene.shape.Rectangle;
 
@@ -32,7 +29,7 @@ public class ContextMenuExample {
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT, false);
+		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT, true, false);
 		
 		// Initialize lwjgui for this window
 		LWJGUIWindow newWindow = LWJGUI.initialize(window);

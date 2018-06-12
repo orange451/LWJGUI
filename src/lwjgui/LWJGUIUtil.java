@@ -22,7 +22,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 public class LWJGUIUtil {
-	public static long createOpenGLCoreWindow(String name, int width, int height, boolean ontop) {
+	public static long createOpenGLCoreWindow(String name, int width, int height, boolean resizable, boolean ontop) {
 		// Configure GLFW
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
@@ -34,6 +34,7 @@ public class LWJGUIUtil {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 		glfwWindowHint(GLFW.GLFW_FLOATING, ontop?GL_TRUE:GL_FALSE);
+		glfwWindowHint(GLFW.GLFW_RESIZABLE, resizable?GL_TRUE:GL_FALSE);
 
 		// Create the window
 		long window = glfwCreateWindow(width, height, name, NULL, NULL);

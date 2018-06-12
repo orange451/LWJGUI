@@ -1,6 +1,5 @@
 package lwjgui.scene.layout;
 
-import lwjgui.Context;
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.Node;
 

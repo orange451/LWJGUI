@@ -18,8 +18,6 @@ import lwjgui.scene.control.Label;
 import lwjgui.scene.control.SplitPane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
-import lwjgui.theme.Theme;
-import lwjgui.theme.ThemeDark;
 
 public class SplitPaneExample {
 	public static final int WIDTH   = 320;
@@ -30,14 +28,13 @@ public class SplitPaneExample {
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT, false);
+		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT, true, false);
 		
 		// Initialize lwjgui for this window
 		LWJGUIWindow newWindow = LWJGUI.initialize(window);
 		Scene scene = newWindow.getScene();
 		
 		// Add some components
-		Theme.setTheme(new ThemeDark());
 		addComponents(scene);
 		
 		// Game Loop

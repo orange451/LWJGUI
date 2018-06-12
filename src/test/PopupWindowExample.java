@@ -25,7 +25,7 @@ public class PopupWindowExample {
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT, false);
+		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT, true, false);
 		
 		// Initialize lwjgui for this window
 		LWJGUIWindow newWindow = LWJGUI.initialize(window);
@@ -70,7 +70,7 @@ public class PopupWindowExample {
 
 	protected static void popup(String popup) {
 		// Create a popup window
-		long pWin = LWJGUIUtil.createOpenGLCoreWindow(popup, 300, 200, true);
+		long pWin = LWJGUIUtil.createOpenGLCoreWindow(popup, 250, 150, false, true);
 		LWJGUIWindow newWindow = LWJGUI.initialize(pWin);
 		newWindow.setCanUserClose(false); // Prevent user from xing out of window
 		Scene scene = newWindow.getScene();

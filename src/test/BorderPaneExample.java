@@ -13,7 +13,6 @@ import lwjgui.LWJGUIWindow;
 import lwjgui.scene.Scene;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.BorderPane;
-import lwjgui.scene.layout.StackPane;
 
 public class BorderPaneExample {
 	public static final int WIDTH   = 320;
@@ -24,7 +23,7 @@ public class BorderPaneExample {
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT, false);
+		long window = LWJGUIUtil.createOpenGLCoreWindow("LWJGUI Window", WIDTH, HEIGHT, true, false);
 		
 		// Initialize lwjgui for this window
 		LWJGUIWindow newWindow = LWJGUI.initialize(window);

@@ -64,12 +64,6 @@ public abstract class ButtonBase extends Labeled {
 			int w = p.x;
 			int h = p.y;
 			
-			// Draw dropped down button outline
-			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRoundedRect(context.getNVG(), 0, 1, w, h, (float) cornerRadius);
-			NanoVG.nvgFillColor(context.getNVG(), Theme.currentTheme().getControl().getNVG());
-			NanoVG.nvgFill(context.getNVG());
-			
 			// Selection graphic
 			if ( context.isSelected(this) && context.isFocused() ) {
 				int feather = 4;//(int) (cornerRadius*2); // Smoothing

@@ -104,7 +104,7 @@ public class ContextMenu extends PopupWindow {
 		
 		// Draw Drop Shadow
 		this.clip(context,16);
-		NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+1,y+3, w,h, 4, 12, Theme.currentTheme().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
+		NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+2,y+3, w-2,h, 4, 12, Theme.currentTheme().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgRect(vg, x-16,y-16, w+32,h+32);
 		NanoVG.nvgFillPaint(vg, paint);

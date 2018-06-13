@@ -7,6 +7,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL3;
+import org.lwjgl.opengl.GL11;
 
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.Node;
@@ -194,11 +195,5 @@ public class Context {
 		while (popups.size() > 0 ) {
 			popups.get(0).close();
 		}
-	}
-
-	public void refresh() {
-		NanoVG.nvgReset(nvgContext);
-		NanoVG.nvgEndFrame(getNVG());
-		NanoVG.nvgBeginFrame(getNVG(), windowWidth, windowHeight, getPixelRatio());
 	}
 }

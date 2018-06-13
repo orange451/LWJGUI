@@ -73,7 +73,6 @@ public class OpenGLPane extends StackPane {
 		}
 		
 		// Render children
-		//context.refresh();
 		super.render(context);
 	}
 }

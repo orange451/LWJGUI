@@ -30,12 +30,12 @@ import lwjgui.scene.Scene;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.BorderPane;
+import lwjgui.scene.layout.OpenGLPane;
+import lwjgui.scene.layout.StackPane;
 
-public class OpenGLExample {
+public class OpenGLPaneExample {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
-	
-	private static CheckBox spinBox;
 
 	public static void main(String[] args) throws IOException {
 		if ( !glfwInit() )
@@ -51,9 +51,6 @@ public class OpenGLExample {
 		// Add some components
 		addComponents(scene);
 
-		// Add a rendering callback
-		newWindow.setRenderingCallback(new RenderingCallbackTest());
-
 		// Game Loop
 		while (!GLFW.glfwWindowShouldClose(window)) {
 			// Render GUI
@@ -66,40 +63,37 @@ public class OpenGLExample {
 
 	private static void addComponents(Scene scene) {
 		// Create a simple pane
-		BorderPane pane = new BorderPane();
-		pane.setPadding(new Insets(16,16,16,16));
-		pane.setBackground(null);
-
-		// Set the pane as the scenes root
-		scene.setRoot(pane);
-
-		// Put a label in the pane
-		Label label = new Label("Hello World!");
-		label.setTextFill(Color.WHITE);
-		pane.setCenter(label);
+		StackPane root = new StackPane();
+		scene.setRoot(root);
 		
-		// Add a checkbox
-		spinBox = new CheckBox("Spin");
-		pane.setBottom(spinBox);
+		// Create an OpenGL pane (canvas)
+		OpenGLPane ogl = new OpenGLPane();
+		ogl.setPrefSize(100, 100);
+		root.getChildren().add(ogl);
+		
+		// Add a rendering callback to the opengl pane
+		ogl.setRendererCallback(new RenderingCallbackTest());
+		
+		// Add a label on top of the OpenGL pane
+		ogl.getChildren().add(new Label("Hello World"));
 	}
 
 	private static class RenderingCallbackTest implements Renderer {
 		private GenericShader shader;
 		private int vao;
 		private int vbo;
-		private float rot;
 
 		public RenderingCallbackTest() {
-			// Test shader
-			shader = new GenericShader(); // Will load a testing vert/frag quad shader
-			
 			// Setup geometry
 			int vertSize = 3; // vec3 in shader
 			int texSize = 2; // vec2 in shader
 			int colorSize = 4; // vec4 in shader
 			int size = vertSize + texSize + colorSize; // Stride length
 			int verts = 3; // Number of vertices
-			int bytes = Float.BYTES; // Bytes per element (float)
+			int bytes = 4; // Bytes per element (float)
+			
+			// Test shader
+			shader = new GenericShader(); // Will load a testing vert/frag quad shader
 			
 			stackPush();
 			{
@@ -147,14 +141,9 @@ public class OpenGLExample {
 
 		@Override
 		public void render(Context context) {
-			if ( spinBox.isChecked() ) {
-				rot += 1.0e-3f;
-			}
-			
 			// Bind shader for drawing
 			shader.bind();
-			shader.projectOrtho( -0.6f, -0.6f, 1.2f, 1.2f );
-			shader.setWorldMatrix(new Matrix4f().rotateY(rot));
+			shader.projectOrtho( -0.5f, -0.5f, 1.0f, 1.0f );
 
 			// Disable culling (just in case)
 			GL11.glDisable(GL11.GL_CULL_FACE);

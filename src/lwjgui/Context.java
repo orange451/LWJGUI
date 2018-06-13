@@ -5,6 +5,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL3;
 
 import lwjgui.collections.ObservableList;
@@ -16,29 +17,29 @@ import lwjgui.scene.control.PopupWindow;
 public class Context {
 	private long windowHandle;
 	private long nvgContext;
-	
+
 	private int windowWidth = 1;
 	private int windowHeight = 1;
 	private int screenPixelRatio = 1;
-	
+
 	private Node selected = null;
 	private Node hovered = null;
-	
+
 	private double mouseX;
 	private double mouseY;
 	protected boolean focused;
-	
+
 	public Context( long window ) {
 		windowHandle = window;
-		
-        int flags = NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS;
-        nvgContext = NanoVGGL3.nvgCreate(flags);
+
+		int flags = NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS;
+		nvgContext = NanoVGGL3.nvgCreate(flags);
 	}
-	
+
 	public boolean isFocused() {
 		return focused;
 	}
-	
+
 	protected void updateContext() {
 		int[] windowWidthArr = {0}, windowHeightArr = {0};
 		int[] frameBufferWidthArr = {0}, frameBufferHeightArr = {0};
@@ -46,7 +47,7 @@ public class Context {
 		glfwGetWindowSize(windowHandle, windowWidthArr, windowHeightArr);
 		glfwGetFramebufferSize(windowHandle, frameBufferWidthArr, frameBufferHeightArr);
 		glfwGetWindowPos(windowHandle, xposArr, yposArr);
-		
+
 		if ( windowWidthArr[0] == 0 ) {
 			return;
 		}
@@ -54,32 +55,32 @@ public class Context {
 		windowWidth = windowWidthArr[0];
 		windowHeight = windowHeightArr[0];
 		screenPixelRatio = frameBufferWidthArr[0]/windowWidthArr[0];
-		
+
 		double[] mousePosX = {0},mousePosY = {0};
 		GLFW.glfwGetCursorPos(windowHandle, mousePosX, mousePosY);
 		mouseX = mousePosX[0];
 		mouseY = mousePosY[0];
-		
+
 		mouseHover();
 	}
-	
+
 	protected boolean hoveringOverPopup;
 	private void mouseHover() {
 		// Get scene
 		LWJGUIWindow window = LWJGUI.getWindowFromContext(windowHandle);
 		Scene scene = window.getScene();
-		
+
 		// Calculate current hover
 		hoveringOverPopup = false;
 		hovered = calculateHoverRecursive(null, scene);
 		Node last = hovered;
 		hovered = calculateHoverPopups(scene);
-		
+
 		// Check if hovering over a popup
 		if ( last != null && !last.equals(hovered) ) {
 			hoveringOverPopup = true;
 		}
-		
+
 		// Not hovering over popups
 		if ( last != null && last.equals(hovered ) ) {
 			for (int i = 0; i < scene.getPopups().size(); i++) {
@@ -97,7 +98,7 @@ public class Context {
 				return calculateHoverRecursive(null, popup);
 			}
 		}
-		
+
 		return hovered;
 	}
 
@@ -105,21 +106,21 @@ public class Context {
 		// Use scene as an entry point into nodes
 		if ( parent == null && root instanceof Scene ) 
 			root = ((Scene)root).getRoot();
-		
+
 		// If there's no root. then there's nothing to hover
 		if ( root == null )
 			return null;
-		
+
 		// Ignore if unclickable
 		if ( root.isMouseTransparent() )
 			return parent;
-		
+
 		// If mouse is out of our bounds, we're not clickable
 		if ( mouseX <= root.getAbsoluteX() || mouseX > root.getAbsoluteX() + root.getWidth() )
 			return parent;
 		if ( mouseY <= root.getAbsoluteY() || mouseY > root.getAbsoluteY() + root.getHeight() )
 			return parent;
-		
+
 		// Check children
 		if ( root instanceof Parent ) {
 			ObservableList<Node> children = ((Parent)root).getChildren();
@@ -136,15 +137,15 @@ public class Context {
 	public int getWidth() {
 		return windowWidth;
 	}
-	
+
 	public int getHeight() {
 		return windowHeight;
 	}
-	
+
 	public int getPixelRatio() {
 		return screenPixelRatio;
 	}
-	
+
 	public long getNVG() {
 		return nvgContext;
 	}
@@ -159,13 +160,13 @@ public class Context {
 		}
 		return node.equals(selected);
 	}
-	
+
 	public boolean isHovered(Node node) {
 		if ( hovered == null )
 			return false;
 		return node.equals(hovered);
 	}
-	
+
 	public void setSelected(Node node) {
 		this.selected = node;
 	}
@@ -173,7 +174,7 @@ public class Context {
 	public double getMouseX() {
 		return mouseX;
 	}
-	
+
 	public double getMouseY() {
 		return mouseY;
 	}
@@ -193,5 +194,11 @@ public class Context {
 		while (popups.size() > 0 ) {
 			popups.get(0).close();
 		}
+	}
+
+	public void refresh() {
+		NanoVG.nvgReset(nvgContext);
+		NanoVG.nvgEndFrame(getNVG());
+		NanoVG.nvgBeginFrame(getNVG(), windowWidth, windowHeight, getPixelRatio());
 	}
 }

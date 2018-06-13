@@ -45,7 +45,6 @@ public class LWJGUIUtil {
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(0);
 		glfwShowWindow(window);
-		GL.createCapabilities();
 		
 		// Get the resolution of the primary monitor
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
@@ -56,6 +55,9 @@ public class LWJGUIUtil {
 			(vidmode.width() - width) / 2,
 			(vidmode.height() - height) / 2
 		);
+		
+		// Create context
+		GL.createCapabilities();
 		
 		return window;
 	}

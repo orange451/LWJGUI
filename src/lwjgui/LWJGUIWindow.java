@@ -8,6 +8,7 @@ import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
 
+import lwjgui.gl.Renderer;
 import lwjgui.scene.Node;
 import lwjgui.scene.Scene;
 

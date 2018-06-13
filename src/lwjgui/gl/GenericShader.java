@@ -5,11 +5,13 @@ import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 
 import lwjgui.Context;
@@ -24,6 +26,7 @@ public class GenericShader {
 	protected final int projMatLoc;
 	protected final int viewMatLoc;
 	protected final int worldMatLoc;
+	private int texId;
 
 
 	private static final Matrix4f IDENTITY_MATRIX = new Matrix4f();
@@ -52,10 +55,27 @@ public class GenericShader {
 		projMatLoc = GL20.glGetUniformLocation(id, "projectionMatrix");
 		viewMatLoc = GL20.glGetUniformLocation(id, "viewMatrix");
 		worldMatLoc = GL20.glGetUniformLocation(id, "worldMatrix");
+		
+		// Generic white texture
+		texId = GL11.glGenTextures();
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
+		int wid = 1;
+		int hei = 1;
+		ByteBuffer data = BufferUtils.createByteBuffer(wid*hei*4);
+		while(data.hasRemaining()) {
+			data.put((byte) (255 & 0xff));
+		}
+		data.flip();
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, wid, hei, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 	}
 
 	public void bind() {
 		GL20.glUseProgram(id);
+
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
 	}
 
 	public void cleanup() {

@@ -6,8 +6,6 @@ import org.lwjgl.opengl.GL30;
 import lwjgui.Context;
 
 public class OffscreenBuffer {
-
-	private Context context;
 	private int width = 0;
 	private int height = 0;
 	private int texId = 0;
@@ -16,13 +14,11 @@ public class OffscreenBuffer {
 	private TexturedQuad quad = null;
 	private GenericShader quadShader = null;
 	
-	public OffscreenBuffer(Context context, int width, int height) {
+	public OffscreenBuffer(int width, int height) {
 		
 		if (width <= 0 || height <= 0) {
 			throw new IllegalArgumentException(String.format("invalid size: %dx%d", width, height));
 		}
-		
-		this.context = context;
 		
 		// lazily create the quad and shader,
 		// in case we want to render this buf in a different context than the one we created it in
@@ -71,6 +67,9 @@ public class OffscreenBuffer {
 		// remove the old quad
 		quadDirty = true;
 		
+
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+		
 		return true;
 	}
 	
@@ -82,23 +81,33 @@ public class OffscreenBuffer {
 		return fboId;
 	}
 	
-	public int bind() {
-		int oldFboId = GL11.glGetInteger(GL30.GL_FRAMEBUFFER_BINDING);
+	private int unbindTo = -1;
+	public void bind() {
+		unbindTo = GL11.glGetInteger(GL30.GL_FRAMEBUFFER_BINDING);
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, getFboId());
-		return oldFboId;
+	}
+	
+	public void unbind() {
+		if ( unbindTo == -1 )
+			return;
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, unbindTo);
 	}
 	
 	public void render() {
-		render(0, 0, width, height);
+		render(0, 0);
+	}
+	
+	public void render(int x, int y) {
+		render(x, y, width, height);
 	}
 	
 	public void render(int x, int y, int w, int h) {
-		
 		if (quadShader == null) {
 			quadShader = new GenericShader();
 		}
+		GL11.glViewport(x, y, w, h);
 		quadShader.bind();
-		quadShader.projectOrtho(x, y, w, h);
+		quadShader.projectOrtho(0, 0, w, h);
 		
 		if (quadDirty) {
 			quadDirty = false;
@@ -108,10 +117,6 @@ public class OffscreenBuffer {
 			quad = new TexturedQuad(0, 0, w, h, texId, quadShader);
 		}
 		quad.render();
-	}
-	
-	public void unbind(int oldFboId) {
-		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, oldFboId);
 	}
 	
 	public void cleanup() {

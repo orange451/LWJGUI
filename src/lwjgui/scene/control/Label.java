@@ -87,7 +87,7 @@ public class Label extends Control {
 
 		long vg = context.getNVG();
 		int absX = (int)getAbsoluteX();
-		int absY = (int)getAbsoluteY();
+		int absY = (int)(getAbsoluteY()+0.5);
 		
 		// Background
 		/*NanoVG.nvgBeginPath(vg);

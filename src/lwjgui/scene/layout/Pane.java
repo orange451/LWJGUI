@@ -15,7 +15,7 @@ public class Pane extends Region {
 	//private boolean scrollableY;
 	
 	public Pane() {
-		this.backgroundColor = Theme.currentTheme().getPane();
+		this.setBackground(Theme.currentTheme().getPane());
 		this.setPrefSize(100, 100);
 		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 	}

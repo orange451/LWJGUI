@@ -1,7 +1,6 @@
 package lwjgui.scene.control;
 
 import lwjgui.Context;
-import lwjgui.scene.Node;
 import lwjgui.scene.Region;
 import lwjgui.scene.Scene;
 
@@ -27,15 +26,6 @@ public abstract class PopupWindow extends Region {
 		scene.showPopup(this);
 		mouseEntered = false;
 		this.open = true;
-	}
-	
-	@Override
-	protected void position(Node node) {
-		super.position(node);
-		
-		if ( this.getAbsoluteY() + this.getHeight() > this.getScene().getHeight() ) {
-			this.setAbsolutePosition(getAbsoluteX(), getScene().getHeight()-this.getHeight());
-		}
 	}
 	
 	public boolean isOpen() {

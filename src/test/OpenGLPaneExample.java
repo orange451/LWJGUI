@@ -80,12 +80,12 @@ public class OpenGLPaneExample {
 
 		public RenderingCallbackTest() {
 			// Setup geometry
-			int vertSize = 3; // vec3 in shader
-			int texSize = 2; // vec2 in shader
-			int colorSize = 4; // vec4 in shader
+			int vertSize = 3;	// vec3 in shader
+			int texSize = 2;		// vec2 in shader
+			int colorSize = 4;	// vec4 in shader
 			int size = vertSize + texSize + colorSize; // Stride length
 			int verts = 3; // Number of vertices
-			int bytes = 4; // Bytes per element (float)
+			int bytes = Float.BYTES; // Bytes per element (float)
 			
 			// Test shader
 			shader = new GenericShader(); // Will load a testing vert/frag quad shader
@@ -94,17 +94,17 @@ public class OpenGLPaneExample {
 			{
 				// Initial vertex data
 				FloatBuffer buffer = stackMallocFloat(verts * size);
-				buffer.put(-0.5f).put(+0.5f).put(0.0f);		// Vert 1 position
-				buffer.put(new float[] {0.0f, 0.0f});		// Vert 1 texture
-				buffer.put(new float[] {1.0f,0.0f,0.0f,1.0f}); // Vert 1 color
+				buffer.put(new float[] {-0.5f, +0.5f, +0.0f});	// Vert 1 position
+				buffer.put(new float[] {0.0f, 0.0f});			// Vert 1 texture
+				buffer.put(new float[] {1.0f,0.0f,0.0f,1.0f});	// Vert 1 color
 				
-				buffer.put(+0.5f).put(+0.5f).put(0.0f);		// Vert 2 position
-				buffer.put(new float[] {0.0f, 0.0f});		// Vert 2 texture
-				buffer.put(new float[] {0.0f,1.0f,0.0f,1.0f}); // Vert 2 color
+				buffer.put(new float[] {+0.5f, +0.5f, +0.0f});	// Vert 2 position
+				buffer.put(new float[] {0.0f, 0.0f});			// Vert 2 texture
+				buffer.put(new float[] {0.0f,1.0f,0.0f,1.0f});	// Vert 2 color
 				
-				buffer.put(+0.0f).put(-0.5f).put(0.0f);		// Vert 3 position
-				buffer.put(new float[] {0.0f, 0.0f});		// Vert 3 texture
-				buffer.put(new float[] {0.0f,0.0f,1.0f,1.0f}); // Vert 3 color
+				buffer.put(new float[] {+0.0f, -0.5f, +0.0f});	// Vert 3 position
+				buffer.put(new float[] {0.0f, 0.0f});			// Vert 3 texture
+				buffer.put(new float[] {0.0f,0.0f,1.0f,1.0f});	// Vert 3 color
 				buffer.flip();
 
 				// Generate buffers

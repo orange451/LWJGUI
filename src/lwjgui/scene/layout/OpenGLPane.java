@@ -65,7 +65,7 @@ public class OpenGLPane extends StackPane {
 				this.buffer.unbind();
 	
 				// Render FBO to screen
-				this.buffer.render(context, (int)this.getAbsoluteX(), (int)this.getAbsoluteY());
+				this.buffer.render(context, (int)this.getAbsoluteX(), (int)(context.getHeight()-this.getHeight())-(int)this.getAbsoluteY());
 			}
 			NanoVG.nvgRestore(context.getNVG());
 		}

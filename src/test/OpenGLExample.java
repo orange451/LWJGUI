@@ -51,7 +51,7 @@ public class OpenGLExample {
 		// Add some components
 		addComponents(scene);
 
-		// Add a rendering callback
+		// Add a rendering callback to the window. This is the first thing called when the window draws.
 		newWindow.setRenderingCallback(new RenderingCallbackTest());
 
 		// Game Loop

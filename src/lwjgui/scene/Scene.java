@@ -52,10 +52,14 @@ public class Scene extends Node {
 			((Region) root).setFillToParentWidth(true);
 		}
 		
-		// Render normal
+		// Position elements
 		this.flag_clip = true;
-		position(null);
-		root.position(this);
+		for (int i = 0; i < 4; i++) {
+			position(null);
+			root.position(this);
+		}
+		
+		// Render normal
 		root.render(context);
 		
 		// Render popups

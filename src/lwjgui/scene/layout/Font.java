@@ -21,7 +21,7 @@ import lwjgui.LWJGUI;
 import lwjgui.LWJGUIWindow;
 
 public class Font {
-	public static Font SANS = new Font("sans", "Roboto-Regular.ttf", "Roboto-Bold.ttf", "Roboto-Light.ttf");
+	public static Font SANS = new Font("sans", "Roboto-Regular.ttf", "Roboto-Bold.ttf", "Roboto-Light.ttf", "Roboto-Italic.ttf");
 	public static Font ARIAL = new Font("arial", "Arial-Unicode.ttf");
 
 	
@@ -30,15 +30,18 @@ public class Font {
 	private String fontNameNormal;
 	private String fontNameBold;
 	private String fontNameLight;
+	private String fontNameItalic;
 	private HashMap<Long,String> fontDataNormal = new HashMap<Long,String>();
 	private HashMap<Long,String> fontDataBold = new HashMap<Long,String>();
 	private HashMap<Long,String> fontDataLight = new HashMap<Long,String>();
+	private HashMap<Long,String> fontDataItalic = new HashMap<Long,String>();
 	private ArrayList<ByteBuffer> bufs = new ArrayList<ByteBuffer>();
 	
-	private Font(String name, String normal, String bold, String light) {
+	private Font(String name, String normal, String bold, String light, String italic) {
 		this.fontNameNormal = normal;
 		this.fontNameBold = bold;
 		this.fontNameLight = light;
+		this.fontNameItalic = italic;
 		this.name = name;
 	}	
 	
@@ -146,12 +149,15 @@ public class Font {
 			loadFont(fontNameNormal, "-Regular", fontDataNormal);
 			loadFont(fontNameBold, "-Bold", fontDataBold);
 			loadFont(fontNameLight, "-Light", fontDataLight);
+			loadFont(fontNameItalic, "-Italic", fontDataItalic);
 		}
 
 		if ( style == FontStyle.BOLD && fontDataBold.get(vg) != null )
 			using = fontDataBold;
 		if ( style == FontStyle.LIGHT && fontDataLight.get(vg) != null )
 			using = fontDataLight;
+		if ( style == FontStyle.ITALIC && fontDataItalic.get(vg) != null )
+			using = fontDataItalic;
 		
 		return using.get(vg);
 	}

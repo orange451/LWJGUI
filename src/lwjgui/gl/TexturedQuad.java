@@ -16,26 +16,20 @@ import static org.lwjgl.system.MemoryStack.stackMallocFloat;
 import static org.lwjgl.system.MemoryStack.stackPop;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.system.MemoryStack;
 
 public class TexturedQuad {
-	private final GenericShader shader;
 	private final int vaoId;
 	private final int vboId;
 
 	public int texId;
 
-	public TexturedQuad(int x, int y, int w, int h, int texId, GenericShader shader) {
-
-		this.shader = shader;
+	public TexturedQuad(int x, int y, int w, int h, int texId) {
 		this.texId = texId;
 
 		// Setup geometry

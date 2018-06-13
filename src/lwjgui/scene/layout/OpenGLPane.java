@@ -1,6 +1,5 @@
 package lwjgui.scene.layout;
 
-import org.joml.Vector2d;
 import org.joml.Vector2i;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
@@ -66,13 +65,13 @@ public class OpenGLPane extends StackPane {
 				this.buffer.unbind();
 	
 				// Render FBO to screen
-				this.buffer.render((int)this.getAbsoluteX(), (int)this.getAbsoluteY());
+				this.buffer.render(context, (int)this.getAbsoluteX(), (int)this.getAbsoluteY());
 			}
 			NanoVG.nvgRestore(context.getNVG());
-			GL11.glViewport(0, 0, context.getWidth(), context.getHeight());
 		}
 		
 		// Render children
+		context.refresh(); // Restore glViewport
 		super.render(context);
 	}
 }

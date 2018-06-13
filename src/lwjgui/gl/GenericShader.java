@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL20;
 import lwjgui.Context;
 import sun.misc.IOUtils;
 
+@SuppressWarnings("restriction")
 public class GenericShader {
 	private final int id;
 	private final int vertexId;

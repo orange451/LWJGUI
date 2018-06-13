@@ -100,7 +100,7 @@ public class LWJGUIWindow {
 		scene.setMaxSize(width, height);
 
 		// Begin rendering prepass
-		GL11.glViewport(0, 0, (int)(width*ratio), (int)(height*ratio));
+		context.refresh();
 		if ( this.renderCallback != null ) {
 			this.renderCallback.render(context);
 		}

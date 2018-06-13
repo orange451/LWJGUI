@@ -15,21 +15,16 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import lwjgui.Color;
 import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.LWJGUIWindow;
-import lwjgui.geometry.Insets;
 import lwjgui.gl.GenericShader;
 import lwjgui.gl.Renderer;
 import lwjgui.scene.Scene;
-import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
-import lwjgui.scene.layout.BorderPane;
 import lwjgui.scene.layout.OpenGLPane;
 import lwjgui.scene.layout.StackPane;
 

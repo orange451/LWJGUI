@@ -196,4 +196,8 @@ public class Context {
 			popups.get(0).close();
 		}
 	}
+
+	public void refresh() {
+		GL11.glViewport(0, 0, (int)(getWidth()*getPixelRatio()), (int)(getHeight()*getPixelRatio()));
+	}
 }

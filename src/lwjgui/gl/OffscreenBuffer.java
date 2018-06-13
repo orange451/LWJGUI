@@ -54,8 +54,8 @@ public class OffscreenBuffer {
 		texId = GL11.glGenTextures();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 0);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		
 		// update the framebuf
 		if (fboId == 0) {
@@ -93,19 +93,21 @@ public class OffscreenBuffer {
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, unbindTo);
 	}
 	
-	public void render() {
-		render(0, 0);
+	public void render(Context context) {
+		render(context, 0, 0);
 	}
 	
-	public void render(int x, int y) {
-		render(x, y, width, height);
+	public void render(Context context, int x, int y) {
+		render(context, x, y, width, height);
 	}
 	
-	public void render(int x, int y, int w, int h) {
+	public void render(Context context, int x, int y, int w, int h) {
 		if (quadShader == null) {
 			quadShader = new GenericShader();
 		}
-		GL11.glViewport(x, y, w, h);
+		x *= context.getPixelRatio();
+		y *= context.getPixelRatio();
+		GL11.glViewport(x, y, w*context.getPixelRatio(), h*context.getPixelRatio());
 		quadShader.bind();
 		quadShader.projectOrtho(0, 0, w, h);
 		
@@ -114,7 +116,7 @@ public class OffscreenBuffer {
 			if (quad != null) {
 				quad.cleanup();
 			}
-			quad = new TexturedQuad(0, 0, w, h, texId, quadShader);
+			quad = new TexturedQuad(0, 0, w, h, texId);
 		}
 		quad.render();
 	}

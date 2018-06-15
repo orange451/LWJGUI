@@ -12,6 +12,8 @@ Simple library to add a user interface in LWJGL3.
 - SplitPane
 - Pane/StackPane
 - BorderPane
+- ScrollPane
+- OpenGLPane
 - HBox
 - VBox
 - Font

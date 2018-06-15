@@ -2,12 +2,33 @@ package lwjgui.scene;
 
 import org.joml.Vector2d;
 
+import lwjgui.Color;
 import lwjgui.geometry.Insets;
 
 public abstract class Region extends Parent {
 	private boolean fillToParentHeight;
 	private boolean fillToParentWidth;
 	private Insets padding = Insets.EMPTY;
+	
+	private Color backgroundColor;
+	
+	/**
+	 * Set the background color of this node.
+	 * <br>
+	 * If set to null, then no background will draw.
+	 * @param color
+	 */
+	public void setBackground(Color color) {
+		this.backgroundColor = color;
+	}
+	
+	/**
+	 * Get the current background color of this node.
+	 * @return
+	 */
+	public Color getBackground() {
+		return this.backgroundColor;
+	}
 	
 	/**
 	 * Flag that controls whether this parent will stretch to the width of its parent.

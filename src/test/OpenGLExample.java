@@ -66,21 +66,21 @@ public class OpenGLExample {
 
 	private static void addComponents(Scene scene) {
 		// Create a simple pane
-		BorderPane pane = new BorderPane();
-		pane.setPadding(new Insets(16,16,16,16));
-		pane.setBackground(null);
+		BorderPane root = new BorderPane();
+		root.setPadding(new Insets(16,16,16,16));
+		root.setBackground(null);
 
 		// Set the pane as the scenes root
-		scene.setRoot(pane);
+		scene.setRoot(root);
 
 		// Put a label in the pane
 		Label label = new Label("Hello World!");
 		label.setTextFill(Color.WHITE);
-		pane.setCenter(label);
+		root.setCenter(label);
 		
 		// Add a checkbox
 		spinBox = new CheckBox("Spin");
-		pane.setBottom(spinBox);
+		root.setBottom(spinBox);
 	}
 
 	private static class RenderingCallbackTest implements Renderer {

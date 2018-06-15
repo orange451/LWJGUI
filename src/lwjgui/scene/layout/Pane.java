@@ -2,7 +2,6 @@ package lwjgui.scene.layout;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.Context;
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.Node;
@@ -10,7 +9,6 @@ import lwjgui.scene.Region;
 import lwjgui.theme.Theme;
 
 public class Pane extends Region {
-	private Color backgroundColor;
 	//private boolean scrollableX;
 	//private boolean scrollableY;
 	
@@ -18,14 +16,6 @@ public class Pane extends Region {
 		this.setBackground(Theme.currentTheme().getPane());
 		this.setPrefSize(100, 100);
 		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-	}
-	
-	public void setBackground(Color color) {
-		this.backgroundColor = color;
-	}
-	
-	public Color getBackground() {
-		return this.backgroundColor;
 	}
 	
 	@Override

@@ -105,6 +105,7 @@ public class LWJGUIWindow {
 		}
 		
 		// Do NVG frame
+		context.refresh();
 		NanoVG.nvgBeginFrame(context.getNVG(), (int)width, (int)height, ratio);
 		scene.render(context);
         NanoVG.nvgRestore(context.getNVG());

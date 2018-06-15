@@ -16,6 +16,14 @@ public class ObservableList<E> {
 			this.add(array.get(i));
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public ObservableList(E... elements) {
+		this();
+		for (int i = 0; i < elements.length; i++) {
+			this.add(elements[i]);
+		}
+	}
 
 	public ObservableList() {
 		this.internal = new ArrayList<E>();

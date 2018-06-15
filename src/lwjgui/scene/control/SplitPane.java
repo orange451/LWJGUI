@@ -97,10 +97,6 @@ public class SplitPane extends Control {
 		for (int i = 0; i < dividers.size(); i++) {
 			Divider d = dividers.get(i);
 			Vector4d bounds = getDividerBounds(d);
-			//bounds.add(this.getAbsoluteX(), this.getAbsoluteY(), 0, 0);
-			//mx += this.getAbsoluteX();
-			//my += this.getAbsoluteY();
-			
 			if ( mx > bounds.x && mx < bounds.x+bounds.z && my > bounds.y && my < bounds.y+bounds.w) {
 				return d;
 			}

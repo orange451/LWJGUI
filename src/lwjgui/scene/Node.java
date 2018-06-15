@@ -28,6 +28,7 @@ public abstract class Node implements Resizable {
 	
 	private boolean mouseTransparent = false;
 	protected boolean flag_clip = false;
+	private boolean mousePressed = false;
 	
 	public void setLocalPosition(Node parent, double x, double y) {
 		double changex = x-this.getX();
@@ -44,6 +45,10 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
+	public void setAbsolutePosition( double x, double y ) {
+		this.absolutePosition.set(x,y);
+	}
+	
 	public void offset( double x, double y ) {
 		//this.localPosition.add(x, y);
 		this.absolutePosition.add(x,y);
@@ -54,14 +59,17 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
-	protected void position(Node parent) {
-		this.parent = parent;
-		
+	public void updateChildren() {
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			child.position(this);
 		}
-
+	}
+	
+	protected void position(Node parent) {
+		this.parent = parent;
+		
+		updateChildren();
 		resize();
 		
 		Pos useAlignment = getAlignment();
@@ -552,12 +560,18 @@ public abstract class Node implements Resizable {
 	}
 	
 	public void onMousePressed( int button ) {
+		mousePressed = true;
+		
 		if ( mousePressedEvent == null )
 			return;
+		
 		this.mousePressedEvent.onEvent(button);
 	}
 	
 	public void onMouseReleased( int button ) {
+		if ( !mousePressed )
+			return;
+		mousePressed = false;
 		if ( mouseReleasedEvent == null )
 			return;
 		this.mouseReleasedEvent.onEvent(button);

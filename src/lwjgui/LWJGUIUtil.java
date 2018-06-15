@@ -19,6 +19,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL;
 
 public class LWJGUIUtil {
@@ -60,5 +61,12 @@ public class LWJGUIUtil {
 		GL.createCapabilities();
 		
 		return window;
+	}
+
+	public static void fillRect(Context context, double x, double y, double width, double height, Color color) {
+		NanoVG.nvgBeginPath(context.getNVG());
+		NanoVG.nvgRect(context.getNVG(), (float)x, (float)y, (float)width, (float)height);
+		NanoVG.nvgFillColor(context.getNVG(), color.getNVG());
+		NanoVG.nvgFill(context.getNVG());
 	}
 }

@@ -3,7 +3,6 @@ package lwjgui.scene.control;
 import org.joml.Vector2d;
 import org.joml.Vector4d;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
 import lwjgui.Context;
@@ -214,9 +213,9 @@ public class ScrollPane extends Control {
 		if ( hBar.active ) // Horizontal scrollbar track
 			LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY()+viewportSize.y, getWidth(), getHeight()-viewportSize.y, Theme.currentTheme().getControlAlt());
 		if ( vBar.active ) // Vertical scrollbar track outline
-			LWJGUIUtil.fillRect(context, getAbsoluteX()+viewportSize.x-0.5, getAbsoluteY(), 1, viewportSize.y, Theme.currentTheme().getSelectionPassive());
-		if ( vBar.active ) // Horizontal scrollbar track outline
-			LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY()+viewportSize.y-0.5, viewportSize.x, 1, Theme.currentTheme().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getAbsoluteX()+viewportSize.x-1, getAbsoluteY(), 1, viewportSize.y, Theme.currentTheme().getSelectionPassive());
+		if ( hBar.active ) // Horizontal scrollbar track outline
+			LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY()+viewportSize.y-1, viewportSize.x, 1, Theme.currentTheme().getSelectionPassive());
 		
 		// Draw bars
 		for (int i = 0; i < scrollBars.size(); i++) {
@@ -227,13 +226,8 @@ public class ScrollPane extends Control {
 		}
 		
 		// Pane Outline
-		long vg = context.getNVG();
 		Color outlineColor = context.isSelected(this)?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
-		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, (int)this.getAbsoluteX(), (int)this.getAbsoluteY(), (int)getWidth(), (int)getHeight());
-		NanoVG.nvgStrokeColor(vg, outlineColor.getNVG());
-		NanoVG.nvgStrokeWidth(vg, 1f);
-		NanoVG.nvgStroke(vg);
+		LWJGUIUtil.outlineRect( context, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), outlineColor);
 	}
 	
 	public void setContent( Node content ) {

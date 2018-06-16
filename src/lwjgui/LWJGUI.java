@@ -16,16 +16,22 @@ import java.util.Map.Entry;
 
 import org.lwjgl.glfw.GLFW;
 
+import lwjgui.scene.Context;
 import lwjgui.scene.Scene;
+import lwjgui.scene.Window;
 
 public class LWJGUI {
-	private static HashMap<Long, LWJGUIWindow> windows = new HashMap<Long, LWJGUIWindow>();
+	private static HashMap<Long, Window> windows = new HashMap<Long, Window>();
 	private static List<Runnable> runnables = Collections.synchronizedList(new ArrayList<Runnable>());
 	
-	public static LWJGUIWindow initialize(long window) {
+	public static Window initialize(long window) {
+		if ( windows.containsKey(window) ) {
+			System.err.println("Failed to initialize this LWJGUI Window. Already initialized.");
+			return null;
+		}
 		Context context = new Context(window);
 		Scene scene = new Scene();
-		LWJGUIWindow wind = LWJGUIWindow.newWindow(context, scene);
+		Window wind = new Window(context, scene);
 		windows.put(window, wind);
 		
 		return wind;
@@ -37,13 +43,13 @@ public class LWJGUI {
 		
 		// Render all windows
 		ArrayList<Long> windowsToClose = new ArrayList<Long>();
-		Iterator<Entry<Long, LWJGUIWindow>> it = windows.entrySet().iterator();
+		Iterator<Entry<Long, Window>> it = windows.entrySet().iterator();
 		synchronized(windows) {
 			while ( it.hasNext() ) {
 				// Get window information
-				Entry<Long, LWJGUIWindow> e = it.next();
+				Entry<Long, Window> e = it.next();
 				long context = e.getKey();
-				LWJGUIWindow window = e.getValue();
+				Window window = e.getValue();
 				
 				// Set context
 				GLFW.glfwMakeContextCurrent(context);
@@ -80,7 +86,7 @@ public class LWJGUI {
 		}
 	}
 
-	public static LWJGUIWindow getWindowFromContext(long context) {
+	public static Window getWindowFromContext(long context) {
 		return windows.get(context);
 	}
 

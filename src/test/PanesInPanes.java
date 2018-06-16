@@ -10,10 +10,10 @@ import org.lwjgl.glfw.GLFW;
 import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.LWJGUIWindow;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
+import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
 
@@ -29,7 +29,7 @@ public class PanesInPanes {
 		long window = LWJGUIUtil.createOpenGLCoreWindow("Panes in Panes", WIDTH, HEIGHT, true, false);
 		
 		// Initialize lwjgui for this window
-		LWJGUIWindow newWindow = LWJGUI.initialize(window);
+		Window newWindow = LWJGUI.initialize(window);
 		Scene scene = newWindow.getScene();
 		
 		// Add some components
@@ -68,9 +68,10 @@ public class PanesInPanes {
 		pane2.setBackground(Color.DARK_GRAY);
 		pane.getChildren().add(pane2);
 		
-		Label label = new Label("Hello World!");
+		Label label = new Label("Hello World! LONG TEXT");
 		label.setTextFill(Color.WHITE_SMOKE);
 		pane2.getChildren().add(label);
+		
 		
 		LWJGUI.runLater(() -> {
 			System.out.println(pane2.getWidth());

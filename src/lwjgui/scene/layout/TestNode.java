@@ -3,7 +3,7 @@ package lwjgui.scene.layout;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
-import lwjgui.Context;
+import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 
 public class TestNode extends Node {

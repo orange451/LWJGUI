@@ -5,9 +5,9 @@ import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
 
 import lwjgui.Color;
-import lwjgui.Context;
 import lwjgui.gl.OffscreenBuffer;
 import lwjgui.gl.Renderer;
+import lwjgui.scene.Context;
 
 public class OpenGLPane extends StackPane {
 	private Vector2i oldSize = new Vector2i(1,1);

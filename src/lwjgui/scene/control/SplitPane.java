@@ -10,15 +10,15 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
-import lwjgui.Context;
 import lwjgui.LWJGUI;
-import lwjgui.LWJGUIWindow;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ChangeEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.scene.Window;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.theme.Theme;
 
@@ -79,7 +79,7 @@ public class SplitPane extends Control {
 			return;
 		}
 		
-		LWJGUIWindow window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
+		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
 		Context context = window.getContext();
 		double mx = context.getMouseX();
 		double my = context.getMouseY();
@@ -89,7 +89,7 @@ public class SplitPane extends Control {
 	}
 	
 	private Divider getDividerUnderMouse() {
-		LWJGUIWindow window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
+		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
 		Context context = window.getContext();
 		double mx = context.getMouseX();
 		double my = context.getMouseY();
@@ -136,7 +136,7 @@ public class SplitPane extends Control {
 		}
 		
 		// Get mouse coordinates
-		LWJGUIWindow window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
+		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
 		Context context = window.getContext();
 		double mx = context.getMouseX() - mouseGrabLocation.x;
 		double my = context.getMouseY() - mouseGrabLocation.y;

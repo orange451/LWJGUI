@@ -1,6 +1,5 @@
 package lwjgui.scene;
 
-import lwjgui.Context;
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.control.PopupWindow;
 
@@ -30,6 +29,8 @@ public class Scene extends Node {
 	}
 	
 	public void setRoot(Node node) {
+		this.children.clear();
+		this.children.add(node);
 		this.root = node;
 	}
 

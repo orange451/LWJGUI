@@ -3,12 +3,12 @@ package lwjgui.scene.control;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.theme.Theme;
 

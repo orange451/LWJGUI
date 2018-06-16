@@ -2,8 +2,8 @@ package lwjgui.scene.layout;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Context;
 import lwjgui.collections.ObservableList;
+import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.Region;
 import lwjgui.theme.Theme;

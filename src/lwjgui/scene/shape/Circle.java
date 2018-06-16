@@ -2,7 +2,7 @@ package lwjgui.scene.shape;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Context;
+import lwjgui.scene.Context;
 
 public class Circle extends Shape {
 	private float radius = 8;

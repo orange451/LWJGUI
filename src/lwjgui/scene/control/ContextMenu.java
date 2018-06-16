@@ -4,10 +4,10 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
-import lwjgui.Context;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ChangeEvent;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Context;
 import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
 

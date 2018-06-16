@@ -17,13 +17,14 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import lwjgui.Context;
+
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.LWJGUIWindow;
 import lwjgui.gl.GenericShader;
 import lwjgui.gl.Renderer;
+import lwjgui.scene.Context;
 import lwjgui.scene.Scene;
+import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.OpenGLPane;
 import lwjgui.scene.layout.StackPane;
@@ -40,7 +41,7 @@ public class OpenGLPaneExample {
 		long window = LWJGUIUtil.createOpenGLCoreWindow("OpenGL Pane", WIDTH, HEIGHT, true, false);
 
 		// Initialize lwjgui for this window
-		LWJGUIWindow newWindow = LWJGUI.initialize(window);
+		Window newWindow = LWJGUI.initialize(window);
 		Scene scene = newWindow.getScene();
 
 		// Add some components

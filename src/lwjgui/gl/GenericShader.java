@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 
-import lwjgui.Context;
+import lwjgui.scene.Context;
 import sun.misc.IOUtils;
 
 @SuppressWarnings("restriction")

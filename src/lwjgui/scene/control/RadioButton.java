@@ -4,9 +4,9 @@ import java.awt.Point;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Context;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 
 public class RadioButton extends ToggleButton {

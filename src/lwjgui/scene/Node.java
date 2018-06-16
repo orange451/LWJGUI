@@ -1,11 +1,13 @@
 package lwjgui.scene;
 
 import org.joml.Vector2d;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Context;
+import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.MouseEvent;
+import lwjgui.event.ScrollEvent;
 import lwjgui.geometry.HPos;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
@@ -25,6 +27,8 @@ public abstract class Node implements Resizable {
 
 	protected MouseEvent mousePressedEvent;
 	protected MouseEvent mouseReleasedEvent;
+	protected ScrollEvent mouseScrollEvent;
+	protected ScrollEvent mouseScrollEventInternal;
 	
 	private boolean mouseTransparent = false;
 	protected boolean flag_clip = false;
@@ -68,6 +72,8 @@ public abstract class Node implements Resizable {
 	
 	protected void position(Node parent) {
 		this.parent = parent;
+		
+		cached_context = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext();
 		
 		updateChildren();
 		resize();
@@ -182,10 +188,10 @@ public abstract class Node implements Resizable {
 		Node p = this;
 		
 		while ( p != null ) {
-			
-			double use = p.getMaxWidth();
+			double padding = p.getWidth()-p.getInnerBounds().getWidth();
+			double use = p.getMaxWidth()-padding;
 			if ( use > Double.MAX_VALUE*0.9 )
-				use = p.getWidth();
+				use = p.getWidth()-padding;
 			
 			max = Math.min(max, use);
 			p = p.parent;
@@ -273,6 +279,39 @@ public abstract class Node implements Resizable {
 		}
 		
 		NanoVG.nvgScissor(context.getNVG(), clipBoundsTemp.minX, clipBoundsTemp.minY, clipBoundsTemp.getWidth(), clipBoundsTemp.getHeight());
+	}
+	
+	protected Context cached_context;
+	protected boolean isDecendentSelected() {
+		if ( cached_context != null && cached_context.isSelected(this) ) {
+			return true;
+		}
+		
+		ObservableList<Node> c = getChildren();
+		for (int i = 0; i < c.size(); i++) {
+			if ( c.get(i).isDecendentSelected() ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns whether this node is a descendent of the supplied parent node.
+	 * @param parent
+	 * @return
+	 */
+	public boolean isDescendentOf(Node parent) {
+		Node t = this;
+		while ( t != null ) {
+			if ( t.equals(parent) ) {
+				return true;
+			}
+			t = t.getParent();
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -559,22 +598,34 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
-	public void onMousePressed( int button ) {
+	protected void onMousePressed( int button ) {
 		mousePressed = true;
 		
-		if ( mousePressedEvent == null )
-			return;
-		
-		this.mousePressedEvent.onEvent(button);
+		if ( mousePressedEvent != null ) {
+			this.mousePressedEvent.onEvent(button);
+		}
 	}
 	
-	public void onMouseReleased( int button ) {
+	protected void onMouseReleased( int button ) {
 		if ( !mousePressed )
 			return;
 		mousePressed = false;
-		if ( mouseReleasedEvent == null )
-			return;
-		this.mouseReleasedEvent.onEvent(button);
+		
+		if ( mouseReleasedEvent != null ) {
+			this.mouseReleasedEvent.onEvent(button);
+		}
+	}
+	
+	public void setMousePressedEvent( MouseEvent event ) {
+		this.mousePressedEvent = event;
+	}
+	
+	public void setMouseReleasedEvent( MouseEvent event ) {
+		this.mouseReleasedEvent = event;
+	}
+	
+	public void setMouseScrollGestureEvent( ScrollEvent event ) {
+		this.mouseScrollEvent = event;
 	}
 
 	public abstract void render(Context context);

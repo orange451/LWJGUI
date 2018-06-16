@@ -9,9 +9,9 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.LWJGUIWindow;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
+import lwjgui.scene.Window;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.RadioButton;
@@ -32,7 +32,7 @@ public class ControlExample {
 		long window = LWJGUIUtil.createOpenGLCoreWindow("Control Buttons", WIDTH, HEIGHT, true, false);
 		
 		// Initialize lwjgui for this window
-		LWJGUIWindow newWindow = LWJGUI.initialize(window);
+		Window newWindow = LWJGUI.initialize(window);
 		Scene scene = newWindow.getScene();
 		
 		// Add some components

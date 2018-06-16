@@ -3,8 +3,8 @@ package lwjgui.scene.control;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import lwjgui.Color;
-import lwjgui.Context;
 import lwjgui.LWJGUI;
+import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.Font;
 import lwjgui.scene.layout.FontStyle;
@@ -12,10 +12,12 @@ import lwjgui.theme.Theme;
 
 public class Label extends Control {
 	private String text = "";
+	private String useString = "";
 	private float fontSize = 18;
 	private FontStyle fontStyle = FontStyle.REGULAR;
 	private Color textColor;
-	private boolean updated = true;
+	
+	private static final String ELIPSES = "...";
 
 	public Label(String text) {
 		setText(text);
@@ -29,7 +31,6 @@ public class Label extends Control {
 
 	public void setText(String text) {
 		this.text = text;
-		updated = true;
 	}
 
 	public void setFontSize( float size ) {
@@ -37,7 +38,6 @@ public class Label extends Control {
 			return;
 		
 		this.fontSize = size;
-		updated = true;
 	}
 
 	public void setFontStyle( FontStyle style ) {
@@ -45,7 +45,6 @@ public class Label extends Control {
 			return;
 		
 		this.fontStyle = style;
-		updated = true;
 	}
 
 	@Override
@@ -56,29 +55,54 @@ public class Label extends Control {
 	@Override
 	public void position(Node parent) {
 		Context context = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext();
-		long vg = context.getNVG();
 
-		if ( updated ) {
-			updated = false;
-			float[] bounds = new float[4];
-
-			NanoVG.nvgFontSize(vg, fontSize);
-			NanoVG.nvgFontFace(vg, Font.SANS.getFont(fontStyle));
-			NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
-			if ( text != null ) {
-				NanoVG.nvgTextBounds(vg, 0, 0, text, bounds);
+		if (this.getParent() != null) {
+			useString = text;
+			
+			// Get max width of parent element
+			double maxWid = this.getParent().getInnerBounds().getWidth();
+			int remove = 0;
+			
+			// Get some text bounds
+			float[] bounds = getTextBounds( context, useString, Font.SANS, fontStyle, fontSize);
+			float[] elipBnd = getTextBounds( context, ELIPSES, Font.SANS, fontStyle, fontSize);
+			float curWid = bounds[2]-bounds[0];
+			float prefWid = curWid;
+			this.setPrefWidth(prefWid);
+			
+			// If we're too large for the parent element...
+			if ( this.getPrefWidth() >= this.getAvailableSize().x ) {
+				this.setPrefWidth(maxWid);
+				float eWid = elipBnd[2]-elipBnd[0];
+				curWid += eWid;
+				
+				// While we're too large, remove text off the end and replace with elipses
+				while ( (curWid >= maxWid) && (remove < text.length()) ) {
+					remove++;
+					useString = useString.substring(0, text.length()-remove)+ELIPSES;
+					bounds = getTextBounds( context, useString, Font.SANS, fontStyle, fontSize);
+					curWid = bounds[2]-bounds[0];
+				}
 			}
-
-			double wid = (bounds[2] - bounds[0]);
+			
+			// Set final bounds
 			double hei = (bounds[3] - bounds[1]);
-
-			this.setMinWidth(wid);
-			this.setMaxWidth(wid);
 			this.setMinHeight(hei);
 			this.setMaxHeight(hei);
 		}
-
+		
 		super.position(parent);
+	}
+	
+	private static float[] getTextBounds(Context context, String string, Font font, FontStyle style, float size) {
+		float[] bounds = new float[4];
+		NanoVG.nvgFontSize(context.getNVG(), size);
+		NanoVG.nvgFontFace(context.getNVG(), font.getFont(style));
+		NanoVG.nvgTextAlign(context.getNVG(),NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
+		if ( string != null ) {
+			NanoVG.nvgTextBounds(context.getNVG(), 0, 0, string, bounds);
+		}
+		return bounds;
 	}
 
 	@Override
@@ -104,7 +128,7 @@ public class Label extends Control {
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgFontBlur(vg,0);
 		NanoVG.nvgFillColor(vg, textColor.getNVG());
-		NanoVG.nvgText(vg, absX, absY, text);
+		NanoVG.nvgText(vg, absX, absY, useString);
 	}
 
 	public void setTextFill(Color color) {

@@ -2,7 +2,7 @@ package lwjgui.scene.shape;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Context;
+import lwjgui.scene.Context;
 
 public class Rectangle extends Shape {
 	private float corderRadius = 0;

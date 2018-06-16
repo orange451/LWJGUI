@@ -4,12 +4,12 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ChangeEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.Region;
 import lwjgui.scene.layout.HBox;

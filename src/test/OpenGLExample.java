@@ -19,14 +19,14 @@ import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import lwjgui.Color;
-import lwjgui.Context;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.LWJGUIWindow;
 import lwjgui.geometry.Insets;
 import lwjgui.gl.GenericShader;
 import lwjgui.gl.Renderer;
+import lwjgui.scene.Context;
 import lwjgui.scene.Scene;
+import lwjgui.scene.Window;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.BorderPane;
@@ -45,7 +45,7 @@ public class OpenGLExample {
 		long window = LWJGUIUtil.createOpenGLCoreWindow("OpenGL Example", WIDTH, HEIGHT, true, false);
 
 		// Initialize lwjgui for this window
-		LWJGUIWindow newWindow = LWJGUI.initialize(window);
+		Window newWindow = LWJGUI.initialize(window);
 		Scene scene = newWindow.getScene();
 
 		// Add some components

@@ -2,10 +2,10 @@ package lwjgui.scene.control;
 
 import java.awt.Point;
 
-import lwjgui.Context;
 import lwjgui.event.ButtonEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 
 public class CheckBox extends ButtonBase {

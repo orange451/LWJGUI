@@ -22,6 +22,8 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL;
 
+import lwjgui.scene.Context;
+
 public class LWJGUIUtil {
 	public static long createOpenGLCoreWindow(String name, int width, int height, boolean resizable, boolean ontop) {
 		// Configure GLFW

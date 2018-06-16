@@ -16,9 +16,9 @@ import java.util.HashMap;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Context;
 import lwjgui.LWJGUI;
-import lwjgui.LWJGUIWindow;
+import lwjgui.scene.Context;
+import lwjgui.scene.Window;
 
 public class Font {
 	public static Font SANS = new Font("sans", "Roboto-Regular.ttf", "Roboto-Bold.ttf", "Roboto-Light.ttf", "Roboto-Italic.ttf");
@@ -95,7 +95,7 @@ public class Font {
 		if ( loadName == null ) {
 			return;
 		}
-		LWJGUIWindow window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
+		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
 		Context context = window.getContext();
 		long vg = context.getNVG();
 		int fontCallback;
@@ -140,7 +140,7 @@ public class Font {
 	}
 
 	public String getFont(FontStyle style) {
-		LWJGUIWindow window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
+		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
 		Context context = window.getContext();
 		long vg = context.getNVG();
 

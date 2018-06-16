@@ -2,8 +2,8 @@ package lwjgui.scene.control;
 
 import java.awt.Point;
 
-import lwjgui.Context;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.FontStyle;
 import lwjgui.scene.layout.HBox;

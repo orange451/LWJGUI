@@ -9,10 +9,10 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
-import lwjgui.Context;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
+import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 
 public abstract class ButtonBase extends Labeled {

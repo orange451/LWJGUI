@@ -1,6 +1,6 @@
 package lwjgui.scene.control;
 
-import lwjgui.Context;
+import lwjgui.scene.Context;
 import lwjgui.scene.Region;
 import lwjgui.scene.Scene;
 

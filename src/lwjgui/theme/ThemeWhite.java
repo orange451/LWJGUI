@@ -11,7 +11,7 @@ public class ThemeWhite extends Theme {
 	public static Color shadow				= new Color(32, 32, 32, 100);
 	public static Color textColor			= Color.DARK_GRAY;
 	public static Color controlColor			= new Color(240, 240, 240);
-	public static Color controlColorAlt		= controlColor.darker();
+	public static Color controlColorAlt		= new Color(232, 232, 232);
 	public static Color controlHoverColor	= Color.WHITE;
 	public static Color controlOutlineColor	= Color.DIM_GRAY;
 

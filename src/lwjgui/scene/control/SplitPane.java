@@ -381,6 +381,7 @@ public class SplitPane extends Control {
     static class DividerNode extends StackPane {
     	
 		public DividerNode(Node node) {
+			this.setAlignment(Pos.TOP_LEFT);
 			this.getChildren().add(node);
 			this.setFillToParentWidth(true);
 			this.setFillToParentHeight(true);

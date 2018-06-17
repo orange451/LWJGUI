@@ -78,5 +78,9 @@ public class SplitPaneExample {
 			
 			p.getChildren().add(new Button("Hello World"));
 		}
+
+		SplitPane.setResizableWithParent(split.getItems().get(0), false);
+		SplitPane.setResizableWithParent(split.getItems().get(2), false);
+		//split.setDividerPosition(0, 0.4);
 	}
 }

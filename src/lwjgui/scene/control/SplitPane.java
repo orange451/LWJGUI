@@ -31,6 +31,8 @@ public class SplitPane extends Control {
 	private StackPane divider_holder;
 	private int dividerThickness = 6;
 	
+	protected static HashMap<Node,Boolean> divider_resize = new HashMap<Node,Boolean>();
+	
 	private Divider grabbedDivider;
 	private Divider hovered;
 	
@@ -46,6 +48,9 @@ public class SplitPane extends Control {
 		this.items.setAddCallback(new ChangeEvent<Node>() {
 			@Override
 			public void onEvent(Node changed) {
+				if ( divider_resize.get(changed) == null ) {
+					divider_resize.put(changed, true);
+				}
 				recalculateDividers();
 			}
 		});
@@ -66,9 +71,20 @@ public class SplitPane extends Control {
 		
 		this.setOrientation(Orientation.VERTICAL);
 	}
-	
+
+	private double lastLen = 0;
 	@Override
-	public void position(Node parent) {
+	protected void position(Node parent) {
+		double curLen = getWidth();
+		if ( !this.orientation.equals(Orientation.VERTICAL) ) {
+			curLen = getHeight();
+		}
+		
+		if ( curLen != lastLen ) {
+			onSizeChange(lastLen);
+			lastLen = curLen;
+		}
+		
 		super.position(parent);
 		
 		grabDividers();
@@ -147,11 +163,61 @@ public class SplitPane extends Control {
 			pChange = pixelSpaceToDividerSpace((int) my);
 		
 		this.setDividerPosition(divider_cache.get(grabbedDivider), grabbedDivider.position+pChange);
+		this.resize();
 		mouseGrabLocation.add(mx, my); 
 	}
 
+	protected void onSizeChange(double lastLength) {
+		for (int i = 0; i < divider_nodes.size(); i++) {
+			DividerNode d = divider_nodes.get(i);
+
+			Divider leftDivider = null;
+			Divider rightDivider = null;
+			
+			// Has a left divider
+			if ( i > 0 ) {
+				leftDivider = this.dividers.get(i-1);
+			}
+			// Has a right divider
+			if ( i < divider_nodes.size()-1 ) {
+				rightDivider = this.dividers.get(i);
+			}
+			
+			boolean resize = true;
+			if ( d.getChildren().size() > 0 ) {
+				resize = divider_resize.get(d.getChildren().get(0));
+			}
+			
+			if ( !resize ) {
+				resizeDiv( leftDivider, d, lastLength );
+				resizeDiv( rightDivider, d, lastLength );
+			}
+		}
+	}
+	
+	private void resizeDiv(Divider div, DividerNode node, double lastLength) {
+		if ( div == null || lastLength == 0)
+			return;
+		
+		double lastOff = this.pixelSpaceToDividerSpace(div.position*lastLength);
+		int divIndex = getDividerIndex(div);
+		if ( divIndex == dividers.size()-1) {
+			lastOff = 1.0 - this.pixelSpaceToDividerSpace((1.0-div.position)*lastLength);
+		}
+		setDividerPosition(divIndex, lastOff);
+	}
+
+	private int getDividerIndex(Divider div) {
+		for (int i = 0; i < dividers.size(); i++) {
+			if ( dividers.get(i).equals(div) ) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	@Override
-	protected void resize() {
+	protected void resize() {		
 		super.resize();
 
 		float filledLen = 0;
@@ -165,15 +231,19 @@ public class SplitPane extends Control {
 			double left = 0;
 			double right = 1;
 			double subt = 0;
+			Divider leftDivider = null;
+			Divider rightDivider = null;
 			
 			// Has a left divider
 			if ( i > 0 ) {
-				left = this.dividers.get(i-1).position;
+				leftDivider = this.dividers.get(i-1);
+				left = leftDivider.position;
 				subt += dividerThickness/2f;
 			}
 			// Has a right divider
 			if ( i < divider_nodes.size()-1 ) {
-				right = this.dividers.get(i).position;
+				rightDivider = this.dividers.get(i);
+				right = rightDivider.position;
 				subt += dividerThickness/2f;
 			}
 			
@@ -184,7 +254,6 @@ public class SplitPane extends Control {
 			if ( d.getChildren().size() > 0 )
 				d.setAlignment(d.getChildren().get(0).getAlignment());
 			
-			// Set size
 			if ( this.orientation.equals(Orientation.VERTICAL) ) {
 				d.setFillToParentWidth(false);
 				d.setFillToParentHeight(true);
@@ -358,9 +427,10 @@ public class SplitPane extends Control {
 		
 		// Set position
 		d.position = position;
-		
-		// Reposition divider nodes
-		resize();
+	}
+	
+	public static void setResizableWithParent(Node node, boolean bool) {
+		divider_resize.put(node, bool);
 	}
 
 	/**

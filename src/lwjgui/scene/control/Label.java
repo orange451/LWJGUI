@@ -64,12 +64,12 @@ public class Label extends Control {
 			int remove = 0;
 			
 			// Get some text bounds
-			float[] bounds = getTextBounds( context, useString, Font.SANS, fontStyle, fontSize);
+			float[] bounds = getTextBounds( context, text, Font.SANS, fontStyle, fontSize);
 			float[] elipBnd = getTextBounds( context, ELIPSES, Font.SANS, fontStyle, fontSize);
 			float curWid = bounds[2]-bounds[0];
 			float prefWid = curWid;
 			this.setPrefWidth(prefWid);
-			this.setMaxWidth(prefWid);
+			//this.setMaxWidth(prefWid);
 			
 			// If we're too large for the parent element...
 			if ( this.getPrefWidth() >= this.getAvailableSize().x ) {

@@ -2,6 +2,7 @@ package lwjgui.scene.control;
 
 import java.awt.Point;
 
+import lwjgui.Color;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
@@ -69,7 +70,6 @@ public abstract class Labeled extends Control {
 	protected void position( Node parent ) {
 		this.setPrefWidth(this.graphicLabel.getMaximumPotentialWidth());
 		this.setPrefHeight(this.graphicLabel.getMaximumPotentialHeight());
-		this.graphicLabel.holder.setPrefWidth(this.getPrefWidth());
 		this.graphicLabel.holder.position(this);
 		this.graphicLabel.holder.offset(graphicLabel.offset.x, graphicLabel.offset.y);
 		super.position(parent);

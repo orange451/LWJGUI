@@ -69,6 +69,7 @@ public class Label extends Control {
 			float curWid = bounds[2]-bounds[0];
 			float prefWid = curWid;
 			this.setPrefWidth(prefWid);
+			this.setMaxWidth(prefWid);
 			
 			// If we're too large for the parent element...
 			if ( this.getPrefWidth() >= this.getAvailableSize().x ) {
@@ -96,6 +97,10 @@ public class Label extends Control {
 	
 	private static float[] getTextBounds(Context context, String string, Font font, FontStyle style, float size) {
 		float[] bounds = new float[4];
+		if ( context == null ) {
+			return bounds;
+		}
+		
 		NanoVG.nvgFontSize(context.getNVG(), size);
 		NanoVG.nvgFontFace(context.getNVG(), font.getFont(style));
 		NanoVG.nvgTextAlign(context.getNVG(),NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
@@ -137,6 +142,11 @@ public class Label extends Control {
 
 	public float getFontSize() {
 		return this.fontSize;
+	}
+
+	public double getTextWidth() {
+		float[] bounds = getTextBounds(this.cached_context,text,Font.SANS,fontStyle,fontSize);
+		return bounds[2]-bounds[0];
 	}
 
 }

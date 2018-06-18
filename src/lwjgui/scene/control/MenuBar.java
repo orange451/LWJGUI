@@ -55,7 +55,7 @@ public class MenuBar extends Region {
 		for (int i = 0; i < items.size(); i++) {
 			internalBox.getChildren().add(items.get(i));
 		}
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 4; i++) {
 			internalBox.position(this);
 		}
 	}
@@ -81,7 +81,7 @@ public class MenuBar extends Region {
 				if (!currentMenu.isOpen() ) {
 					currentMenu = null;
 				} else {
-					Node hover = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext().getHovered();
+					Node hover = this.cached_context.getHovered();//LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext().getHovered();
 					if ( hover instanceof Menu ) {
 						Menu menu = (Menu) hover;
 						if ( items.contains(menu) ) {

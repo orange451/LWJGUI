@@ -44,8 +44,9 @@ public class MenuItem extends Node {
 		super.resize();
 		
 		this.setAlignment(Pos.CENTER_LEFT);
+		this.resize(Integer.MAX_VALUE, prefHeight);
+		this.internalLabel.position(this);
 		this.resize(internalLabel.graphicLabel.getMaximumPotentialWidth(), prefHeight);
-		internalLabel.position(this);
 	}
 	
 	protected boolean isSelected() {

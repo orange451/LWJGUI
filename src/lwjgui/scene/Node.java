@@ -281,6 +281,7 @@ public abstract class Node implements Resizable {
 		NanoVG.nvgScissor(context.getNVG(), clipBoundsTemp.minX, clipBoundsTemp.minY, clipBoundsTemp.getWidth(), clipBoundsTemp.getHeight());
 	}
 	
+	@Deprecated
 	protected Context cached_context;
 	protected boolean isDecendentSelected() {
 		if ( cached_context != null && cached_context.isSelected(this) ) {

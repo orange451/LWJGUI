@@ -5,8 +5,10 @@ import static org.lwjgl.glfw.GLFW.glfwGetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.nanovg.NanoVGGL2;
 import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
@@ -19,6 +21,8 @@ public class Context {
 	private int windowWidth = 1;
 	private int windowHeight = 1;
 	private int screenPixelRatio = 1;
+	
+	private boolean modernOpenGL;
 
 	private Node selected = null;
 	private Node hovered = null;
@@ -30,8 +34,15 @@ public class Context {
 	public Context( long window ) {
 		windowHandle = window;
 
-		int flags = NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS;
-		nvgContext = NanoVGGL3.nvgCreate(flags);
+		this.modernOpenGL = (GL11.glGetInteger(GL30.GL_MAJOR_VERSION) > 3) || (GL11.glGetInteger(GL30.GL_MAJOR_VERSION) == 3 && GL11.glGetInteger(GL30.GL_MINOR_VERSION) >= 2);
+		
+		if ( this.isModernOpenGL() ) {
+			int flags = NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS;
+			nvgContext = NanoVGGL3.nvgCreate(flags);
+		} else {
+			int flags = NanoVGGL2.NVG_STENCIL_STROKES | NanoVGGL2.NVG_ANTIALIAS;
+			nvgContext = NanoVGGL2.nvgCreate(flags);
+		}
 	}
 
 	public boolean isFocused() {
@@ -196,5 +207,9 @@ public class Context {
 
 	public void refresh() {
 		GL11.glViewport(0, 0, (int)(getWidth()*getPixelRatio()), (int)(getHeight()*getPixelRatio()));
+	}
+
+	public boolean isModernOpenGL() {
+		return this.modernOpenGL;
 	}
 }

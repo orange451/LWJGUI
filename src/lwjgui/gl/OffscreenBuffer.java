@@ -11,6 +11,7 @@ public class OffscreenBuffer {
 	private int height = 0;
 	private int texId = 0;
 	private int fboId = 0;
+	private int renderId = 0;
 	private boolean quadDirty = true;
 	private TexturedQuad quad = null;
 	private GenericShader quadShader = null;
@@ -38,7 +39,6 @@ public class OffscreenBuffer {
 	}
 	
 	public boolean resize(int width, int height) {
-		
 		if (this.width == width && this.height == height) {
 			return false;
 		}
@@ -49,23 +49,37 @@ public class OffscreenBuffer {
 		// resize the texture
 		if (texId != 0) {
 			GL11.glDeleteTextures(texId);
+			GL30.glDeleteFramebuffers(fboId);
+			GL30.glDeleteRenderbuffers(renderId);
+			texId = 0;
+			fboId = 0;
+			renderId = 0;
 		}
 		
 		// Create texture
-		texId = GL11.glGenTextures();
+		if ( texId == 0 )
+			texId = GL11.glGenTextures();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 0);
+		
+		// Set default filtering
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 		
 		// update the framebuf
-		if (fboId == 0) {
+		if (fboId == 0)
 			fboId = GL30.glGenFramebuffers();
-		}
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, fboId);
 		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, texId, 0);
+		
+		// The depth buffer
+		if ( renderId == 0 )
+			renderId = GL30.glGenRenderbuffers();
+		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderId);
+		GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL11.GL_DEPTH_COMPONENT, width, height);
+		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL30.GL_RENDERBUFFER, renderId);
 		
 		// remove the old quad
 		quadDirty = true;

@@ -45,27 +45,27 @@ public class TexturedQuad {
 			// Initial vertex data
 			FloatBuffer buffer = stackMallocFloat(verts * size);
 			buffer.put(new float[] {x+0, y+0, 0});			// Vert 1 position
-			buffer.put(new float[] {0.0f, 1.0f});			// Vert 1 texture
+			buffer.put(new float[] {0.0f, 0.0f});			// Vert 1 texture
 			buffer.put(new float[] {1.0f,1.0f,1.0f,1.0f});	// Vert 1 color
 
 			buffer.put(new float[] {x+w, y+0, 0});			// Vert 2 position
-			buffer.put(new float[] {1.0f, 1.0f});			// Vert 2 texture
+			buffer.put(new float[] {1.0f, 0.0f});			// Vert 2 texture
 			buffer.put(new float[] {1.0f,1.0f,1.0f,1.0f});	// Vert 2 color
 
 			buffer.put(new float[] {x+w, y+h, 0});			// Vert 3 position
-			buffer.put(new float[] {1.0f, 0.0f});			// Vert 3 texture
+			buffer.put(new float[] {1.0f, 1.0f});			// Vert 3 texture
 			buffer.put(new float[] {1.0f,1.0f,1.0f,1.0f});	// Vert 3 color
 
 			buffer.put(new float[] {x+0, y+0, 0});			// Vert 4 position
-			buffer.put(new float[] {0.0f, 1.0f});			// Vert 4 texture
+			buffer.put(new float[] {0.0f, 0.0f});			// Vert 4 texture
 			buffer.put(new float[] {1.0f,1.0f,1.0f,1.0f});	// Vert 4 color
 
 			buffer.put(new float[] {x+w, y+h, 0});			// Vert 5 position
-			buffer.put(new float[] {1.0f, 0.0f});			// Vert 5 texture
+			buffer.put(new float[] {1.0f, 1.0f});			// Vert 5 texture
 			buffer.put(new float[] {1.0f,1.0f,1.0f,1.0f});	// Vert 5 color
 
 			buffer.put(new float[] {x+0, y+h, 0});			// Vert 6 position
-			buffer.put(new float[] {0.0f, 0.0f});			// Vert 6 texture
+			buffer.put(new float[] {0.0f, 1.0f});			// Vert 6 texture
 			buffer.put(new float[] {1.0f,1.0f,1.0f,1.0f});	// Vert 6 color
 			buffer.flip();
 

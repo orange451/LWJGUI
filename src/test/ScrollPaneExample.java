@@ -17,6 +17,7 @@ import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.layout.BorderPane;
+import lwjgui.scene.layout.OpenGLPane;
 import lwjgui.scene.layout.VBox;
 
 public class ScrollPaneExample {

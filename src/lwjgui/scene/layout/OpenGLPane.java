@@ -1,7 +1,10 @@
 package lwjgui.scene.layout;
 
 import org.joml.Vector2i;
+import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGL2;
+import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
 
 import lwjgui.Color;
@@ -14,6 +17,7 @@ public class OpenGLPane extends StackPane {
 	private OffscreenBuffer buffer;
 	private Renderer renderer;
 	private Color internalBackground;
+	private int nanoImage = -1;
 	
 	public OpenGLPane() {
 		resizeBuffer();
@@ -24,6 +28,15 @@ public class OpenGLPane extends StackPane {
 			buffer = new OffscreenBuffer((int)oldSize.x, (int)oldSize.y);
 		} else {
 			buffer.resize((int)oldSize.x, (int)oldSize.y);
+		}
+		if ( this.cached_context == null ) {
+			return;
+		}
+		
+		if ( this.cached_context.isModernOpenGL() ) {
+			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.cached_context.getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+		} else {
+			nanoImage = NanoVGGL2.nvglCreateImageFromHandle(this.cached_context.getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
 		}
 	}
 	
@@ -41,13 +54,13 @@ public class OpenGLPane extends StackPane {
 	public void render(Context context) {
 		// Check for resize
 		Vector2i newDims = new Vector2i((int)getWidth(),(int)getHeight());
-		if ( !newDims.equals(oldSize) ) {
+		if ( !newDims.equals(oldSize) || nanoImage == -1 ) {
 			oldSize.set(newDims);
 			resizeBuffer();
 		}
 		
 		// FBO Rendering
-		if ( renderer != null ) {
+		if ( renderer != null && nanoImage != -1 ) {
 			NanoVG.nvgSave(context.getNVG());
 			NanoVG.nvgEndFrame(context.getNVG());
 			{
@@ -65,13 +78,29 @@ public class OpenGLPane extends StackPane {
 				this.buffer.unbind();
 	
 				// Render FBO to screen
-				this.buffer.render(context, (int)this.getAbsoluteX(), (int)(context.getHeight()-this.getHeight())-(int)this.getAbsoluteY());
+				//this.buffer.render(context, (int)this.getAbsoluteX()+(int)getWidth(), (int)(context.getHeight()-this.getHeight())-(int)this.getAbsoluteY());
 			}
+			
+			// Restore nanovg
 			NanoVG.nvgRestore(context.getNVG());
+			context.refresh(); // Restore glViewport
+
+			// Render FBO to screen
+			long nanovg = context.getNVG();
+			float x = (int)this.getAbsoluteX();
+			float y = (int)this.getAbsoluteY();
+			float w = (int)this.getWidth();
+			float h = (int)this.getHeight();
+			NVGPaint imagePaint = NanoVG.nvgImagePattern(nanovg, x, y, w, h, 0, nanoImage, 1, NVGPaint.calloc());
+			NanoVG.nvgBeginPath(nanovg);
+			NanoVG.nvgRect(nanovg, x, y, w, h);
+			NanoVG.nvgFillPaint(nanovg, imagePaint);
+			NanoVG.nvgFill(nanovg);
+			imagePaint.free();
 		}
 		
 		// Render children
-		context.refresh(); // Restore glViewport
 		super.render(context);
 	}
+	float a;
 }

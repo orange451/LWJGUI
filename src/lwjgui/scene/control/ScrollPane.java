@@ -28,7 +28,7 @@ public class ScrollPane extends Control {
 	
 	private double thickness = 7;
 	private double barPadding = 2;
-	private double scrollGestureSpeedMultiplier = 2;
+	private double scrollGestureSpeedMultiplier = 5;
 	
 	private ScrollBar holdingBar;
 	private ScrollBar hoveredBar;

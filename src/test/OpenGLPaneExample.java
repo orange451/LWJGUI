@@ -74,7 +74,7 @@ public class OpenGLPaneExample {
 		ogl.getChildren().add(new Label("Hello World"));
 	}
 
-	private static class RenderingCallbackTest implements Renderer {
+	static class RenderingCallbackTest implements Renderer {
 		private GenericShader shader;
 		private int vao;
 		private int vbo;

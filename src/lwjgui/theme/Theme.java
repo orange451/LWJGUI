@@ -6,6 +6,7 @@ public abstract class Theme {
 	public abstract Color getBackground();
 	public abstract Color getPane();
 	public abstract Color getSelection();
+	public abstract Color getSelectionAlt();
 	public abstract Color getSelectionPassive();
 	public abstract Color getShadow();
 	public abstract Color getText();

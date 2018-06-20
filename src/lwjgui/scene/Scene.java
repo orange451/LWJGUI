@@ -1,5 +1,7 @@
 package lwjgui.scene;
 
+import org.lwjgl.glfw.GLFW;
+
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.control.PopupWindow;
 
@@ -81,5 +83,9 @@ public class Scene extends Node {
 
 	public ObservableList<PopupWindow> getPopups() {
 		return this.popups;
+	}
+
+	public void setCursor(Cursor cursor) {
+		GLFW.glfwSetCursor(cached_context.getWindowHandle(), cursor.getCursor(cached_context.getWindowHandle()));
 	}
 }

@@ -1,6 +1,9 @@
 package lwjgui.scene;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCharModsCallbackI;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallbackI;
 import org.lwjgl.glfw.GLFWWindowCloseCallbackI;
@@ -22,10 +25,69 @@ public class Window {
 		this.context = context;
 		this.scene = scene;
 		
+		GLFW.glfwSetCursorPosCallback(context.getWindowHandle(), new GLFWCursorPosCallback() {
+			@Override
+			public void invoke(long window, double x, double y) {
+				Node selected = context.getSelected();
+				if ( selected == null )
+					return;
+				
+				if ( selected.mousePressed && selected.mouseDraggedEvent != null ) {
+					selected.mouseDraggedEvent.onEvent(-1);
+				}
+			}
+		});
+		
+		GLFW.glfwSetCharModsCallback(context.getWindowHandle(), new GLFWCharModsCallbackI() {
+			@Override
+			public void invoke(long handle, int key, int mods) {
+				boolean isCtrlDown = (mods & GLFW.GLFW_MOD_CONTROL) == GLFW.GLFW_MOD_CONTROL || (mods & GLFW.GLFW_MOD_SUPER) == GLFW.GLFW_MOD_SUPER;
+				boolean isAltDown = (mods & GLFW.GLFW_MOD_ALT) == GLFW.GLFW_MOD_ALT;
+				boolean isShiftDown = (mods & GLFW.GLFW_MOD_SHIFT) == GLFW.GLFW_MOD_SHIFT;
+				
+				notifyTextInput( scene, key, mods, isCtrlDown, isAltDown, isShiftDown);
+			}
+
+			private void notifyTextInput(Node root, int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
+				ObservableList<Node> children = root.getChildren();
+				for (int i = 0; i < children.size(); i++) {
+					notifyTextInput(children.get(i), key, mods, isCtrlDown, isAltDown, isShiftDown);
+				}
+				
+				if ( root.textInputEvent != null ) {
+					root.textInputEvent.onEvent(key, mods, isCtrlDown, isAltDown, isShiftDown);
+				}
+			}
+		});
+		
+		GLFW.glfwSetKeyCallback(context.getWindowHandle(), new GLFWKeyCallback() {
+
+			@Override
+			public void invoke(long handle, int key, int scancode, int action, int mods) {
+				boolean isCtrlDown = (mods & GLFW.GLFW_MOD_CONTROL) == GLFW.GLFW_MOD_CONTROL || (mods & GLFW.GLFW_MOD_SUPER) == GLFW.GLFW_MOD_SUPER;
+				boolean isAltDown = (mods & GLFW.GLFW_MOD_ALT) == GLFW.GLFW_MOD_ALT;
+				boolean isShiftDown = (mods & GLFW.GLFW_MOD_SHIFT) == GLFW.GLFW_MOD_SHIFT;
+				notifyKeyInput( scene, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown );
+			}
+
+			private void notifyKeyInput(Node root, int key, int scancode, int action, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
+				ObservableList<Node> children = root.getChildren();
+				for (int i = 0; i < children.size(); i++) {
+					notifyKeyInput(children.get(i), key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+				}
+				
+				if ( action == GLFW.GLFW_PRESS && root.keyPressedEvent != null ) {
+					root.keyPressedEvent.onEvent(key, mods, isCtrlDown, isAltDown, isShiftDown);
+				}
+			}
+		});
+		
         GLFW.glfwSetMouseButtonCallback(context.getWindowHandle(), new GLFWMouseButtonCallback() {
+    			Node lastPressed = null;
+    			
 			@Override
 			public void invoke(long window, int button, int downup, int modifier) {
-				if ( downup == 1 ) {
+				if ( downup == 1 ) { // Press
 					if ( !context.hoveringOverPopup && context.getPopups().size() > 0 ) {
 						context.closePopups();
 						return;
@@ -35,15 +97,19 @@ public class Window {
 					if ( hovered != null ) {
 						hovered.onMousePressed(button);
 					}
-				} else {
+					lastPressed = hovered;
+				} else { // Release
 					
 					Node hovered = context.getHovered();
-					if ( hovered != null ) {
+					if ( hovered != null && hovered.mousePressed ) {
 						hovered.onMouseReleased(button);
+						if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
+							context.setSelected(hovered);
+						}
 					}
 					
-					if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
-						context.setSelected(hovered);
+					if ( lastPressed != null ) {
+						lastPressed.mousePressed = false;
 					}
 				}
 			}

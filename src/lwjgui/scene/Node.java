@@ -6,6 +6,7 @@ import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
+import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.event.ScrollEvent;
 import lwjgui.geometry.HPos;
@@ -27,12 +28,20 @@ public abstract class Node implements Resizable {
 
 	protected MouseEvent mousePressedEvent;
 	protected MouseEvent mouseReleasedEvent;
+	protected MouseEvent mouseEnteredEvent;
+	protected MouseEvent mouseLeftEvent;
+	protected MouseEvent mouseDraggedEvent;
 	protected ScrollEvent mouseScrollEvent;
 	protected ScrollEvent mouseScrollEventInternal;
+	protected KeyEvent textInputEvent;
+	protected KeyEvent keyPressedEvent;
 	
 	private boolean mouseTransparent = false;
 	protected boolean flag_clip = false;
-	private boolean mousePressed = false;
+	protected boolean mousePressed = false;
+	
+	@Deprecated
+	protected Context cached_context;
 	
 	public void setLocalPosition(Node parent, double x, double y) {
 		double changex = x-this.getX();
@@ -264,7 +273,7 @@ public abstract class Node implements Resizable {
 		Node par = this.parent;
 		while ( par != null ) {
 			if ( par.flag_clip ) {
-				LayoutBounds tempBounds = new LayoutBounds((int)par.getAbsoluteX(), (int)par.getAbsoluteY(), (int)Math.ceil(par.getAbsoluteX()+par.getWidth()), (int)Math.ceil(par.getAbsoluteY()+par.getHeight()));
+				LayoutBounds tempBounds = new LayoutBounds((int)par.getAbsoluteX(), (int)par.getAbsoluteY(), (int)Math.ceil(par.getAbsoluteX()+par.getWidth()+0.5), (int)Math.ceil(par.getAbsoluteY()+par.getHeight()+0.5));
 				if ( tempBounds.minX > clipBoundsTemp.minX )
 					clipBoundsTemp.minX = tempBounds.minX;
 				if ( tempBounds.minY > clipBoundsTemp.minY )
@@ -281,18 +290,60 @@ public abstract class Node implements Resizable {
 		NanoVG.nvgScissor(context.getNVG(), clipBoundsTemp.minX, clipBoundsTemp.minY, clipBoundsTemp.getWidth(), clipBoundsTemp.getHeight());
 	}
 	
-	@Deprecated
-	protected Context cached_context;
 	protected boolean isDecendentSelected() {
-		if ( cached_context != null && cached_context.isSelected(this) ) {
-			return true;
+		if ( cached_context == null ) {
+			return false;
 		}
+		Node selected = cached_context.getSelected();
+		if ( selected == null )
+			return false;
 		
-		ObservableList<Node> c = getChildren();
-		for (int i = 0; i < c.size(); i++) {
-			if ( c.get(i).isDecendentSelected() ) {
+		Node p = selected;
+		if ( !p.isDescendentOf(this) )
+			return false;
+		
+		while(p != null) {
+			if ( p.getClass().isAssignableFrom(this.getClass()) ) {
 				return true;
 			}
+			p = p.getParent();
+		}
+		
+		return false;
+		/*if ( cached_context != null && cached_context.isSelected(this) ) {
+			return true;
+		}
+		if ( cached_context != null )
+			System.out.println("Checking " + this.toString() + "   /  " + cached_context.isSelected(this));
+
+		ObservableList<Node> c = getChildren();
+		for (int i = 0; i < c.size(); i++) {
+			Node child = c.get(i);
+			if ( child.isDecendentSelected() ) {
+				return true;
+			}
+		}
+		
+		return false;*/
+	}
+	
+	protected boolean isDecendentHovered() {
+		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
+		Context context = window.getContext();
+		Node hovered = context.getHovered();
+		if ( hovered == null ) {
+			return false;
+		}
+		
+		Node p = hovered;
+		if ( !p.isDescendentOf(this) )
+			return false;
+		
+		while(p != null) {
+			if ( p.getClass().isAssignableFrom(this.getClass()) ) {
+				return true;
+			}
+			p = p.getParent();
 		}
 		
 		return false;
@@ -617,6 +668,26 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
+	protected void onMouseEntered() {
+		if ( this.mouseEnteredEvent != null ) {
+			this.mouseEnteredEvent.onEvent(-1);
+		}
+	}
+	
+	protected void onMouseLeft() {
+		if ( this.mouseLeftEvent != null ) {
+			this.mouseLeftEvent.onEvent(-1);
+		}
+	}
+	
+	public void setMouseEnteredEvent( MouseEvent event ) {
+		this.mouseEnteredEvent = event;
+	}
+	
+	public void setMouseLeftEvent( MouseEvent event ) {
+		this.mouseLeftEvent = event;
+	}
+	
 	public void setMousePressedEvent( MouseEvent event ) {
 		this.mousePressedEvent = event;
 	}
@@ -627,6 +698,18 @@ public abstract class Node implements Resizable {
 	
 	public void setMouseScrollGestureEvent( ScrollEvent event ) {
 		this.mouseScrollEvent = event;
+	}
+	
+	public void setMouseDraggedEvent( MouseEvent event ) {
+		this.mouseDraggedEvent = event;
+	}
+	
+	public void setOnTextInput( KeyEvent event ) {
+		this.textInputEvent = event;
+	}
+	
+	public void setOnKeyPressed( KeyEvent event ) {
+		this.keyPressedEvent = event;
 	}
 
 	public abstract void render(Context context);

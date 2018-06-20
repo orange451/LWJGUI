@@ -7,6 +7,7 @@ public class ThemeWhite extends Theme {
 	public static Color backgroundColor		= Color.WHITE;
 	public static Color paneColor			= Color.WHITE_SMOKE;
 	public static Color selectColor			= Color.AQUA;
+	public static Color selectColorAlt		= selectColor.brighter();
 	public static Color selectColorPassive	= Color.LIGHT_GRAY;
 	public static Color shadow				= new Color(32, 32, 32, 100);
 	public static Color textColor			= Color.DARK_GRAY;
@@ -28,6 +29,11 @@ public class ThemeWhite extends Theme {
 	@Override
 	public Color getSelection() {
 		return selectColor;
+	}
+
+	@Override
+	public Color getSelectionAlt() {
+		return selectColorAlt;
 	}
 
 	@Override

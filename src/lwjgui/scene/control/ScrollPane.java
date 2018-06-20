@@ -20,7 +20,7 @@ import lwjgui.theme.Theme;
 public class ScrollPane extends Control {
 	
 	private Node content;
-	private ScrollCanvas internalPane;
+	protected ScrollCanvas internalPane;
 	private Vector2d viewportSize;
 	
 	private ScrollBar vBar;
@@ -85,41 +85,19 @@ public class ScrollPane extends Control {
 			internalPane.updateChildren();
 			children.remove(internalPane);
 			internalPane.setAbsolutePosition(this.getAbsoluteX(), this.getAbsoluteY());
-			content.setAbsolutePosition(this.getAbsoluteX()-hBar.pixel, this.getAbsoluteY()-vBar.pixel);
+			content.setAbsolutePosition(internalPane.getAbsoluteX()+this.padding.getLeft()-hBar.pixel, internalPane.getAbsoluteY()+this.padding.getTop()-vBar.pixel);
 			sizeInternal(viewportSize.x, viewportSize.y);
 			this.internalPane.setParent(this);
 			
 			// Update scrollbars
-			vBar.update(viewportSize.y, content.getHeight());
-			hBar.update(viewportSize.x, content.getWidth());
+			vBar.update(viewportSize.y, content.getHeight()+this.padding.getHeight());
+			hBar.update(viewportSize.x, content.getWidth()+this.padding.getWidth());
 		} else {
 			hBar.active = false;
 			vBar.active = false;
 		}
 		
 		updateBars();
-	}
-	
-	protected boolean isDecendentHovered() {
-		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
-		Context context = window.getContext();
-		Node hovered = context.getHovered();
-		if ( hovered == null ) {
-			return false;
-		}
-		
-		Node p = hovered;
-		if ( !p.isDescendentOf(this) )
-			return false;
-		
-		while(p != null) {
-			if ( p instanceof ScrollPane ) {
-				return true;
-			}
-			p = p.getParent();
-		}
-		
-		return false;
 	}
 	
 	private void sizeInternal(double x, double y) {
@@ -266,6 +244,10 @@ public class ScrollPane extends Control {
 		this.internalPane.getChildren().add(content);
 	}
 	
+	public Node getContent() {
+		return this.content;
+	}
+	
 	private class ScrollCanvas extends Pane {
 		ScrollCanvas() {
 			this.flag_clip = true;
@@ -328,7 +310,7 @@ public class ScrollPane extends Control {
 				return new Vector4d( 
 						(int)(getAbsoluteX()+pixelSpaceToScrollSpace(pixel)),
 						(int)(getAbsoluteY()+viewportSize.y+barPadding),
-						(int)length,
+						(int)Math.max(length,1),
 						(int)thickness
 						);
 			} else {
@@ -336,7 +318,7 @@ public class ScrollPane extends Control {
 						(int)(getAbsoluteX()+viewportSize.x+barPadding),
 						(int)(getAbsoluteY()+pixelSpaceToScrollSpace(pixel)),
 						(int)thickness,
-						(int)length
+						(int)Math.max(length,1)
 						);
 			}
 		}

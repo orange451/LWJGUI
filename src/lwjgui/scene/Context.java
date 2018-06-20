@@ -73,6 +73,7 @@ public class Context {
 		mouseHover();
 	}
 
+	private Node lastHovered = null;
 	protected boolean hoveringOverPopup;
 	private void mouseHover() {
 		// Get scene
@@ -91,12 +92,21 @@ public class Context {
 		}
 
 		// Not hovering over popups
-		if ( last != null && last.equals(hovered ) ) {
+		if ( last != null && last.equals(hovered) ) {
 			for (int i = 0; i < scene.getPopups().size(); i++) {
 				PopupWindow popup = scene.getPopups().get(i);
 				popup.weakClose();
 			}
 		}
+		
+		// Mouse hovered event
+		if ( hovered != null && (lastHovered == null || !lastHovered.equals(hovered)) ) {
+			hovered.onMouseEntered();
+		}
+		if (lastHovered != null && (hovered == null || !lastHovered.equals(hovered)) ) {
+			lastHovered.onMouseLeft();
+		}
+		lastHovered = hovered;
 	}
 
 	private Node calculateHoverPopups(Scene scene) {
@@ -211,5 +221,9 @@ public class Context {
 
 	public boolean isModernOpenGL() {
 		return this.modernOpenGL;
+	}
+
+	public Node getSelected() {
+		return this.selected;
 	}
 }

@@ -8,7 +8,7 @@ import lwjgui.geometry.Insets;
 public abstract class Region extends Parent {
 	private boolean fillToParentHeight;
 	private boolean fillToParentWidth;
-	private Insets padding = Insets.EMPTY;
+	protected Insets padding = Insets.EMPTY;
 	
 	private Color backgroundColor;
 	

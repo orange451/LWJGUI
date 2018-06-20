@@ -56,7 +56,7 @@ public abstract class ButtonBase extends Labeled {
 
 	@Override
 	public void render(Context context) {
-		clip(context, 4);
+		clip(context, 8);
 		
 		NanoVG.nvgTranslate(context.getNVG(), (int)getAbsoluteX(), (int)getAbsoluteY());		
 			long vg = context.getNVG();

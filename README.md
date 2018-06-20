@@ -14,6 +14,7 @@ Simple library to add a user interface in LWJGL3.
 - BorderPane
 - ScrollPane
 - OpenGLPane
+- TextArea
 - HBox
 - VBox
 - Font
@@ -25,6 +26,7 @@ Simple library to add a user interface in LWJGL3.
 ![PicNoMeansNo](https://i.imgur.com/jqRl6NY.png)
 ![ScrollSplitPane](https://i.imgur.com/EKVvWdP.png)
 ![MenuBar](https://i.imgur.com/RdKJJJA.png)
+![TextArea](https://i.imgur.com/0YNqcfz.png)
 
 # Required Libraries
 - [LWJGL3](https://www.lwjgl.org/)

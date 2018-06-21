@@ -33,6 +33,7 @@ public class Window {
 					return;
 				
 				if ( selected.mousePressed && selected.mouseDraggedEvent != null ) {
+					selected.mouseDraggedEvent.setConsumed(false);
 					selected.mouseDraggedEvent.onEvent(-1);
 				}
 			}
@@ -49,13 +50,16 @@ public class Window {
 			}
 
 			private void notifyTextInput(Node root, int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
+				if ( root.textInputEvent != null ) {
+					root.textInputEvent.setConsumed(false);
+					root.textInputEvent.onEvent(key, mods, isCtrlDown, isAltDown, isShiftDown);
+					if ( root.textInputEvent.isConsumed() )
+						return;
+				}
+				
 				ObservableList<Node> children = root.getChildren();
 				for (int i = 0; i < children.size(); i++) {
 					notifyTextInput(children.get(i), key, mods, isCtrlDown, isAltDown, isShiftDown);
-				}
-				
-				if ( root.textInputEvent != null ) {
-					root.textInputEvent.onEvent(key, mods, isCtrlDown, isAltDown, isShiftDown);
 				}
 			}
 		});
@@ -77,7 +81,10 @@ public class Window {
 				}
 				
 				if ( action == GLFW.GLFW_PRESS && root.keyPressedEvent != null ) {
+					root.keyPressedEvent.setConsumed(false);
 					root.keyPressedEvent.onEvent(key, mods, isCtrlDown, isAltDown, isShiftDown);
+					if ( root.keyPressedEvent.isConsumed() )
+						return;
 				}
 			}
 		});
@@ -150,10 +157,14 @@ public class Window {
 				for (int i = 0; i < children.size(); i++) {
 					notifyScroll(children.get(i), x, y);
 				}
-				if ( t.mouseScrollEventInternal != null )
+				if ( t.mouseScrollEventInternal != null ) {
+					t.mouseScrollEventInternal.setConsumed(false);
 					t.mouseScrollEventInternal.onEvent(x,y);
-				if ( t.mouseScrollEvent != null )
+				}
+				if ( t.mouseScrollEvent != null ) {
+					t.mouseScrollEvent.setConsumed(false);
 					t.mouseScrollEvent.onEvent(x,y);
+				}
 			}
 		});
 		

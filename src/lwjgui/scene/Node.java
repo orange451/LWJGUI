@@ -29,7 +29,7 @@ public abstract class Node implements Resizable {
 	protected MouseEvent mousePressedEvent;
 	protected MouseEvent mouseReleasedEvent;
 	protected MouseEvent mouseEnteredEvent;
-	protected MouseEvent mouseLeftEvent;
+	protected MouseEvent mouseExitedEvent;
 	protected MouseEvent mouseDraggedEvent;
 	protected ScrollEvent mouseScrollEvent;
 	protected ScrollEvent mouseScrollEventInternal;
@@ -654,6 +654,7 @@ public abstract class Node implements Resizable {
 		mousePressed = true;
 		
 		if ( mousePressedEvent != null ) {
+			this.mousePressedEvent.setConsumed(false);
 			this.mousePressedEvent.onEvent(button);
 		}
 	}
@@ -664,19 +665,22 @@ public abstract class Node implements Resizable {
 		mousePressed = false;
 		
 		if ( mouseReleasedEvent != null ) {
+			this.mouseReleasedEvent.setConsumed(false);
 			this.mouseReleasedEvent.onEvent(button);
 		}
 	}
 	
 	protected void onMouseEntered() {
 		if ( this.mouseEnteredEvent != null ) {
+			this.mouseEnteredEvent.setConsumed(false);
 			this.mouseEnteredEvent.onEvent(-1);
 		}
 	}
 	
-	protected void onMouseLeft() {
-		if ( this.mouseLeftEvent != null ) {
-			this.mouseLeftEvent.onEvent(-1);
+	protected void onMouseExited() {
+		if ( this.mouseExitedEvent != null ) {
+			this.mouseExitedEvent.setConsumed(false);
+			this.mouseExitedEvent.onEvent(-1);
 		}
 	}
 	
@@ -684,8 +688,8 @@ public abstract class Node implements Resizable {
 		this.mouseEnteredEvent = event;
 	}
 	
-	public void setMouseLeftEvent( MouseEvent event ) {
-		this.mouseLeftEvent = event;
+	public void setMouseExitedEvent( MouseEvent event ) {
+		this.mouseExitedEvent = event;
 	}
 	
 	public void setMousePressedEvent( MouseEvent event ) {

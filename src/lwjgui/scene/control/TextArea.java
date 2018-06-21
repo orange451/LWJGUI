@@ -2,6 +2,7 @@ package lwjgui.scene.control;
 
 import java.nio.Buffer;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
@@ -12,6 +13,7 @@ import org.lwjgl.nanovg.NanoVG;
 import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
+import lwjgui.collections.StateStack;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
@@ -36,9 +38,13 @@ public class TextArea extends Control {
 	private int fontSize = 16;
 	private Font font = Font.SANS;
 	private FontStyle style = FontStyle.REGULAR;
+	
+	private StateStack<TextState> undoStack;
 
 	public TextArea() {
+		this.undoStack = new StateStack<TextState>();
 		this.setText("");
+		this.saveState();
 		
 		this.fakeBox = new TextAreaContent();
 		this.fakeBox.setPrefSize(300, 300);
@@ -51,15 +57,23 @@ public class TextArea extends Control {
 		this.flag_clip = true;
 		
 		this.setOnTextInput(new KeyEvent() {
+			int charCount = Integer.MAX_VALUE/2;
 			@Override
 			public void onEvent(int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
 				if ( !editing )
 					return;
 				
+				charCount++;
 				deleteSelection();
 				insertText(caretPosition, ""+(char)key);
 				setCaretPosition(caretPosition+1);
 				deselect();
+				
+				// If you press space or if it hasen't saved in 10 chars --> Save history
+				if ( (char)key == ' ' || charCount > 6 ) {
+					charCount = 0;
+					saveState();
+				}
 			}
 		});
 		
@@ -71,31 +85,25 @@ public class TextArea extends Control {
 				
 				// Tab
 				if ( key == GLFW.GLFW_KEY_TAB ) {
-					deleteSelection();
-					insertText(caretPosition,"\t");
-					caretPosition++;
+					tab();
 				}
 				
 				// Backspace
 				if ( key == GLFW.GLFW_KEY_BACKSPACE ) {
-					if (!deleteSelection()) {
-						deleteText(caretPosition-1, caretPosition);
-						caretPosition--;
-					}
+					deletePreviousCharacter();
 				}
 				
 				// Delete
 				if ( key == GLFW.GLFW_KEY_DELETE ) {
-					if (!deleteSelection()) {
-						deleteText(caretPosition, caretPosition+1);
-					}
+					deleteNextCharacter();
 				}
 				
 				// Enter
 				if ( key == GLFW.GLFW_KEY_ENTER ) {
 					deleteSelection();
 					insertText(caretPosition, "\n");
-					caretPosition++;
+					setCaretPosition(caretPosition+1);
+					deselect();
 				}
 				
 				// Select All
@@ -116,6 +124,15 @@ public class TextArea extends Control {
 				// Cut
 				if ( key == GLFW.GLFW_KEY_X && isCtrlDown ) {
 					cut();
+				}
+				
+				// Undo/Redo
+				if ( key == GLFW.GLFW_KEY_Z && isCtrlDown ) {
+					if ( isShiftDown ) {
+						redo();
+					} else {
+						undo();
+					}
 				}
 				
 				// Home
@@ -224,9 +241,14 @@ public class TextArea extends Control {
 			}
 		});
 	}
+	
+	protected void saveState() {
+		undoStack.Push(new TextState(getText(),caretPosition));
+	}
 
 	public void clear() {
 		setText("");
+		saveState();
 	}
 	
 	public void deselect() {
@@ -235,6 +257,7 @@ public class TextArea extends Control {
 	}
 	
 	public void setText(String text) {
+		
 		int oldCaret = caretPosition;
 		
 		if ( lines == null ) {
@@ -262,6 +285,7 @@ public class TextArea extends Control {
 	
 	public void appendText(String text) {
 		insertText(getLength(), text);
+		saveState();
 	}
 	
 	public void insertText(int index, String text) {
@@ -294,10 +318,48 @@ public class TextArea extends Control {
 		String prefix = text.substring(0, range.getStart());
 		String suffix = text.substring(range.getEnd(),text.length());
 		this.setText(prefix+suffix);
+		saveState();
 	}
 	
 	public void deleteText(int start, int end) {
 		deleteText(new IndexRange(start, end));
+	}
+	
+	public void deletePreviousCharacter() {
+		if (!deleteSelection()) {
+			this.saveState();
+			int old = caretPosition;
+			deleteText(caretPosition-1, caretPosition);
+			this.setCaretPosition(old-1);
+		}
+	}
+	
+	public void deleteNextCharacter() {
+		if (!deleteSelection()) {
+			this.saveState();
+			deleteText(caretPosition, caretPosition+1);
+		}
+	}
+	
+	public void undo() {
+		if ( this.undoStack.isCurrent() ) {
+			this.saveState();
+			this.undoStack.Rewind(); // Go back one more, since setting text will overwrite
+		}
+		TextState state = this.undoStack.Rewind();
+		if ( state == null )
+			return;
+		setText(state.text);
+		this.setCaretPosition(state.caretPosition);
+	}
+	
+	public void redo() {
+		TextState state = this.undoStack.Forward();
+		if ( state == null )
+			return;
+		//this.undoStack.Rewind(); // Go back one more, since setting text will overwrite
+		setText(state.text);
+		this.setCaretPosition(state.caretPosition);
 	}
 	
 	public void copy() {
@@ -309,11 +371,13 @@ public class TextArea extends Control {
 	}
 	
 	public void cut() {
+		saveState();
 		copy();
 		deleteSelection();
 	}
 	
 	public void paste() {
+		saveState();
 		deleteSelection();
 		LWJGUI.runLater(()-> {
 			String str = GLFW.glfwGetClipboardString(cached_context.getWindowHandle());
@@ -330,6 +394,13 @@ public class TextArea extends Control {
 		int line = getRowFromCaret(caretPosition);
 		String str = lines.get(line);
 		caretPosition = this.getCaretFromRowLine(line, str.length());
+	}
+	
+	public void tab() {
+		deleteSelection();
+		insertText(caretPosition,"\t");
+		setCaretPosition(caretPosition+1);
+		saveState();
 	}
 	
 	public void selectAll() {
@@ -361,6 +432,10 @@ public class TextArea extends Control {
 		this.renderCaret = (float) (Math.PI*(3/2f));
 		
 		this.caretPosition = pos;
+		if ( this.caretPosition < 0 )
+			this.caretPosition = 0;
+		if ( this.caretPosition > getLength() )
+			this.caretPosition = getLength();
 	}
 	
 	public String getSelectedText() {
@@ -621,6 +696,21 @@ public class TextArea extends Control {
 		}
 	}
 	
+	class TextState {
+		protected String text;
+		protected int caretPosition;
+		
+		public TextState(String text, int pos) {
+			this.text = text;
+			this.caretPosition = pos;
+		}
+		
+		@Override
+		public String toString() {
+			return caretPosition+":"+text;
+		}
+	}
+	
 	class TextAreaScrollPane extends ScrollPane {
 		
 		public TextAreaScrollPane() {
@@ -633,16 +723,14 @@ public class TextArea extends Control {
 			this.getViewport().setMouseEnteredEvent(new MouseEvent() {
 				@Override
 				public void onEvent(int button) {
-					System.out.println("ENTERED");
 					getScene().setCursor(Cursor.IBEAM);
 				}
 			});
 
 			
-			this.getViewport().setMouseLeftEvent(new MouseEvent() {
+			this.getViewport().setMouseExitedEvent(new MouseEvent() {
 				@Override
 				public void onEvent(int button) {
-					System.out.println("LEFT");
 					getScene().setCursor(Cursor.NORMAL);
 				}
 			});
@@ -690,10 +778,12 @@ public class TextArea extends Control {
 			this.setBackground(null);
 		}
 		
+		private long lastTime;
 		@Override
 		public void render(Context context) {
 			this.clip(context);
-			renderCaret += 1/100f;
+			renderCaret += lastTime-System.currentTimeMillis();
+			lastTime = System.currentTimeMillis();
 			
 			// Render selection
 			IndexRange range = getSelection();
@@ -723,9 +813,9 @@ public class TextArea extends Control {
 						g2 = getGlyphPosition(i, l.length()-1);
 					}
 
-					int xx = (int)(getAbsoluteX()+g1.minx());
+					int xx = (int)(getAbsoluteX()+g1.minx()-0.5);
 					int yy = (int)getAbsoluteY() + (fontSize*i);
-					int width = (int) (g2.minx()-g1.minx())+1;
+					int width = (int) (g2.minx()-g1.minx())+2;
 					int height = fontSize;
 					LWJGUIUtil.fillRect(context, xx, yy, width, height, Theme.currentTheme().getSelectionAlt());
 				}
@@ -757,10 +847,10 @@ public class TextArea extends Control {
 				NVGGlyphPosition glyph = getGlyphPosition(caretPosition);
 				
 				if ( glyph != null ) {
-					int cx = (int) (getAbsoluteX()+glyph.minx());
+					int cx = (int) (getAbsoluteX()+glyph.minx()-0.5);
 					int cy = (int) (getAbsoluteY() + (line * fontSize));
 					
-					if ( Math.sin(renderCaret) < 0 ) {
+					if ( Math.sin(renderCaret*1/150f) < 0 ) {
 						LWJGUIUtil.fillRect(context, cx, cy, 2, fontSize, Color.BLACK);
 					}
 				}

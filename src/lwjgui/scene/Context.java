@@ -104,7 +104,7 @@ public class Context {
 			hovered.onMouseEntered();
 		}
 		if (lastHovered != null && (hovered == null || !lastHovered.equals(hovered)) ) {
-			lastHovered.onMouseLeft();
+			lastHovered.onMouseExited();
 		}
 		lastHovered = hovered;
 	}

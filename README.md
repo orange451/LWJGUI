@@ -15,6 +15,7 @@ Simple library to add a user interface in LWJGL3.
 - ScrollPane
 - OpenGLPane
 - TextArea
+- CodeArea
 - HBox
 - VBox
 - Font

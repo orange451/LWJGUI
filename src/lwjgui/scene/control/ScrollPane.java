@@ -42,6 +42,8 @@ public class ScrollPane extends Control {
 		this.flag_clip = true;
 		this.viewportSize = new Vector2i();
 		
+		this.setBackground(Theme.currentTheme().getPane());
+		
 		this.vBar = new ScrollBar(Orientation.VERTICAL);
 		this.hBar = new ScrollBar(Orientation.HORIZONTAL);
 		this.scrollBars = new ObservableList<ScrollBar>();

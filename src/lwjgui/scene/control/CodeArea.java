@@ -18,12 +18,15 @@ public class CodeArea extends TextArea {
 		this.setPreferredColumnCount(20);
 		this.setPreferredRowCount(10);
 		this.setFont(Font.CONSOLAS);
-		this.setFontSize(13);
+		this.setFontSize(14);
 		
-		this.lineCounter = new LineCounter();
-		
+		// Replace content window with our custom one
 		this.fakeBox = new CodeAreaContent();
 		this.internal.setContent(fakeBox);
+
+		// Add line counter to scrollpane
+		this.lineCounter = new LineCounter();
+		this.fakeBox.getChildren().add(lineCounter);
 		
 	}
 	
@@ -45,9 +48,6 @@ public class CodeArea extends TextArea {
 				l.setFont(Font.COURIER);
 				lineCounter.getChildren().add(l);
 			}
-			
-			if ( !this.internal.internalPane.getChildren().contains(lineCounter) )
-				this.internal.internalPane.getChildren().add(lineCounter);
 		}
 		
 		super.position(parent);
@@ -55,7 +55,8 @@ public class CodeArea extends TextArea {
 		double wid = lineCounter.getWidth()+2;
 		this.lineCounter.setPrefHeight(fakeBox.getHeight());
 		this.internal.setPadding(new Insets(internal.getPadding().getTop(), internal.getPadding().getRight(), internal.getPadding().getBottom(), wid));
-		this.lineCounter.setAbsolutePosition(getAbsoluteX(), fakeBox.getAbsoluteY());
+		this.lineCounter.offset(-internal.getPadding().getLeft()-1, 0);
+		//this.lineCounter.setAbsolutePosition(getAbsoluteX(), fakeBox.getAbsoluteY());
 	}
 	
 	@Override
@@ -82,7 +83,8 @@ public class CodeArea extends TextArea {
 			super.render(context);
 			
 			// Draw line coutner background
-			LWJGUIUtil.fillRect(context, lineCounter.getAbsoluteX()+1, CodeArea.this.getAbsoluteY()+1, lineCounter.getWidth(), CodeArea.this.getHeight()-2, Color.LIGHT_GRAY);
+			LWJGUIUtil.fillRect(context, lineCounter.getAbsoluteX()+1, CodeArea.this.getAbsoluteY()+1, lineCounter.getWidth(), CodeArea.this.getHeight()-2, Theme.currentTheme().getPane());
+			LWJGUIUtil.fillRect(context, lineCounter.getAbsoluteX()+lineCounter.getWidth(), CodeArea.this.getAbsoluteY()+1, 1, CodeArea.this.getHeight()-2, Theme.currentTheme().getSelectionPassive());
 		}
 	}
 	
@@ -91,7 +93,7 @@ public class CodeArea extends TextArea {
 			this.setFillToParentWidth(false);
 			this.setFillToParentHeight(true);
 			this.setMouseTransparent(true);
-			this.setPadding(new Insets(0,0,0,0));
+			this.setPadding(new Insets(0,4,0,0));
 			this.setAlignment(Pos.TOP_LEFT);
 			this.setBackground(null);
 			this.setPrefWidth(0);

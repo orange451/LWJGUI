@@ -9,12 +9,12 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.event.ButtonEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
-import lwjgui.scene.control.Button;
+import lwjgui.scene.control.PasswordField;
 import lwjgui.scene.control.TextArea;
+import lwjgui.scene.control.TextField;
 import lwjgui.scene.layout.BorderPane;
 
 public class TextAreaExample {
@@ -51,19 +51,20 @@ public class TextAreaExample {
 		pane.setPadding(new Insets(8,8,8,8));
 		scene.setRoot(pane);
 		
-		// Create a scrollpane
-		TextArea p = new TextArea();
-		p.setPrefSize(250, 150);
-		pane.setCenter(p);
+		// Create an Input Field
+		TextField f = new TextField();
+		f.setPrompt("Text Field");
+		pane.setTop(f);
 		
-		// Clear button
-		Button b = new Button("Clear Text");
-		b.setOnAction(new ButtonEvent() {
-			@Override
-			public void onEvent() {
-				p.clear();
-			}
-		});
-		pane.setBottom(b);
+		// Create a Text Area
+		TextArea t = new TextArea();
+		t.setPreferredColumnCount(22);
+		t.setPreferredRowCount(8);
+		pane.setCenter(t);
+		
+		// Password field
+		PasswordField p = new PasswordField();
+		p.setPrompt("Password Field");
+		pane.setBottom(p);
 	}
 }

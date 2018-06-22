@@ -1,6 +1,7 @@
 package lwjgui.scene.control;
 
 import org.joml.Vector2d;
+import org.joml.Vector2i;
 import org.joml.Vector4d;
 import org.lwjgl.glfw.GLFW;
 
@@ -21,7 +22,7 @@ public class ScrollPane extends Control {
 	
 	private Node content;
 	protected ScrollCanvas internalPane;
-	private Vector2d viewportSize;
+	private Vector2i viewportSize;
 	
 	private ScrollBar vBar;
 	private ScrollBar hBar;
@@ -39,7 +40,7 @@ public class ScrollPane extends Control {
 		this.setPrefSize(100, 100);
 		this.setAlignment(Pos.TOP_LEFT);
 		this.flag_clip = true;
-		this.viewportSize = new Vector2d();
+		this.viewportSize = new Vector2i();
 		
 		this.vBar = new ScrollBar(Orientation.VERTICAL);
 		this.hBar = new ScrollBar(Orientation.HORIZONTAL);
@@ -69,7 +70,7 @@ public class ScrollPane extends Control {
 	protected void position(Node parent) {
 		super.position(parent);
 
-		viewportSize.set(getWidth(),getHeight());
+		viewportSize.set((int)getWidth()-1,(int)getHeight()-1);
 		if ( vBar.active )
 			viewportSize.x -= (thickness+barPadding*2);
 		if ( hBar.active )
@@ -84,9 +85,9 @@ public class ScrollPane extends Control {
 			children.add(internalPane);
 			internalPane.updateChildren();
 			children.remove(internalPane);
-			internalPane.setAbsolutePosition(this.getAbsoluteX(), this.getAbsoluteY());
+			internalPane.setAbsolutePosition(this.getAbsoluteX()+1, this.getAbsoluteY()+1);
 			content.setAbsolutePosition(internalPane.getAbsoluteX()+this.padding.getLeft()-hBar.pixel, internalPane.getAbsoluteY()+this.padding.getTop()-vBar.pixel);
-			sizeInternal(viewportSize.x, viewportSize.y);
+			sizeInternal(viewportSize.x-1, viewportSize.y-1);
 			this.internalPane.setParent(this);
 			
 			// Update scrollbars
@@ -217,13 +218,13 @@ public class ScrollPane extends Control {
 		
 		this.clip(context);
 		if ( vBar.active ) // Vertical scrollbar track
-			LWJGUIUtil.fillRect(context, getAbsoluteX()+viewportSize.x, getAbsoluteY(), getWidth()-viewportSize.x, getHeight(), Theme.currentTheme().getControl());
+			LWJGUIUtil.fillRect(context, getAbsoluteX()+viewportSize.x, getAbsoluteY()+1, getWidth()-viewportSize.x-1, getHeight()-2, Theme.currentTheme().getControl());
 		if ( hBar.active ) // Horizontal scrollbar track
-			LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY()+viewportSize.y, getWidth(), getHeight()-viewportSize.y, Theme.currentTheme().getControl());
+			LWJGUIUtil.fillRect(context, getAbsoluteX()+1, getAbsoluteY()+viewportSize.y, getWidth()-2, getHeight()-viewportSize.y-1, Theme.currentTheme().getControl());
 		if ( vBar.active ) // Vertical scrollbar track outline
-			LWJGUIUtil.fillRect(context, getAbsoluteX()+viewportSize.x-1, getAbsoluteY(), 1, viewportSize.y, Theme.currentTheme().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getAbsoluteX()+viewportSize.x-1, getAbsoluteY()+1, 1, viewportSize.y-2, Theme.currentTheme().getSelectionPassive());
 		if ( hBar.active ) // Horizontal scrollbar track outline
-			LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY()+viewportSize.y-1, viewportSize.x, 1, Theme.currentTheme().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getAbsoluteX()+1, getAbsoluteY()+viewportSize.y-1, viewportSize.x-1, 1, Theme.currentTheme().getSelectionPassive());
 		
 		// Draw bars
 		for (int i = 0; i < scrollBars.size(); i++) {
@@ -234,8 +235,10 @@ public class ScrollPane extends Control {
 		}
 		
 		// Pane Outline
-		Color outlineColor = this.isDecendentSelected()?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
-		LWJGUIUtil.outlineRect( context, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), outlineColor);
+		if ( this.getBackground() != null ) {
+			Color outlineColor = this.isDecendentSelected()?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
+			LWJGUIUtil.outlineRect( context, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), outlineColor);
+		}
 	}
 	
 	public void setContent( Node content ) {
@@ -248,7 +251,7 @@ public class ScrollPane extends Control {
 		return this.content;
 	}
 	
-	private class ScrollCanvas extends Pane {
+	static class ScrollCanvas extends Pane {
 		ScrollCanvas() {
 			this.flag_clip = true;
 			this.setBackground(null);

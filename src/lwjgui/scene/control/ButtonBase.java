@@ -89,7 +89,7 @@ public abstract class ButtonBase extends Labeled {
 			NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, -hDist/2f, 0, h*hDist, buttonColor.getNVG(), Theme.currentTheme().getShadow().getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRoundedRect(vg, 1,1, w-2,h-2, (float) cornerRadius-1.0f);
-			NanoVG.nvgFillColor(vg, Color.WHITE.getNVG());
+			NanoVG.nvgFillColor(vg, Theme.currentTheme().getControl().getNVG());
 			NanoVG.nvgFill(vg);
 			NanoVG.nvgFillPaint(vg, bg);
 			NanoVG.nvgFill(vg);

@@ -14,6 +14,7 @@ public class Label extends Control {
 	private String text = "";
 	private String useString = "";
 	private float fontSize = 18;
+	private Font font = Font.SANS;
 	private FontStyle fontStyle = FontStyle.REGULAR;
 	private Color textColor;
 	
@@ -31,6 +32,10 @@ public class Label extends Control {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public void setFont(Font font) {
+		this.font = font;
 	}
 
 	public void setFontSize( float size ) {
@@ -64,8 +69,8 @@ public class Label extends Control {
 			int remove = 0;
 			
 			// Get some text bounds
-			float[] bounds = getTextBounds( context, text, Font.SANS, fontStyle, fontSize);
-			float[] elipBnd = getTextBounds( context, ELIPSES, Font.SANS, fontStyle, fontSize);
+			float[] bounds = getTextBounds( context, text, font, fontStyle, fontSize);
+			float[] elipBnd = getTextBounds( context, ELIPSES, font, fontStyle, fontSize);
 			float curWid = bounds[2]-bounds[0];
 			float prefWid = curWid;
 			this.setPrefWidth(prefWid);
@@ -81,7 +86,7 @@ public class Label extends Control {
 				while ( (curWid >= maxWid) && (remove < text.length()) ) {
 					remove++;
 					useString = useString.substring(0, text.length()-remove)+ELIPSES;
-					bounds = getTextBounds( context, useString, Font.SANS, fontStyle, fontSize);
+					bounds = getTextBounds( context, useString, font, fontStyle, fontSize);
 					curWid = bounds[2]-bounds[0];
 				}
 			}
@@ -126,7 +131,7 @@ public class Label extends Control {
 
 		// Setup font
 		NanoVG.nvgFontSize(vg, fontSize);
-		NanoVG.nvgFontFace(vg, Font.SANS.getFont(fontStyle));
+		NanoVG.nvgFontFace(vg, font.getFont(fontStyle));
 		NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
 
 		// Draw
@@ -145,8 +150,12 @@ public class Label extends Control {
 	}
 
 	public double getTextWidth() {
-		float[] bounds = getTextBounds(this.cached_context,text,Font.SANS,fontStyle,fontSize);
+		float[] bounds = getTextBounds(this.cached_context,text,font,fontStyle,fontSize);
 		return bounds[2]-bounds[0];
+	}
+
+	public String getText() {
+		return this.text;
 	}
 
 }

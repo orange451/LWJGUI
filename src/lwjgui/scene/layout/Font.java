@@ -22,6 +22,8 @@ import lwjgui.scene.Window;
 
 public class Font {
 	public static Font SANS = new Font("sans", "Roboto-Regular.ttf", "Roboto-Bold.ttf", "Roboto-Light.ttf", "Roboto-Italic.ttf");
+	public static Font COURIER = new Font("courier", "Courier-New-Regular.ttf", "Courier-New-Bold.ttf", null, "Courier-New-Italic.ttf");
+	public static Font CONSOLAS = new Font("consolas", "Consolas-Regular.ttf", "Consolas-Bold.ttf", null, "Consolas-Italic.ttf");
 	public static Font ARIAL = new Font("arial", "Arial-Unicode.ttf");
 
 	

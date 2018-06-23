@@ -149,6 +149,7 @@ public abstract class Node implements Resizable {
 		
 		// Resize if smaller than pref size
 		synchronized(size) {
+			//System.out.println(this.getClass() + "   /   preferred width: " + this.getPrefWidth());
 			// Size up to pref size
 			if ( size.x < prefsize.x )
 				size.x = prefsize.x;
@@ -171,6 +172,9 @@ public abstract class Node implements Resizable {
 						+ " ////////// " 
 						+ (parent.getInnerBounds().minY + (parent.getHeight()-parent.getInnerBounds().maxY)));*/
 			
+			//if ( size.x > prefsize.x && size.x < availableWidth && size.x < this.getMaxWidth() )
+				//size.x = prefsize.x;
+			
 			// Cap size to available size
 			if ( size.x > availableWidth )
 				size.x = availableWidth;
@@ -188,6 +192,7 @@ public abstract class Node implements Resizable {
 				size.x = this.getMaxWidth();
 			if ( size.y > this.getMaxHeight() )
 				size.y = this.getMaxHeight();
+			
 		}
 		//System.out.println("    " + getWidth());
 	}

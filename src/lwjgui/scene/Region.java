@@ -141,30 +141,16 @@ public abstract class Region extends Parent {
 		
 		// Fix this pane to the width of its elements. Provided it does not exceed max width
 		if ( !this.isFillToParentWidth() ) {
-			float maxWidthInside = (float) getMaxElementWidth();
-			if ( maxWidthInside > getInnerBounds().getWidth() && this.getChildren().size() > 0 ) {
-				double temp = maxWidthInside+padding.getWidth();
-				double potential = availableSize.x;
-				if ( temp <= potential ) {
-					size.x = temp;
-				} else {
-					size.x = potential;
-				}
-			}
+			float maxWidthInside = (float) (getMaxElementWidth()+padding.getWidth());
+			maxWidthInside = (float) Math.max(maxWidthInside, getPrefWidth());
+			size.x = Math.min(maxWidthInside, availableSize.x);
 		}
 		
 		// Fix this pane to the height of its elements. Provided it does not exceed max height
 		if ( !this.isFillToParentHeight() ) {
-			float maxHeightInside = (float) getMaxElementHeight();
-			if ( maxHeightInside > getInnerBounds().getHeight() && this.getChildren().size() > 0 ) {
-				double temp = maxHeightInside+padding.getHeight();
-				double potential = availableSize.y;
-				if ( temp <= potential ) {
-					size.y = temp;
-				} else {
-					size.y = potential;
-				}
-			}
+			float maxHeightInside = (float) (getMaxElementHeight()+padding.getHeight());
+			maxHeightInside = (float) Math.max(maxHeightInside, getPrefHeight());
+			size.y = Math.min(maxHeightInside, availableSize.y);
 		}
 		
 		super.resize();

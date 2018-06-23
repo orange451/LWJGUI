@@ -14,6 +14,7 @@ Simple library to add a user interface in LWJGL3.
 - BorderPane
 - ScrollPane
 - OpenGLPane
+- BlurPane
 - TextArea
 - CodeArea
 - HBox

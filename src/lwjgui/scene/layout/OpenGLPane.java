@@ -102,5 +102,4 @@ public class OpenGLPane extends StackPane {
 		// Render children
 		super.render(context);
 	}
-	float a;
 }

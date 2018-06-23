@@ -12,9 +12,9 @@ public class OffscreenBuffer {
 	private int texId = 0;
 	private int fboId = 0;
 	private int renderId = 0;
-	private boolean quadDirty = true;
-	private TexturedQuad quad = null;
-	private GenericShader quadShader = null;
+	protected boolean quadDirty = true;
+	protected TexturedQuad quad = null;
+	protected GenericShader quadShader = null;
 	
 	public OffscreenBuffer(int width, int height) {
 		
@@ -135,7 +135,9 @@ public class OffscreenBuffer {
 			}
 			quad = new TexturedQuad(0, 0, w, h, texId);
 		}
-		quad.render();
+		if ( quad != null ) {
+			quad.render();
+		}
 	}
 	
 	public void cleanup() {
@@ -149,5 +151,9 @@ public class OffscreenBuffer {
 		if (quadShader != null) {
 			quadShader.cleanup();
 		}
+	}
+
+	public TexturedQuad getQuad() {
+		return quad;
 	}
 }

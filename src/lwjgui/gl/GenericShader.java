@@ -229,4 +229,8 @@ public class GenericShader {
 		mat.get(matrix44Buffer);
 		glUniformMatrix4fv(worldMatLoc, false, matrix44Buffer);
 	}
+
+	public int getProgram() {
+		return id;
+	}
 }

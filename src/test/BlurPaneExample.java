@@ -70,7 +70,9 @@ public class BlurPaneExample {
 		root.setBackground(null);
 		scene.setRoot(root);
 
-		// Put a Blurred Pane in the scene
+		// Put a Blurred Pane in the scene.
+		// The blurred pane works by taking anything drawn underneath it in
+		// the same FBO, and blurs the section of it that the pane overlaps.
 		BlurPane pane = new BlurPane();
 		pane.setPrefSize(150, 150);
 		root.setCenter(pane);
@@ -81,6 +83,11 @@ public class BlurPaneExample {
 		pane.getChildren().add(l);
 	}
 
+	/**
+	 * This is a generic testing class to test OpenGL Rendering
+	 * @author Andrew
+	 *
+	 */
 	private static class RenderingCallbackTest implements Renderer {
 		private GenericShader shader;
 		private int vao;

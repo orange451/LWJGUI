@@ -74,6 +74,11 @@ public class OpenGLPaneExample {
 		ogl.getChildren().add(new Label("Hello World"));
 	}
 
+	/**
+	 * This is a generic testing class to test OpenGL Rendering
+	 * @author Andrew
+	 *
+	 */
 	static class RenderingCallbackTest implements Renderer {
 		private GenericShader shader;
 		private int vao;

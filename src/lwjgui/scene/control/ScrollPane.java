@@ -94,7 +94,7 @@ public class ScrollPane extends Control {
 			
 			// Update scrollbars
 			vBar.update(viewportSize.y, content.getHeight()+this.padding.getHeight());
-			hBar.update(viewportSize.x, content.getWidth()+this.padding.getWidth());
+			hBar.update(viewportSize.x, content.getWidth()+this.padding.getWidth()+2);
 		} else {
 			hBar.active = false;
 			vBar.active = false;

@@ -17,7 +17,7 @@ import lwjgui.scene.Context;
 
 public class BlurPane extends StackPane {
 	private Vector2i oldSize = new Vector2i(1,1);
-	private float blurRadius = 64;
+	private float blurRadius = 52;
 	private Color internalBackground;
 
 	private BlurBuffer buffer;
@@ -27,7 +27,7 @@ public class BlurPane extends StackPane {
 	public BlurPane() {
 		resizeBuffer();
 		
-		this.setBackground(new Color(48,48,48,48));
+		this.setBackground(Color.DIM_GRAY);
 	}
 
 	private void resizeBuffer() {
@@ -175,7 +175,7 @@ public class BlurPane extends StackPane {
 			quadShader.bind();
 			quadShader.projectOrtho(0, h, w, -h);
 			
-			GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uColor"), internalBackground.getRed()/255f, internalBackground.getGreen()/255f, internalBackground.getBlue()/255f, internalBackground.getAlpha()/255f);
+			GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uColor"), internalBackground.getRed()/255f-0.5f, internalBackground.getGreen()/255f-0.5f, internalBackground.getBlue()/255f-0.5f, internalBackground.getAlpha()/255f-0.5f);
 			GL20.glUniform1f(GL20.glGetUniformLocation(quadShader.getProgram(), "uBlurSize"), blurRadius);
 			
 			if ( quad != null ) {

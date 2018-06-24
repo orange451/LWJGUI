@@ -83,6 +83,11 @@ public class OpenGLExample {
 		root.setBottom(spinBox);
 	}
 
+	/**
+	 * This is a generic testing class to test OpenGL Rendering
+	 * @author Andrew
+	 *
+	 */
 	private static class RenderingCallbackTest implements Renderer {
 		private GenericShader shader;
 		private int vao;

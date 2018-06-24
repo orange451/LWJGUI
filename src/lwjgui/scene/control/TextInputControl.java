@@ -27,6 +27,8 @@ public abstract class TextInputControl extends Control {
 	private int caretPosition;
 	protected boolean editing = false;
 	
+	private boolean wordWrap;
+	
 	private int selectionStartPosition;
 	private int selectionEndPosition;
 	
@@ -99,6 +101,14 @@ public abstract class TextInputControl extends Control {
 	protected void saveState() {
 		undoStack.Push(new TextState(getText(),caretPosition));
 	}
+	
+	/*public void setWordWrap(boolean wrap) {
+		wordWrap = wrap;
+	}
+	
+	public boolean isWordWrap() {
+		return this.wordWrap;
+	}*/
 
 	public void clear() {
 		setText("");
@@ -140,13 +150,17 @@ public abstract class TextInputControl extends Control {
 			if ( i < split.length -1 ) {
 				tt += "\n";
 			}
-			lines.add(tt);
-			String drawLine = tt;
+			addRow(tt);
+			/*String drawLine = tt;
 			if ( this.textParser != null )
 				drawLine = textParser.parseText(drawLine);
+
+			lines.add(tt);
 			linesDraw.add(drawLine);
 			
 			ArrayList<GlyphData> glyphEntry = new ArrayList<GlyphData>();
+			
+			int curWid = 0;
 			
 			if ( cached_context != null ) {
 				bindFont();
@@ -159,9 +173,54 @@ public abstract class TextInputControl extends Control {
 				}
 				positions.free();
 				glyphData.add(glyphEntry);
-			}
+			}*/
 		}
 		setCaretPosition(oldCaret);
+	}
+	
+	private void addRow(String originalText) {
+		String drawLine = originalText;
+		
+		if ( cached_context != null ) {
+			ArrayList<GlyphData> glyphEntry = new ArrayList<GlyphData>();
+			bindFont();
+			org.lwjgl.nanovg.NVGGlyphPosition.Buffer positions = NVGGlyphPosition.malloc(drawLine.length());
+			NanoVG.nvgTextGlyphPositions(cached_context.getNVG(), 0, 0, drawLine, positions);
+			int j = 0;
+			while (positions.hasRemaining()) {
+				glyphEntry.add(fixGlyph(positions.get(), drawLine.substring(j, j+1)));
+				j++;
+			}
+			positions.free();
+			
+			// Word Wrap not yet implemented properly. Will be rewritten.
+			int maxWidth = Integer.MAX_VALUE;//(int) (wordWrap?this.internal.getViewport().getWidth():Integer.MAX_VALUE);
+			int index = 0;
+			int curWid = 0;
+			while ( index < glyphEntry.size() ) {
+				GlyphData entry = glyphEntry.get(index);
+				
+				if ( curWid >= maxWidth ) {
+					index--;
+					addRow(originalText.substring(0, index) + "\n");
+					addRow(originalText.substring(index,originalText.length()));
+					return;
+				}
+				
+				curWid += entry.width();
+				index++;
+			}
+			
+			glyphData.add(glyphEntry);
+		}
+		
+		// Get decorated line
+		if ( this.textParser != null )
+			drawLine = textParser.parseText(drawLine);
+		
+		// Add line normally
+		lines.add(originalText);
+		linesDraw.add(drawLine);
 	}
 	
 	public void appendText(String text) {
@@ -732,6 +791,10 @@ public abstract class TextInputControl extends Control {
 		@Override
 		public void onEvent(int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
 			if ( !editing )
+				return;
+			
+			// Return if consued
+			if ( this.isConsumed() )
 				return;
 			
 			// Backspace

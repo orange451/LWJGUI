@@ -11,7 +11,7 @@ import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
 
 public class CodeArea extends TextArea {
-	private VBox lineCounter;
+	private LineCounter lineCounter;
 	
 	public CodeArea() {
 		
@@ -30,33 +30,18 @@ public class CodeArea extends TextArea {
 		
 	}
 	
-	int lastLines = -1;
 	@Override
 	protected void position(Node parent) {
-		int lines = this.lines();
-		if ( lines != lastLines ) {
-			lastLines = lines;
-			
-			this.lineCounter.getChildren().clear();
-			this.lineCounter.setMaxWidth(0);
-			this.lineCounter.position(fakeBox);
-			this.lineCounter.setMaxWidth(Integer.MAX_VALUE);
-			
-			for (int i = 0; i < lines; i++) {
-				Label l = new Label(" "+(i+1));
-				l.setFontSize(fontSize);
-				l.setFont(Font.COURIER);
-				lineCounter.getChildren().add(l);
-			}
-		}
 		
+		// Only update if the amount of lines has changed
+		lineCounter.update(this.lines());
+		
+		// Normal positioning
 		super.position(parent);
 		
-		double wid = lineCounter.getWidth()+2;
-		this.lineCounter.setPrefHeight(fakeBox.getHeight());
-		this.internal.setPadding(new Insets(internal.getPadding().getTop(), internal.getPadding().getRight(), internal.getPadding().getBottom(), wid));
+		// Make sure line counter is on the left side of the area.
+		this.internal.setPadding(new Insets(internal.getPadding().getTop(), internal.getPadding().getRight(), internal.getPadding().getBottom(), lineCounter.getWidth()+2));
 		this.lineCounter.offset(-internal.getPadding().getLeft()-1, 0);
-		//this.lineCounter.setAbsolutePosition(getAbsoluteX(), fakeBox.getAbsoluteY());
 	}
 	
 	@Override
@@ -89,6 +74,8 @@ public class CodeArea extends TextArea {
 	}
 	
 	class LineCounter extends VBox {
+		int lastLines = -1;
+		
 		public LineCounter() {
 			this.setFillToParentWidth(false);
 			this.setFillToParentHeight(true);
@@ -97,6 +84,21 @@ public class CodeArea extends TextArea {
 			this.setAlignment(Pos.TOP_LEFT);
 			this.setBackground(null);
 			this.setPrefWidth(0);
+		}
+		
+		public void update(int lines) {
+			if ( lines != lastLines ) {
+				lastLines = lines;
+				
+				// Add line labels in
+				getChildren().clear();
+				for (int i = 0; i < lines; i++) {
+					Label l = new Label(" "+(i+1));
+					l.setFontSize(fontSize);
+					l.setFont(Font.COURIER);
+					getChildren().add(l);
+				}
+			}
 		}
 	}
 }

@@ -158,4 +158,8 @@ public class Label extends Control {
 		return this.text;
 	}
 
+	public Color getTextFill() {
+		return this.textColor;
+	}
+
 }

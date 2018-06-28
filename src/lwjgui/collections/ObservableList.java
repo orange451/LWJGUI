@@ -46,9 +46,7 @@ public class ObservableList<E> {
 	}
 	
 	public void remove(E element) {
-		internal.remove(element);
-
-		if ( removeCallback != null ) {
+		if (internal.remove(element) && removeCallback != null) {
 			removeCallback.onEvent(element);
 		}
 	}

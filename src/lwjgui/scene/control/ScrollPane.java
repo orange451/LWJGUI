@@ -72,7 +72,7 @@ public class ScrollPane extends Control {
 	protected void position(Node parent) {
 		super.position(parent);
 
-		viewportSize.set((int)getWidth()-1,(int)getHeight()-1);
+		viewportSize.set((int)getWidth(),(int)getHeight());
 		if ( vBar.active )
 			viewportSize.x -= (thickness+barPadding*2);
 		if ( hBar.active )
@@ -83,6 +83,7 @@ public class ScrollPane extends Control {
 			// Update internal content
 			this.internalPane.setParent(null);
 			this.updateChildren();
+			content.setMinSize(viewportSize.x-getPadding().getWidth()-1, viewportSize.y-getPadding().getHeight()-1);
 			sizeInternal(Integer.MAX_VALUE, Integer.MAX_VALUE);
 			children.add(internalPane);
 			internalPane.updateChildren();
@@ -94,7 +95,7 @@ public class ScrollPane extends Control {
 			
 			// Update scrollbars
 			vBar.update(viewportSize.y, content.getHeight()+this.padding.getHeight());
-			hBar.update(viewportSize.x, content.getWidth()+this.padding.getWidth()+2);
+			hBar.update(viewportSize.x, content.getWidth()+this.padding.getWidth());
 		} else {
 			hBar.active = false;
 			vBar.active = false;
@@ -220,11 +221,11 @@ public class ScrollPane extends Control {
 		
 		this.clip(context);
 		if ( vBar.active ) // Vertical scrollbar track
-			LWJGUIUtil.fillRect(context, getAbsoluteX()+viewportSize.x, getAbsoluteY()+1, getWidth()-viewportSize.x-1, getHeight()-2, Theme.currentTheme().getControl());
+			LWJGUIUtil.fillRect(context, getAbsoluteX()+viewportSize.x-0.5, getAbsoluteY()+1, getWidth()-viewportSize.x-1, getHeight()-2, Theme.currentTheme().getControl());
 		if ( hBar.active ) // Horizontal scrollbar track
 			LWJGUIUtil.fillRect(context, getAbsoluteX()+1, getAbsoluteY()+viewportSize.y, getWidth()-2, getHeight()-viewportSize.y-1, Theme.currentTheme().getControl());
 		if ( vBar.active ) // Vertical scrollbar track outline
-			LWJGUIUtil.fillRect(context, getAbsoluteX()+viewportSize.x-1, getAbsoluteY()+1, 1, viewportSize.y-2, Theme.currentTheme().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getAbsoluteX()+viewportSize.x-1.5, getAbsoluteY()+1, 1, viewportSize.y-2, Theme.currentTheme().getSelectionPassive());
 		if ( hBar.active ) // Horizontal scrollbar track outline
 			LWJGUIUtil.fillRect(context, getAbsoluteX()+1, getAbsoluteY()+viewportSize.y-1, viewportSize.x-1, 1, Theme.currentTheme().getSelectionPassive());
 		
@@ -320,7 +321,7 @@ public class ScrollPane extends Control {
 						);
 			} else {
 				return new Vector4d( 
-						(int)(getAbsoluteX()+viewportSize.x+barPadding),
+						(int)(getAbsoluteX()+viewportSize.x+barPadding-0.5),
 						(int)(getAbsoluteY()+pixelSpaceToScrollSpace(pixel)),
 						(int)thickness,
 						(int)Math.max(length,1)

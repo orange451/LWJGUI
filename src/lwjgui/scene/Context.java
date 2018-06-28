@@ -134,6 +134,8 @@ public class Context {
 		if ( root.isMouseTransparent() )
 			return parent;
 
+		//System.out.println(root.getClass().getSimpleName() + " / " + root.getWidth());
+		
 		// If mouse is out of our bounds, we're not clickable
 		if ( mouseX <= root.getAbsoluteX() || mouseX > root.getAbsoluteX() + root.getWidth() )
 			return parent;
@@ -145,7 +147,7 @@ public class Context {
 			ObservableList<Node> children = ((Parent)root).getChildren();
 			for (int i = 0; i < children.size(); i++) {
 				Node ret = calculateHoverRecursive( root, children.get(i));
-				if ( ret != null && ! ret.equals(root)) {
+				if ( ret != null && !ret.equals(root)) {
 					return ret;
 				}
 			}

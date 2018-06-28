@@ -27,7 +27,7 @@ public abstract class TextInputControl extends Control {
 	private int caretPosition;
 	protected boolean editing = false;
 	
-	private boolean wordWrap;
+	private boolean wordWrap; // Not used yet. Requires major changes
 	
 	private int selectionStartPosition;
 	private int selectionEndPosition;
@@ -1027,6 +1027,8 @@ public abstract class TextInputControl extends Control {
 		private long lastTime;
 		@Override
 		public void render(Context context) {
+			super.render(context);
+			
 			if ( glyphData.size() == 0 )
 				return;
 			

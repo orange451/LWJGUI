@@ -41,7 +41,7 @@ public class CodeArea extends TextArea {
 		
 		// Make sure line counter is on the left side of the area.
 		this.internal.setPadding(new Insets(internal.getPadding().getTop(), internal.getPadding().getRight(), internal.getPadding().getBottom(), lineCounter.getWidth()+2));
-		this.lineCounter.offset(-internal.getPadding().getLeft()-1, 0);
+		this.lineCounter.offset(-(fakeBox.getAbsoluteX()-this.getAbsoluteX())-1, 0);
 	}
 	
 	@Override

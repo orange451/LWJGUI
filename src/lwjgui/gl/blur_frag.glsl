@@ -21,6 +21,12 @@ void main(void) {
          result += vec4(texture(colorSampler, passTexCoord + offset).rgb,1.0);
       }
    }
- 
-   outColor = (result / float(uBlurSize * uBlurSize)) + uColor;
+   
+	// Calculate final color
+	vec4 final = result / float(uBlurSize*uBlurSize);
+	final = final * vec4(1,1,1,uColor.a);
+	final = final + vec4(uColor.rgb,0.0);
+	
+	// Output to screen
+	outColor = final;
 }

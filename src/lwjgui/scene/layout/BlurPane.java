@@ -27,7 +27,7 @@ public class BlurPane extends StackPane {
 	public BlurPane() {
 		resizeBuffer();
 		
-		this.setBackground(Color.DIM_GRAY);
+		this.setBackground(new Color(150,150,150,255));
 	}
 
 	private void resizeBuffer() {
@@ -175,7 +175,7 @@ public class BlurPane extends StackPane {
 			quadShader.bind();
 			quadShader.projectOrtho(0, h, w, -h);
 			
-			GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uColor"), internalBackground.getRed()/255f-0.5f, internalBackground.getGreen()/255f-0.5f, internalBackground.getBlue()/255f-0.5f, internalBackground.getAlpha()/255f-0.5f);
+			GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uColor"), internalBackground.getRed()/255f-0.5f, internalBackground.getGreen()/255f-0.5f, internalBackground.getBlue()/255f-0.5f, internalBackground.getAlpha()/255f);
 			GL20.glUniform1f(GL20.glGetUniformLocation(quadShader.getProgram(), "uBlurSize"), blurRadius);
 			
 			if ( quad != null ) {

@@ -27,7 +27,7 @@ public class TextArea extends TextInputControl {
 			// Parents key input
 			super.onEvent(key, mods, isCtrlDown, isAltDown, isShiftDown);
 			
-			// Return if consued
+			// Return if consumed
 			if ( this.isConsumed() )
 				return;
 			

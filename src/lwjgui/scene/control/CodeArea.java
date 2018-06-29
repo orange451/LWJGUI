@@ -41,7 +41,10 @@ public class CodeArea extends TextArea {
 		
 		// Make sure line counter is on the left side of the area.
 		this.internal.setPadding(new Insets(internal.getPadding().getTop(), internal.getPadding().getRight(), internal.getPadding().getBottom(), lineCounter.getWidth()+2));
-		this.lineCounter.offset(-(fakeBox.getAbsoluteX()-this.getAbsoluteX())-1, 0);
+		double a = this.internal.getAbsoluteX()+this.internal.getPadding().getLeft();
+		double b = this.internal.getContent().getAbsoluteX();
+		double c = b-a;
+		this.lineCounter.offset(-internal.getPadding().getLeft()-c, 0);
 	}
 	
 	@Override
@@ -67,7 +70,7 @@ public class CodeArea extends TextArea {
 			// Render normal text
 			super.render(context);
 			
-			// Draw line coutner background
+			// Draw line counter background
 			LWJGUIUtil.fillRect(context, lineCounter.getAbsoluteX()+1, CodeArea.this.getAbsoluteY()+1, lineCounter.getWidth(), CodeArea.this.getHeight()-2, Theme.currentTheme().getPane());
 			LWJGUIUtil.fillRect(context, lineCounter.getAbsoluteX()+lineCounter.getWidth(), CodeArea.this.getAbsoluteY()+1, 1, CodeArea.this.getHeight()-2, Theme.currentTheme().getSelectionPassive());
 		}

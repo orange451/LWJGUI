@@ -53,10 +53,6 @@ public abstract class TextInputControl extends Control {
 		this.setText("");
 		this.saveState();
 		
-		LWJGUI.runLater(()-> {
-			setText(getText());
-		});
-		
 		this.fakeBox = new TextAreaContent();
 
 		this.setBackground(Theme.currentTheme().getControlHover());
@@ -1029,8 +1025,9 @@ public abstract class TextInputControl extends Control {
 		public void render(Context context) {
 			super.render(context);
 			
-			if ( glyphData.size() == 0 )
-				return;
+			if ( glyphData.size() == 0 ) {
+				setText(getText());
+			}
 			
 			this.clip(context);
 			renderCaret += lastTime-System.currentTimeMillis();

@@ -9,10 +9,8 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
-import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
-import lwjgui.scene.control.Label;
 import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.control.TreeItem;
 import lwjgui.scene.control.TreeView;

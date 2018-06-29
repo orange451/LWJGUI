@@ -625,7 +625,7 @@ public abstract class TextInputControl extends Control {
 		
 		// If mouse is halfway over, move to next character (provided the character exists, and it isn't a new line)
 		if ( pixelX > tempx + lastGlyph.width()/2) {
-			if ( index+1 < line.length() && line.charAt(index+1) != '\n' ) {
+			if ( getRowFromCaret(getCaretFromRowLine(row,index+1)) == row ) {
 				index++;
 			}
 		}

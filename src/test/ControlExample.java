@@ -10,15 +10,23 @@ import org.lwjgl.glfw.GLFW;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Node;
+import lwjgui.scene.Parent;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.control.Button;
+import lwjgui.scene.control.ButtonBase;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.RadioButton;
+import lwjgui.scene.control.SegmentedButton;
+import lwjgui.scene.control.ToggleButton;
 import lwjgui.scene.control.ToggleGroup;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
+import lwjgui.theme.Theme;
+import lwjgui.theme.ThemeDark;
 
 public class ControlExample {
 	public static final int WIDTH   = 320;
@@ -60,21 +68,72 @@ public class ControlExample {
 	}
 
 	private static void addComponents(Scene scene) {
+		//Theme.setTheme(new ThemeDark());
+		
 		// Create background pane
 		StackPane background = new StackPane();
 		scene.setRoot(background);
 		
+		// Create a vbox to store examples vertically
+		VBox vbox = new VBox();
+		vbox.setSpacing(32);
+		background.getChildren().add(vbox);
+		
+		{
+			// Segmented Button
+			displaySegmentedButton(vbox);
+		}
+		
 		// Create hbox used to store two control types
 		HBox hbox = new HBox();
 		hbox.setSpacing(32);
-		background.getChildren().add(hbox);
+		vbox.getChildren().add(hbox);
 		
+		{
+			// Checkboxes
+			displayCheckboxes(hbox);		
+			
+			// Redio Buttons
+			displayRadioButtons(hbox);
+		}
 		
+	}
+
+	private static void displaySegmentedButton(Parent parent) {
+		HBox t = new HBox();
+		parent.getChildren().add(t);
 		
+		ToggleGroup g = new ToggleGroup();
 		
+		ToggleButton b1 = new ToggleButton("Day", g);
+		ToggleButton b2 = new ToggleButton("Week", g);
+		ToggleButton b3 = new ToggleButton("Month", g);
+		ToggleButton b4 = new ToggleButton("Year", g);
+		
+		SegmentedButton b = new SegmentedButton(b1, b2, b3, b4);
+		
+		t.getChildren().add(b);
+	}
+
+	private static void displayRadioButtons(Parent parent) {
+		// Create a vertical box to hold radio buttons
+		VBox radio = exampleBox("Radio Buttons:");
+		parent.getChildren().add(radio);
+		
+		// Create radio options
+		ToggleGroup g = new ToggleGroup(); // This prevents multiple radio options from being selected
+		radio.getChildren().add(new RadioButton("Option 1", g));
+		radio.getChildren().add(new RadioButton("Option 2", g));
+		radio.getChildren().add(new RadioButton("Option 3", g));
+		
+		// Force select the third toggle
+		g.selectToggle(g.getToggles().get(2));
+	}
+
+	private static void displayCheckboxes(Parent parent) {
 		// Create a vertical box to hold checkboxes
 		VBox pane = exampleBox("Check boxes:");
-		hbox.getChildren().add(pane);
+		parent.getChildren().add(pane);
 		
 		// Various ways to add checkboxes
 		CheckBox b = new CheckBox("Hello World");
@@ -85,22 +144,5 @@ public class ControlExample {
 		// Make the first checkbox selected visually and checked
 		b.setChecked(true);
 		LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext().setSelected(b);
-		
-		
-		
-		
-		
-		// Create a vertical box to hold radio buttons
-		VBox radio = exampleBox("Radio Buttons:");
-		hbox.getChildren().add(radio);
-		
-		// Create radio options
-		ToggleGroup g = new ToggleGroup(); // This prevents multiple radio options from being selected
-		radio.getChildren().add(new RadioButton("Option 1", g));
-		radio.getChildren().add(new RadioButton("Option 2", g));
-		radio.getChildren().add(new RadioButton("Option 3", g));
-		
-		// Force select the third toggle
-		g.selectToggle(g.getToggles().get(2));
 	}
 }

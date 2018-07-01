@@ -27,6 +27,11 @@ public class RadioButton extends ToggleButton {
 	}
 	
 	@Override
+	protected boolean isPressed() {
+		return super.isPressed() && !this.isSelected();
+	}
+	
+	@Override
 	protected void resize() {
 		this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
 		this.setMinHeight(size);
@@ -43,7 +48,7 @@ public class RadioButton extends ToggleButton {
 		this.graphicLabel.offset.x = size + spacing;
 		this.graphicLabel.alignment = Pos.CENTER_LEFT;
 		
-		this.cornerRadius = size/2f;
+		this.setCornerRadius(size/2f);
 		
 		super.render(context);
 

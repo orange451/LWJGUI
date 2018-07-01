@@ -14,8 +14,9 @@ public class Button extends ButtonBase {
 		this.setText(name);
 	}
 	
+	@Override
 	public void setCornerRadius( double radius ) {
-		this.cornerRadius = radius;
+		super.setCornerRadius(radius);
 	}
 	
 	@Override

@@ -2,7 +2,7 @@ package lwjgui.scene.control;
 
 import lwjgui.event.ButtonEvent;
 
-public abstract class ToggleButton extends ButtonBase implements Toggle {
+public class ToggleButton extends ButtonBase implements Toggle {
 	protected boolean selected;
 	protected ToggleGroup toggleGroup;
 	
@@ -23,11 +23,19 @@ public abstract class ToggleButton extends ButtonBase implements Toggle {
 		this.setToggleGroup(group);
 	}
 	
+	@Override
+	protected boolean isPressed() {
+		return super.isPressed() || isSelected();
+	}
+	
 	/**
 	 * Sets the toggle group of this button.
 	 * @param g
 	 */
 	public void setToggleGroup( ToggleGroup g ) {
+		if ( g == null )
+			return;
+		
 		this.toggleGroup = g;
 		g.add(this);
 	}

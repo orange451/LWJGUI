@@ -16,7 +16,7 @@ public class HBox extends DirectionalBox {
 		if ( getAlignment().getHpos() == HPos.RIGHT)
 			xMult = 1;*/
 		
-		double xStart = (getWidth()*xMult)-(totalWidth*xMult);
+		int xStart = (int) ((getWidth()*xMult)-(totalWidth*xMult));
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			

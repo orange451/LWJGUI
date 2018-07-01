@@ -6,6 +6,7 @@ Simple library to add a user interface in LWJGL3.
 - Button
 - CheckBox
 - RadioButton
+- SegmentedButton
 - ContextMenu
 - MenuBar
 - Label
@@ -22,7 +23,7 @@ Simple library to add a user interface in LWJGL3.
 - Font
 
 # Screenshots
-![PicCheckBox](https://i.imgur.com/XjhGSCI.png)
+![PicControlExample](https://i.imgur.com/NfH3uUB.png)
 ![PicSplitPane](https://i.imgur.com/l3gsiYo.png)
 ![PicOpenGL](https://i.imgur.com/X3PRVcI.png)
 ![PicNoMeansNo](https://i.imgur.com/jqRl6NY.png)

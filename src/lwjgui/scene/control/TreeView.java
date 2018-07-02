@@ -22,7 +22,6 @@ public class TreeView<E> extends TreeBase<E> {
 	
 	public TreeView() {
 		this.internalBox = new VBox();
-		this.internalBox.setFillToParentWidth(true);
 		this.children.add(internalBox);
 		
 		this.flag_clip = true;
@@ -78,12 +77,25 @@ public class TreeView<E> extends TreeBase<E> {
 	
 	@Override
 	protected void position(Node parent) {
+		this.internalBox.setPrefWidth(0);
+		for (int i = 0; i < visibleItems.size(); i++) {
+			TreeItem<E> item = visibleItems.get(i);
+			TreeNode<E> node = getNode(item);
+			if ( node != null ) {
+				node.setPrefWidth(0);
+			}
+		}
 		super.position(parent);
+		
+		// Size internal box
+		this.internalBox.setPrefWidth(TreeView.this.getWidth());
 
+		// Refresh visible Item list
 		visibleItems.clear();
 		internalBox.getChildren().clear();
 		addChildren(0, this);
 		
+		// Deselect if not selected
 		if ( !this.isDecendentSelected() )
 			lastSelected = null;
 	}
@@ -97,7 +109,7 @@ public class TreeView<E> extends TreeBase<E> {
 			TreeItem<E> child = (TreeItem<E>)itm.get(i);
 			TreeNode<E> node = root.getNode(child);
 			node.root = this;
-			node.setPrefWidth(internalBox.getWidth());
+			node.setPrefWidth(TreeView.this.getWidth());
 			node.setInset(indent*indentWidth);
 			
 			internalBox.getChildren().add(node);

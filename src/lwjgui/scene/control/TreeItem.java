@@ -168,7 +168,7 @@ class TreeNode<E> extends HBox {
 		// Draw fancy outline
 		if ( selected && active ) {
 			this.clip(context);
-			LWJGUIUtil.outlineRect(context, getAbsoluteX()+1, getAbsoluteY()+1, getWidth()-2, getHeight()-3, Theme.currentTheme().getSelectionAlt());
+			LWJGUIUtil.outlineRect(context, getAbsoluteX(), getAbsoluteY()+1, getWidth()-1, getHeight()-3, Theme.currentTheme().getSelectionAlt());
 		}
 	}
 }

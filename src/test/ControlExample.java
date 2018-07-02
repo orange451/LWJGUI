@@ -10,12 +10,9 @@ import org.lwjgl.glfw.GLFW;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Pos;
-import lwjgui.scene.Node;
 import lwjgui.scene.Parent;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
-import lwjgui.scene.control.Button;
-import lwjgui.scene.control.ButtonBase;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.RadioButton;
@@ -25,8 +22,6 @@ import lwjgui.scene.control.ToggleGroup;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
-import lwjgui.theme.Theme;
-import lwjgui.theme.ThemeDark;
 
 public class ControlExample {
 	public static final int WIDTH   = 320;
@@ -68,8 +63,6 @@ public class ControlExample {
 	}
 
 	private static void addComponents(Scene scene) {
-		//Theme.setTheme(new ThemeDark());
-		
 		// Create background pane
 		StackPane background = new StackPane();
 		scene.setRoot(background);
@@ -104,14 +97,12 @@ public class ControlExample {
 		parent.getChildren().add(t);
 		
 		ToggleGroup g = new ToggleGroup();
-		
 		ToggleButton b1 = new ToggleButton("Day", g);
 		ToggleButton b2 = new ToggleButton("Week", g);
 		ToggleButton b3 = new ToggleButton("Month", g);
 		ToggleButton b4 = new ToggleButton("Year", g);
 		
 		SegmentedButton b = new SegmentedButton(b1, b2, b3, b4);
-		
 		t.getChildren().add(b);
 	}
 

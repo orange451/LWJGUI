@@ -97,7 +97,7 @@ public class TreeView<E> extends TreeBase<E> {
 			TreeItem<E> child = (TreeItem<E>)itm.get(i);
 			TreeNode<E> node = root.getNode(child);
 			node.root = this;
-			node.setPrefWidth(this.getWidth());
+			node.setPrefWidth(internalBox.getWidth());
 			node.setInset(indent*indentWidth);
 			
 			internalBox.getChildren().add(node);

@@ -120,7 +120,7 @@ public abstract class ButtonBase extends Labeled {
 				c2 = buttonColor.darker().getNVG();
 				c1 = c2;
 			}
-			NanoVG.nvgStrokePaint(vg, NanoVG.nvgLinearGradient(vg, 0, 0, 0, h, c1, c2, NVGPaint.calloc()));
+			NanoVG.nvgStrokePaint(vg, NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1, c2, NVGPaint.calloc()));
 			NanoVG.nvgStrokeWidth(vg, 1f);
 			NanoVG.nvgStroke(vg);
 			

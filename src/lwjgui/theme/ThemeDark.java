@@ -6,15 +6,15 @@ public class ThemeDark extends Theme {
 
 	public static Color backgroundColor		= Color.BLACK;
 	public static Color paneColor			= new Color(35,35,35);
-	public static Color selectColor			= Color.aqua.darker().darker();
+	public static Color selectColor			= new Color(110, 135, 160);
 	public static Color selectColorPassive	= Color.DARK_GRAY;
 	public static Color selectColorAlt		= selectColor.brighter();
 	public static Color shadow				= new Color(16, 16, 16, 100);
 	public static Color textColor			= Color.SILVER;
-	public static Color controlColor			= new Color(50,50,50);
-	public static Color controlColorAlt		= controlColor.darker().darker();
-	public static Color controlHoverColor	= new Color(70,70,70);
-	public static Color controlOutlineColor	= new Color(22,22,22);
+	public static Color controlColor			= new Color(60,60,60);
+	public static Color controlColorAlt		= new Color(50,50,50);
+	public static Color controlHoverColor	= new Color(80,85,90);
+	public static Color controlOutlineColor	= new Color(20,20,20);
 
 	@Override
 	public Color getBackground() {

@@ -46,6 +46,9 @@ public class Color {
 	public final static Color lightYellow  = new Color(255, 238, 158);
 	public final static Color LIGHT_YELLOW = lightYellow;
 
+	public final static Color lightBlue  = new Color(158, 238, 255);
+	public final static Color LIGHT_BLUE = lightBlue;
+
 	public final static Color green     = new Color(0, 255, 0);
 	public final static Color GREEN 	= green;
 

@@ -2,6 +2,7 @@ package lwjgui.scene.shape;
 
 import org.lwjgl.nanovg.NanoVG;
 
+import lwjgui.Color;
 import lwjgui.scene.Context;
 
 public class Rectangle extends Shape {
@@ -14,6 +15,11 @@ public class Rectangle extends Shape {
 	public Rectangle( float radius ) {
 		this.setPrefSize(16, 16);
 		this.setCornerRadius(radius);
+	}
+	
+	public Rectangle( int width, int height, Color color ) {
+		this.setPrefSize(width, height);
+		this.setFill(color);
 	}
 	
 	public void setCornerRadius( float radius ) {

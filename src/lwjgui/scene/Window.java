@@ -110,7 +110,14 @@ public class Window {
 					Node hovered = context.getHovered();
 					if ( hovered != null && hovered.mousePressed ) {
 						hovered.onMouseReleased(button);
-						if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
+						
+						// Check if consumed
+						boolean consumed = false;
+						if ( hovered.mouseReleasedEvent != null && hovered.mouseReleasedEvent.isConsumed() )
+							consumed = true;
+						
+						// If not consumed, set selected
+						if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT && !consumed) {
 							context.setSelected(hovered);
 						}
 					}

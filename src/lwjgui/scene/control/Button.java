@@ -10,7 +10,7 @@ public class Button extends ButtonBase {
 		super(name);
 		
 		this.setMinSize(32, 24);
-		this.setPadding(new Insets(4,8,4,8));
+		this.setPadding(new Insets(4,4,4,4));
 		this.setText(name);
 	}
 	
@@ -32,6 +32,7 @@ public class Button extends ButtonBase {
 	@Override
 	protected void resize() {
 		super.resize();
+		//update();
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class Button extends ButtonBase {
 	
 	private void update() {
 		LWJGUI.runLater(() -> {
-			this.setPrefWidth(graphicLabel.getMaximumPotentialWidth()+this.getPadding().getWidth());
+			this.setPrefWidth(graphicLabel.getMaximumPotentialWidth()+this.getPadding().getWidth()+1);
 		});
 	}
 }

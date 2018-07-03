@@ -160,7 +160,7 @@ public class SplitPane extends Control {
 		// If we're holding onto a divider
 		double pChange = pixelSpaceToDividerSpace(mx);
 		if ( this.orientation == Orientation.HORIZONTAL ) 
-			pChange = pixelSpaceToDividerSpace((int) my);
+			pChange = pixelSpaceToDividerSpace(my);
 		
 		this.setDividerPosition(divider_cache.get(grabbedDivider), grabbedDivider.position+pChange);
 		this.resize();
@@ -183,11 +183,13 @@ public class SplitPane extends Control {
 				rightDivider = this.dividers.get(i);
 			}
 			
+			// Check if the divider needs to be resized
 			boolean resize = true;
 			if ( d.getChildren().size() > 0 ) {
 				resize = divider_resize.get(d.getChildren().get(0));
 			}
 			
+			// If not (static divider), then make sure it stays the same length
 			if ( !resize ) {
 				resizeDiv( leftDivider, d, lastLength );
 				resizeDiv( rightDivider, d, lastLength );

@@ -22,7 +22,7 @@ public abstract class PopupWindow extends Region {
 	
 	public void show(Scene scene, double absoluteX, double absoluteY) {
 		this.position(scene);
-		this.setAbsolutePosition(absoluteX, absoluteY);
+		this.setAbsolutePosition((int)absoluteX, (int)absoluteY);
 		scene.showPopup(this);
 		mouseEntered = false;
 		this.open = true;

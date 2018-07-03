@@ -81,6 +81,10 @@ public class SplitPaneExample {
 
 		SplitPane.setResizableWithParent(split.getItems().get(0), false);
 		SplitPane.setResizableWithParent(split.getItems().get(2), false);
-		//split.setDividerPosition(0, 0.4);
+		
+		LWJGUI.runLater(() -> {
+			split.setDividerPosition(0, 0.35);
+			split.setDividerPosition(1, 0.65);
+		});
 	}
 }

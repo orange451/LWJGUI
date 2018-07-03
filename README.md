@@ -25,7 +25,7 @@ Simple library to add a user interface in LWJGL3.
 # Screenshots
 ![PicControlExample](https://i.imgur.com/NfH3uUB.png)
 ![PicSplitPane](https://i.imgur.com/l3gsiYo.png)
-![PicOpenGL](https://i.imgur.com/X3PRVcI.png)
+![PicOpenGL](https://i.imgur.com/jOHtsxJ.png)
 ![PicNoMeansNo](https://i.imgur.com/jqRl6NY.png)
 ![ScrollSplitPane](https://i.imgur.com/EKVvWdP.png)
 ![MenuBar](https://i.imgur.com/RdKJJJA.png)

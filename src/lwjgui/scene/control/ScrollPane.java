@@ -83,8 +83,11 @@ public class ScrollPane extends Control {
 			// Update internal content
 			this.internalPane.setParent(null);
 			this.updateChildren();
-			content.setPrefSize(viewportSize.x-getPadding().getWidth()-1, viewportSize.y-getPadding().getHeight()-1);
+			int px = (int) (viewportSize.x-getPadding().getWidth()-1);
+			int py = (int) (viewportSize.y-getPadding().getHeight()-1);
+			//System.out.println(px + " / " + py);
 			sizeInternal(Integer.MAX_VALUE, Integer.MAX_VALUE);
+			content.setPrefSize(px, py);
 			children.add(internalPane);
 			internalPane.updateChildren();
 			children.remove(internalPane);

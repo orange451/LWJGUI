@@ -24,6 +24,7 @@ import lwjgui.scene.Window;
 public class LWJGUI {
 	private static HashMap<Long, Window> windows = new HashMap<Long, Window>();
 	private static List<Runnable> runnables = Collections.synchronizedList(new ArrayList<Runnable>());
+	private static Context currentContext;
 	
 	/**
 	 * Initializes a LWJGUI window. The window contains a Scene class.<br>
@@ -79,6 +80,7 @@ public class LWJGUI {
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 				
 				// Render window
+				currentContext = window.getContext();
 				window.render();
 	
 				// Draw
@@ -109,5 +111,9 @@ public class LWJGUI {
 		synchronized(runnables) {
 			runnables.add(runnable);
 		}
+	}
+
+	public static Context getCurrentContext() {
+		return currentContext;
 	}
 }

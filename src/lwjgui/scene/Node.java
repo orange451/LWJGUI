@@ -82,7 +82,7 @@ public abstract class Node implements Resizable {
 	protected void position(Node parent) {
 		this.parent = parent;
 		
-		cached_context = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext();
+		cached_context = LWJGUI.getCurrentContext();
 		
 		updateChildren();
 		resize();
@@ -202,10 +202,11 @@ public abstract class Node implements Resizable {
 		Node p = this;
 		
 		while ( p != null ) {
-			double padding = p.getWidth()-p.getInnerBounds().getWidth();
+			double pWid = p.getWidth();
+			double padding = pWid-p.getInnerBounds().getWidth();
 			double use = p.getMaxWidth()-padding;
 			if ( use > Double.MAX_VALUE*0.9 )
-				use = p.getWidth()-padding;
+				use = pWid-padding;
 			
 			max = Math.min(max, use);
 			p = p.parent;

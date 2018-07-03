@@ -497,7 +497,7 @@ public abstract class TextInputControl extends Control {
 		internal.setPrefSize(getWidth(), getHeight());
 		
 		int width = getMaxTextWidth();
-		this.fakeBox.setPrefSize(width, lines.size()*fontSize);
+		this.fakeBox.setMinSize(width, lines.size()*fontSize);
 		
 		if ( !this.isDecendentSelected() && editing ) {
 			editing = false;
@@ -1072,8 +1072,14 @@ public abstract class TextInputControl extends Control {
 			for (int i = 0; i < linesDraw.size(); i++) {
 				int mx = (int)getAbsoluteX();
 				int my = (int)getAbsoluteY() + (fontSize*i);
-				long vg = context.getNVG();
 				
+				// Quick bounds check
+				if ( my < internal.getAbsoluteY()-(fontSize*i))
+					continue;
+				if ( my > internal.getAbsoluteY()+internal.getHeight())
+					continue;
+				
+				long vg = context.getNVG();
 				String text = linesDraw.get(i);
 				
 				// Setup font
@@ -1119,6 +1125,11 @@ public abstract class TextInputControl extends Control {
 				if ( glyphData.size() > 0 ) {
 					int offsetX = 0;
 					for (int j = 0; j < index; j++) {
+						if ( glyphData.size() <= line )
+							continue;
+						if ( glyphData.get(line).size() <= j)
+							continue;
+						
 						offsetX += glyphData.get(line).get(j).width();
 					}
 					cx += offsetX;

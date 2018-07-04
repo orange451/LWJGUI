@@ -1,6 +1,7 @@
 package lwjgui.scene.control;
 
 import lwjgui.Color;
+import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ChangeEvent;
 import lwjgui.event.MouseEvent;
@@ -52,17 +53,12 @@ public class TabPane extends Control {
 			@Override
 			public void onEvent(Tab changed) {
 				tabButtons.getChildren().add(changed.button);
-				
-				changed.button.setMousePressedEvent(new MouseEvent() {
-					@Override
-					public void onEvent(int button) {
-						select(changed);
-					}
-				});
+				changed.tabPane = TabPane.this;
 				
 				changed.button.setMouseReleasedEvent(new MouseEvent() {
 					@Override
 					public void onEvent(int button) {
+						select(changed);
 						this.consume();
 					}
 				});
@@ -85,12 +81,11 @@ public class TabPane extends Control {
 		super.position(parent);
 		
 		if ( tabs == null || tabs.size() == 0) {
-			currentTab = null;
-			currentTabIndex = 0;
+			deselect();
 		}
 		
 		// Find missing tab
-		while ( (currentTab == null && tabs.size() > 0) || !tabs.contains(currentTab) ) {
+		while ( (currentTab == null || !tabs.contains(currentTab) ) && tabs.size() > 0 ) {
 			currentTabIndex--;
 			if ( currentTabIndex < 0 )
 				currentTabIndex = 0;
@@ -107,6 +102,12 @@ public class TabPane extends Control {
 				return i;
 		}
 		return -1;
+	}
+	
+	protected void deselect() {
+		currentTab = null;
+		currentTabIndex = 0;
+		this.contentPane.getChildren().clear();
 	}
 	
 	public void select(Tab tab) {
@@ -143,11 +144,7 @@ public class TabPane extends Control {
 		for (int i = 0; i < tabs.size(); i++) {
 			Tab tab = tabs.get(i);
 			TabButton button = tab.button;
-			button.setBackground(Theme.currentTheme().getSelectionPassive());
-			
-			if ( currentTab.equals(tab) ) {
-				button.setBackground(Theme.currentTheme().getPane());
-			}
+			button.pressed = currentTab.equals(tab);
 		}
 	}
 	
@@ -164,9 +161,20 @@ public class TabPane extends Control {
 		TabPaneButtonBox() {
 			this.flag_clip = true;
 			this.setFillToParentWidth(true);
-			this.setSpacing(3);
+			this.setSpacing(2);
 			this.setPadding(new Insets(6,4,0,4));
-			this.setBackground(Theme.currentTheme().getControlOutline());
+			this.setPrefHeight(28);
+			this.setBackground(Theme.currentTheme().getSelectionPassive());
+		}
+		
+		@Override
+		public void render(Context context) {
+			LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), getBackground());
+			LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY()+getHeight()-1, getWidth(), 1, Theme.currentTheme().getControlOutline());
+			for (int i = 0; i < children.size(); i++) {
+				clip(context);
+				children.get(i).render(context);
+			}
 		}
 	}
 }

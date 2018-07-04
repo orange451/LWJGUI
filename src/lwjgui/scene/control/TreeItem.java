@@ -16,14 +16,10 @@ import lwjgui.theme.Theme;
 public class TreeItem<E> extends TreeBase<E> {
 	private E root;
 	private boolean opened;
-	protected Labeled label;
+	protected TreeItemLabel label;
 	
 	public TreeItem(E root, Node icon) {
-		this.label = new Labeled(root.toString()) {
-			{
-				setMouseTransparent(true);
-			}
-		};
+		this.label = new TreeItemLabel(root.toString());
 		this.label.setGraphic(icon);
 	}
 	
@@ -41,6 +37,36 @@ public class TreeItem<E> extends TreeBase<E> {
 
 	public E getRoot() {
 		return root;
+	}
+}
+
+class TreeItemLabel extends HBox {
+	protected Label label;
+	private Node graphic;
+	
+	public TreeItemLabel(String text) {
+		this.label = new Label();
+		this.setMouseTransparent(true);
+		this.setBackground(null);
+		setText(text);
+	}
+	
+	public void setText(String text) {
+		this.label.setText(text);
+		update();
+	}
+	
+	public void setGraphic(Node node) {
+		this.graphic = node;
+		update();
+	}
+	
+	private void update() {
+		this.getChildren().clear();
+		if ( graphic != null ) {
+			this.getChildren().add(graphic);
+		}
+		this.getChildren().add(label);
 	}
 }
 
@@ -162,8 +188,8 @@ class TreeNode<E> extends HBox {
 		this.setBackground(color);
 		
 		// Set appropriate colors
-		item.label.graphicLabel.label.setTextFill((selected&&active)?Theme.currentTheme().getPane():Theme.currentTheme().getText());
-		openGraphic.setTextFill(item.label.graphicLabel.label.getTextFill());
+		item.label.label.setTextFill((selected&&active)?Theme.currentTheme().getPane():Theme.currentTheme().getText());
+		openGraphic.setTextFill(item.label.label.getTextFill());
 		
 		// Draw fancy outline
 		if ( selected && active ) {

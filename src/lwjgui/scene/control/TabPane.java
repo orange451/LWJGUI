@@ -134,6 +134,10 @@ public class TabPane extends Control {
 			cached_context.setSelected(currentTab.lastSelected);
 		}
 	}
+	
+	public Tab getSelected() {
+		return currentTab;
+	}
 
 	@Override
 	public void render(Context context) {

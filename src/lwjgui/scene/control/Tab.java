@@ -11,6 +11,7 @@ import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.Font;
+import lwjgui.scene.layout.FontStyle;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.theme.Theme;
@@ -79,7 +80,10 @@ public class Tab {
 			if ( cached_context == null )
 				return false;
 			
-			if ( cached_context.isSelected(x) )
+			if ( cached_context.isSelected(x) || cached_context.isHovered(x) )
+				return false;
+			
+			if ( tabPane.getSelected().equals(Tab.this) )
 				return false;
 			
 			return (this.isDecendentHovered() && GLFW.glfwGetMouseButton(cached_context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
@@ -125,10 +129,21 @@ public class Tab {
 			NanoVG.nvgFillPaint(vg, bg);
 			NanoVG.nvgFill(vg);
 			
+			// Draw dark line show this tab button is not selected
 			if ( !pressed ) {
 				LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY()+getHeight()-1, getWidth(), 1, Theme.currentTheme().getControlOutline());
 			}
 			
+			// Change color of X button
+			boolean xpressed = context.isHovered(this.x) && GLFW.glfwGetMouseButton(context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
+			Color c = Theme.currentTheme().getSelectionPassive();
+			if ( context.isHovered(this.x) )
+				c = Theme.currentTheme().getControlOutline();
+			if ( this.isPressed() || xpressed )
+				c = Theme.currentTheme().getText();
+			this.x.setTextFill(c);
+			
+			// Render internal stuff
 			super.render(context);
 		}
 	}

@@ -2,8 +2,11 @@ package lwjgui.scene.layout;
 
 import org.lwjgl.glfw.GLFW;
 
+import lwjgui.Color;
 import lwjgui.LWJGUI;
+import lwjgui.LWJGUIUtil;
 import lwjgui.event.KeyEvent;
+import lwjgui.geometry.HPos;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
@@ -109,14 +112,20 @@ public class GridPane extends Node {
 				if ( element == null ) {
 					element = new NodeFiller();
 				}
-				NodeFiller sizer = new NodeFiller();
+				Node sizer = new NodeFiller();
 				elementsInternal[j][i] = new NodePair(element, sizer);
 				
 				HBox cell = new HBox();
 				cell.setBackground(null);
-				cell.getChildren().add(element);
-				cell.getChildren().add(sizer);
 				row.getChildren().add(cell);
+				
+				if ( element.getAlignment() != null && element.getAlignment().getHpos().equals(HPos.RIGHT) ) {
+					cell.getChildren().add(sizer);
+					cell.getChildren().add(element);
+				} else {
+					cell.getChildren().add(element);
+					cell.getChildren().add(sizer);
+				}
 			}
 			internalVBox.getChildren().add(row);
 		}
@@ -284,6 +293,7 @@ public class GridPane extends Node {
 
 		@Override
 		public void render(Context context) {
+			this.clip(context);
 			//LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), Color.RED);
 		}
 	}

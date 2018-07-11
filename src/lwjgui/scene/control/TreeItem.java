@@ -70,6 +70,14 @@ class TreeItemLabel extends HBox {
 		}
 		this.getChildren().add(label);
 	}
+	
+	@Override
+	public void position(Node parent) {
+		super.position(parent);
+		if ( graphic != null ) {
+			graphic.offset(0, 1);
+		}
+	}
 }
 
 class TreeNode<E> extends HBox {

@@ -143,15 +143,15 @@ public class Context {
 			return parent;
 
 		// Check children
-		if ( root instanceof Parent ) {
-			ObservableList<Node> children = ((Parent)root).getChildren();
+		//if ( root instanceof Parent ) {
+			ObservableList<Node> children = root.getChildren();
 			for (int i = 0; i < children.size(); i++) {
 				Node ret = calculateHoverRecursive( root, children.get(i));
 				if ( ret != null && !ret.equals(root)) {
 					return ret;
 				}
 			}
-		}
+		//}
 		return root;
 	}
 

@@ -24,6 +24,7 @@ public abstract class TextInputControl extends Control {
 	private ArrayList<String> lines;
 	private ArrayList<ArrayList<GlyphData>> glyphData;
 	private ArrayList<String> linesDraw;
+	private String source;
 	private int caretPosition;
 	protected boolean editing = false;
 	
@@ -98,13 +99,13 @@ public abstract class TextInputControl extends Control {
 		undoStack.Push(new TextState(getText(),caretPosition));
 	}
 	
-	/*public void setWordWrap(boolean wrap) {
+	public void setWordWrap(boolean wrap) {
 		wordWrap = wrap;
 	}
 	
 	public boolean isWordWrap() {
 		return this.wordWrap;
-	}*/
+	}
 
 	public void clear() {
 		setText("");
@@ -121,7 +122,6 @@ public abstract class TextInputControl extends Control {
 	}
 	
 	public void setText(String text) {
-		
 		int oldCaret = caretPosition;
 		
 		if ( lines == null ) {
@@ -138,6 +138,8 @@ public abstract class TextInputControl extends Control {
 		
 		String trail = "[!$*]T!R@A#I$L%I^N&G[!$*]"; // Naive fix to allow trailing blank lines to still be parsed
 		text = text.replace("\r", "");
+		this.source = text;
+		
 		text = text + trail; // Add tail
 		String[] split = text.split("\n");
 		for (int i = 0; i < split.length; i++) {
@@ -189,17 +191,18 @@ public abstract class TextInputControl extends Control {
 			}
 			positions.free();
 			
-			// Word Wrap not yet implemented properly. Will be rewritten.
-			int maxWidth = Integer.MAX_VALUE;//(int) (wordWrap?this.internal.getViewport().getWidth():Integer.MAX_VALUE);
+			// Word Wrap not yet properly implemented properly. Will be rewritten.
+			int vWid = (int) (this.internal.getViewport().getWidth() - 16);
+			int maxWidth = (int) (wordWrap?vWid:Integer.MAX_VALUE);
 			int index = 0;
 			int curWid = 0;
 			while ( index < glyphEntry.size() ) {
 				GlyphData entry = glyphEntry.get(index);
 				
 				if ( curWid >= maxWidth ) {
-					index--;
-					addRow(originalText.substring(0, index) + "\n");
+					addRow(originalText.substring(0, index));
 					addRow(originalText.substring(index,originalText.length()));
+					//index--;
 					return;
 				}
 				
@@ -420,7 +423,7 @@ public abstract class TextInputControl extends Control {
 	}
 	
 	public String getText() {
-		String text = "";
+		/*String text = "";
 		for (int i = 0; i < lines.size(); i++) {
 			text += lines.get(i);
 			if ( i < lines.size()-1 ) {
@@ -428,7 +431,8 @@ public abstract class TextInputControl extends Control {
 			}
 		}
 		
-		return text;
+		return text;*/
+		return source;
 	}
 	
 	public String getText(int start, int end) {
@@ -499,9 +503,13 @@ public abstract class TextInputControl extends Control {
 		int width = getMaxTextWidth();
 		this.fakeBox.setMinSize(width, lines.size()*fontSize);
 		
-		if ( !this.isDecendentSelected() && editing ) {
-			editing = false;
-			this.deselect();
+		if ( this.isDecendentSelected() ) {
+			editing = true;
+		} else {
+			if ( editing ) {
+				this.deselect();
+			}
+			this.editing = false;
 		}
 		
 		if ( caretPosition < 0 )
@@ -985,7 +993,6 @@ public abstract class TextInputControl extends Control {
 					
 					LWJGUI.runLater(()-> {
 						cached_context.setSelected(getViewport());
-						editing = true;
 					});
 					
 					setCaretPosition(getCaretAtMouse());

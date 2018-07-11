@@ -1,11 +1,10 @@
 package lwjgui.scene.control;
 
-import lwjgui.Color;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ChangeEvent;
 import lwjgui.event.MouseEvent;
-import lwjgui.event.ScrollEvent;
+import lwjgui.event.TabDragEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
@@ -26,6 +25,8 @@ public class TabPane extends Control {
 	private TabPaneInternal internal;
 	private TabPaneButtonBox tabButtons;
 	private StackPane contentPane;
+	
+	private TabDragEvent tabDragEvent;
 	
 	public TabPane() {
 		this.setFillToParentHeight(true);
@@ -55,11 +56,26 @@ public class TabPane extends Control {
 				tabButtons.getChildren().add(changed.button);
 				changed.tabPane = TabPane.this;
 				
+				changed.button.setMousePressedEvent(new MouseEvent() {
+					@Override
+					public void onEvent(int button) {
+						select(changed);
+						this.consume();
+					}
+				});
+				
 				changed.button.setMouseReleasedEvent(new MouseEvent() {
 					@Override
 					public void onEvent(int button) {
 						select(changed);
 						this.consume();
+					}
+				});
+				
+				changed.button.setMouseDraggedEvent(new MouseEvent() {
+					@Override
+					public void onEvent(int button) {
+						System.out.println("Not implemented yet");
 					}
 				});
 			}
@@ -180,5 +196,9 @@ public class TabPane extends Control {
 				children.get(i).render(context);
 			}
 		}
+	}
+
+	public void setTabDraggedEvent(TabDragEvent event) {
+		this.tabDragEvent = event;
 	}
 }

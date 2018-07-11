@@ -10,8 +10,6 @@ import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.scene.layout.Font;
-import lwjgui.scene.layout.FontStyle;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.theme.Theme;
@@ -111,8 +109,10 @@ public class Tab {
 			int y = (int) this.getAbsoluteY();
 			int w = (int) this.getWidth();
 			int h = (int) this.getHeight();
-			
+
+			internal.setMousePressedEvent(this.mousePressedEvent);
 			internal.setMouseReleasedEvent(this.mouseReleasedEvent);
+			internal.setMouseDraggedEvent(this.mouseDraggedEvent);
 			
 			// Background
 			NanoVG.nvgBeginPath(vg);
@@ -136,11 +136,11 @@ public class Tab {
 			
 			// Change color of X button
 			boolean xpressed = context.isHovered(this.x) && GLFW.glfwGetMouseButton(context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
-			Color c = Theme.currentTheme().getSelectionPassive();
+			Color c = Theme.currentTheme().getControlOutline();
 			if ( context.isHovered(this.x) )
-				c = Theme.currentTheme().getControlOutline();
-			if ( this.isPressed() || xpressed )
 				c = Theme.currentTheme().getText();
+			if ( this.isPressed() || xpressed )
+				c = Theme.currentTheme().getControlOutline();
 			this.x.setTextFill(c);
 			
 			// Render internal stuff

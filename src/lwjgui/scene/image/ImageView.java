@@ -13,8 +13,13 @@ public class ImageView extends Region {
 	private boolean stretchToFit = true;
 	
 	public ImageView() {
-		this.setBackground(Color.BLACK);
+		this.setBackground(null);
 		this.setPrefSize(100, 100);
+	}
+	
+	public ImageView(Image image) {
+		this();
+		setImage(image);
 	}
 	
 	public void setMaintainAspectRatio(boolean maintain) {

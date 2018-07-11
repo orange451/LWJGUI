@@ -46,6 +46,7 @@ class TreeItemLabel extends HBox {
 	
 	public TreeItemLabel(String text) {
 		this.label = new Label();
+		this.setSpacing(4);
 		this.setMouseTransparent(true);
 		this.setBackground(null);
 		setText(text);
@@ -65,6 +66,7 @@ class TreeItemLabel extends HBox {
 		this.getChildren().clear();
 		if ( graphic != null ) {
 			this.getChildren().add(graphic);
+			this.graphic.setPrefSize(16, 16);
 		}
 		this.getChildren().add(label);
 	}

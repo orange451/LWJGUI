@@ -1,8 +1,20 @@
 package lwjgui.scene.image;
 
+import static org.lwjgl.BufferUtils.createByteBuffer;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.LWJGUI;
@@ -19,6 +31,10 @@ public class Image {
 	public Image(String filePath) {
 		this.desiredPath = filePath;
 	}
+	
+	public Image() {
+		
+	}
 
 	protected int getImage() {
 		Context context = LWJGUI.getCurrentContext();
@@ -31,9 +47,19 @@ public class Image {
 		long nvg = context.getNVG();
 
 		if ( !imageReferences.containsKey(nvg)) {
+			ByteBuffer data = null;
+			
+			try {
+				data = ioResourceToByteBuffer(desiredPath, 4 * 1024);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if ( data == null ) 
+				return -1;
 			
 			// Get image
-			int img = NanoVG.nvgCreateImage(nvg, desiredPath, 0);
+			int img = NanoVG.nvgCreateImageMem(nvg, 0, data);
 			int[] w = new int[1];
 			int[] h = new int[1];
 			NanoVG.nvgImageSize(nvg, img, w, h);
@@ -46,6 +72,60 @@ public class Image {
 		
 		// Return
 		return imageReferences.get(nvg);
+	}
+	
+	private static ByteBuffer resizeBuffer(ByteBuffer buffer, int newCapacity) {
+		ByteBuffer newBuffer = BufferUtils.createByteBuffer(newCapacity);
+		buffer.flip();
+		newBuffer.put(buffer);
+		return newBuffer;
+	}
+	
+	protected static URL ioResourceGetURL( String resource ) {
+		URL url = Image.class.getClassLoader().getResource(resource);
+		if (url == null) {
+			try {
+				url = new File(resource).toURL();
+			} catch (MalformedURLException e) {
+				return null;
+			}
+		}
+
+		return url;
+	}
+	
+	protected static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
+		if ( resource == null )
+			return null;
+
+		// Get URL for file
+		URL url = ioResourceGetURL( resource );
+
+		ByteBuffer buffer = createByteBuffer(bufferSize);
+		InputStream source = url.openStream();
+
+		if ( source == null )
+			throw new FileNotFoundException(resource);
+
+		try {
+			ReadableByteChannel rbc = Channels.newChannel(source);
+			try {
+				while ( true ) {
+					int bytes = rbc.read(buffer);
+					if ( bytes == -1 )
+						break;
+					if ( buffer.remaining() == 0 )
+						buffer = resizeBuffer(buffer, buffer.capacity() * 2);
+				}
+			} finally {
+				rbc.close();
+			}
+		} finally {
+			source.close();
+		}
+
+		buffer.flip();
+		return buffer;
 	}
 
 	protected boolean isLoaded() {

@@ -11,7 +11,6 @@ import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
-import lwjgui.scene.control.Label;
 import lwjgui.scene.image.Image;
 import lwjgui.scene.image.ImageView;
 import lwjgui.scene.layout.StackPane;

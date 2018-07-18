@@ -3,12 +3,10 @@ package lwjgui.scene.control;
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.collections.ObservableList;
-import lwjgui.event.ChangeEvent;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
-import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 
 public class TreeView<E> extends TreeBase<E> {
@@ -223,45 +221,5 @@ public class TreeView<E> extends TreeBase<E> {
 	 */
 	public void setAutoSelectChildren(boolean autoSelectChildren) {
 		this.autoSelectChildren = autoSelectChildren;
-	}
-}
-
-abstract class TreeBase<E> extends StackPane {
-	protected ObservableList<TreeItem<E>> items;
-	protected ObservableList<TreeNode<E>> nodes;
-	
-	public TreeBase() {
-		items = new ObservableList<TreeItem<E>>();
-		nodes = new ObservableList<TreeNode<E>>();
-		
-		items.setAddCallback(new ChangeEvent<TreeItem<E>>() {
-			@Override
-			public void onEvent(TreeItem<E> changed) {
-				nodes.add(new TreeNode<E>(changed));
-			}
-		});
-		items.setRemoveCallback(new ChangeEvent<TreeItem<E>>() {
-			@Override
-			public void onEvent(TreeItem<E> changed) {
-				nodes.remove(getNode(changed));
-			}
-		});
-	}
-
-	protected TreeNode<E> getNode(TreeItem<E> item) {
-		for (int i = 0; i < nodes.size(); i++) {
-			if ( nodes.get(i).item.equals(item) ) {
-				return nodes.get(i);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 
-	 * @return Returns the direct children of this tree. Adding to this list will add them to the tree.
-	 */
-	public ObservableList<TreeItem<E>> getItems() {
-		return items;
 	}
 }

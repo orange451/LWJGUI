@@ -182,10 +182,17 @@ public abstract class TextInputControl extends Control {
 		if ( cached_context != null ) {
 			ArrayList<GlyphData> glyphEntry = new ArrayList<GlyphData>();
 			bindFont();
-			org.lwjgl.nanovg.NVGGlyphPosition.Buffer positions = NVGGlyphPosition.malloc(drawLine.length());
+			
+			org.lwjgl.nanovg.NVGGlyphPosition.Buffer positions;
+			if (drawLine.length() > 0) {
+				positions = NVGGlyphPosition.malloc(drawLine.length());
+			} else {
+				positions = NVGGlyphPosition.malloc(1);
+			}
+			
 			NanoVG.nvgTextGlyphPositions(cached_context.getNVG(), 0, 0, drawLine, positions);
 			int j = 0;
-			while (positions.hasRemaining()) {
+			while (j < drawLine.length()) {
 				glyphEntry.add(fixGlyph(positions.get(), drawLine.substring(j, j+1)));
 				j++;
 			}

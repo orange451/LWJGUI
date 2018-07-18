@@ -20,7 +20,7 @@ public class Window {
 	private boolean canUserClose = true;
 	protected boolean windowResizing;
 	private Renderer renderCallback;
-	private boolean autoDraw;
+	private boolean autoDraw = true;
 	
 	public Window(final Context context, Scene scene) {
 		this.context = context;

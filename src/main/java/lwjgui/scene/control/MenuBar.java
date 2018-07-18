@@ -1,10 +1,8 @@
 package lwjgui.scene.control;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ChangeEvent;
 import lwjgui.geometry.Insets;

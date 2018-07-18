@@ -3,6 +3,7 @@ package lwjgui.scene.control;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
+import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.MouseEvent;
@@ -17,6 +18,7 @@ public class MenuItem extends Node {
 	private Labeled internalLabel;
 	private static final int prefHeight = 24;
 	private static final int padding = 4;
+	protected Color background;
 	
 	public MenuItem(String string) {
 		this(string, null);
@@ -26,6 +28,7 @@ public class MenuItem extends Node {
 		this.internalLabel = new Labeled(string) {};
 		this.internalLabel.setGraphic(graphic);
 		this.internalLabel.setPadding(new Insets(0,padding,0,padding));
+		background = Theme.currentTheme().getPane();
 		
 		this.mouseReleasedEvent = new MouseEvent() {
 			@Override
@@ -37,6 +40,10 @@ public class MenuItem extends Node {
 				}
 			}
 		};
+	}
+	
+	public void setGraphic(Node node) {
+		this.internalLabel.setGraphic(node);
 	}
 	
 	@Override
@@ -61,10 +68,13 @@ public class MenuItem extends Node {
 			if ( this.parent.getParent() instanceof ContextMenu ) {
 				((ContextMenu) this.parent.getParent()).mouseEntered = true;
 			}
-			
+		}
+		
+		Color bg = isSelected()?Theme.currentTheme().getSelection():this.background;
+		if ( bg != null ) {
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRect(context.getNVG(), (int)getAbsoluteX(), (int)getAbsoluteY(), (int)getWidth(), (int)getHeight());
-			NanoVG.nvgFillColor(context.getNVG(), Theme.currentTheme().getSelection().getNVG());
+			NanoVG.nvgFillColor(context.getNVG(), bg.getNVG());
 			NanoVG.nvgFill(context.getNVG());
 		}
 		

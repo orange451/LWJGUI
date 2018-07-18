@@ -12,6 +12,7 @@ public class Menu extends MenuItem {
 	
 	public Menu(String string) {
 		super(string, null);
+		background = null;
 		
 		context = new ContextMenu();
 		context.setAutoHide(true);

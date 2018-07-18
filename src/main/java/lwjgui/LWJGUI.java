@@ -82,9 +82,6 @@ public class LWJGUI {
 				// Render window
 				currentContext = window.getContext();
 				window.render();
-	
-				// Draw
-				glfwSwapBuffers(context);
 			}
 		}
 		

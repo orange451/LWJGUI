@@ -20,6 +20,7 @@ public class Window {
 	private boolean canUserClose = true;
 	protected boolean windowResizing;
 	private Renderer renderCallback;
+	private boolean autoDraw;
 	
 	public Window(final Context context, Scene scene) {
 		this.context = context;
@@ -184,6 +185,14 @@ public class Window {
 		return context;
 	}
 	
+	/**
+	 * Default: true. When set to true the window will automatically call OpenGL's SwapBuffers method after drawing.
+	 * @param autoDraw
+	 */
+	public void setWindowAutoDraw(boolean autoDraw) {
+		autoDraw = autoDraw;
+	}
+	
 	public void render() {
 		if ( GLFW.glfwGetCurrentContext() != context.getWindowHandle() ) {
 			System.err.println("Error rendering window. Incorrect GLFW context");
@@ -213,6 +222,10 @@ public class Window {
 		scene.render(context);
         NanoVG.nvgRestore(context.getNVG());
 		NanoVG.nvgEndFrame(context.getNVG());
+		
+		if ( autoDraw ) {
+			GLFW.glfwSwapBuffers(context.getWindowHandle());
+		}
 	}
 
 	public Scene getScene() {

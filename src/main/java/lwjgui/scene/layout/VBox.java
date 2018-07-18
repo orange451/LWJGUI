@@ -8,7 +8,7 @@ public class VBox extends DirectionalBox {
 	public void position( Node parent ) {
 		super.position(parent);
 		
-		double totalHeight = getMinimumPotentialHeight();
+		double totalHeight = this.getMaxPotentialHeight();//getMinimumPotentialHeight();
 		//double probableHeight = this.getAvailableSize().y;
 		
 		float mult = 0;

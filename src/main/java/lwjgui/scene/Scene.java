@@ -47,6 +47,8 @@ public class Scene extends Node {
 
 	@Override
 	public void render(Context context) {
+		this.flag_clip = true;
+		
 		if ( root == null )
 			return;
 		
@@ -56,8 +58,7 @@ public class Scene extends Node {
 		}
 		
 		// Position elements
-		this.flag_clip = true;
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 2; i++) {
 			position(null);
 			root.position(this);
 		}

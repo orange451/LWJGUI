@@ -88,9 +88,6 @@ public abstract class Node implements Resizable {
 		resize();
 		
 		Pos useAlignment = getAlignment();
-		if ( parent != null ) {
-			useAlignment = parent.getAlignment();
-		}
 		
 		double xMult = 0;
 		if ( useAlignment.getHpos() == HPos.CENTER)
@@ -409,16 +406,17 @@ public abstract class Node implements Resizable {
 	 * @return
 	 */
 	public Pos getAlignment() {
-		Pos useAlignment = Pos.CENTER;
-		if ( parent != null ) {
-			if ( parent.getAlignment() != null ) {
-				useAlignment = parent.getAlignment();
-			}
-		}
-		if ( alignment != null ) {
-			useAlignment = alignment;
+		Pos useAlignment = null;
+		Node p = this;
+		int t = 0;
+		while ( p != null && useAlignment == null && t < 32 ) {
+			useAlignment = p.alignment;
+			p = p.parent;
+			t++;
 		}
 		
+		if ( useAlignment == null )
+			return Pos.CENTER;
 		return useAlignment;
 	}
 	

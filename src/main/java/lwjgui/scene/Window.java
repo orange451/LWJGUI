@@ -190,7 +190,7 @@ public class Window {
 	 * @param autoDraw
 	 */
 	public void setWindowAutoDraw(boolean autoDraw) {
-		autoDraw = autoDraw;
+		this.autoDraw = autoDraw;
 	}
 	
 	public void render() {

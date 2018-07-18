@@ -10,6 +10,7 @@ import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.scene.Region;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.theme.Theme;
@@ -41,7 +42,7 @@ public class Tab {
 		return content;
 	}
 
-	class TabButton extends StackPane {
+	class TabButton extends Region {
 		protected HBox internal;
 		protected Label label;
 		protected boolean pressed;
@@ -51,7 +52,7 @@ public class Tab {
 			this.internal = new HBox();
 			this.internal.setBackground(null);
 			this.internal.setSpacing(4);
-			this.getChildren().add(internal);
+			this.children.add(internal);
 			
 			this.label = new Label(name);
 			this.label.setMouseTransparent(true);
@@ -143,8 +144,15 @@ public class Tab {
 				c = Theme.currentTheme().getControlOutline();
 			this.x.setTextFill(c);
 			
-			// Render internal stuff
-			super.render(context);
+			for (int i = 0; i < children.size(); i++) {
+				children.get(i).render(context);
+			}
+		}
+
+		@Override
+		public boolean isResizeable() {
+			// TODO Auto-generated method stub
+			return false;
 		}
 	}
 }

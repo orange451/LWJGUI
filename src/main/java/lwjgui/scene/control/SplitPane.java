@@ -84,10 +84,9 @@ public class SplitPane extends Control {
 			onSizeChange(lastLen);
 			lastLen = curLen;
 		}
+		grabDividers();
 		
 		super.position(parent);
-		
-		grabDividers();
 	}
 	
 	private void clickDividers() {
@@ -163,8 +162,12 @@ public class SplitPane extends Control {
 			pChange = pixelSpaceToDividerSpace(my);
 		
 		this.setDividerPosition(divider_cache.get(grabbedDivider), grabbedDivider.position+pChange);
-		this.resize();
 		mouseGrabLocation.add(mx, my); 
+		
+		for (int i = 0; i < 4; i++) {
+			this.updateChildren();
+			this.resize();
+		}
 	}
 
 	protected void onSizeChange(double lastLength) {

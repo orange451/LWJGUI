@@ -53,9 +53,6 @@ public class MenuBar extends Region {
 		for (int i = 0; i < items.size(); i++) {
 			internalBox.getChildren().add(items.get(i));
 		}
-		for (int i = 0; i < 4; i++) {
-			internalBox.position(this);
-		}
 	}
 	
 	public ObservableList<Menu> getItems() {

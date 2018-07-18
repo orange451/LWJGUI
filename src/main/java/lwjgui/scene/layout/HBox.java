@@ -8,7 +8,7 @@ public class HBox extends DirectionalBox {
 	public void position( Node parent ) {
 		super.position(parent);
 		
-		double totalWidth = this.getAvailableSize().x;//getMinimumPotentialWidth();
+		double totalWidth = this.getMaxPotentialWidth();
 		
 		float xMult = 0;
 		/*if ( getAlignment().getHpos() == HPos.CENTER)

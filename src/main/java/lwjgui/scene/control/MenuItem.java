@@ -28,6 +28,7 @@ public class MenuItem extends Node {
 		this.internalLabel = new Labeled(string) {};
 		this.internalLabel.setGraphic(graphic);
 		this.internalLabel.setPadding(new Insets(0,padding,0,padding));
+		this.internalLabel.setFontSize(16);
 		background = Theme.currentTheme().getPane();
 		
 		this.mouseReleasedEvent = new MouseEvent() {

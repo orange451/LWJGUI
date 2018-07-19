@@ -504,7 +504,11 @@ public abstract class TextInputControl extends Control {
 	protected void resize() {
 		super.resize();
 		
-		this.setPrefSize(this.preferredColumnCount*(fontSize*(2/3f)), (this.preferredRowCount*fontSize)+this.internal.getPadding().getHeight()+1);
+		int prefX = (int) (this.preferredColumnCount*(fontSize*(2/3f)));
+		int prefY = (int) ((this.preferredRowCount*fontSize)+this.internal.getPadding().getHeight()+1);
+		prefX = (int) Math.min(prefX, this.getMaxPotentialWidth());
+		prefY = (int) Math.min(prefY, this.getMaxPotentialHeight());
+		this.setPrefSize(prefX, prefY);
 		internal.setPrefSize(getWidth(), getHeight());
 		
 		int width = getMaxTextWidth();

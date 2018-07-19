@@ -110,6 +110,8 @@ public class TabPane extends Control {
 			
 			select(tabs.get(currentTabIndex));
 		}
+		
+		contentPane.setMaxSize(getWidth(), getHeight()-tabButtons.getHeight());
 	}
 	
 	protected int getTabIndex(Tab tab) {

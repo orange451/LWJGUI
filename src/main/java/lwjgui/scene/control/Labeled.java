@@ -33,6 +33,12 @@ public abstract class Labeled extends Control {
 		}
 
 		public void render(Context context) {
+			if ( graphic != null ) {
+				int minSize = (int) label.getFontSize();
+				graphic.setPrefSize(minSize, minSize);
+				graphic.setMaxSize(minSize, minSize);
+			}
+			
 			holder.position(Labeled.this);
 			holder.offset(offset.x, offset.y);
 			holder.render(context);

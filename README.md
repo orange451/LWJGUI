@@ -9,6 +9,7 @@ Simple library to add a user interface in LWJGL3.
 - SegmentedButton
 - ContextMenu
 - MenuBar
+- ToolBar
 - Label
 - SplitPane
 - Pane/StackPane
@@ -32,6 +33,7 @@ Simple library to add a user interface in LWJGL3.
 ![MenuBar](https://i.imgur.com/RdKJJJA.png)
 ![TextArea](https://i.imgur.com/0YNqcfz.png)
 ![TreeView](https://i.imgur.com/WZQxpvU.png)
+![IDE](http://magaimg.net/img/5reo.png)
 
 # Required Libraries
 - [LWJGL3](https://www.lwjgl.org/)

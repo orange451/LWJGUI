@@ -1,5 +1,5 @@
 package lwjgui.event;
 
-public abstract class ButtonEvent extends Event {
+public class ButtonEvent extends Event {
 
 }

@@ -70,11 +70,8 @@ public class ButtonExample2 {
 			label.setAlignment(Pos.BOTTOM_CENTER);
 			
 			Button button = new Button("No Click");
-			button.setOnAction(new ButtonEvent() {
-				@Override
-				public void onEvent() {
-					label.setText("No Means No!!");
-				}
+			button.setOnAction(event -> {
+				label.setText("No Means No!!");
 			});
 			
 			vbox.getChildren().add(button);

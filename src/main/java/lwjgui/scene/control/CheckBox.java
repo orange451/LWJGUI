@@ -3,6 +3,7 @@ package lwjgui.scene.control;
 import java.awt.Point;
 
 import lwjgui.event.ButtonEvent;
+import lwjgui.event.EventHandler;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
@@ -27,9 +28,9 @@ public class CheckBox extends ButtonBase {
 
 		this.setPadding(Insets.EMPTY);
 
-		this.setOnAction(new ButtonEvent() {
+		this.setOnAction(new EventHandler<ButtonEvent>() {
 			@Override
-			public void onEvent() {
+			public void handle(ButtonEvent event) {
 				checked = !checked;
 			}
 		});

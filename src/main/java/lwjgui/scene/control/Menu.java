@@ -1,7 +1,7 @@
 package lwjgui.scene.control;
 
 import lwjgui.collections.ObservableList;
-import lwjgui.event.ChangeEvent;
+import lwjgui.event.ElementCallback;
 import lwjgui.event.MouseEvent;
 import lwjgui.scene.Context;
 
@@ -17,26 +17,23 @@ public class Menu extends MenuItem {
 		context = new ContextMenu();
 		context.setAutoHide(true);
 		
-		this.items.setAddCallback(new ChangeEvent<MenuItem>() {
+		this.items.setAddCallback(new ElementCallback<MenuItem>() {
 			@Override
 			public void onEvent(MenuItem changed) {
 				context.getItems().add(changed);
 			}
 		});
 		
-		this.items.setRemoveCallback(new ChangeEvent<MenuItem>() {
+		this.items.setRemoveCallback(new ElementCallback<MenuItem>() {
 			@Override
 			public void onEvent(MenuItem changed) {
 				context.getItems().remove(changed);
 			}
 		});
 		
-		this.mousePressedEvent = new MouseEvent() {
-			@Override
-			public void onEvent(int button) {
-				open();
-			}
-		};
+		this.setMousePressedEvent( event -> {
+			open();
+		});
 		
 		this.mouseReleasedEvent = null;
 	}

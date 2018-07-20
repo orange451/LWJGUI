@@ -6,6 +6,8 @@ import org.lwjgl.nanovg.NanoVG;
 import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.event.ButtonEvent;
+import lwjgui.event.EventHandler;
+import lwjgui.event.EventHelper;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
@@ -14,7 +16,7 @@ import lwjgui.scene.Node;
 import lwjgui.theme.Theme;
 
 public class MenuItem extends Node {
-	protected ButtonEvent buttonEvent;
+	protected EventHandler<ButtonEvent> buttonEvent;
 	private Labeled internalLabel;
 	private static final int prefHeight = 24;
 	private static final int padding = 4;
@@ -31,16 +33,13 @@ public class MenuItem extends Node {
 		this.internalLabel.setFontSize(16);
 		background = Theme.currentTheme().getPane();
 		
-		this.mouseReleasedEvent = new MouseEvent() {
-			@Override
-			public void onEvent(int button) {
-				if ( button == 0 ) {
-					if ( buttonEvent != null ) 
-						buttonEvent.onEvent();
-					((ContextMenu)getParent().getParent()).close();
-				}
+		this.setMouseReleasedEvent( event -> {
+			if ( event.button == 0 ) {
+				if ( buttonEvent != null ) 
+					EventHelper.fireEvent(buttonEvent, new ButtonEvent());
+				((ContextMenu)getParent().getParent()).close();
 			}
-		};
+		});
 	}
 	
 	public void setGraphic(Node node) {
@@ -95,7 +94,7 @@ public class MenuItem extends Node {
 		return false;
 	}
 	
-	public void setOnAction(ButtonEvent event) {
+	public void setOnAction(EventHandler<ButtonEvent> event) {
 		this.buttonEvent = event;
 	}
 }

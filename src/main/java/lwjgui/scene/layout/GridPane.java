@@ -40,32 +40,29 @@ public class GridPane extends Node {
 		
 		update();
 		
-		this.setOnKeyPressed(new KeyEvent() {
-			@Override
-			public void onEvent(int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
-				if( !GridPane.this.isDecendentSelected() )
-					return;
+		this.setOnKeyPressed(event -> {
+			if( !GridPane.this.isDecendentSelected() )
+				return;
+			
+			if ( event.key == GLFW.GLFW_KEY_TAB ) {
+				Node selected = LWJGUI.getCurrentContext().getSelected();
+				int col = getColumn(selected);
+				int row = getRow(selected);
 				
-				if ( key == GLFW.GLFW_KEY_TAB ) {
-					Node selected = LWJGUI.getCurrentContext().getSelected();
-					int col = getColumn(selected);
-					int row = getRow(selected);
-					
-					Node e = null;
-					int tries = 0;
-					while ( e == null && tries < 32 ) {
-						tries++;
-						if ( isShiftDown ) {
-							row--;
-						} else {
-							row++;
-						}
-						row = Math.min(maxY-1, Math.max(row, 0));
-						e = elements[col][row];
+				Node e = null;
+				int tries = 0;
+				while ( e == null && tries < 32 ) {
+					tries++;
+					if ( event.isShiftDown ) {
+						row--;
+					} else {
+						row++;
 					}
-					
-					LWJGUI.getCurrentContext().setSelected(e);
+					row = Math.min(maxY-1, Math.max(row, 0));
+					e = elements[col][row];
 				}
+				
+				LWJGUI.getCurrentContext().setSelected(e);
 			}
 		});
 	}

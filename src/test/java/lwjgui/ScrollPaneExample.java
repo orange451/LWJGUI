@@ -68,11 +68,8 @@ public class ScrollPaneExample {
 		
 		// Create a button
 		Button button = new Button("Click me");
-		button.setOnAction(new ButtonEvent() {
-			@Override
-			public void onEvent() {
-				test.getChildren().add(new Label("WOAH THIS IS SOME REALLY LONG TEXT!"));
-			}
+		button.setOnAction(event -> {
+			test.getChildren().add(new Label("WOAH THIS IS SOME REALLY LONG TEXT!"));
 		});
 		pane.setBottom(button);
 		

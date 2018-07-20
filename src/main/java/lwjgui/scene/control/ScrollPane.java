@@ -9,6 +9,7 @@ import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
+import lwjgui.event.EventHandler;
 import lwjgui.event.ScrollEvent;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
@@ -52,14 +53,14 @@ public class ScrollPane extends Control {
 		
 		this.internalPane = new ScrollCanvas();
 		
-		this.mouseScrollEventInternal = new ScrollEvent() {
+		this.mouseScrollEventInternal = new EventHandler<ScrollEvent>() {
 			@Override
-			public void onEvent(double x, double y) {
+			public void handle(ScrollEvent event) {
 				if ( isDecendentHovered() ) {
-					vBar.pixel -= y*scrollGestureSpeedMultiplier;
-					hBar.pixel -= x*scrollGestureSpeedMultiplier;
+					vBar.pixel -= event.y*scrollGestureSpeedMultiplier;
+					hBar.pixel -= event.x*scrollGestureSpeedMultiplier;
 				}
-			}	
+			}
 		};
 	}
 

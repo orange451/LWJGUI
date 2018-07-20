@@ -4,7 +4,7 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.collections.ObservableList;
-import lwjgui.event.ChangeEvent;
+import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
@@ -33,14 +33,14 @@ public class MenuBar extends Region {
 		this.internalBox.setBackground(null);
 		this.children.add(internalBox);
 		
-		this.items.setAddCallback(new ChangeEvent<Menu>() {
+		this.items.setAddCallback(new ElementCallback<Menu>() {
 			@Override
 			public void onEvent(Menu changed) {
 				recalculate();
 			}
 		});
 		
-		this.items.setRemoveCallback(new ChangeEvent<Menu>() {
+		this.items.setRemoveCallback(new ElementCallback<Menu>() {
 			@Override
 			public void onEvent(Menu changed) {
 				recalculate();

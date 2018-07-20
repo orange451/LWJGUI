@@ -1,7 +1,5 @@
 package lwjgui.scene.control;
 
-import lwjgui.event.ButtonEvent;
-
 public class ToggleButton extends ButtonBase implements Toggle {
 	protected boolean selected;
 	protected ToggleGroup toggleGroup;
@@ -12,12 +10,9 @@ public class ToggleButton extends ButtonBase implements Toggle {
 
 	public ToggleButton(String name, ToggleGroup group) {
 		super(name);
-
-		this.setOnAction(new ButtonEvent() {
-			@Override
-			public void onEvent() {
-				setSelected(true);
-			}
+		
+		this.setOnAction( event -> {
+			setSelected(true);
 		});
 		
 		this.setToggleGroup(group);

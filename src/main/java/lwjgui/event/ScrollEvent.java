@@ -1,11 +1,12 @@
 package lwjgui.event;
 
-public abstract class ScrollEvent extends Event {
+public class ScrollEvent extends Event {
+	public final double x;
+	public final double y;
 	
-	public abstract void onEvent( double x, double y );
-
-	@Override
-	final public void onEvent() {
+	public ScrollEvent( double x, double y ) {
+		this.x = x;
+		this.y = y;
 	}
 
 }

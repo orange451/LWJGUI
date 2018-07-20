@@ -6,6 +6,9 @@ import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
+import lwjgui.event.Event;
+import lwjgui.event.EventHandler;
+import lwjgui.event.EventHelper;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.event.ScrollEvent;
@@ -26,15 +29,15 @@ public abstract class Node implements Resizable {
 	protected Pos alignment;
 	protected Node parent;
 
-	protected MouseEvent mousePressedEvent;
-	protected MouseEvent mouseReleasedEvent;
-	protected MouseEvent mouseEnteredEvent;
-	protected MouseEvent mouseExitedEvent;
-	protected MouseEvent mouseDraggedEvent;
-	protected ScrollEvent mouseScrollEvent;
-	protected ScrollEvent mouseScrollEventInternal;
-	protected KeyEvent textInputEvent;
-	protected KeyEvent keyPressedEvent;
+	protected EventHandler<MouseEvent> mousePressedEvent;
+	protected EventHandler<MouseEvent> mouseReleasedEvent;
+	protected EventHandler<Event> mouseEnteredEvent;
+	protected EventHandler<Event> mouseExitedEvent;
+	protected EventHandler<MouseEvent> mouseDraggedEvent;
+	protected EventHandler<ScrollEvent> mouseScrollEvent;
+	protected EventHandler<ScrollEvent> mouseScrollEventInternal;
+	protected EventHandler<KeyEvent> textInputEvent;
+	protected EventHandler<KeyEvent> keyPressedEvent;
 	
 	private boolean mouseTransparent = false;
 	protected boolean flag_clip = false;
@@ -654,69 +657,67 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
-	protected void onMousePressed( int button ) {
+	protected boolean onMousePressed( int button ) {
 		mousePressed = true;
 		
 		if ( mousePressedEvent != null ) {
-			this.mousePressedEvent.setConsumed(false);
-			this.mousePressedEvent.onEvent(button);
+			return EventHelper.fireEvent(this.mousePressedEvent, new MouseEvent(button));
 		}
+		return false;
 	}
 	
-	protected void onMouseReleased( int button ) {
+	protected boolean onMouseReleased( int button ) {
 		if ( !mousePressed )
-			return;
+			return false;
 		mousePressed = false;
 		
 		if ( mouseReleasedEvent != null ) {
-			this.mouseReleasedEvent.setConsumed(false);
-			this.mouseReleasedEvent.onEvent(button);
+			return EventHelper.fireEvent(this.mouseReleasedEvent, new MouseEvent(button));
 		}
+		return false;
 	}
 	
 	protected void onMouseEntered() {
 		if ( this.mouseEnteredEvent != null ) {
-			this.mouseEnteredEvent.setConsumed(false);
-			this.mouseEnteredEvent.onEvent(-1);
+			EventHelper.fireEvent(this.mouseEnteredEvent, new Event());
 		}
 	}
 	
 	protected void onMouseExited() {
 		if ( this.mouseExitedEvent != null ) {
-			this.mouseExitedEvent.setConsumed(false);
-			this.mouseExitedEvent.onEvent(-1);
+			EventHelper.fireEvent(this.mouseExitedEvent, new Event());
 		}
 	}
 	
-	public void setMouseEnteredEvent( MouseEvent event ) {
+	public void setMouseEnteredEvent( EventHandler<Event> event ) {
 		this.mouseEnteredEvent = event;
 	}
 	
-	public void setMouseExitedEvent( MouseEvent event ) {
+	public void setMouseExitedEvent( EventHandler<Event> event ) {
 		this.mouseExitedEvent = event;
 	}
 	
-	public void setMousePressedEvent( MouseEvent event ) {
+	public void setMousePressedEvent( EventHandler<MouseEvent> event ) {
 		this.mousePressedEvent = event;
 	}
 	
-	public void setMouseReleasedEvent( MouseEvent event ) {
+	public void setMouseReleasedEvent( EventHandler<MouseEvent> event ) {
 		this.mouseReleasedEvent = event;
 	}
 	
-	public void setMouseScrollGestureEvent( ScrollEvent event ) {
+	public void setMouseScrollGestureEvent( EventHandler<ScrollEvent> event ) {
 		this.mouseScrollEvent = event;
 	}
 	
-	public void setMouseDraggedEvent( MouseEvent event ) {
+	public void setMouseDraggedEvent( EventHandler<MouseEvent> event ) {
 		this.mouseDraggedEvent = event;
 	}
 	
-	public void setOnTextInput( KeyEvent event ) {
+	public void setOnTextInput( EventHandler<KeyEvent> event ) {
 		this.textInputEvent = event;
 	}
 	
-	public void setOnKeyPressed( KeyEvent event ) {
+	public void setOnKeyPressed( EventHandler<KeyEvent> event ) {
 		this.keyPressedEvent = event;
 	}
 

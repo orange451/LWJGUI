@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.Color;
 import lwjgui.LWJGUIUtil;
+import lwjgui.event.EventHandler;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
@@ -109,22 +110,20 @@ class TreeNode<E> extends HBox {
 		getChildren().add(stateButton);
 		getChildren().add(item.label);
 		
-		stateButton.setMousePressedEvent(new MouseEvent() {
-			@Override
-			public void onEvent(int button) {
-				if ( item.getItems().size() == 0 )
-					return;
-				
-				item.setExpanded(!item.isExpanded());
-				
-				this.consume();
-			}
+		stateButton.setMousePressedEvent( event -> {
+			if ( item.getItems().size() == 0 )
+				return;
+			
+			item.setExpanded(!item.isExpanded());
+			
+			event.consume();
 		});
 		
-		this.setMousePressedEvent(new MouseEvent() {
+		this.setMousePressedEvent(new EventHandler<MouseEvent>() {
 			long lastPressed = -1;
+			
 			@Override
-			public void onEvent(int button) {
+			public void handle(MouseEvent event) {
 				long handle = cached_context.getWindowHandle();
 				boolean isCtrlDown = GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_LEFT_CONTROL) == GLFW.GLFW_PRESS
 								|| GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_RIGHT_CONTROL) == GLFW.GLFW_PRESS
@@ -160,6 +159,7 @@ class TreeNode<E> extends HBox {
 				cached_context.setSelected(TreeNode.this);
 				lastPressed = System.currentTimeMillis();
 			}
+			
 		});
 	}
 	

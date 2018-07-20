@@ -12,7 +12,7 @@ import org.lwjgl.nanovg.NanoVG;
 import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
-import lwjgui.event.ChangeEvent;
+import lwjgui.event.ElementCallback;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
@@ -45,7 +45,7 @@ public class SplitPane extends Control {
 		this.divider_holder.setBackground(Color.TRANSPARENT);
 		this.children.add(divider_holder);
 		
-		this.items.setAddCallback(new ChangeEvent<Node>() {
+		this.items.setAddCallback(new ElementCallback<Node>() {
 			@Override
 			public void onEvent(Node changed) {
 				if ( divider_resize.get(changed) == null ) {
@@ -55,19 +55,16 @@ public class SplitPane extends Control {
 			}
 		});
 		
-		this.items.setRemoveCallback(new ChangeEvent<Node>() {
+		this.items.setRemoveCallback(new ElementCallback<Node>() {
 			@Override
 			public void onEvent(Node changed) {
 				recalculateDividers();
 			}
 		});
 		
-		this.mouseReleasedEvent = new MouseEvent() {
-			@Override
-			public void onEvent(int button) {
-				System.out.println("A");
-			}
-		};
+		this.setMouseReleasedEvent(event -> {
+			System.out.println("A");
+		});
 		
 		this.setOrientation(Orientation.VERTICAL);
 	}

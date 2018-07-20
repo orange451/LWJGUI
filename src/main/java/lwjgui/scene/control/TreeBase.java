@@ -1,7 +1,7 @@
 package lwjgui.scene.control;
 
 import lwjgui.collections.ObservableList;
-import lwjgui.event.ChangeEvent;
+import lwjgui.event.ElementCallback;
 import lwjgui.scene.layout.StackPane;
 
 public abstract class TreeBase<E> extends StackPane {
@@ -12,13 +12,13 @@ public abstract class TreeBase<E> extends StackPane {
 		items = new ObservableList<TreeItem<E>>();
 		nodes = new ObservableList<TreeNode<E>>();
 		
-		items.setAddCallback(new ChangeEvent<TreeItem<E>>() {
+		items.setAddCallback(new ElementCallback<TreeItem<E>>() {
 			@Override
 			public void onEvent(TreeItem<E> changed) {
 				nodes.add(new TreeNode<E>(changed));
 			}
 		});
-		items.setRemoveCallback(new ChangeEvent<TreeItem<E>>() {
+		items.setRemoveCallback(new ElementCallback<TreeItem<E>>() {
 			@Override
 			public void onEvent(TreeItem<E> changed) {
 				nodes.remove(getNode(changed));

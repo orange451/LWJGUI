@@ -60,11 +60,8 @@ public class ButtonExample {
 		// Create the button for the box
 		final Label label = new Label();
 		Button button = new Button("Click Me!");
-		button.setOnAction(new ButtonEvent() {
-			@Override
-			public void onEvent() {
-				label.setText("Please don't press me :(");
-			}
+		button.setOnAction(event -> {
+			label.setText("Please don't press me :(");
 		});
 		
 		// Add the components

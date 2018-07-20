@@ -4,7 +4,7 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.collections.ObservableList;
-import lwjgui.event.ChangeEvent;
+import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
@@ -25,14 +25,14 @@ public class ToolBar extends Control {
 		this.setMinHeight(24);
 		this.setMaxHeight(24);
 		
-		this.items.setAddCallback(new ChangeEvent<Node>() {
+		this.items.setAddCallback(new ElementCallback<Node>() {
 			@Override
 			public void onEvent(Node changed) {
 				recalculate();
 			}
 		});
 		
-		this.items.setRemoveCallback(new ChangeEvent<Node>() {
+		this.items.setRemoveCallback(new ElementCallback<Node>() {
 			@Override
 			public void onEvent(Node changed) {
 				recalculate();

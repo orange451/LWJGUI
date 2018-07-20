@@ -1,11 +1,11 @@
 package lwjgui.event;
 
-public abstract class ChangeEvent<E> extends Event {
+public class ChangeEvent<T> extends Event {
+	public final T previous;
+	public final T current;
 	
-	public abstract void onEvent( E changed );
-
-	@Override
-	final public void onEvent() {
+	public ChangeEvent( T previous, T current ) {
+		this.previous = previous;
+		this.current = current;
 	}
-
 }

@@ -12,6 +12,11 @@ import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.collections.ObservableList;
+import lwjgui.event.Event;
+import lwjgui.event.EventHelper;
+import lwjgui.event.KeyEvent;
+import lwjgui.event.MouseEvent;
+import lwjgui.event.ScrollEvent;
 import lwjgui.gl.Renderer;
 
 public class Window {
@@ -34,8 +39,7 @@ public class Window {
 					return;
 				
 				if ( selected.mousePressed && selected.mouseDraggedEvent != null ) {
-					selected.mouseDraggedEvent.setConsumed(false);
-					selected.mouseDraggedEvent.onEvent(-1);
+					EventHelper.fireEvent(selected.mouseDraggedEvent, new MouseEvent(GLFW.GLFW_MOUSE_BUTTON_LEFT));
 				}
 			}
 		});
@@ -52,9 +56,8 @@ public class Window {
 
 			private void notifyTextInput(Node root, int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
 				if ( root.textInputEvent != null ) {
-					root.textInputEvent.setConsumed(false);
-					root.textInputEvent.onEvent(key, mods, isCtrlDown, isAltDown, isShiftDown);
-					if ( root.textInputEvent.isConsumed() )
+					boolean consumed = EventHelper.fireEvent(root.textInputEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown));
+					if ( consumed )
 						return;
 				}
 				
@@ -82,9 +85,8 @@ public class Window {
 				}
 				
 				if ( action == GLFW.GLFW_PRESS && root.keyPressedEvent != null ) {
-					root.keyPressedEvent.setConsumed(false);
-					root.keyPressedEvent.onEvent(key, mods, isCtrlDown, isAltDown, isShiftDown);
-					if ( root.keyPressedEvent.isConsumed() )
+					boolean consumed = EventHelper.fireEvent(root.keyPressedEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown));
+					if ( consumed )
 						return;
 				}
 			}
@@ -110,12 +112,7 @@ public class Window {
 					
 					Node hovered = context.getHovered();
 					if ( hovered != null && hovered.mousePressed ) {
-						hovered.onMouseReleased(button);
-						
-						// Check if consumed
-						boolean consumed = false;
-						if ( hovered.mouseReleasedEvent != null && hovered.mouseReleasedEvent.isConsumed() )
-							consumed = true;
+						boolean consumed = hovered.onMouseReleased(button);
 						
 						// If not consumed, set selected
 						if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT && !consumed) {
@@ -166,12 +163,10 @@ public class Window {
 					notifyScroll(children.get(i), x, y);
 				}
 				if ( t.mouseScrollEventInternal != null ) {
-					t.mouseScrollEventInternal.setConsumed(false);
-					t.mouseScrollEventInternal.onEvent(x,y);
+					EventHelper.fireEvent(t.mouseScrollEventInternal, new ScrollEvent(x,y));
 				}
 				if ( t.mouseScrollEvent != null ) {
-					t.mouseScrollEvent.setConsumed(false);
-					t.mouseScrollEvent.onEvent(x,y);
+					EventHelper.fireEvent(t.mouseScrollEvent, new ScrollEvent(x,y));
 				}
 			}
 		});

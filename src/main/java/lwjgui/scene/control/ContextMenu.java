@@ -5,7 +5,7 @@ import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
 import lwjgui.collections.ObservableList;
-import lwjgui.event.ChangeEvent;
+import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.layout.VBox;
@@ -22,14 +22,14 @@ public class ContextMenu extends PopupWindow {
 		this.internalBox = new VBox();
 		this.children.add(this.internalBox);
 		
-		this.items.setAddCallback(new ChangeEvent<MenuItem>() {
+		this.items.setAddCallback(new ElementCallback<MenuItem>() {
 			@Override
 			public void onEvent(MenuItem changed) {
 				recalculate();
 			}
 		});
 		
-		this.items.setRemoveCallback(new ChangeEvent<MenuItem>() {
+		this.items.setRemoveCallback(new ElementCallback<MenuItem>() {
 			@Override
 			public void onEvent(MenuItem changed) {
 				recalculate();

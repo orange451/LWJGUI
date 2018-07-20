@@ -2,12 +2,13 @@ package lwjgui.collections;
 
 import java.util.ArrayList;
 
-import lwjgui.event.ChangeEvent;
+import lwjgui.event.ElementCallback;
+import lwjgui.event.EventHelper;
 
 public class ObservableList<E> {
 	private ArrayList<E> internal;
-	private ChangeEvent<E> addCallback;
-	private ChangeEvent<E> removeCallback;
+	private ElementCallback<E> addCallback;
+	private ElementCallback<E> removeCallback;
 
 	public ObservableList(ObservableList<E> array) {
 		this();
@@ -29,11 +30,11 @@ public class ObservableList<E> {
 		this.internal = new ArrayList<E>();
 	}
 
-	public void setAddCallback( ChangeEvent<E> e ) {
+	public void setAddCallback( ElementCallback<E> e ) {
 		this.addCallback = e;
 	}
 	
-	public void setRemoveCallback( ChangeEvent<E> e ) {
+	public void setRemoveCallback( ElementCallback<E> e ) {
 		this.removeCallback = e;
 	}
 	

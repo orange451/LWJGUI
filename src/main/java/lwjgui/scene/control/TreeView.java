@@ -29,46 +29,41 @@ public class TreeView<E> extends TreeBase<E> {
 		this.selectedItems = new ObservableList<TreeItem<E>>();
 		this.visibleItems = new ObservableList<TreeItem<E>>();
 		
-		this.setMousePressedEvent(new MouseEvent() {
-			@Override
-			public void onEvent(int button) {
-				clearSelectedItems();
-			}
+		this.setMousePressedEvent(event -> {
+			clearSelectedItems();
 		});
 		
-		this.setOnKeyPressed(new KeyEvent() {
-			@Override
-			public void onEvent(int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
-				if ( this.isConsumed() )
-					return;
-				
-				if ( !isDecendentSelected() )
-					return;
-				
-				int index = getItemIndex(getLastSelectedItem());
-				index = Math.min(visibleItems.size()-1, Math.max(0, index));
-				
-				// Up and down arrows
-				if ( key == GLFW.GLFW_KEY_UP || key == GLFW.GLFW_KEY_DOWN ) {
-					int end = index;
-					if ( key == GLFW.GLFW_KEY_UP )
-						end--;
-					if ( key == GLFW.GLFW_KEY_DOWN )
-						end++;
-					end = Math.min(visibleItems.size()-1, Math.max(0, end));
+		this.setOnKeyPressed(event -> {
+			if ( event.isConsumed() )
+				return;
+			
+			if ( !isDecendentSelected() )
+				return;
+			
+			int index = getItemIndex(getLastSelectedItem());
+			index = Math.min(visibleItems.size()-1, Math.max(0, index));
+			int key = event.getKey();
+			
+			// Up and down arrows
+			if ( key == GLFW.GLFW_KEY_UP || key == GLFW.GLFW_KEY_DOWN ) {
+				int end = index;
+				if ( key == GLFW.GLFW_KEY_UP )
+					end--;
+				if ( key == GLFW.GLFW_KEY_DOWN )
+					end++;
+				end = Math.min(visibleItems.size()-1, Math.max(0, end));
 
-					if ( isShiftDown ) {
-						selectItems(new IndexRange(end,index));
-					} else {
-						clearSelectedItems();
-						selectItem(visibleItems.get(end));
-					}
+				if ( event.isShiftDown ) {
+					selectItems(new IndexRange(end,index));
+				} else {
+					clearSelectedItems();
+					selectItem(visibleItems.get(end));
 				}
-				
-				// Enter key
-				if ( key == GLFW.GLFW_KEY_ENTER ) {
-					visibleItems.get(index).setExpanded(!visibleItems.get(index).isExpanded());
-				}
+			}
+			
+			// Enter key
+			if ( key == GLFW.GLFW_KEY_ENTER ) {
+				visibleItems.get(index).setExpanded(!visibleItems.get(index).isExpanded());
 			}
 		});
 	}

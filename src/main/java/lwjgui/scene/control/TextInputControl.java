@@ -10,6 +10,7 @@ import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.StateStack;
+import lwjgui.event.EventHandler;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
@@ -63,28 +64,35 @@ public abstract class TextInputControl extends Control {
 		
 		this.flag_clip = true;
 		
-		this.setOnTextInput(new KeyEvent() {
+		this.setOnTextInput( new EventHandler<KeyEvent>() {
 			int charCount = Integer.MAX_VALUE/2;
+
 			@Override
-			public void onEvent(int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
+			public void handle(KeyEvent event) {
 				if ( !editing )
 					return;
 				
 				charCount++;
 				deleteSelection();
-				insertText(caretPosition, ""+(char)key);
+				insertText(caretPosition, ""+(char)event.getKey());
 				setCaretPosition(caretPosition+1);
 				deselect();
 				
 				// If you press space or if it hasen't saved in 10 chars --> Save history
-				if ( (char)key == ' ' || charCount > 6 ) {
+				if ( (char)event.getKey() == ' ' || charCount > 6 ) {
 					charCount = 0;
 					saveState();
 				}
 			}
 		});
 		
-		this.setOnKeyPressed( new TextInputControlKeyInput() );
+		this.setOnKeyPressed( event -> {
+			TextInputControlKeyInput t = new TextInputControlKeyInput(event.key, event.mods, event.isCtrlDown, event.isAltDown, event.isShiftDown);
+			if ( t.isConsumed() ) {
+				event.consume();
+				return;
+			}
+		});
 	}
 	
 	public void setPreferredRowCount( int rows ) {
@@ -803,8 +811,9 @@ public abstract class TextInputControl extends Control {
 	}
 	
 	protected class TextInputControlKeyInput extends KeyEvent {
-		@Override
-		public void onEvent(int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
+		public TextInputControlKeyInput(int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
+			super(key, mods, isCtrlDown, isAltDown, isShiftDown);
+			
 			if ( !editing )
 				return;
 			
@@ -980,48 +989,39 @@ public abstract class TextInputControl extends Control {
 			this.setVbarPolicy(ScrollBarPolicy.NEVER);
 			this.setHbarPolicy(ScrollBarPolicy.NEVER);
 			this.setPadding(new Insets(4,4,4,4));
-			
-			this.getViewport().setMouseEnteredEvent(new MouseEvent() {
-				@Override
-				public void onEvent(int button) {
-					getScene().setCursor(Cursor.IBEAM);
-				}
+
+			// Enter
+			this.getViewport().setMouseEnteredEvent(event -> {
+				getScene().setCursor(Cursor.IBEAM);
 			});
 
+			// Leave
+			this.getViewport().setMouseExitedEvent(event -> {
+				getScene().setCursor(Cursor.NORMAL);
+			});
 			
-			this.getViewport().setMouseExitedEvent(new MouseEvent() {
-				@Override
-				public void onEvent(int button) {
-					getScene().setCursor(Cursor.NORMAL);
+			// Clicked
+			this.getViewport().setMousePressedEvent(event -> {
+				if ( cached_context == null )
+					return;
+				
+				LWJGUI.runLater(()-> {
+					cached_context.setSelected(getViewport());
+				});
+				
+				setCaretPosition(getCaretAtMouse());
+				selectionEndPosition = caretPosition;
+				
+				int state = GLFW.glfwGetKey(cached_context.getWindowHandle(), GLFW.GLFW_KEY_LEFT_SHIFT);
+				if ( state != GLFW.GLFW_PRESS ) {
+					selectionStartPosition = caretPosition;
 				}
 			});
 			
-			this.getViewport().setMousePressedEvent(new MouseEvent() {
-				@Override
-				public void onEvent(int button) {
-					if ( cached_context == null )
-						return;
-					
-					LWJGUI.runLater(()-> {
-						cached_context.setSelected(getViewport());
-					});
-					
-					setCaretPosition(getCaretAtMouse());
-					selectionEndPosition = caretPosition;
-					
-					int state = GLFW.glfwGetKey(cached_context.getWindowHandle(), GLFW.GLFW_KEY_LEFT_SHIFT);
-					if ( state != GLFW.GLFW_PRESS ) {
-						selectionStartPosition = caretPosition;
-					}
-				}
-			});
-			
-			this.getViewport().setMouseDraggedEvent(new MouseEvent() {
-				@Override
-				public void onEvent(int button) {
-					caretPosition = getCaretAtMouse();
-					selectionEndPosition = caretPosition;
-				}
+			// Drag mouse
+			this.getViewport().setMouseDraggedEvent(event -> {
+				caretPosition = getCaretAtMouse();
+				selectionEndPosition = caretPosition;
 			});
 		}
 		

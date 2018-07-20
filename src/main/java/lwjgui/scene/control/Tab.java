@@ -6,6 +6,9 @@ import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
 import lwjgui.LWJGUIUtil;
+import lwjgui.event.Event;
+import lwjgui.event.EventHandler;
+import lwjgui.event.EventHelper;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
@@ -20,6 +23,8 @@ public class Tab {
 	private Node content;
 	protected Node lastSelected;
 	protected TabPane tabPane;
+	
+	protected EventHandler<Event> closeRequestEvent;
 	
 	public Tab(String name) {
 		button = new TabButton(name);
@@ -40,6 +45,10 @@ public class Tab {
 
 	public Node getContent() {
 		return content;
+	}
+	
+	public void setOnCloseRequest(EventHandler<Event> e) {
+		closeRequestEvent = e;
 	}
 
 	class TabButton extends Region {
@@ -63,9 +72,17 @@ public class Tab {
 			this.x.setFontSize(16);
 			this.internal.getChildren().add(x);
 			
-			this.x.setMouseReleasedEvent(new MouseEvent() {
-				@Override
-				public void onEvent(int button) {
+			this.x.setMouseReleasedEvent(event -> {
+				boolean close = true;
+				
+				if ( closeRequestEvent != null ) {
+					// If close request is consumed, don't close
+					if ( EventHelper.fireEvent(closeRequestEvent, new Event()) ) {
+						close = false;
+					}
+				}
+				
+				if ( close ) {
 					tabPane.getTabs().remove(Tab.this);
 				}
 			});

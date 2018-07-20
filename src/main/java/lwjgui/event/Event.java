@@ -1,8 +1,7 @@
 package lwjgui.event;
 
-public abstract class Event {
+public class Event {
 	private boolean consumed;
-	public abstract void onEvent();
 	
 	public void consume() {
 		this.consumed = true;
@@ -12,7 +11,7 @@ public abstract class Event {
 		return this.consumed;
 	}
 	
-	public void setConsumed(boolean b) {
+	protected void setConsumed(boolean b) {
 		this.consumed = b;
 	}
 }

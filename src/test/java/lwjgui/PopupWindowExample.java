@@ -59,11 +59,8 @@ public class PopupWindowExample {
 
 		// Create the button for the box
 		Button button = new Button("Click Me!");
-		button.setOnAction(new ButtonEvent() {
-			@Override
-			public void onEvent() {
-				popup("Test Popup");
-			}
+		button.setOnAction(event -> {
+			popup("Test Popup");
 		});
 		
 		// Add the components
@@ -89,11 +86,8 @@ public class PopupWindowExample {
 		// Create a button
 		Button b = new Button("Claim prize");
 		root.setBottom(b);
-		b.setOnAction(new ButtonEvent() {
-			@Override
-			public void onEvent() {
-				GLFW.glfwSetWindowShouldClose(pWin, true);
-			}
+		b.setOnAction(event -> {
+			GLFW.glfwSetWindowShouldClose(pWin, true);
 		});
 	}
 }

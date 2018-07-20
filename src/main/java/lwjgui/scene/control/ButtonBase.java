@@ -10,13 +10,15 @@ import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
 import lwjgui.event.ButtonEvent;
+import lwjgui.event.EventHandler;
+import lwjgui.event.EventHelper;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 
 public abstract class ButtonBase extends Labeled {
-	private ButtonEvent buttonEvent;
+	private EventHandler<ButtonEvent> buttonEvent;
 
 	protected double cornerNW = 3.0;
 	protected double cornerNE = 3.0;
@@ -29,17 +31,16 @@ public abstract class ButtonBase extends Labeled {
 		this.setMinSize(32, 24);
 		this.setPadding(new Insets(4,8,4,8));
 		
-		this.mouseReleasedEvent = new MouseEvent() {
+		this.setMouseReleasedEvent( new EventHandler<MouseEvent>() {
 			@Override
-			public void onEvent(int button) {
-				if ( button == 0 ) {
+			public void handle(MouseEvent event) {
+				if ( event.button == 0 ) {
 					if ( buttonEvent != null ) {
-						buttonEvent.onEvent();
+						EventHelper.fireEvent(buttonEvent, new ButtonEvent());
 					}
 				}
 			}
-		};
-		
+		});
 		this.setText(name);
 	}
 	
@@ -154,7 +155,7 @@ public abstract class ButtonBase extends Labeled {
 		return new Point((int)getWidth(), (int)getHeight());
 	}
 
-	public void setOnAction(ButtonEvent event) {
+	public void setOnAction(EventHandler<ButtonEvent> event) {
 		this.buttonEvent = event;
 	}
 

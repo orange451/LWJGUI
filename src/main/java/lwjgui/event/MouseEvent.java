@@ -1,11 +1,9 @@
 package lwjgui.event;
 
-public abstract class MouseEvent extends Event {
+public class MouseEvent extends Event {
+	public final int button;
 	
-	public abstract void onEvent( int button );
-
-	@Override
-	final public void onEvent() {
+	public MouseEvent( int button ) {
+		this.button = button;
 	}
-
 }

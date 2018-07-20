@@ -3,6 +3,9 @@ package lwjgui.scene.control;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ChangeEvent;
+import lwjgui.event.ElementCallback;
+import lwjgui.event.EventHandler;
+import lwjgui.event.EventHelper;
 import lwjgui.event.MouseEvent;
 import lwjgui.event.TabDragEvent;
 import lwjgui.geometry.Insets;
@@ -27,6 +30,7 @@ public class TabPane extends Control {
 	private StackPane contentPane;
 	
 	private TabDragEvent tabDragEvent;
+	private EventHandler<ChangeEvent<Tab>> selectionChangeEvent;
 	
 	public TabPane() {
 		this.setFillToParentHeight(true);
@@ -50,37 +54,28 @@ public class TabPane extends Control {
 		
 		this.setAlignment(Pos.TOP_LEFT);
 		
-		this.tabs.setAddCallback(new ChangeEvent<Tab>() {
+		this.tabs.setAddCallback(new ElementCallback<Tab>() {
 			@Override
 			public void onEvent(Tab changed) {
 				tabButtons.getChildren().add(changed.button);
 				changed.tabPane = TabPane.this;
 				
-				changed.button.setMousePressedEvent(new MouseEvent() {
-					@Override
-					public void onEvent(int button) {
-						select(changed);
-						this.consume();
-					}
+				changed.button.setMousePressedEvent(event -> {
+					select(changed);
+					event.consume();
 				});
 				
-				changed.button.setMouseReleasedEvent(new MouseEvent() {
-					@Override
-					public void onEvent(int button) {
-						select(changed);
-						this.consume();
-					}
+				changed.button.setMouseReleasedEvent(event -> {
+					select(changed);
+					event.consume();
 				});
 				
-				changed.button.setMouseDraggedEvent(new MouseEvent() {
-					@Override
-					public void onEvent(int button) {
-						System.out.println("Not implemented yet");
-					}
+				changed.button.setMouseDraggedEvent(event -> {
+					System.out.println("Not implemented yet");
 				});
 			}
 		});		
-		this.tabs.setRemoveCallback(new ChangeEvent<Tab>() {
+		this.tabs.setRemoveCallback(new ElementCallback<Tab>() {
 			@Override
 			public void onEvent(Tab changed) {
 				tabButtons.getChildren().remove(changed.button);
@@ -143,6 +138,10 @@ public class TabPane extends Control {
 				stored = true;
 			}
 		}
+		boolean consumed = EventHelper.fireEvent(selectionChangeEvent, new ChangeEvent<Tab>(currentTab, tab));
+		if ( consumed )
+			return;
+		
 		currentTab = tab;
 		this.contentPane.getChildren().clear();
 		this.contentPane.getChildren().add(tab.getContent());
@@ -202,5 +201,9 @@ public class TabPane extends Control {
 
 	public void setTabDraggedEvent(TabDragEvent event) {
 		this.tabDragEvent = event;
+	}
+	
+	public void setOnSelectionChange( EventHandler<ChangeEvent<Tab>> event ) {
+		this.selectionChangeEvent = event;
 	}
 }

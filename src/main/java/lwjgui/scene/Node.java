@@ -31,6 +31,7 @@ public abstract class Node implements Resizable {
 
 	protected EventHandler<MouseEvent> mousePressedEvent;
 	protected EventHandler<MouseEvent> mouseReleasedEvent;
+	protected EventHandler<MouseEvent> mouseClickedEvent;
 	protected EventHandler<Event> mouseEnteredEvent;
 	protected EventHandler<Event> mouseExitedEvent;
 	protected EventHandler<MouseEvent> mouseDraggedEvent;
@@ -666,11 +667,28 @@ public abstract class Node implements Resizable {
 		return false;
 	}
 	
+	@Deprecated
+	private long _lastClick = 0;
+	@Deprecated
+	private int _flag_clicks = 0;
+	
 	protected boolean onMouseReleased( int button ) {
 		if ( !mousePressed )
 			return false;
 		mousePressed = false;
 		
+		// Clicked
+		if ( this.mouseClickedEvent != null ) {
+			long time = System.currentTimeMillis()-_lastClick;
+			if ( time > 300 ) {
+				_flag_clicks = 0;
+			}
+			_flag_clicks++;
+			_lastClick = System.currentTimeMillis();
+			EventHelper.fireEvent(this.mouseClickedEvent, new MouseEvent(button, _flag_clicks));
+		}
+		
+		// Released
 		if ( mouseReleasedEvent != null ) {
 			return EventHelper.fireEvent(this.mouseReleasedEvent, new MouseEvent(button));
 		}
@@ -689,32 +707,72 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
+	public EventHandler<Event> getMouseEnteredEvent() {
+		return mouseEnteredEvent;
+	}
+	
 	public void setMouseEnteredEvent( EventHandler<Event> event ) {
 		this.mouseEnteredEvent = event;
+	}
+	
+	public EventHandler<Event> getMouseExitedEvent() {
+		return this.mouseExitedEvent;
 	}
 	
 	public void setMouseExitedEvent( EventHandler<Event> event ) {
 		this.mouseExitedEvent = event;
 	}
 	
+	public EventHandler<MouseEvent> getMousePressedEvent() {
+		return this.mousePressedEvent;
+	}
+	
 	public void setMousePressedEvent( EventHandler<MouseEvent> event ) {
 		this.mousePressedEvent = event;
+	}
+	
+	public EventHandler<MouseEvent> getMouseReleasedEvent() {
+		return this.mouseReleasedEvent;
 	}
 	
 	public void setMouseReleasedEvent( EventHandler<MouseEvent> event ) {
 		this.mouseReleasedEvent = event;
 	}
 	
+	public EventHandler<MouseEvent> getOnMouseClicked() {
+		return this.mouseClickedEvent;
+	}
+	
+	public void setOnMouseClicked( EventHandler<MouseEvent> event) {
+		this.mouseClickedEvent = event;
+	}
+	
+	public EventHandler<ScrollEvent> getMouseScrollGesture() {
+		return this.mouseScrollEvent;
+	}
+	
 	public void setMouseScrollGestureEvent( EventHandler<ScrollEvent> event ) {
 		this.mouseScrollEvent = event;
+	}
+	
+	public EventHandler<MouseEvent> getMouseDraggedEvent() {
+		return this.mouseDraggedEvent;
 	}
 	
 	public void setMouseDraggedEvent( EventHandler<MouseEvent> event ) {
 		this.mouseDraggedEvent = event;
 	}
 	
+	public EventHandler<KeyEvent> getOnTextInput() {
+		return this.textInputEvent;
+	}
+	
 	public void setOnTextInput( EventHandler<KeyEvent> event ) {
 		this.textInputEvent = event;
+	}
+	
+	public EventHandler<KeyEvent> getOnKeyPressed() {
+		return this.keyPressedEvent;
 	}
 	
 	public void setOnKeyPressed( EventHandler<KeyEvent> event ) {

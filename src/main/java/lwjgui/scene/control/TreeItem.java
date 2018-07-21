@@ -20,6 +20,7 @@ public class TreeItem<E> extends TreeBase<E> {
 	protected TreeItemLabel label;
 	
 	public TreeItem(E root, Node icon) {
+		this.root = root;
 		this.label = new TreeItemLabel(root.toString());
 		this.label.setGraphic(icon);
 	}
@@ -38,6 +39,12 @@ public class TreeItem<E> extends TreeBase<E> {
 
 	public E getRoot() {
 		return root;
+	}
+	
+	@Override
+	protected void position(Node parent) {
+		super.position(parent);
+		label.setText(root.toString());
 	}
 }
 
@@ -99,7 +106,7 @@ class TreeNode<E> extends HBox {
 		
 		StackPane stateButton = new StackPane();
 		stateButton.setAlignment(Pos.CENTER);
-		stateButton.setPrefSize(18, 18);
+		stateButton.setPrefSize(20, 20);
 		stateButton.setBackground(null);
 		openGraphic = new Label();
 		openGraphic.setFont(Font.COURIER);
@@ -120,7 +127,7 @@ class TreeNode<E> extends HBox {
 		});
 		
 		this.setMousePressedEvent(new EventHandler<MouseEvent>() {
-			long lastPressed = -1;
+			//long lastPressed = -1;
 			
 			@Override
 			public void handle(MouseEvent event) {
@@ -152,12 +159,22 @@ class TreeNode<E> extends HBox {
 					root.selectItem(item);
 					
 					// Double click
-					if ( System.currentTimeMillis() - lastPressed < 300 ) {
+					/*if ( System.currentTimeMillis() - lastPressed < 300 ) {
 						item.setExpanded(!item.isExpanded());
-					}
+					}*/
+					setOnMouseClicked(cc -> {
+						EventHandler<MouseEvent> t = item.getOnMouseClicked();
+						MouseEvent ev = new MouseEvent(cc.button,cc.getClickCount());
+						t.handle(ev);
+						if ( !ev.isConsumed() ) {
+							if ( cc.getClickCount() == 2 ) {
+								item.setExpanded(!item.isExpanded());
+							}
+						}
+					});
 				}
 				cached_context.setSelected(TreeNode.this);
-				lastPressed = System.currentTimeMillis();
+				//lastPressed = System.currentTimeMillis();
 			}
 			
 		});

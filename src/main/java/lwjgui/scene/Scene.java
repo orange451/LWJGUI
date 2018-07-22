@@ -86,7 +86,13 @@ public class Scene extends Node {
 		return this.popups;
 	}
 
+	private Cursor lastCursor = Cursor.NORMAL;
 	public void setCursor(Cursor cursor) {
 		GLFW.glfwSetCursor(cached_context.getWindowHandle(), cursor.getCursor(cached_context.getWindowHandle()));
+		lastCursor = cursor;
+	}
+
+	public Cursor getCursor() {
+		return lastCursor;
 	}
 }

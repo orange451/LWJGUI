@@ -1,6 +1,7 @@
 package lwjgui.scene.control;
 
 import java.util.ArrayList;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGGlyphPosition;
 import org.lwjgl.nanovg.NVGPaint;
@@ -12,7 +13,6 @@ import lwjgui.LWJGUIUtil;
 import lwjgui.collections.StateStack;
 import lwjgui.event.EventHandler;
 import lwjgui.event.KeyEvent;
-import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
 import lwjgui.scene.Cursor;
@@ -28,6 +28,7 @@ public abstract class TextInputControl extends Control {
 	private String source;
 	private int caretPosition;
 	protected boolean editing = false;
+	protected boolean editable = true;
 	
 	private boolean wordWrap; // Not used yet. Requires major changes
 	
@@ -508,6 +509,10 @@ public abstract class TextInputControl extends Control {
 		this.textParser = parser;
 	}
 	
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+	}
+	
 	@Override
 	protected void resize() {
 		super.resize();
@@ -522,7 +527,7 @@ public abstract class TextInputControl extends Control {
 		int width = getMaxTextWidth();
 		this.fakeBox.setMinSize(width, lines.size()*fontSize);
 		
-		if ( this.isDecendentSelected() ) {
+		if ( this.isDecendentSelected() && editable ) {
 			editing = true;
 		} else {
 			if ( editing ) {

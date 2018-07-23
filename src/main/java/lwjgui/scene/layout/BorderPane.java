@@ -13,6 +13,8 @@ public class BorderPane extends Pane {
 	private VBox internalVBox;
 	private HBox internalHBox;
 	
+	private double spacing;
+	
 	public BorderPane() {
 		this.setFillToParentHeight(true);
 		this.setFillToParentWidth(true);
@@ -28,6 +30,44 @@ public class BorderPane extends Pane {
 		this.internalHBox.setFillToParentHeight(true);
 		this.internalHBox.setFillToParentWidth(true);
 		
+		update();
+	}
+	
+	@Override
+	protected void position(Node parent) {
+		super.position(parent);
+		
+		if ( center != null ) {
+			float height = 0;
+			int v = 0;
+			if ( top != null ) {
+				height += top.getHeight();
+				v++;
+			}
+			if ( bottom != null ) {
+				height += bottom.getHeight();
+				v++;
+			}
+			
+			center.setMaxHeight((getHeight()-height)-(spacing*v));
+			
+			float width = 0;
+			int h = 0;
+			if ( left != null ) {
+				width += left.getWidth();
+				h++;
+			}
+			if ( right != null ) {
+				width += right.getWidth();
+				h++;
+			}
+			
+			center.setMaxWidth((getWidth()-width)-(spacing*h));
+		}
+	}
+	
+	public void setSpacing( double spacing ) {
+		this.spacing = spacing;
 		update();
 	}
 	
@@ -67,6 +107,9 @@ public class BorderPane extends Pane {
 		
 		this.internalHBox.setAlignment(this.getAlignment());
 		this.internalVBox.setAlignment(this.getAlignment());
+		
+		this.internalHBox.setSpacing(spacing);
+		this.internalVBox.setSpacing(spacing);
 		
 		if ( top != null ) {
 			this.internalVBox.getChildren().add(top);

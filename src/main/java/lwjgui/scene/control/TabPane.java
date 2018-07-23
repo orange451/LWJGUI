@@ -38,6 +38,7 @@ public class TabPane extends Control {
 		
 		this.tabs = new ObservableList<Tab>();
 		this.flag_clip = true;
+		this.setAlignment(Pos.TOP_LEFT);
 		this.setPrefSize(100, 100);
 		
 		this.internal = new TabPaneInternal();
@@ -46,13 +47,12 @@ public class TabPane extends Control {
 		this.tabButtons = new TabPaneButtonBox();
 		this.internal.getChildren().add(tabButtons);
 		
-		this.contentPane = new StackPane();
-		this.flag_clip = true;
-		this.contentPane.setFillToParentHeight(true);
-		this.contentPane.setFillToParentWidth(true);
+		this.contentPane = new StackPane() {
+			{
+				flag_clip = true;
+			}
+		};
 		this.internal.getChildren().add(contentPane);
-		
-		this.setAlignment(Pos.TOP_LEFT);
 		
 		this.tabs.setAddCallback(new ElementCallback<Tab>() {
 			@Override
@@ -89,6 +89,10 @@ public class TabPane extends Control {
 	
 	@Override
 	protected void position(Node parent) {
+		// Limit content pane size
+		contentPane.setMaxSize(getWidth(), getHeight()-tabButtons.getHeight());
+		contentPane.setPrefSize(contentPane.getMaxWidth(), contentPane.getMaxHeight());
+		
 		super.position(parent);
 		
 		if ( tabs == null || tabs.size() == 0) {
@@ -105,8 +109,6 @@ public class TabPane extends Control {
 			
 			select(tabs.get(currentTabIndex));
 		}
-		
-		contentPane.setMaxSize(getWidth(), getHeight()-tabButtons.getHeight());
 	}
 	
 	protected int getTabIndex(Tab tab) {

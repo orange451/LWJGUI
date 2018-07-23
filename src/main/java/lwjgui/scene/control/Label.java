@@ -59,9 +59,7 @@ public class Label extends Control {
 
 	@Override
 	public void position(Node parent) {
-		Context context = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext();
-
-		if (this.getParent() != null) {
+		if (this.getParent() != null && cached_context != null) {
 			useString = text;
 			
 			// Get max width of parent element
@@ -69,8 +67,8 @@ public class Label extends Control {
 			int remove = 0;
 			
 			// Get some text bounds
-			float[] bounds = getTextBounds( context, text, font, fontStyle, fontSize);
-			float[] elipBnd = getTextBounds( context, ELIPSES, font, fontStyle, fontSize);
+			float[] bounds = getTextBounds( cached_context, text, font, fontStyle, fontSize);
+			float[] elipBnd = getTextBounds( cached_context, ELIPSES, font, fontStyle, fontSize);
 			float curWid = bounds[2]-bounds[0];
 			float prefWid = curWid;
 			this.setPrefWidth(prefWid);
@@ -86,7 +84,7 @@ public class Label extends Control {
 				while ( (curWid >= maxWid) && (remove < text.length()) ) {
 					remove++;
 					useString = useString.substring(0, text.length()-remove)+ELIPSES;
-					bounds = getTextBounds( context, useString, font, fontStyle, fontSize);
+					bounds = getTextBounds( cached_context, useString, font, fontStyle, fontSize);
 					curWid = bounds[2]-bounds[0];
 				}
 			}

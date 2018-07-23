@@ -577,6 +577,9 @@ public abstract class Node implements Resizable {
 	 * @param width
 	 */
 	public void setMinWidth( double width ) {
+		if ( width < 0 )
+			width = 0;
+		
 		layoutBounds.minX = (int)width;
 		if ( size.x < (int)width )
 			size.x = (int)width;
@@ -587,6 +590,9 @@ public abstract class Node implements Resizable {
 	 * @param height
 	 */
 	public void setMinHeight( double height ) {
+		if ( height < 0 )
+			height = 0;
+		
 		layoutBounds.minY = (int)height;
 		if ( size.y < (int)height )
 			size.y = (int)height;
@@ -597,6 +603,9 @@ public abstract class Node implements Resizable {
 	 * @param width
 	 */
 	public void setMaxWidth( double width ) {
+		if ( width < 0 )
+			width = 0;
+		
 		layoutBounds.maxX = (int)width;
 		if ( size.x > (int)width )
 			size.x = (int)width;
@@ -607,6 +616,9 @@ public abstract class Node implements Resizable {
 	 * @param height
 	 */
 	public void setMaxHeight( double height ) {
+		if ( height < 0 )
+			height = 0;
+		
 		layoutBounds.maxY = (int)height;
 		if ( size.y > (int)height )
 			size.y = (int)height;

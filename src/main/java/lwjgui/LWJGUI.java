@@ -80,7 +80,11 @@ public class LWJGUI {
 				
 				// Render window
 				currentContext = window.getContext();
-				window.render();
+				try {
+					window.render();
+				}catch(Exception ex) {
+					
+				}
 			}
 		}
 		
@@ -93,7 +97,11 @@ public class LWJGUI {
 		// Run runnables
 		synchronized(runnables) {
 			for (int i = 0; i < runnables.size(); i++) {
-				runnables.get(i).run();
+				try {
+					runnables.get(i).run();
+				}catch(Exception ex) {
+					
+				}
 			}
 			runnables.clear();
 		}

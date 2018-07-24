@@ -30,7 +30,7 @@ public abstract class TextInputControl extends Control {
 	protected boolean editing = false;
 	protected boolean editable = true;
 	
-	private boolean wordWrap; // Not used yet. Requires major changes
+	private boolean wordWrap; // Buggy AF
 	
 	private int selectionStartPosition;
 	private int selectionEndPosition;
@@ -51,6 +51,8 @@ public abstract class TextInputControl extends Control {
 	
 	private TextParser textParser;
 
+	private final int MAX_LINES = 10000;
+	
 	public TextInputControl() {
 		this.undoStack = new StateStack<TextState>();
 		this.setText("");
@@ -236,11 +238,19 @@ public abstract class TextInputControl extends Control {
 		// Add line normally
 		lines.add(originalText);
 		linesDraw.add(drawLine);
+		
+		while ( lines.size() > MAX_LINES ) {
+			lines.remove(0);
+			linesDraw.remove(0);
+			glyphData.remove(0);
+		}
 	}
 	
 	public void appendText(String text) {
 		insertText(getLength(), text);
 		saveState();
+		
+		internal.scrollBottom();
 	}
 	
 	public void insertText(int index, String text) {
@@ -1030,6 +1040,10 @@ public abstract class TextInputControl extends Control {
 			});
 		}
 		
+		public void scrollBottom() {
+			this.setVvalue(1.0);
+		}
+
 		protected Pane getViewport() {
 			return this.internalPane;
 		}

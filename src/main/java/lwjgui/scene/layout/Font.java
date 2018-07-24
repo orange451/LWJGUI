@@ -143,6 +143,9 @@ public class Font {
 
 	public String getFont(FontStyle style) {
 		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
+		if ( window == null )
+			return null;
+		
 		Context context = window.getContext();
 		long vg = context.getNVG();
 

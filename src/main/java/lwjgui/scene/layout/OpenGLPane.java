@@ -18,6 +18,7 @@ public class OpenGLPane extends StackPane {
 	private Renderer renderer;
 	private Color internalBackground;
 	private int nanoImage = -1;
+	private boolean flipY;
 	
 	public OpenGLPane() {
 		resizeBuffer();
@@ -42,6 +43,10 @@ public class OpenGLPane extends StackPane {
 	
 	public void setRendererCallback(Renderer renderer) {
 		this.renderer = renderer;
+	}
+	
+	public void setFlipY(boolean flip) {
+		this.flipY = flip;
 	}
 	
 	@Override
@@ -91,6 +96,10 @@ public class OpenGLPane extends StackPane {
 			float y = (int)this.getAbsoluteY();
 			float w = (int)this.getWidth();
 			float h = (int)this.getHeight();
+			if ( flipY ) {
+				y = y + h;
+				h = -h;
+			}
 			NVGPaint imagePaint = NanoVG.nvgImagePattern(nanovg, x, y, w, h, 0, nanoImage, 1, NVGPaint.calloc());
 			NanoVG.nvgBeginPath(nanovg);
 			NanoVG.nvgRect(nanovg, x, y, w, h);

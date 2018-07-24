@@ -54,6 +54,7 @@ class TreeItemLabel extends HBox {
 	
 	public TreeItemLabel(String text) {
 		this.label = new Label();
+		this.label.setFontSize(16);
 		this.setSpacing(4);
 		this.setMouseTransparent(true);
 		this.setBackground(null);

@@ -103,9 +103,12 @@ public class Label extends Control {
 		if ( context == null ) {
 			return bounds;
 		}
+		String fnt = font.getFont(style);
+		if ( fnt == null )
+			return bounds;
 		
 		NanoVG.nvgFontSize(context.getNVG(), size);
-		NanoVG.nvgFontFace(context.getNVG(), font.getFont(style));
+		NanoVG.nvgFontFace(context.getNVG(), fnt);
 		NanoVG.nvgTextAlign(context.getNVG(),NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
 		if ( string != null ) {
 			NanoVG.nvgTextBounds(context.getNVG(), 0, 0, string, bounds);

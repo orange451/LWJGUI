@@ -107,6 +107,14 @@ public class ScrollPane extends Control {
 		
 		updateBars();
 	}
+
+	public void setVvalue(double value) {
+		vBar.pixel = value*vBar.contentLen;
+	}
+	
+	public void setHvalue(double value) {
+		hBar.pixel = value*hBar.contentLen;
+	}
 	
 	private void sizeInternal(double x, double y) {
 		this.internalPane.setMinSize(x, y);
@@ -125,8 +133,7 @@ public class ScrollPane extends Control {
 	private void updateBars() {
 
 		// Get mouse coordinates
-		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
-		Context context = window.getContext();
+		Context context = cached_context;
 		double mx = context.getMouseX();
 		double my = context.getMouseY();
 		

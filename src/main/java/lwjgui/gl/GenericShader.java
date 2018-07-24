@@ -215,12 +215,12 @@ public class GenericShader {
 		setWorldMatrix(IDENTITY_MATRIX);
 	}
 
-	private void setProjectionMatrix(Matrix4f mat) {
+	public void setProjectionMatrix(Matrix4f mat) {
 		mat.get(matrix44Buffer);
 		glUniformMatrix4fv(projMatLoc, false, matrix44Buffer);
 	}
 
-	private void setViewMatrix(Matrix4f mat) {
+	public void setViewMatrix(Matrix4f mat) {
 		mat.get(matrix44Buffer);
 		glUniformMatrix4fv(viewMatLoc, false, matrix44Buffer);
 	}

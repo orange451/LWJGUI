@@ -47,6 +47,10 @@ public class CheckBox extends ButtonBase {
 	protected Point getDrawSize() {
 		return new Point( size, size );
 	}
+	
+	public void setSize(int size) {
+		this.size = size;
+	}
 
 	@Override
 	public void render(Context context) {

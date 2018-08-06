@@ -3,8 +3,9 @@ package lwjgui.scene.control;
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.collections.ObservableList;
-import lwjgui.event.KeyEvent;
-import lwjgui.event.MouseEvent;
+import lwjgui.event.CallbackEvent;
+import lwjgui.event.EventHandler;
+import lwjgui.event.EventHelper;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.VBox;
@@ -17,6 +18,9 @@ public class TreeView<E> extends TreeBase<E> {
 	protected ObservableList<TreeItem<E>> visibleItems;
 	private TreeItem<E> lastSelected;
 	private boolean autoSelectChildren;
+
+	protected EventHandler<CallbackEvent<TreeItem<E>>> onSelectItemEvent;
+	protected EventHandler<CallbackEvent<TreeItem<E>>> onDeselectItemEvent;
 	
 	public TreeView() {
 		this.internalBox = new VBox();
@@ -111,6 +115,14 @@ public class TreeView<E> extends TreeBase<E> {
 		}
 	}
 	
+	public void setOnSelectItem(EventHandler<CallbackEvent<TreeItem<E>>> event) {
+		this.onSelectItemEvent = event;
+	}
+	
+	public void setOnDeselectItem(EventHandler<CallbackEvent<TreeItem<E>>> event) {
+		this.onDeselectItemEvent = event;
+	}
+	
 	protected int getItemIndex(TreeItem<E> item) {
 		if ( item == null )
 			return -1;
@@ -176,12 +188,21 @@ public class TreeView<E> extends TreeBase<E> {
 		
 		lastSelected = item;
 		this.selectedItems.add(item);
+		
+		if ( onSelectItemEvent != null ) {
+			EventHelper.fireEvent(this.onSelectItemEvent, new CallbackEvent<TreeItem<E>>(item));
+		}
 	}
 	
 	/**
 	 * Clears the current item selection list.
 	 */
 	public void clearSelectedItems() {
+		for (int i = 0; i < selectedItems.size(); i++) {
+			if ( onDeselectItemEvent != null ) {
+				EventHelper.fireEvent(this.onDeselectItemEvent, new CallbackEvent<TreeItem<E>>(selectedItems.get(i)));
+			}
+		}
 		this.selectedItems.clear();
 	}
 	
@@ -198,6 +219,10 @@ public class TreeView<E> extends TreeBase<E> {
 		}
 		
 		this.selectedItems.remove(item);
+		
+		if ( onDeselectItemEvent != null ) {
+			EventHelper.fireEvent(this.onDeselectItemEvent, new CallbackEvent<TreeItem<E>>(item));
+		}
 	}
 	
 	/**

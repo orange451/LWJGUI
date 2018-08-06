@@ -4,14 +4,12 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.Color;
 import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
-import lwjgui.event.KeyEvent;
 import lwjgui.geometry.HPos;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 
-public class GridPane extends Node {
+public class GridPane extends Pane {
 	private VBox internalVBox;
 	
 	private Node[][] elements;
@@ -22,6 +20,8 @@ public class GridPane extends Node {
 	
 	private int hgap;
 	private int vgap;
+	
+	private boolean modified;
 	
 	private static int MAX_SIZE = 1024;
 	
@@ -37,6 +37,8 @@ public class GridPane extends Node {
 		this.internalVBox = new VBox();
 		this.internalVBox.setAlignment(Pos.TOP_LEFT);
 		this.children.add(this.internalVBox);
+		
+		this.setPrefSize(1, 1);
 		
 		update();
 		
@@ -87,10 +89,23 @@ public class GridPane extends Node {
 	
 	public void add(Node element, int x, int y) {
 		elements[x][y] = element;
+		modified = true;
+	}
+	
+	public void clear() {
+		maxX = getMaxX();
+		maxY = getMaxY();
+		for (int i = 0; i < maxX; i++) {
+			for (int j = 0; j < maxY; j++) {
+				elements[i][j] = null;
+			}
+		}
 		update();
 	}
 	
 	private void update() {
+		modified = false;
+		
 		maxX = getMaxX();
 		maxY = getMaxY();
 		
@@ -98,6 +113,7 @@ public class GridPane extends Node {
 		this.elementsInternal = new NodePair[maxX][maxY];
 		
 		this.internalVBox.setSpacing(vgap);
+		this.internalVBox.setBackground(null);
 		
 		for (int i = 0; i < maxY; i++) {
 			HBox row = new HBox();
@@ -130,10 +146,15 @@ public class GridPane extends Node {
 	
 	@Override
 	protected void position(Node parent) {
+		if ( modified )
+			update();
+		
 		super.position(parent);
 		
 		adjustSize();
-		this.setPrefSize(internalVBox.getWidth(), internalVBox.getHeight());
+		internalVBox.setFillToParentWidth(this.isFillToParentWidth());
+		internalVBox.setFillToParentHeight(this.isFillToParentHeight());
+		//this.setPrefSize(internalVBox.getWidth(), internalVBox.getHeight());
 	}
 	
 	public void setColumnConstraint(int column, ColumnConstraint constraint) {
@@ -145,18 +166,39 @@ public class GridPane extends Node {
 		for (int i = 0; i < maxX; i++) {
 			double columnWidth = getColumnWidth(i);
 			double desiredColumnWidth = constraints[i].getPrefWidth();
+			
+			// Get total width of columns except for the current one
+			int totalWidthWithoutMe = 0;
+			for (int j = 0; j < maxX; j++) {
+				if ( j == i )
+					continue;
+				totalWidthWithoutMe += elementsInternal[j][0].node1.getWidth();
+				totalWidthWithoutMe += elementsInternal[j][0].node2.getWidth();
+			}
+			
+			// If this column is marked to grow, use the above value to calculate width
+			if ( constraints[i].getHgrow().equals(Priority.ALWAYS) ) {
+				desiredColumnWidth = this.getWidth()-totalWidthWithoutMe;
+			}
+			
 			if ( columnWidth < desiredColumnWidth )
 				columnWidth = desiredColumnWidth;
 			if ( columnWidth < constraints[i].getMinWidth() )
 				columnWidth = constraints[i].getMinWidth();
 			if ( columnWidth > constraints[i].getMaxWidth() )
 				columnWidth = constraints[i].getMaxWidth();
+			
 			for (int j = 0; j < maxY; j++) {
 				NodePair e = elementsInternal[i][j];
 				
 				if ( e != null ) {
-					int mWid = (int) e.node1.getWidth();
-					e.node2.setPrefWidth(Math.max(0, columnWidth-mWid));
+					if( constraints[i].isFillWidth() ) {
+						e.node1.setPrefWidth(columnWidth);
+						e.node2.setPrefWidth(0);
+					} else {
+						int mWid = (int) e.node1.getWidth();
+						e.node2.setPrefWidth(Math.max(0, columnWidth-mWid));
+					}
 				}
 			}
 		}
@@ -257,14 +299,6 @@ public class GridPane extends Node {
 	public boolean isResizeable() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void render(Context context) {
-		this.clip(context);
-		for (int i = 0; i < children.size(); i++) {
-			children.get(i).render(context);
-		}
 	}
 	
 	class NodePair {

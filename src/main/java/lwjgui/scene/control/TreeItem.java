@@ -23,6 +23,12 @@ public class TreeItem<E> extends TreeBase<E> {
 		this.root = root;
 		this.label = new TreeItemLabel(root.toString());
 		this.label.setGraphic(icon);
+		
+		this.setBackground(null);
+	}
+	
+	public void setText(String text) {
+		this.label.label.setText(text);
 	}
 	
 	public void setExpanded(boolean expanded) {
@@ -98,6 +104,8 @@ class TreeNode<E> extends HBox {
 	
 	public TreeNode(TreeItem<E> item) {
 		this.item = item;
+		
+		this.setBackground(null);
 		
 		inset = new StackPane();
 		inset.setMouseTransparent(true);
@@ -212,7 +220,7 @@ class TreeNode<E> extends HBox {
 		// Set appropriate background color
 		boolean selected = root.isItemSelected(item);
 		boolean active = context.isFocused();
-		Color color = selected?(active?Theme.currentTheme().getSelection():Theme.currentTheme().getSelectionPassive()):Theme.currentTheme().getPane();
+		Color color = selected?(active?Theme.currentTheme().getSelection():Theme.currentTheme().getSelectionPassive()):null;
 		this.setBackground(color);
 		
 		// Set appropriate colors

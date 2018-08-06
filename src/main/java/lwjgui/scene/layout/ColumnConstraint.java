@@ -4,6 +4,9 @@ public class ColumnConstraint {
 	private double minWidth;
 	private double maxWidth;
 	private double prefWidth;
+	private boolean fillWidth;
+	
+	private Priority hgrow = Priority.NEVER;
 	
 	public ColumnConstraint() {
 		this(0);
@@ -19,6 +22,14 @@ public class ColumnConstraint {
 		this.maxWidth = maxWidth;
 	}
 	
+	public void setHgrow(Priority p) {
+		this.hgrow = p;
+	}
+	
+	public Priority getHgrow() {
+		return this.hgrow;
+	}
+	
 	public double getPrefWidth() {
 		return this.prefWidth;
 	}
@@ -29,5 +40,13 @@ public class ColumnConstraint {
 	
 	public double getMaxWidth() {
 		return this.maxWidth;
+	}
+	
+	public boolean isFillWidth() {
+		return fillWidth;
+	}
+	
+	public void setFillWidth(boolean b) {
+		this.fillWidth = b;
 	}
 }

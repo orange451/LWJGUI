@@ -89,6 +89,12 @@ public class Window {
 					if ( consumed )
 						return;
 				}
+				
+				if ( action == GLFW.GLFW_RELEASE && root.keyReleasedEvent != null ) {
+					boolean consumed = EventHelper.fireEvent(root.keyReleasedEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown));
+					if ( consumed )
+						return;
+				}
 			}
 		});
 		

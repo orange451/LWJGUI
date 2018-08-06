@@ -39,6 +39,7 @@ public abstract class Node implements Resizable {
 	protected EventHandler<ScrollEvent> mouseScrollEventInternal;
 	protected EventHandler<KeyEvent> textInputEvent;
 	protected EventHandler<KeyEvent> keyPressedEvent;
+	protected EventHandler<KeyEvent> keyReleasedEvent;
 	
 	private boolean mouseTransparent = false;
 	protected boolean flag_clip = false;
@@ -72,7 +73,8 @@ public abstract class Node implements Resizable {
 		
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
-			child.setLocalPosition(this, child.getX(), child.getY());
+			//child.setLocalPosition(this, child.getX(), child.getY());
+			child.offset(x, y);
 		}
 	}
 	
@@ -789,6 +791,14 @@ public abstract class Node implements Resizable {
 	
 	public void setOnKeyPressed( EventHandler<KeyEvent> event ) {
 		this.keyPressedEvent = event;
+	}
+	
+	public EventHandler<KeyEvent> getOnKeyReleased() {
+		return this.keyReleasedEvent;
+	}
+	
+	public void setOnKeyReleased( EventHandler<KeyEvent> event ) {
+		this.keyReleasedEvent = event;
 	}
 
 	public abstract void render(Context context);

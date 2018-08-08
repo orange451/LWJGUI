@@ -18,6 +18,8 @@ public class TreeItem<E> extends TreeBase<E> {
 	private E root;
 	private boolean opened;
 	protected TreeItemLabel label;
+
+	protected ContextMenu context;
 	
 	public TreeItem(E root, Node icon) {
 		this.root = root;
@@ -45,6 +47,14 @@ public class TreeItem<E> extends TreeBase<E> {
 
 	public E getRoot() {
 		return root;
+	}
+	
+	public void setContextMenu(ContextMenu menu) {
+		this.context = menu;
+	}
+	
+	public ContextMenu getContextMenu() {
+		return this.context;
 	}
 	
 	@Override
@@ -127,10 +137,12 @@ class TreeNode<E> extends HBox {
 		getChildren().add(item.label);
 		
 		stateButton.setMousePressedEvent( event -> {
-			if ( item.getItems().size() == 0 )
-				return;
-			
-			item.setExpanded(!item.isExpanded());
+			if ( event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
+				if ( item.getItems().size() == 0 )
+					return;
+				
+				item.setExpanded(!item.isExpanded());
+			}
 			
 			event.consume();
 		});
@@ -164,26 +176,32 @@ class TreeNode<E> extends HBox {
 					
 					root.selectItems(new IndexRange(start,end));
 				} else { // Normal click
+					
+					// Select
 					root.clearSelectedItems();
 					root.selectItem(item);
-					
-					// Double click
-					/*if ( System.currentTimeMillis() - lastPressed < 300 ) {
-						item.setExpanded(!item.isExpanded());
-					}*/
-					setOnMouseClicked(cc -> {
-						EventHandler<MouseEvent> t = item.getOnMouseClicked();
-						MouseEvent ev = new MouseEvent(cc.button,cc.getClickCount());
-						t.handle(ev);
-						if ( !ev.isConsumed() ) {
-							if ( cc.getClickCount() == 2 ) {
-								item.setExpanded(!item.isExpanded());
+
+					if ( event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
+						// Double click
+						setOnMouseClicked(cc -> {
+							EventHandler<MouseEvent> t = item.getOnMouseClicked();
+							MouseEvent ev = new MouseEvent(cc.button,cc.getClickCount());
+							t.handle(ev);
+							if ( !ev.isConsumed() ) {
+								if ( cc.getClickCount() == 2 ) {
+									item.setExpanded(!item.isExpanded());
+								}
 							}
+						});
+					} else {
+						ContextMenu context = item.context;
+						System.out.println(context);
+						if ( context != null ) {
+							context.show(getScene(), getAbsoluteX(), getAbsoluteY()+getHeight());
 						}
-					});
+					}
 				}
 				cached_context.setSelected(TreeNode.this);
-				//lastPressed = System.currentTimeMillis();
 			}
 			
 		});

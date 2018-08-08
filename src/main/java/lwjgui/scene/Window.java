@@ -26,6 +26,7 @@ public class Window {
 	protected boolean windowResizing;
 	private Renderer renderCallback;
 	private boolean autoDraw = true;
+	private boolean autoClear = true;
 	
 	public Window(final Context context, Scene scene) {
 		this.context = context;
@@ -192,6 +193,18 @@ public class Window {
 	 */
 	public void setWindowAutoDraw(boolean autoDraw) {
 		this.autoDraw = autoDraw;
+	}
+	
+	/**
+	 * Default: true. When set to true, the window will automatically clear OpenGL's depth and color at the start of drawing.
+	 * @param autoClear
+	 */
+	public void setWindowAutoClear(boolean autoClear) {
+		this.autoClear = autoClear;
+	}
+	
+	public boolean isWindowAutoClear() {
+		return this.autoClear;
 	}
 	
 	public void render() {

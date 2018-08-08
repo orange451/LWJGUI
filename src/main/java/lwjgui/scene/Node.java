@@ -276,13 +276,23 @@ public abstract class Node implements Resizable {
 		clip(context, 0);
 	}
 	
+	private LayoutBounds LAYOUT_CACHE = new LayoutBounds(0,0,0,0);
+	
 	protected void clip( Context context, int padding ) {
 		LayoutBounds clipBoundsTemp = new LayoutBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+		LayoutBounds tempBounds = LAYOUT_CACHE;
 		
 		Node par = this.parent;
 		while ( par != null ) {
 			if ( par.flag_clip ) {
-				LayoutBounds tempBounds = new LayoutBounds((int)par.getAbsoluteX(), (int)par.getAbsoluteY(), (int)Math.ceil(par.getAbsoluteX()+par.getWidth()+0.5), (int)Math.ceil(par.getAbsoluteY()+par.getHeight()+0.5));
+				
+				// Update temp bounds
+				tempBounds.minX = (int)par.getAbsoluteX();
+				tempBounds.minY = (int)par.getAbsoluteY();
+				tempBounds.maxX = (int)Math.ceil(par.getAbsoluteX()+par.getWidth()+0.5);
+				tempBounds.maxY = (int)Math.ceil(par.getAbsoluteY()+par.getHeight()+0.5);
+				
+				// Clamp
 				if ( tempBounds.minX > clipBoundsTemp.minX )
 					clipBoundsTemp.minX = tempBounds.minX;
 				if ( tempBounds.minY > clipBoundsTemp.minY )
@@ -379,8 +389,17 @@ public abstract class Node implements Resizable {
 	 * Return a bounds fit to the size of the node.
 	 * @return
 	 */
+	private LayoutBounds innerBounds;
 	public LayoutBounds getInnerBounds() {
-		return new LayoutBounds(0, 0, (int)getWidth(), (int)getHeight());
+		if ( innerBounds == null )
+			innerBounds = new LayoutBounds(0,0,0,0);
+		
+		innerBounds.minX = 0;
+		innerBounds.minY = 0;
+		innerBounds.maxX = (int)getWidth();
+		innerBounds.maxY = (int)getHeight();
+		
+		return innerBounds;
 	}
 	
 	/**

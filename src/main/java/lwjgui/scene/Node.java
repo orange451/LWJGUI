@@ -309,7 +309,7 @@ public abstract class Node implements Resizable {
 		NanoVG.nvgScissor(context.getNVG(), clipBoundsTemp.minX, clipBoundsTemp.minY, clipBoundsTemp.getWidth(), clipBoundsTemp.getHeight());
 	}
 	
-	protected boolean isDecendentSelected() {
+	public boolean isDescendentSelected() {
 		if ( cached_context == null ) {
 			return false;
 		}
@@ -329,24 +329,9 @@ public abstract class Node implements Resizable {
 		}
 		
 		return false;
-		/*if ( cached_context != null && cached_context.isSelected(this) ) {
-			return true;
-		}
-		if ( cached_context != null )
-			System.out.println("Checking " + this.toString() + "   /  " + cached_context.isSelected(this));
-
-		ObservableList<Node> c = getChildren();
-		for (int i = 0; i < c.size(); i++) {
-			Node child = c.get(i);
-			if ( child.isDecendentSelected() ) {
-				return true;
-			}
-		}
-		
-		return false;*/
 	}
 	
-	protected boolean isDecendentHovered() {
+	public boolean isDescendentHovered() {
 		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
 		Context context = window.getContext();
 		Node hovered = context.getHovered();

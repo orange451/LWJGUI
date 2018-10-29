@@ -43,7 +43,7 @@ public class GridPane extends Pane {
 		update();
 		
 		this.setOnKeyPressed(event -> {
-			if( !GridPane.this.isDecendentSelected() )
+			if( !GridPane.this.isDescendentSelected() )
 				return;
 			
 			if ( event.key == GLFW.GLFW_KEY_TAB ) {

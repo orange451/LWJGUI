@@ -537,7 +537,7 @@ public abstract class TextInputControl extends Control {
 		int width = getMaxTextWidth();
 		this.fakeBox.setMinSize(width, lines.size()*fontSize);
 		
-		if ( this.isDecendentSelected() && editable ) {
+		if ( this.isDescendentSelected() && editable ) {
 			editing = true;
 		} else {
 			if ( editing ) {
@@ -707,7 +707,7 @@ public abstract class TextInputControl extends Control {
 		this.clip(context,4);
 		
 		// Selection graphic
-		if ( this.isDecendentSelected() ) {
+		if ( this.isDescendentSelected() ) {
 			int feather = 4;
 			Color color = context.isFocused()?Theme.currentTheme().getSelection():Theme.currentTheme().getSelectionPassive();
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
@@ -721,7 +721,7 @@ public abstract class TextInputControl extends Control {
 		}
 		
 		// Outline
-		Color outlineColor = this.isDecendentSelected()?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
+		Color outlineColor = this.isDescendentSelected()?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
 		NanoVG.nvgBeginPath(context.getNVG());
 		NanoVG.nvgRoundedRect(context.getNVG(), x, y, w, h, (float) 2);
 		NanoVG.nvgFillColor(context.getNVG(), outlineColor.getNVG());
@@ -762,7 +762,7 @@ public abstract class TextInputControl extends Control {
 		this.internal.render(context);
 		
 		// internal selection graphic
-		if ( this.isDecendentSelected() ) {
+		if ( this.isDescendentSelected() ) {
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
 			Color sel = context.isFocused()?Theme.currentTheme().getSelection():Theme.currentTheme().getSelectionPassive();
 			Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);

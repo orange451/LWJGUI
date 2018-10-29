@@ -102,7 +102,7 @@ public class Tab {
 			if ( tabPane.getSelected().equals(Tab.this) )
 				return false;
 			
-			return (this.isDecendentHovered() && GLFW.glfwGetMouseButton(cached_context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
+			return (this.isDescendentHovered() && GLFW.glfwGetMouseButton(cached_context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
 		}
 		
 		protected boolean isHovered() {
@@ -112,7 +112,7 @@ public class Tab {
 			if ( cached_context.isSelected(x) )
 				return false;
 			
-			return this.isDecendentHovered();
+			return this.isDescendentHovered();
 		}
 		
 		private void buttonMask(long vg, float x, float y, float w, float h, float rOffset) {

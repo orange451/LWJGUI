@@ -56,7 +56,7 @@ public class ScrollPane extends Control {
 		this.mouseScrollEventInternal = new EventHandler<ScrollEvent>() {
 			@Override
 			public void handle(ScrollEvent event) {
-				if ( isDecendentHovered() ) {
+				if ( isDescendentHovered() ) {
 					vBar.pixel -= event.y*scrollGestureSpeedMultiplier;
 					hBar.pixel -= event.x*scrollGestureSpeedMultiplier;
 				}
@@ -250,7 +250,7 @@ public class ScrollPane extends Control {
 		
 		// Pane Outline
 		if ( this.getBackground() != null ) {
-			Color outlineColor = this.isDecendentSelected()?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
+			Color outlineColor = this.isDescendentSelected()?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
 			LWJGUIUtil.outlineRect( context, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), outlineColor);
 		}
 	}

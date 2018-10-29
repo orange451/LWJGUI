@@ -41,7 +41,7 @@ public class TreeView<E> extends TreeBase<E> {
 			if ( event.isConsumed() )
 				return;
 			
-			if ( !isDecendentSelected() )
+			if ( !isDescendentSelected() )
 				return;
 			
 			int index = getItemIndex(getLastSelectedItem());
@@ -93,7 +93,7 @@ public class TreeView<E> extends TreeBase<E> {
 		addChildren(0, this);
 		
 		// Deselect if not selected
-		if ( !this.isDecendentSelected() )
+		if ( !this.isDescendentSelected() )
 			lastSelected = null;
 	}
 	

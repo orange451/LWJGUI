@@ -3,7 +3,6 @@ package lwjgui.collections;
 import java.util.ArrayList;
 
 import lwjgui.event.ElementCallback;
-import lwjgui.event.EventHelper;
 
 public class ObservableList<E> {
 	private ArrayList<E> internal;
@@ -61,7 +60,10 @@ public class ObservableList<E> {
 	}
 
 	public void clear() {
-		this.internal.clear();
+		while(internal.size()>0) {
+			E obj = internal.get(0);
+			remove(obj);
+		}
 	}
 
 	public boolean contains(E element) {

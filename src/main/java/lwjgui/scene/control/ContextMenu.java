@@ -20,7 +20,7 @@ public class ContextMenu extends PopupWindow {
 	public ContextMenu() {
 		this.setAutoHide(true);
 		this.internalBox = new VBox();
-		this.children.add(this.internalBox);
+		//this.children.add(this.internalBox);
 		
 		this.items.setAddCallback(new ElementCallback<MenuItem>() {
 			@Override
@@ -37,16 +37,27 @@ public class ContextMenu extends PopupWindow {
 		});
 	}
 	
-	protected void recalculate() {
-		resize(1024,1024);
+	private void recalculate() {
+		resize(100,100);
+		
+		// Fill the internal box with our items
 		internalBox.getChildren().clear();
 		for (int i = 0; i < items.size(); i++) {
 			internalBox.getChildren().add(items.get(i));
 		}
-		for (int i = 0; i < 8; i++) {
+		
+		// Position the internalbox? This is really hacky... Something is wrong internally...
+		for (int i = 0; i < 4; i++) {
 			internalBox.position(this);
 		}
-		resize(internalBox.getWidth(), internalBox.getHeight());		
+		
+		float wid = (float) internalBox.getWidth();
+		float hei = (float) internalBox.getHeight();
+		
+		// Make our size it's size.
+		if ( wid > 0 && hei > 0 ) {
+			resize(wid, hei);	
+		}
 	}
 
 	public ContextMenu getChild() {
@@ -56,6 +67,9 @@ public class ContextMenu extends PopupWindow {
 	protected void resize( double sx, double sy ) {
 		this.setMinSize(sx, sy);
 		this.setMaxSize(sx, sy);
+		//this.setPrefSize(sx, sy);
+		//internalBox.setMaxSize(1024, 1024);
+		//internalBox.setPrefSize(sx, sy);
 	}
 	
 	@Override
@@ -75,6 +89,7 @@ public class ContextMenu extends PopupWindow {
 	@Override
 	public void render(Context context) {
 		// Position the menu
+		recalculate();
 		this.position(this.getScene());
 		this.setAbsolutePosition( absoluteX, absoluteY );
 		

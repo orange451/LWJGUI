@@ -48,7 +48,7 @@ public abstract class Labeled extends Control {
 			double x = Labeled.this.getPadding().getWidth();
 			if ( holder.getChildren().size() == 2 )
 				x += holder.getChildren().get(0).getPrefWidth();
-			return label.getWidth() + (holder.getSpacing()*holder.getChildren().size()-1) + x; 
+			return label.getPrefWidth() + (holder.getSpacing()*holder.getChildren().size()-1) + x; 
 		}
 
 		public double getMaximumPotentialHeight() {
@@ -78,6 +78,7 @@ public abstract class Labeled extends Control {
 		this.setPrefHeight(this.graphicLabel.getMaximumPotentialHeight());
 		this.graphicLabel.holder.position(this);
 		this.graphicLabel.holder.offset(graphicLabel.offset.x, graphicLabel.offset.y);
+		this.graphicLabel.label.position(this);
 		super.position(parent);
 	}
 	

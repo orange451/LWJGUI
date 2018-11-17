@@ -38,7 +38,7 @@ public class ContextMenu extends PopupWindow {
 	}
 	
 	private void recalculate() {
-		resize(100,100);
+		resize(Integer.MAX_VALUE,Integer.MAX_VALUE);
 		
 		// Fill the internal box with our items
 		internalBox.getChildren().clear();

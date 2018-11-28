@@ -20,7 +20,7 @@ public class ContextMenu extends PopupWindow {
 	public ContextMenu() {
 		this.setAutoHide(true);
 		this.internalBox = new VBox();
-		//this.children.add(this.internalBox);
+		this.children.add(this.internalBox);
 		
 		this.items.setAddCallback(new ElementCallback<MenuItem>() {
 			@Override

@@ -26,7 +26,21 @@ public class Font {
 	public static Font CONSOLAS = new Font("consolas", "Consolas-Regular.ttf", "Consolas-Bold.ttf", null, "Consolas-Italic.ttf");
 	public static Font ARIAL = new Font("arial", "Arial-Unicode.ttf");
 
+	private static ByteBuffer fallbackSansEmoji;
+	private static ByteBuffer fallbackRegularEmoji;
+	private static ByteBuffer fallbackArial;
+	private static ByteBuffer fallbackEntypo;
 	
+	static {
+		try {
+			fallbackSansEmoji		= resourceToByteBuffer("lwjgui/scene/layout/OpenSansEmoji.ttf");
+			fallbackRegularEmoji	= resourceToByteBuffer("lwjgui/scene/layout/NotoEmoji-Regular.ttf");
+			fallbackArial			= resourceToByteBuffer("lwjgui/scene/layout/Arial-Unicode.ttf");
+			fallbackEntypo			= resourceToByteBuffer("lwjgui/scene/layout/entypo.ttf");
+		}catch(Exception e) {
+			//
+		}
+	}
 	
 	private String name;
 	private String fontNameNormal;
@@ -113,25 +127,19 @@ public class Font {
 			bufs.add(buf);
 			
 			// Fallback emoji font
-			addFallback(vg, fontCallback, "OpenSansEmoji.ttf");
-			addFallback(vg, fontCallback, "NotoEmoji-Regular.ttf");
-			addFallback(vg, fontCallback, "Arial-Unicode.ttf");
-			addFallback(vg, fontCallback, "entypo.ttf");
+			addFallback(vg, fontCallback, fallbackSansEmoji);
+			addFallback(vg, fontCallback, fallbackRegularEmoji);
+			addFallback(vg, fontCallback, fallbackArial);
+			addFallback(vg, fontCallback, fallbackEntypo);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void addFallback(long vg, int fontCallback, String fontName) {
-		ByteBuffer tb;
-		try {
-			tb = resourceToByteBuffer("lwjgui/scene/layout/" + fontName);
-			NanoVG.nvgAddFallbackFontId(vg, fontCallback, nvgCreateFontMem(vg, "emoji", tb, 0));
-			bufs.add(tb);
-		} catch (IOException e) {
-			//
-		}
+	private void addFallback(long vg, int fontCallback, ByteBuffer fontData) {
+		NanoVG.nvgAddFallbackFontId(vg, fontCallback, nvgCreateFontMem(vg, "emoji", fontData, 0));
+		bufs.add(fontData);
 	}
 
 	public String getFont() {

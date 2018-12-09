@@ -54,13 +54,14 @@ public class CheckBox extends ButtonBase {
 
 	@Override
 	public void render(Context context) {
-		this.graphicLabel.offset.x = size + spacing;
+		this.graphicLabel.offset.x = size+spacing;
 		this.graphicLabel.alignment = Pos.CENTER_LEFT;
 		
 		super.render(context);
 
 		if ( checked ) {
-			this.setAlignment(Pos.CENTER_LEFT);
+			internalLabel.setAlignment(Pos.CENTER_LEFT);
+			internalLabel2.setAlignment(Pos.CENTER_LEFT);
 
 			// Update the size of the checkmark
 			internalLabel.setFontSize((float) (size*1.2));

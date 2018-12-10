@@ -25,6 +25,8 @@ public abstract class ButtonBase extends Labeled {
 	protected double cornerSW = 3.0;
 	protected double cornerSE = 3.0;
 	
+	protected boolean disabled;
+	
 	public ButtonBase(String name) {
 		super(name);
 		
@@ -34,6 +36,9 @@ public abstract class ButtonBase extends Labeled {
 		this.setMouseReleasedEvent( new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				if ( disabled )
+					return;
+				
 				if ( event.button == 0 ) {
 					if ( buttonEvent != null ) {
 						EventHelper.fireEvent(buttonEvent, new ButtonEvent());
@@ -49,6 +54,14 @@ public abstract class ButtonBase extends Labeled {
 		this.cornerNW = radius;
 		this.cornerSE = radius;
 		this.cornerSW = radius;
+	}
+	
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+	
+	public boolean isDisabled() {
+		return this.disabled;
 	}
 	
 	@Override
@@ -70,6 +83,9 @@ public abstract class ButtonBase extends Labeled {
 		if ( cached_context == null )
 			return false;
 		
+		if ( isDisabled() )
+			return false;
+		
 		return cached_context.isHovered(this) && GLFW.glfwGetMouseButton(cached_context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
 	}
 
@@ -89,7 +105,11 @@ public abstract class ButtonBase extends Labeled {
 			if ( context.isSelected(this) && context.isFocused() ) {
 				int feather = 4;
 				float c = (float) Math.max(cornerNW,Math.max(cornerNE,Math.max(cornerSE,cornerSW)));
-				NVGPaint paint = NanoVG.nvgBoxGradient(vg, x,y, w,h,c, feather, Theme.currentTheme().getSelection().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+				NVGColor sel = Theme.currentTheme().getSelection().getNVG();
+				if ( isDisabled() )
+					sel = Theme.currentTheme().getSelectionPassive().getNVG();
+				
+				NVGPaint paint = NanoVG.nvgBoxGradient(vg, x,y, w,h,c, feather, sel, Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 				NanoVG.nvgBeginPath(vg);
 				buttonMask( vg, x-feather, y-feather, w+feather*2, h+feather*2, 0 );
 				NanoVG.nvgFillPaint(vg, paint);
@@ -98,14 +118,14 @@ public abstract class ButtonBase extends Labeled {
 			}
 			
 			// Draw button outline
-			Color outlineColor = (context.isSelected(this)&&context.isFocused())?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
+			Color outlineColor = (context.isSelected(this)&&context.isFocused()&&!isDisabled())?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x,y,w,h,+1);
 			NanoVG.nvgFillColor(vg, outlineColor.getNVG());
 			NanoVG.nvgFill(vg);	
 			
 			// Draw main background
-			Color buttonColor = isPressed()?Theme.currentTheme().getControlOutline():(context.isHovered(this)?Theme.currentTheme().getControlHover():Theme.currentTheme().getControl());
+			Color buttonColor = isPressed()?Theme.currentTheme().getControlOutline():((context.isHovered(this)&&!isDisabled())?Theme.currentTheme().getControlHover():Theme.currentTheme().getControl());
 			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*3, buttonColor.getNVG(), Theme.currentTheme().getControlOutline().getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x+1,y+1,w-2,h-2, 0);
@@ -128,6 +148,8 @@ public abstract class ButtonBase extends Labeled {
 			// internal selection graphic
 			if ( context.isSelected(this) && context.isFocused() ) {
 				Color sel = Theme.currentTheme().getSelection();
+				if ( isDisabled() )
+					sel = Theme.currentTheme().getSelectionPassive();
 				Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);
 				NanoVG.nvgBeginPath(vg);
 				float inset = 1.25f;
@@ -144,6 +166,10 @@ public abstract class ButtonBase extends Labeled {
 		if ( graphicLabel != null ) {
 			this.setAlignment(graphicLabel.alignment);
 			graphicLabel.render(context);
+		}
+		
+		if ( isDisabled() ) {
+			this.graphicLabel.label.setTextFill(Theme.currentTheme().getShadow());
 		}
 	}
 

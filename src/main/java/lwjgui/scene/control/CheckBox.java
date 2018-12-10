@@ -82,6 +82,7 @@ public class CheckBox extends ButtonBase {
 			// Render checkmark
 			internalLabel2.render(context);
 			internalLabel.render(context);
+			internalLabel.setTextFill(this.graphicLabel.label.getTextFill());
 		}
 	}
 

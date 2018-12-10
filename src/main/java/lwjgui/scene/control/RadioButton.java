@@ -61,7 +61,7 @@ public class RadioButton extends ToggleButton {
 			NanoVG.nvgBeginPath(nvg);
 			NanoVG.nvgShapeAntiAlias(nvg, true);
 			NanoVG.nvgCircle(nvg, xx, yy, size*0.2f);
-			NanoVG.nvgFillColor(nvg, Theme.currentTheme().getText().getNVG());
+			NanoVG.nvgFillColor(nvg, this.graphicLabel.label.getTextFill().getNVG());
 			NanoVG.nvgFill(nvg);
 		}
 	}

@@ -2,8 +2,10 @@ package lwjgui.scene;
 
 import org.lwjgl.glfw.GLFW;
 
+import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.control.PopupWindow;
+import lwjgui.theme.Theme;
 
 /**
  * Every window has a Scene that contains various nodes that add functionality to the program. 

@@ -5,6 +5,10 @@ import org.lwjgl.glfw.GLFW;
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.control.PopupWindow;
 
+/**
+ * Every window has a Scene that contains various nodes that add functionality to the program. 
+ *
+ */
 public class Scene extends Node {
 	private Node root;
 	
@@ -30,6 +34,11 @@ public class Scene extends Node {
 		return this.getPrefHeight();
 	}
 	
+	/**
+	 * Sets the base node of the scene, essentially becoming the "container" for everything else.
+	 * 
+	 * @param node
+	 */
 	public void setRoot(Node node) {
 		this.children.clear();
 		this.children.add(node);

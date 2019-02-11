@@ -8,6 +8,7 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallbackI;
 import org.lwjgl.glfw.GLFWWindowCloseCallbackI;
 import org.lwjgl.glfw.GLFWWindowFocusCallbackI;
+import org.lwjgl.glfw.GLFWWindowRefreshCallbackI;
 import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -154,7 +155,13 @@ public class Window {
 				windowResizing = true;
 				render();
 				windowResizing = false;
-				GLFW.glfwSwapBuffers(context.getWindowHandle());
+			}
+		});
+		
+		GLFW.glfwSetWindowRefreshCallback(context.getWindowHandle(), new GLFWWindowRefreshCallbackI() {
+			@Override
+			public void invoke(long arg0) {
+				render();
 			}
 		});
 		
@@ -234,6 +241,9 @@ public class Window {
 		context.refresh();
 		NanoVG.nvgBeginFrame(context.getNVG(), (int)width, (int)height, ratio);
 		scene.render(context);
+		scene.render(context);
+		scene.render(context);
+		
         NanoVG.nvgRestore(context.getNVG());
 		NanoVG.nvgEndFrame(context.getNVG());
 		

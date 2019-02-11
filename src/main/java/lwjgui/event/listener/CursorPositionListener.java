@@ -5,7 +5,10 @@ package lwjgui.event.listener;
  *
  */
 
-@EventListenerType(type="CursorPositionListener")
-public abstract class CursorPositionListener extends EventListener {
+public abstract class CursorPositionListener implements EventListener {
 	public abstract void invoke(long window, double x, double y);
+	
+	public EventListenerType getEventListenerType() {
+		return EventListenerType.CURSOR_POS_LISTENER;
+	}
 }

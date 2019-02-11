@@ -22,6 +22,7 @@ import lwjgui.event.MouseEvent;
 import lwjgui.event.ScrollEvent;
 import lwjgui.event.listener.CursorPositionListener;
 import lwjgui.event.listener.EventListener;
+import lwjgui.event.listener.EventListener.EventListenerType;
 import lwjgui.event.listener.KeyListener;
 import lwjgui.event.listener.MouseButtonListener;
 import lwjgui.event.listener.MouseWheelListener;
@@ -29,6 +30,8 @@ import lwjgui.event.listener.WindowCloseListener;
 import lwjgui.event.listener.WindowFocusListener;
 import lwjgui.event.listener.WindowSizeListener;
 import lwjgui.gl.Renderer;
+
+import static lwjgui.event.listener.EventListener.EventListenerType.*;
 
 public class Window {
 	private Context context;
@@ -39,7 +42,7 @@ public class Window {
 	private boolean autoDraw = true;
 	private boolean autoClear = true;
 	
-	private HashMap<String, ArrayList<EventListener>> eventListeners = new HashMap<>();
+	private HashMap<EventListenerType, ArrayList<EventListener>> eventListeners = new HashMap<>();
 	
 	public Window(final Context context, Scene scene) {
 		this.context = context;
@@ -51,7 +54,7 @@ public class Window {
 				/*
 				 * Call window event listeners
 				 */
-				ArrayList<EventListener> listeners = getEventListenersForType(CursorPositionListener.class);
+				ArrayList<EventListener> listeners = getEventListenersForType(CURSOR_POS_LISTENER);
 				
 				for (int i = 0; i < listeners.size(); i++) {
 					((CursorPositionListener) listeners.get(i)).invoke(window, x, y);
@@ -105,7 +108,7 @@ public class Window {
 				/*
 				 * Call window event listeners
 				 */
-				ArrayList<EventListener> listeners = getEventListenersForType(KeyListener.class);
+				ArrayList<EventListener> listeners = getEventListenersForType(KEY_LISTENER);
 				
 				for (int i = 0; i < listeners.size(); i++) {
 					((KeyListener) listeners.get(i)).invoke(handle, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
@@ -146,7 +149,7 @@ public class Window {
 				/*
 				 * Call window event listeners
 				 */
-				ArrayList<EventListener> listeners = getEventListenersForType(MouseButtonListener.class);
+				ArrayList<EventListener> listeners = getEventListenersForType(MOUSE_BUTTON_LISTENER);
 				
 				for (int i = 0; i < listeners.size(); i++) {
 					((MouseButtonListener) listeners.get(i)).invoke(window, button, downup, modifier);
@@ -192,7 +195,7 @@ public class Window {
 				/*
 				 * Call window event listeners
 				 */
-				ArrayList<EventListener> listeners = getEventListenersForType(WindowFocusListener.class);
+				ArrayList<EventListener> listeners = getEventListenersForType(MOUSE_WHEEL_LISTENER);
 				
 				for (int i = 0; i < listeners.size(); i++) {
 					((WindowFocusListener) listeners.get(i)).invoke(window, focus);
@@ -213,7 +216,7 @@ public class Window {
 				/*
 				 * Call window event listeners
 				 */
-				ArrayList<EventListener> listeners = getEventListenersForType(WindowCloseListener.class);
+				ArrayList<EventListener> listeners = getEventListenersForType(WINDOW_CLOSE_LISTENER);
 				
 				for (int i = 0; i < listeners.size(); i++) {
 					((WindowCloseListener) listeners.get(i)).invoke(window);
@@ -233,7 +236,7 @@ public class Window {
 				/*
 				 * Call window event listeners
 				 */
-				ArrayList<EventListener> listeners = getEventListenersForType(WindowSizeListener.class);
+				ArrayList<EventListener> listeners = getEventListenersForType(WINDOW_SIZE_LISTENER);
 				
 				for (int i = 0; i < listeners.size(); i++) {
 					((WindowSizeListener) listeners.get(i)).invoke(window, width, height);
@@ -262,7 +265,7 @@ public class Window {
 				/*
 				 * Call window event listeners
 				 */
-				ArrayList<EventListener> listeners = getEventListenersForType(MouseWheelListener.class);
+				ArrayList<EventListener> listeners = getEventListenersForType(MOUSE_WHEEL_LISTENER);
 				
 				for (int i = 0; i < listeners.size(); i++) {
 					((MouseWheelListener) listeners.get(i)).invoke(window, dx, dy);
@@ -369,7 +372,7 @@ public class Window {
 	}
 
 	public void addEventListener(EventListener listener) {
-		String key = listener.getClass().getDeclaredAnnotations()[0].toString();
+		EventListenerType key = listener.getEventListenerType();
 		
 		if (eventListeners.containsKey(key)) {
 			eventListeners.get(key).add(listener);
@@ -380,7 +383,7 @@ public class Window {
 	}
 	
 	public boolean removeEventListener(EventListener listener) {
-		String key = listener.getClass().getSuperclass().getName();
+		EventListenerType key = listener.getEventListenerType();
 		
 		if (eventListeners.containsKey(key)) {
 			return eventListeners.get(key).remove(listener);
@@ -389,15 +392,15 @@ public class Window {
 		}
 	}
 	
-	public ArrayList<EventListener> getEventListenersForType(Class<?> type){
-		String key = type.getClass().getSuperclass().getName();
-		
-		System.err.println("get " + key);
-		
-		if (eventListeners.containsKey(key)) {
-			return eventListeners.get(key);
+	public void removeAll(EventListenerType type) {
+		eventListeners.put(type, new ArrayList<EventListener>());
+	}
+	
+	public ArrayList<EventListener> getEventListenersForType(EventListenerType type){
+		if (eventListeners.containsKey(type)) {
+			return eventListeners.get(type);
 		} else {
-			eventListeners.put(key, new ArrayList<EventListener>());
+			eventListeners.put(type, new ArrayList<EventListener>());
 			return getEventListenersForType(type);
 		}
 	}

@@ -5,8 +5,8 @@ import lwjgui.scene.Node;
 public class VBox extends DirectionalBox {
 	
 	@Override
-	public void position( Node parent ) {
-		super.position(parent);
+	public void updateChildren() {
+		super.updateChildren();
 		
 		double totalHeight = this.getMaxPotentialHeight();//getMinimumPotentialHeight();
 		//double probableHeight = this.getAvailableSize().y;

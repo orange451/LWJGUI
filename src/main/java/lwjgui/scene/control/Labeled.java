@@ -1,110 +1,172 @@
 package lwjgui.scene.control;
 
-import java.awt.Point;
+import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.geometry.Pos;
+import lwjgui.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.scene.layout.Font;
 import lwjgui.scene.layout.FontStyle;
-import lwjgui.scene.layout.HBox;
+import lwjgui.theme.Theme;
 
 public abstract class Labeled extends Control {
-	protected GraphicLabel graphicLabel;
 	private Node graphic;
+	private String text = "";
+	private String useString = "";
+	private float fontSize = 18;
+	private Font font = Font.SANS;
+	private FontStyle fontStyle = FontStyle.REGULAR;
+	private Color textColor;
 	
-	class GraphicLabel {
-		protected HBox holder;
-		protected Point offset = new Point();
-		protected Label label;
-		public Pos alignment;
+	private static final String ELIPSES = "...";
+
+	public Labeled() {
+		textColor = Theme.currentTheme().getText();
+		this.flag_clip = false;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public void setFont(Font font) {
+		this.font = font;
+	}
+
+	public void setFontSize( float size ) {
+		if ( size == this.fontSize )
+			return;
 		
-		GraphicLabel() {
-			alignment = Pos.CENTER;
-			
-			holder = new HBox();
-			holder.setSpacing(4);
-			holder.setFillToParentWidth(false);
-			
-			label = new Label("Label");
-			holder.getChildren().add(label);
-			
-			holder.setBackground(null);
-		}
+		this.fontSize = size;
+	}
 
-		public void render(Context context) {
-			if ( graphic != null ) {
-				int minSize = (int) label.getFontSize();
-				graphic.setPrefSize(minSize, minSize);
-				graphic.setMaxSize(minSize, minSize);
-			}
-			
-			holder.setAlignment(alignment);
-			holder.position(Labeled.this);
-			holder.offset(offset.x, offset.y);
-			holder.render(context);
-		}
-
-		public double getMaximumPotentialWidth() {
-			double x = Labeled.this.getPadding().getWidth();
-			if ( holder.getChildren().size() == 2 )
-				x += holder.getChildren().get(0).getPrefWidth();
-			return label.getPrefWidth() + (holder.getSpacing()*holder.getChildren().size()-1) + x; 
-		}
-
-		public double getMaximumPotentialHeight() {
-			return label.getHeight(); 
-		}
+	public void setFontStyle( FontStyle style ) {
+		if ( fontStyle != null && style.equals(this.fontStyle) )
+			return;
 		
-		protected void update() {
-			holder.getChildren().clear();
-			
-			if ( graphic == null ) {
-				holder.getChildren().add(label);
-			} else {
-				holder.getChildren().add(graphic);
-				holder.getChildren().add(label);
-			}
-		}
+		this.fontStyle = style;
 	}
-	
-	public Labeled(String name) {
-		this.graphicLabel = new GraphicLabel();
-		this.setText(name);
-	}
-	
+
 	@Override
-	protected void position( Node parent ) {
-		this.setPrefWidth(this.graphicLabel.getMaximumPotentialWidth());
-		this.setPrefHeight(this.graphicLabel.getMaximumPotentialHeight());
-		this.graphicLabel.holder.position(this);
-		//this.graphicLabel.holder.offset(graphicLabel.offset.x, graphicLabel.offset.y);
-		//this.graphicLabel.label.position(this);
-		super.position(parent);
-	}
-	
-	@Override
-	public void render(Context context) {
-		this.graphicLabel.render(context);
+	public boolean isResizeable() {
+		return false;
 	}
 	
 	public void setGraphic( Node graphic ) {
+		if ( this.graphic != null )
+			this.children.remove(this.graphic);
+		
 		this.graphic = graphic;
-		this.graphicLabel.update();
+		this.children.add(graphic);
 	}
 	
-	public float getFontSize() {
-		return this.graphicLabel.label.getFontSize();
+	@Override
+	public void position(Node parent) {
+		if (this.getParent() != null && cached_context != null) {
+			useString = text;
+			
+			// Get max width of parent element
+			double maxWid = this.getParent().getInnerBounds().getWidth();
+			double gWid = graphic == null ? 0 : graphic.getWidth();
+			
+			int remove = 0;
+			
+			// Get some text bounds
+			float[] bounds = getTextBounds( cached_context, text, font, fontStyle, fontSize);
+			float[] elipBnd = getTextBounds( cached_context, ELIPSES, font, fontStyle, fontSize);
+			double curWid = bounds[2]-bounds[0]+gWid + this.getPadding().getWidth();
+			double prefWid = curWid;
+			this.setPrefWidth(prefWid);
+			
+			// If we're too large for the parent element...
+			if ( this.getPrefWidth() >= this.getAvailableSize().x ) {
+				this.setPrefWidth(maxWid);
+				float eWid = elipBnd[2]-elipBnd[0];
+				curWid += eWid;
+				
+				// While we're too large, remove text off the end and replace with elipses
+				while ( (curWid >= maxWid) && (remove < text.length()) ) {
+					remove++;
+					useString = useString.substring(0, text.length()-remove)+ELIPSES;
+					bounds = getTextBounds( cached_context, useString, font, fontStyle, fontSize);
+					curWid = bounds[2]-bounds[0]+gWid;
+				}
+			}
+			
+			// Set final bounds
+			double hei = (bounds[3] - bounds[1]) + this.padding.getHeight();
+			this.setMinHeight(hei);
+			this.setMaxHeight(hei);
+		}
+		
+		super.position(parent);
+
 	}
 	
-	public void setFontSize(float size) {
-		this.graphicLabel.label.setFontSize(size);
-	}
-	
-	public void setFontStyle(FontStyle style) {
-		this.graphicLabel.label.setFontStyle(style);
+	private static float[] getTextBounds(Context context, String string, Font font, FontStyle style, float size) {
+		float[] bounds = new float[4];
+		if ( context == null ) {
+			return bounds;
+		}
+		String fnt = font.getFont(style);
+		if ( fnt == null )
+			return bounds;
+		
+		NanoVG.nvgFontSize(context.getNVG(), size);
+		NanoVG.nvgFontFace(context.getNVG(), fnt);
+		NanoVG.nvgTextAlign(context.getNVG(),NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
+		if ( string != null ) {
+			NanoVG.nvgTextBounds(context.getNVG(), 0, 0, string, bounds);
+		}
+		return bounds;
 	}
 
-	public void setText(String string) {
-		this.graphicLabel.label.setText(string);
+	@Override
+	public void render(Context context) {
+		//clip(context);
+
+		long vg = context.getNVG();
+		int absX = (int)(getAbsoluteX()-0.5 + this.padding.getLeft());
+		int absY = (int)(getAbsoluteY()+0.5 + this.padding.getTop());
+		
+		double gWid = graphic == null ? -1 : graphic.getWidth();
+		if ( gWid >= 0 ) {
+			graphic.setAbsolutePosition(absX, absY);
+			graphic.render(context);
+			absX += gWid;
+		}
+
+		// Setup font
+		NanoVG.nvgFontSize(vg, fontSize);
+		NanoVG.nvgFontFace(vg, font.getFont(fontStyle));
+		NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
+
+		// Draw
+		NanoVG.nvgBeginPath(vg);
+		NanoVG.nvgFontBlur(vg,0);
+		NanoVG.nvgFillColor(vg, textColor.getNVG());
+		NanoVG.nvgText(vg, absX, absY, useString);
+	}
+
+	public void setTextFill(Color color) {
+		this.textColor = color;
+	}
+
+	public float getFontSize() {
+		return this.fontSize;
+	}
+
+	public double getTextWidth() {
+		float[] bounds = getTextBounds(this.cached_context,text,font,fontStyle,fontSize);
+		float gWid = (float) (graphic == null ? 0 : graphic.getWidth());
+		return bounds[2]-bounds[0] + gWid;
+	}
+
+	public String getText() {
+		return this.text;
+	}
+
+	public Color getTextFill() {
+		return this.textColor;
 	}
 }

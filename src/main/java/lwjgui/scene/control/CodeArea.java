@@ -11,7 +11,7 @@ import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
 
 public class CodeArea extends TextArea {
-	private LineCounter lineCounter;
+	private LineCounterNode lineCounter;
 	
 	public CodeArea() {
 		
@@ -25,9 +25,8 @@ public class CodeArea extends TextArea {
 		this.internal.setContent(fakeBox);
 
 		// Add line counter to scrollpane
-		this.lineCounter = new LineCounter();
+		this.lineCounter = new LineCounterNode();
 		this.fakeBox.getChildren().add(lineCounter);
-		
 	}
 	
 	@Override
@@ -45,6 +44,7 @@ public class CodeArea extends TextArea {
 		double b = this.internal.getContent().getAbsoluteX();
 		double c = b-a;
 		this.lineCounter.offset(-internal.getPadding().getLeft()-c, 0);
+		this.lineCounter.updateChildren();
 	}
 	
 	@Override
@@ -76,10 +76,10 @@ public class CodeArea extends TextArea {
 		}
 	}
 	
-	class LineCounter extends VBox {
+	class LineCounterNode extends VBox {
 		int lastLines = -1;
 		
-		public LineCounter() {
+		public LineCounterNode() {
 			this.setFillToParentWidth(false);
 			this.setFillToParentHeight(true);
 			this.setMouseTransparent(true);

@@ -2,12 +2,12 @@ package lwjgui.scene.layout;
 
 import org.lwjgl.glfw.GLFW;
 
-import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.geometry.HPos;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.scene.Region;
 
 public class GridPane extends Pane {
 	private VBox internalVBox;
@@ -90,6 +90,10 @@ public class GridPane extends Pane {
 	public void add(Node element, int x, int y) {
 		elements[x][y] = element;
 		modified = true;
+		
+		LWJGUI.runLater(()-> {
+			//modified = true;
+		});
 	}
 	
 	public void clear() {
@@ -120,6 +124,7 @@ public class GridPane extends Pane {
 			row.setSpacing(hgap);
 			row.setBackground(null);
 			row.setAlignment(Pos.TOP_LEFT);
+			
 			for (int j = 0; j < maxX; j++) {
 				Node element = elements[j][i];
 				if ( element == null ) {
@@ -172,8 +177,8 @@ public class GridPane extends Pane {
 			for (int j = 0; j < maxX; j++) {
 				if ( j == i )
 					continue;
-				totalWidthWithoutMe += elementsInternal[j][0].node1.getWidth();
-				totalWidthWithoutMe += elementsInternal[j][0].node2.getWidth();
+				totalWidthWithoutMe += elementsInternal[j][0].nodeReal.getWidth();
+				totalWidthWithoutMe += elementsInternal[j][0].nodeFiller.getWidth();
 			}
 			
 			// If this column is marked to grow, use the above value to calculate width
@@ -193,11 +198,13 @@ public class GridPane extends Pane {
 				
 				if ( e != null ) {
 					if( constraints[i].isFillWidth() ) {
-						e.node1.setPrefWidth(columnWidth);
-						e.node2.setPrefWidth(0);
+						e.nodeReal.setPrefWidth(columnWidth);
+						e.nodeFiller.setPrefWidth(0);
 					} else {
-						int mWid = (int) e.node1.getWidth();
-						e.node2.setPrefWidth(Math.max(0, columnWidth-mWid));
+						int mWid = (int) e.nodeReal.getWidth();
+						if ( e.nodeReal instanceof Region )
+							mWid += ((Region)e.nodeReal).getPadding().getWidth();
+						e.nodeFiller.setPrefWidth(Math.max(0, columnWidth-mWid));
 					}
 				}
 			}
@@ -210,8 +217,11 @@ public class GridPane extends Pane {
 				NodePair e = elementsInternal[j][i];
 				
 				if ( e != null ) {
-					int mHei = (int) e.node1.getHeight();
-					e.node2.setPrefHeight(Math.max(0, rowHeight-mHei));
+					int mHei = (int) e.nodeReal.getHeight();
+					if ( e.nodeReal instanceof Region )
+						mHei += ((Region)e.nodeReal).getPadding().getHeight();
+					
+					e.nodeFiller.setPrefHeight(Math.max(0, rowHeight-mHei));
 				}
 			}
 		}
@@ -302,12 +312,12 @@ public class GridPane extends Pane {
 	}
 	
 	class NodePair {
-		Node node1;
-		Node node2;
+		Node nodeReal;
+		Node nodeFiller;
 		
 		NodePair(Node a, Node b) {
-			node1 = a;
-			node2 = b;
+			nodeReal = a;
+			nodeFiller = b;
 		}
 	}
 	

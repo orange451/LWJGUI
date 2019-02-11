@@ -15,7 +15,6 @@ public class CheckBox extends ButtonBase {
 	private boolean checked;
 	
 	private int size = 18;
-	private int spacing = 4;
 	
 	private String checkmark = "\u2713";
 
@@ -25,6 +24,8 @@ public class CheckBox extends ButtonBase {
 		this.internalLabel = new Label(checkmark);
 		this.internalLabel2 = new Label(checkmark);
 		this.internalLabel2.setTextFill(Theme.currentTheme().getControl());
+		
+		this.textOffset = 24;
 
 		this.setPadding(Insets.EMPTY);
 
@@ -38,7 +39,7 @@ public class CheckBox extends ButtonBase {
 	
 	@Override
 	protected void resize() {
-		this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
+		//this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
 		this.setMinHeight(size);
 		super.resize();
 	}
@@ -54,9 +55,9 @@ public class CheckBox extends ButtonBase {
 
 	@Override
 	public void render(Context context) {
-		this.graphicLabel.offset.x = size+spacing;
-		this.graphicLabel.alignment = Pos.CENTER_LEFT;
-		
+		//this.graphicLabel.offset.x = size+spacing;
+		//this.graphicLabel.alignment = Pos.CENTER_LEFT;
+
 		super.render(context);
 
 		if ( checked ) {
@@ -82,7 +83,7 @@ public class CheckBox extends ButtonBase {
 			// Render checkmark
 			internalLabel2.render(context);
 			internalLabel.render(context);
-			internalLabel.setTextFill(this.graphicLabel.label.getTextFill());
+			//internalLabel.setTextFill(this.graphicLabel.label.getTextFill());
 		}
 	}
 

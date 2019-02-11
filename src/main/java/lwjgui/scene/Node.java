@@ -59,6 +59,9 @@ public abstract class Node implements Resizable {
 		
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
+			if ( child == null )
+				continue;
+			
 			child.setLocalPosition(this, child.getX(), child.getY());
 		}
 	}
@@ -81,7 +84,9 @@ public abstract class Node implements Resizable {
 	public void updateChildren() {
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
-			child.position(this);
+			if ( child != null ) {
+				child.position(this);
+			}
 		}
 	}
 	
@@ -242,6 +247,9 @@ public abstract class Node implements Resizable {
 		double runningX = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
+			if ( child == null )
+				continue;
+			
 			double tempX = child.getX() + child.getWidth();
 			if ( tempX > runningX ) {
 				runningX = tempX;
@@ -255,6 +263,9 @@ public abstract class Node implements Resizable {
 		double runningY = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
+			if ( child == null )
+				continue;
+			
 			double tempY = child.getY() + child.getHeight();
 			if ( tempY > runningY ) {
 				runningY = tempY;

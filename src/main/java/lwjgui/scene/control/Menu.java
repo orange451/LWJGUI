@@ -20,6 +20,8 @@ public class Menu extends MenuItem {
 		this.items.setAddCallback(new ElementCallback<MenuItem>() {
 			@Override
 			public void onEvent(MenuItem changed) {
+				if ( changed == null )
+					return;
 				context.getItems().add(changed);
 			}
 		});

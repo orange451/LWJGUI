@@ -27,16 +27,18 @@ public class MenuItem extends Node {
 	}
 	
 	public MenuItem(String string, Node graphic) {
-		this.internalLabel = new Labeled(string) {};
+		this.internalLabel = new Label(string) {};
 		this.internalLabel.setGraphic(graphic);
 		this.internalLabel.setPadding(new Insets(0,padding,0,padding));
 		this.internalLabel.setFontSize(16);
+		
 		background = Theme.currentTheme().getPane();
 		
 		this.setMouseReleasedEvent( event -> {
 			if ( event.button == 0 ) {
 				if ( buttonEvent != null ) 
 					EventHelper.fireEvent(buttonEvent, new ButtonEvent());
+				
 				((ContextMenu)getParent().getParent()).close();
 			}
 		});
@@ -80,7 +82,7 @@ public class MenuItem extends Node {
 		}
 		
 		// Render text on menu item
-		this.internalLabel.graphicLabel.label.setTextFill(isSelected()?Theme.currentTheme().getControlHover():Theme.currentTheme().getText());
+		this.internalLabel.setTextFill(isSelected()?Theme.currentTheme().getControlHover():Theme.currentTheme().getText());
 		this.internalLabel.render(context);
 	}
 	

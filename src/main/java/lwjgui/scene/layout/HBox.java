@@ -5,8 +5,8 @@ import lwjgui.scene.Node;
 public class HBox extends DirectionalBox {
 	
 	@Override
-	public void position( Node parent ) {
-		super.position(parent);
+	public void updateChildren() {
+		super.updateChildren();
 		
 		double totalWidth = this.getMaxPotentialWidth();
 		

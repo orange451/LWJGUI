@@ -5,17 +5,16 @@ import java.awt.Point;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.geometry.Insets;
-import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
-import lwjgui.theme.Theme;
 
 public class RadioButton extends ToggleButton {
 	private int size = 18;
-	private int spacing = 4;
 
 	public RadioButton( String name, ToggleGroup group ) {
 		super(name, group);
 		this.setPadding(Insets.EMPTY);
+		
+		this.textOffset = 24;
 	}
 	
 	public RadioButton(String name) {
@@ -33,7 +32,7 @@ public class RadioButton extends ToggleButton {
 	
 	@Override
 	protected void resize() {
-		this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
+		//this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
 		this.setMinHeight(size);
 		super.resize();
 	}
@@ -45,8 +44,8 @@ public class RadioButton extends ToggleButton {
 
 	@Override
 	public void render(Context context) {
-		this.graphicLabel.offset.x = size + spacing;
-		this.graphicLabel.alignment = Pos.CENTER_LEFT;
+		//this.graphicLabel.offset.x = size + spacing;
+		//this.graphicLabel.alignment = Pos.CENTER_LEFT;
 		
 		this.setCornerRadius(size/2f);
 		
@@ -61,7 +60,7 @@ public class RadioButton extends ToggleButton {
 			NanoVG.nvgBeginPath(nvg);
 			NanoVG.nvgShapeAntiAlias(nvg, true);
 			NanoVG.nvgCircle(nvg, xx, yy, size*0.2f);
-			NanoVG.nvgFillColor(nvg, this.graphicLabel.label.getTextFill().getNVG());
+			//NanoVG.nvgFillColor(nvg, this.graphicLabel.label.getTextFill().getNVG());
 			NanoVG.nvgFill(nvg);
 		}
 	}

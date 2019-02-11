@@ -8,18 +8,26 @@ import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
+import lwjgui.scene.Node;
 import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
 
 public class ContextMenu extends PopupWindow {
-	private VBox internalBox;
+	private ContextVBox internalBox;
 	private ContextMenu childMenu;
 	
 	private ObservableList<MenuItem> items = new ObservableList<MenuItem>();
 	
+	static class ContextVBox extends VBox {
+		@Override
+		public void position(Node parent) {
+			super.position(parent);
+		}
+	}
+	
 	public ContextMenu() {
 		this.setAutoHide(true);
-		this.internalBox = new VBox();
+		this.internalBox = new ContextVBox();
 		this.children.add(this.internalBox);
 		
 		this.items.setAddCallback(new ElementCallback<MenuItem>() {

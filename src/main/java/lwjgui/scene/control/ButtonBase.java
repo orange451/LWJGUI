@@ -25,10 +25,13 @@ public abstract class ButtonBase extends Labeled {
 	protected double cornerSW = 3.0;
 	protected double cornerSE = 3.0;
 	
+	protected double textOffset;
+	
 	protected boolean disabled;
 	
 	public ButtonBase(String name) {
-		super(name);
+		super();
+		this.setText(name);
 		
 		this.setMinSize(32, 24);
 		this.setPadding(new Insets(4,8,4,8));
@@ -163,14 +166,13 @@ public abstract class ButtonBase extends Labeled {
 			
 		//NanoVG.nvgTranslate(context.getNVG(), (int)-getAbsoluteX(), (int)-getAbsoluteY());
 		
-		if ( graphicLabel != null ) {
-			this.setAlignment(graphicLabel.alignment);
-			graphicLabel.render(context);
-		}
-		
 		if ( isDisabled() ) {
-			this.graphicLabel.label.setTextFill(Theme.currentTheme().getShadow());
+			this.setTextFill(Theme.currentTheme().getShadow());
 		}
+
+		this.offset(textOffset, 0);
+		super.render(context);
+		this.offset(-textOffset, 0);
 	}
 
 	private void buttonMask(long vg, float x, float y, float w, float h, float rOffset) {

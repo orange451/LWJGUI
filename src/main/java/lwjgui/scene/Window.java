@@ -1,11 +1,14 @@
 package lwjgui.scene;
 
+import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCharModsCallbackI;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallbackI;
@@ -14,6 +17,7 @@ import org.lwjgl.glfw.GLFWWindowFocusCallbackI;
 import org.lwjgl.glfw.GLFWWindowRefreshCallbackI;
 import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.stb.STBImage;
 
 import lwjgui.collections.ObservableList;
 import lwjgui.event.EventHelper;
@@ -32,6 +36,7 @@ import lwjgui.event.listener.WindowSizeListener;
 import lwjgui.gl.Renderer;
 
 import static lwjgui.event.listener.EventListener.EventListenerType.*;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
 
 public class Window {
 	private Context context;
@@ -394,6 +399,29 @@ public class Window {
 	
 	public void removeAll(EventListenerType type) {
 		eventListeners.put(type, new ArrayList<EventListener>());
+	}
+	
+	public void setIcon(File[] iconFiles) {
+		int numIcons = iconFiles.length;
+		
+		GLFWImage.Buffer icons = GLFWImage.malloc(numIcons);
+		
+		int[] w = new int[1];
+		int[] h = new int[1];
+		int[] c = new int[1];
+		
+		ByteBuffer[] datas = new ByteBuffer[numIcons];
+		
+		for(int i = 0; i < numIcons; i++) {
+			File f = iconFiles[i];
+			
+			ByteBuffer data = datas[i] = STBImage.stbi_load(f.getAbsolutePath(), w, h, c, 4);
+			//System.out.println("Loaded " + w[0] + "x" + h[0] + " icon (data: " + data + ")");
+			
+			icons.get(i).set(w[0], h[0], data);
+		}
+		
+		glfwSetWindowIcon(context.getWindowHandle(), icons);
 	}
 	
 	public ArrayList<EventListener> getEventListenersForType(EventListenerType type){

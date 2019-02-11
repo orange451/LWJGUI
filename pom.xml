@@ -13,8 +13,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
-		<lwjgl.version>3.1.7-SNAPSHOT</lwjgl.version>
-		<joml.version>1.9.10-SNAPSHOT</joml.version>
+		<lwjgl.version>3.2.1-SNAPSHOT</lwjgl.version>
+		<joml.version>1.9.12-SNAPSHOT</joml.version>
 	</properties>
 	<build>
 		<plugins>
@@ -115,6 +115,17 @@
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-nanovg</artifactId>
+			<version>${lwjgl.version}</version>
+			<classifier>natives-${platform}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-stb</artifactId>
+			<version>${lwjgl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-stb</artifactId>
 			<version>${lwjgl.version}</version>
 			<classifier>natives-${platform}</classifier>
 		</dependency>

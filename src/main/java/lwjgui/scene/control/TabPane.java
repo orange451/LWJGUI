@@ -93,8 +93,6 @@ public class TabPane extends Control {
 		contentPane.setMaxSize(getWidth(), getHeight()-tabButtons.getHeight());
 		contentPane.setPrefSize(contentPane.getMaxWidth(), contentPane.getMaxHeight());
 		
-		super.position(parent);
-		
 		if ( tabs == null || tabs.size() == 0) {
 			deselect();
 		}
@@ -102,6 +100,7 @@ public class TabPane extends Control {
 		// Find missing tab
 		while ( (currentTab == null || !tabs.contains(currentTab) ) && tabs.size() > 0 ) {
 			currentTabIndex--;
+			
 			if ( currentTabIndex < 0 )
 				currentTabIndex = 0;
 			if ( currentTabIndex > tabs.size()-1 )
@@ -109,6 +108,8 @@ public class TabPane extends Control {
 			
 			select(tabs.get(currentTabIndex));
 		}
+
+		super.position(parent);
 	}
 	
 	protected int getTabIndex(Tab tab) {
@@ -140,9 +141,12 @@ public class TabPane extends Control {
 				stored = true;
 			}
 		}
-		boolean consumed = EventHelper.fireEvent(selectionChangeEvent, new ChangeEvent<Tab>(currentTab, tab));
-		if ( consumed )
-			return;
+		
+		if ( selectionChangeEvent != null ) {
+			boolean consumed = EventHelper.fireEvent(selectionChangeEvent, new ChangeEvent<Tab>(currentTab, tab));
+			if ( consumed )
+				return;
+		}
 		
 		currentTab = tab;
 		this.contentPane.getChildren().clear();

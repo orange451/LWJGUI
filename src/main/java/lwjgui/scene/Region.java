@@ -6,8 +6,6 @@ import lwjgui.Color;
 import lwjgui.geometry.Insets;
 
 public abstract class Region extends Parent {
-	private boolean fillToParentHeight;
-	private boolean fillToParentWidth;
 	protected Insets padding = Insets.EMPTY;
 	
 	private Color backgroundColor;
@@ -28,38 +26,6 @@ public abstract class Region extends Parent {
 	 */
 	public Color getBackground() {
 		return this.backgroundColor;
-	}
-	
-	/**
-	 * Flag that controls whether this parent will stretch to the width of its parent.
-	 * @param fill
-	 */
-	public void setFillToParentWidth( boolean fill ) {
-		this.fillToParentWidth = fill;
-	}
-
-	/**
-	 * Flag that controls whether this parent will stretch to the height of its parent.
-	 * @param fill
-	 */
-	public void setFillToParentHeight( boolean fill ) {
-		this.fillToParentHeight = fill;
-	}
-	
-	/**
-	 * 
-	 * @return Returns if this node will fit to its parents width.
-	 */
-	public boolean isFillToParentWidth() {
-		return this.fillToParentWidth;
-	}
-
-	/**
-	 * 
-	 * @return Returns if this node will fit to its parents height.
-	 */
-	public boolean isFillToParentHeight() {
-		return this.fillToParentHeight;
 	}
 	
 	/*@Override
@@ -94,30 +60,6 @@ public abstract class Region extends Parent {
 		//return new Vector2d(availableWidth, availableHeight);
 	//}
 	
-	@Override
-	protected void position(Node parent) {
-		if ( fillToParentWidth ) {
-			LayoutBounds bounds = parent.getInnerBounds();
-			double potential = 0;
-			if ( parent instanceof Region ) {
-				potential = ((Region)parent).getMinimumPotentialWidth();
-			}
-			double wid = bounds.getWidth()-potential;
-			this.size.x = wid;
-		}
-		if ( fillToParentHeight ) {
-			LayoutBounds bounds = parent.getInnerBounds();
-			double potential = 0;
-			if ( parent instanceof Region ) {
-				potential = ((Region)parent).getMinimumPotentialHeight();
-			}
-			double hei = bounds.getHeight()-potential;
-			this.size.y = hei;
-		}
-		
-		super.position(parent);
-	}
-	
 	/**
 	 * Set the padding insets of this node. All child nodes will be offset based on the insets.
 	 * @param value
@@ -142,19 +84,27 @@ public abstract class Region extends Parent {
 		return t;
 	}
 	
+	protected boolean canPackElementWidth() {
+		return true;
+	}
+	
+	protected boolean canPackElementHeight() {
+		return true;
+	}
+	
 	@Override
 	protected void resize() {
 		Vector2d availableSize = this.getAvailableSize();
 		
 		// Fix this pane to the width of its elements. Provided it does not exceed max width
-		if ( !this.isFillToParentWidth() ) {
+		if ( canPackElementWidth() ) {
 			float maxWidthInside = (float) (getMaxElementWidth()+padding.getWidth());
 			maxWidthInside = (float) Math.max(maxWidthInside, getPrefWidth());
 			size.x = Math.min(maxWidthInside, availableSize.x);
 		}
 		
 		// Fix this pane to the height of its elements. Provided it does not exceed max height
-		if ( !this.isFillToParentHeight() ) {
+		if ( canPackElementHeight() ) {
 			float maxHeightInside = (float) (getMaxElementHeight()+padding.getHeight());
 			maxHeightInside = (float) Math.max(maxHeightInside, getPrefHeight());
 			size.y = Math.min(maxHeightInside, availableSize.y);
@@ -168,7 +118,7 @@ public abstract class Region extends Parent {
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			float childWid = (float) child.getWidth();
-			if ( child instanceof Region && ((Region)child).isFillToParentWidth() ) {
+			if ( child instanceof Region && !((Region)child).canPackElementWidth() ) {
 				childWid = 0;
 			}
 			totalWidth += childWid;
@@ -183,7 +133,7 @@ public abstract class Region extends Parent {
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			float temp = (float) child.getHeight();
-			if ( child instanceof Region && ((Region)child).isFillToParentHeight() ) {
+			if ( child instanceof Region && !((Region)child).canPackElementHeight() ) {
 				temp = 0;
 			}
 			totalHeight += temp;

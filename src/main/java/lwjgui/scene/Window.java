@@ -461,8 +461,6 @@ public class Window {
 			
 			ByteBuffer data = datas[i] = STBImage.stbi_load(f.getAbsolutePath(), w, h, c, 4);
 			icons.get(i).set(w[0], h[0], data);
-			
-			//System.out.println("Loaded " + w[0] + "x" + h[0] + " icon (data: " + data + ")");
 		}
 		
 		glfwSetWindowIcon(context.getWindowHandle(), icons);

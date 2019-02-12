@@ -61,9 +61,9 @@ public class Scene extends Node {
 		if ( root == null )
 			return;
 		
-		if ( root instanceof Region ) {
-			((Region) root).setFillToParentHeight(true);
-			((Region) root).setFillToParentWidth(true);
+		if ( root instanceof FillableRegion ) {
+			((FillableRegion) root).setFillToParentHeight(true);
+			((FillableRegion) root).setFillToParentWidth(true);
 		}
 		
 		// Position elements

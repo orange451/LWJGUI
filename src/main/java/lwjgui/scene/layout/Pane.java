@@ -5,10 +5,10 @@ import org.lwjgl.nanovg.NanoVG;
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.scene.Region;
+import lwjgui.scene.FillableRegion;
 import lwjgui.theme.Theme;
 
-public class Pane extends Region {
+public class Pane extends FillableRegion {
 	//private boolean scrollableX;
 	//private boolean scrollableY;
 	

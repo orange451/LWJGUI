@@ -43,8 +43,10 @@ public abstract class Transition {
 	
 	/**
 	 * Called by the TransitionManager regularly.
+	 * 
+	 * @param progress - the progress of the Transition to completion (between 0-1, where 1 is 100% complete)
 	 */
-	public abstract void tick();
+	public abstract void tick(double progress);
 	
 	/**
 	 * @return a value from 0 to 1 based on the transition time.

@@ -95,8 +95,7 @@ public class Color {
 			badComponentString = badComponentString + " Blue";
 		}
 		if ( rangeError == true ) {
-			throw new IllegalArgumentException("Color parameter outside of expected range:"
-					+ badComponentString);
+			throw new IllegalArgumentException("Color parameter outside of expected range: " + badComponentString);
 		}
 	}
 
@@ -141,11 +140,7 @@ public class Color {
 	 * @see #getRGB
 	 */
 	public Color(int r, int g, int b, int a) {
-		value = ((a & 0xFF) << 24) |
-				((r & 0xFF) << 16) |
-				((g & 0xFF) << 8)  |
-				((b & 0xFF) << 0);
-		testColorValueRange(r,g,b,a);
+		set(r, g, b, a);
 	}
 
 	/**
@@ -195,10 +190,22 @@ public class Color {
 	 * @param hex e.g. #FFFFFF for white.
 	 */
 	public Color(String hex) {
-		   this(Integer.valueOf(hex.substring( 1, 3 ), 16 ), 
-				Integer.valueOf(hex.substring( 3, 5 ), 16 ), 
-				Integer.valueOf(hex.substring( 5, 7 ), 16 ));
-		}
+		this(Integer.valueOf(hex.substring(1, 3), 16), 
+				Integer.valueOf(hex.substring(3, 5), 16),
+				Integer.valueOf(hex.substring(5, 7), 16));
+	}
+	
+	public Color(Color color) {
+		this.value = color.value;
+	}
+	
+	public void set(int r, int g, int b, int a) {
+		value = ((a & 0xFF) << 24) |
+				((r & 0xFF) << 16) |
+				((g & 0xFF) << 8)  |
+				((b & 0xFF) << 0);
+		testColorValueRange(r,g,b,a);
+	}
 	
 	/**
 	 * Returns a NanoVG color with the same component values.
@@ -372,5 +379,35 @@ public class Color {
 		array[0] = getRed()/255f;
 		array[1] = getGreen()/255f;
 		array[2] = getBlue()/255f;
+	}
+	
+	/**
+	 * Blends the to colors, gradually fading the "from" color to the "to" color based on the given normalized multiplier (a 0-1 value, where 1 is full transitioned).
+	 * 
+	 * @param from - starting color
+	 * @param to - what color to transition to
+	 * @param store - the Color object to store the blended colors into (to prevent making garbage)
+	 * @param mult - how much of the transition is completed (0 = 100% the from color, 1 = 100% the to color)
+	 * @return
+	 */
+	public static Color blend(Color from, Color to, Color store, double mult) {
+		//May not be the best approach, but if it looks good, then whatever.
+		int r1 = from.getRed();
+		int g1 = from.getGreen();
+		int b1 = from.getBlue();
+		int a1 = from.getAlpha();
+		
+		int r2 = to.getRed();
+		int g2 = to.getGreen();
+		int b2 = to.getBlue();
+		int a2 = to.getAlpha();
+		
+		store.set((int) mix(r1, r2, mult), (int) mix(g1, g2, mult), (int) mix(b1, b2, mult), (int) mix(a1, a2, mult));
+		
+		return store;
+	}
+	
+	public static double mix(double x, double y, double a){
+		return x + (y-x)*a;
 	}
 }

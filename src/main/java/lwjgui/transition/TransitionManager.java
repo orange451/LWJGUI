@@ -16,7 +16,7 @@ public class TransitionManager {
 	public static void tick() {
 		for (int i = 0; i < activeTransitions.size(); i++) {
 			Transition t = activeTransitions.get(i);
-			t.tick();
+			t.tick(t.getProgress());
 			
 			if (t.isFinished()) {
 				activeTransitions.remove(i);

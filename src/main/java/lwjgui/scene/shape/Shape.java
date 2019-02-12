@@ -10,4 +10,8 @@ public abstract class Shape extends Node {
 	public void setFill( Color color ) { 
 		this.fill = color;
 	}
+
+	public Color getFill() {
+		return fill;
+	}
 }

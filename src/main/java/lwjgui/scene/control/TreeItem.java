@@ -221,7 +221,7 @@ class TreeNode<E> extends HBox {
 			if ( item.isExpanded() ) {
 				openGraphic.setText("\u25bc");
 			} else {
-				openGraphic.setText("\u25b6");
+				openGraphic.setText("\u25ba");
 			}
 		}
 	}

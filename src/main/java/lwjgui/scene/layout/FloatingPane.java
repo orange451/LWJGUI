@@ -48,7 +48,7 @@ public class FloatingPane extends Region {
 
 		if ( getBackground() != null ) {
 			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRect(context.getNVG(), (int)getAbsoluteX(), (int)getAbsoluteY(), (float)getWidth(), (float)getHeight());
+			NanoVG.nvgRect(context.getNVG(), (int)getX(), (int)getY(), (float)getWidth(), (float)getHeight());
 			NanoVG.nvgFillColor(context.getNVG(), getBackground().getNVG());
 			NanoVG.nvgFill(context.getNVG());
 		}

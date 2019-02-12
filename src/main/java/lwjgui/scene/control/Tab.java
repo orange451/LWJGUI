@@ -123,8 +123,8 @@ public class Tab {
 		@Override
 		public void render(Context context) {
 			long vg = context.getNVG();
-			int x = (int) this.getAbsoluteX();
-			int y = (int) this.getAbsoluteY();
+			int x = (int) this.getX();
+			int y = (int) this.getY();
 			int w = (int) this.getWidth();
 			int h = (int) this.getHeight();
 
@@ -149,7 +149,7 @@ public class Tab {
 			
 			// Draw dark line show this tab button is not selected
 			if ( !pressed ) {
-				LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY()+getHeight()-1, getWidth(), 1, Theme.currentTheme().getControlOutline());
+				LWJGUIUtil.fillRect(context, getX(), getY()+getHeight()-1, getWidth(), 1, Theme.currentTheme().getControlOutline());
 			}
 			
 			// Change color of X button

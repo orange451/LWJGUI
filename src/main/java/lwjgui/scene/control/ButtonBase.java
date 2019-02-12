@@ -99,8 +99,8 @@ public abstract class ButtonBase extends Labeled {
 		//NanoVG.nvgTranslate(context.getNVG(), (int)getAbsoluteX(), (int)getAbsoluteY());		
 			long vg = context.getNVG();
 			Point p = getDrawSize();
-			int x = (int) this.getAbsoluteX();
-			int y = (int) this.getAbsoluteY();
+			int x = (int) this.getX();
+			int y = (int) this.getY();
 			int w = p.x;
 			int h = p.y;
 			

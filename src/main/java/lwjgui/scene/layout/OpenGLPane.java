@@ -92,8 +92,8 @@ public class OpenGLPane extends StackPane {
 
 			// Render FBO to screen
 			long nanovg = context.getNVG();
-			float x = (int)this.getAbsoluteX();
-			float y = (int)this.getAbsoluteY();
+			float x = (int)this.getX();
+			float y = (int)this.getY();
 			float w = (int)this.getWidth();
 			float h = (int)this.getHeight();
 			if ( flipY ) {

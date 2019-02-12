@@ -15,12 +15,12 @@ public class Scene extends Node {
 	private ObservableList<PopupWindow> popups = new ObservableList<PopupWindow>();
 
 	@Override
-	public double getAbsoluteX() {
+	public double getX() {
 		return 0;
 	}
 	
 	@Override
-	public double getAbsoluteY() {
+	public double getY() {
 		return 0;
 	}
 	

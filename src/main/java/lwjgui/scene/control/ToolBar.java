@@ -105,16 +105,16 @@ public class ToolBar extends Control {
 			bg = NanoVG.nvgLinearGradient(vg, 0, 0, (float)getWidth(), 0, Theme.currentTheme().getPane().getNVG(), Theme.currentTheme().getControlAlt().getNVG(), NVGPaint.calloc());
 		}
 		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, (int)getAbsoluteX(), (int)getAbsoluteY(), (int)getWidth(), (int)getHeight());
+		NanoVG.nvgRect(vg, (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
 		NanoVG.nvgFillPaint(vg, bg);
 		NanoVG.nvgFill(vg);
 		
 		// Divider line
 		NanoVG.nvgBeginPath(vg);
 		if ( orientation.equals(Orientation.VERTICAL) ) {
-			NanoVG.nvgRect(vg, (int)(getAbsoluteX()+getWidth()-1), (int)getAbsoluteY(), 1, (int)getHeight());
+			NanoVG.nvgRect(vg, (int)(getX()+getWidth()-1), (int)getY(), 1, (int)getHeight());
 		} else {
-			NanoVG.nvgRect(vg, (int)getAbsoluteX(), (int)(getAbsoluteY()+getHeight()-1), (int)getWidth(), 1);
+			NanoVG.nvgRect(vg, (int)getX(), (int)(getY()+getHeight()-1), (int)getWidth(), 1);
 		}
 		NanoVG.nvgFillColor(vg, Theme.currentTheme().getControlOutline().getNVG());
 		NanoVG.nvgFill(vg);

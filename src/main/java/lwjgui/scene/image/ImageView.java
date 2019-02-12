@@ -6,9 +6,9 @@ import org.lwjgl.nanovg.NanoVG;
 import lwjgui.Color;
 import lwjgui.LWJGUIUtil;
 import lwjgui.scene.Context;
-import lwjgui.scene.Region;
+import lwjgui.scene.FillableRegion;
 
-public class ImageView extends Region {
+public class ImageView extends FillableRegion {
 	private Image image;
 	private boolean stretchToFit = true;
 	
@@ -33,7 +33,7 @@ public class ImageView extends Region {
 
 	@Override
 	public void render(Context context) {
-		LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), getBackground());
+		LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), getBackground());
 		
 		if ( image == null )
 			return;
@@ -44,8 +44,8 @@ public class ImageView extends Region {
 		int img = image.getImage();
 		
 		long vg = context.getNVG();
-		int x = (int) this.getAbsoluteX();
-		int y = (int) this.getAbsoluteY();
+		int x = (int) this.getX();
+		int y = (int) this.getY();
 		int w = (int) this.getWidth();
 		int h = (int) this.getHeight();
 		int xx = x;

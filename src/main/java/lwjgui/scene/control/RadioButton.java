@@ -56,8 +56,8 @@ public class RadioButton extends ToggleButton {
 		if ( selected ) {
 			clip(context);
 			long nvg = context.getNVG();
-			int xx = (int) (this.getAbsoluteX()+this.size/2f);
-			int yy = (int) (this.getAbsoluteY()+this.size/2f);
+			int xx = (int) (this.getX()+this.size/2f);
+			int yy = (int) (this.getY()+this.size/2f);
 			
 			NanoVG.nvgBeginPath(nvg);
 			NanoVG.nvgShapeAntiAlias(nvg, true);

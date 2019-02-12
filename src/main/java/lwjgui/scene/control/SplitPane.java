@@ -297,13 +297,13 @@ public class SplitPane extends Control {
 		double percent = d.getPosition();
 		int dividerWidth = dividerThickness;
 		int dividerHeight = (int) getHeight();
-		int dividerX = (int) ((getAbsoluteX() + getWidth()*percent)-(dividerThickness/2d));
-		int dividerY = (int) getAbsoluteY();
+		int dividerX = (int) ((getX() + getWidth()*percent)-(dividerThickness/2d));
+		int dividerY = (int) getY();
 		if ( orientation.equals(Orientation.HORIZONTAL) ) {
 			dividerWidth = (int) getWidth();
 			dividerHeight = dividerThickness;
-			dividerX = (int) getAbsoluteX();	
-			dividerY = (int) ((getAbsoluteY() + getHeight()*percent)-(dividerThickness/2d));
+			dividerX = (int) getX();	
+			dividerY = (int) ((getY() + getHeight()*percent)-(dividerThickness/2d));
 		}
 
 		return new Vector4d(dividerX, dividerY, dividerWidth, dividerHeight);
@@ -410,7 +410,7 @@ public class SplitPane extends Control {
 
 		Color outlineColor = Theme.currentTheme().getControlOutline();
 		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, (int)this.getAbsoluteX(), (int)this.getAbsoluteY(), (int)getWidth(), (int)getHeight());
+		NanoVG.nvgRect(vg, (int)this.getX(), (int)this.getY(), (int)getWidth(), (int)getHeight());
 		NanoVG.nvgStrokeColor(vg, outlineColor.getNVG());
 		NanoVG.nvgStrokeWidth(vg, 1f);
 		NanoVG.nvgStroke(vg);

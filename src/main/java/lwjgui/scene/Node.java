@@ -20,7 +20,6 @@ import lwjgui.geometry.VPos;
 
 public abstract class Node implements Resizable {
 	protected ObservableList<Node> children = new ObservableList<Node>();
-	protected Vector2d localPosition = new Vector2d();
 	protected Vector2d absolutePosition = new Vector2d();
 	protected Vector2d size = new Vector2d();
 	protected Vector2d prefsize = new Vector2d();
@@ -261,7 +260,7 @@ public abstract class Node implements Resizable {
 			if ( child == null )
 				continue;
 			
-			double tempX = (child.getAbsoluteX()-this.getAbsoluteX()) + child.getWidth();
+			double tempX = (child.getX()-this.getX()) + child.getWidth();
 			if ( tempX > runningX ) {
 				runningX = tempX;
 			}
@@ -277,7 +276,7 @@ public abstract class Node implements Resizable {
 			if ( child == null )
 				continue;
 			
-			double tempY = (child.getAbsoluteY()-this.getAbsoluteY()) + child.getHeight();
+			double tempY = (child.getY()-this.getY()) + child.getHeight();
 			if ( tempY > runningY ) {
 				runningY = tempY;
 			}
@@ -309,10 +308,10 @@ public abstract class Node implements Resizable {
 			if ( par.flag_clip ) {
 				
 				// Update temp bounds
-				tempBounds.minX = (int)par.getAbsoluteX();
-				tempBounds.minY = (int)par.getAbsoluteY();
-				tempBounds.maxX = (int)Math.ceil(par.getAbsoluteX()+par.getWidth()+0.5);
-				tempBounds.maxY = (int)Math.ceil(par.getAbsoluteY()+par.getHeight()+0.5);
+				tempBounds.minX = (int)par.getX();
+				tempBounds.minY = (int)par.getY();
+				tempBounds.maxX = (int)Math.ceil(par.getX()+par.getWidth()+0.5);
+				tempBounds.maxY = (int)Math.ceil(par.getY()+par.getHeight()+0.5);
 				
 				// Clamp
 				if ( tempBounds.minX > clipBoundsTemp.minX )
@@ -467,28 +466,12 @@ public abstract class Node implements Resizable {
 	protected ObservableList<Node> getChildren() {
 		return this.children;
 	}
-	
-	/**
-	 * Return the local offset x of this node.
-	 * @return
-	 */
-	public double getX() {
-		return localPosition.x;
-	}
-	
-	/**
-	 * Return the local offset y of this node.
-	 * @return
-	 */
-	public double getY() {
-		return localPosition.y;
-	}
 
 	/**
 	 * Return the absolute x position of this node.
 	 * @return
 	 */
-	public double getAbsoluteX() {
+	public double getX() {
 		return absolutePosition.x;
 	}
 	
@@ -496,7 +479,7 @@ public abstract class Node implements Resizable {
 	 * Return the absolute y position of this node.
 	 * @return
 	 */
-	public double getAbsoluteY() {
+	public double getY() {
 		return absolutePosition.y;
 	}
 	

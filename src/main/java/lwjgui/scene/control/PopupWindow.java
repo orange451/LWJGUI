@@ -42,7 +42,7 @@ public abstract class PopupWindow extends FillableRegion {
 	}
 
 	public boolean contains(double x, double y) {
-		return x >= getAbsoluteX() && x <= getAbsoluteX()+getWidth() && y >= getAbsoluteY() && y <= getAbsoluteY() + getHeight();
+		return x >= getX() && x <= getX()+getWidth() && y >= getY() && y <= getY() + getHeight();
 	}
 
 	public void weakClose() {

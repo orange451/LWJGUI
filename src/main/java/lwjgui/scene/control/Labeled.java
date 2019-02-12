@@ -126,8 +126,8 @@ public abstract class Labeled extends Control {
 		//clip(context);
 
 		long vg = context.getNVG();
-		int absX = (int)(getAbsoluteX()-0.5 + this.padding.getLeft());
-		int absY = (int)(getAbsoluteY()+0.5 + this.padding.getTop());
+		int absX = (int)(getX()-0.5 + this.padding.getLeft());
+		int absY = (int)(getY()+0.5 + this.padding.getTop());
 		
 		double gWid = graphic == null ? -1 : graphic.getWidth();
 		if ( gWid >= 0 ) {

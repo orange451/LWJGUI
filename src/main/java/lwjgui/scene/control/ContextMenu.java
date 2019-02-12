@@ -102,10 +102,10 @@ public class ContextMenu extends PopupWindow {
 		this.setAbsolutePosition( absoluteX, absoluteY );
 		
 		// Reposition if outside of screen
-		if ( this.getAbsoluteY() + this.getHeight() > this.getScene().getHeight() )
-			this.setAbsolutePosition(getAbsoluteX(), getScene().getHeight()-this.getHeight());
-		if ( this.getAbsoluteY() < 0 )
-			this.setAbsolutePosition(getAbsoluteX(), 0);
+		if ( this.getY() + this.getHeight() > this.getScene().getHeight() )
+			this.setAbsolutePosition(getX(), getScene().getHeight()-this.getHeight());
+		if ( this.getY() < 0 )
+			this.setAbsolutePosition(getX(), 0);
 		
 		// Position internal box inside menu
 		this.setAlignment(Pos.TOP_LEFT);
@@ -126,8 +126,8 @@ public class ContextMenu extends PopupWindow {
 		
 		// Setup rendering info
 		long vg = context.getNVG();
-		int x = (int) getAbsoluteX();
-		int y = (int) getAbsoluteY();
+		int x = (int) getX();
+		int y = (int) getY();
 		int w = (int) getWidth();
 		int h = (int) getHeight();
 		

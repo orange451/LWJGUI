@@ -76,7 +76,7 @@ public class MenuItem extends Node {
 		Color bg = isSelected()?Theme.currentTheme().getSelection():this.background;
 		if ( bg != null ) {
 			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRect(context.getNVG(), (int)getAbsoluteX(), (int)getAbsoluteY(), (int)getWidth(), (int)getHeight());
+			NanoVG.nvgRect(context.getNVG(), (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
 			NanoVG.nvgFillColor(context.getNVG(), bg.getNVG());
 			NanoVG.nvgFill(context.getNVG());
 		}

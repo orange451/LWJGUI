@@ -75,8 +75,8 @@ public class BlurPane extends StackPane {
 
 			// Render FBO to screen
 			long nanovg = context.getNVG();
-			float x = (int)this.getAbsoluteX();
-			float y = (int)this.getAbsoluteY();
+			float x = (int)this.getX();
+			float y = (int)this.getY();
 			float w = (int)this.getWidth();
 			float h = (int)this.getHeight();
 			NVGPaint imagePaint = NanoVG.nvgImagePattern(nanovg, x, y, w, h, 0, nanoImage, 1, NVGPaint.calloc());
@@ -127,8 +127,8 @@ public class BlurPane extends StackPane {
 		int destwid = bufferTemp.getWidth();
 		int desthei = bufferTemp.getHeight();
 		
-		int sx1 = (int)getAbsoluteX()*ratio;
-		int sy1 = (int)getAbsoluteY()*ratio;
+		int sx1 = (int)getX()*ratio;
+		int sy1 = (int)getY()*ratio;
 		int sx2 = sx1 + destwid*ratio;
 		int sy2 = sy1 + desthei*ratio;
 		

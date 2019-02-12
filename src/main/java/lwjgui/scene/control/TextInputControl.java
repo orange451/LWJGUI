@@ -704,8 +704,8 @@ public abstract class TextInputControl extends Control {
 	}
 	
 	private int getCaretAtMouse() {
-		double mx = cached_context.getMouseX()-internal.getContent().getAbsoluteX();
-		double my = cached_context.getMouseY()-internal.getContent().getAbsoluteY();
+		double mx = cached_context.getMouseX()-internal.getContent().getX();
+		double my = cached_context.getMouseY()-internal.getContent().getY();
 		
 		// Find row clicked
 		int row = (int) (my / (float)fontSize);
@@ -719,8 +719,8 @@ public abstract class TextInputControl extends Control {
 	@Override
 	public void render(Context context) {
 		long vg = context.getNVG();
-		float x = (int)getAbsoluteX();
-		float y = (int)getAbsoluteY();
+		float x = (int)getX();
+		float y = (int)getY();
 		float w = (int)getWidth();
 		float h = (int)getHeight();
 		float r = 2;
@@ -751,7 +751,7 @@ public abstract class TextInputControl extends Control {
 		// Background
 		if ( this.getBackground() != null ) {	
 			int inset = 1;
-			LWJGUIUtil.fillRect(context, getAbsoluteX()+inset, getAbsoluteY()+inset, getWidth()-inset*2, getHeight()-inset*2, this.getBackground());
+			LWJGUIUtil.fillRect(context, getX()+inset, getY()+inset, getWidth()-inset*2, getHeight()-inset*2, this.getBackground());
 		}
 		
 		// Dropshadow
@@ -763,8 +763,8 @@ public abstract class TextInputControl extends Control {
 		
 		// Draw Prompt
 		if ( getLength() == 0 && prompt != null && prompt.length() > 0 ) {
-			int xx = (int) this.fakeBox.getAbsoluteX();
-			int yy = (int) this.fakeBox.getAbsoluteY();
+			int xx = (int) this.fakeBox.getX();
+			int yy = (int) this.fakeBox.getY();
 			
 			// Setup font
 			NanoVG.nvgFontSize(vg, fontSize);
@@ -1118,19 +1118,19 @@ public abstract class TextInputControl extends Control {
 					int height = fontSize;
 					int width = (int) (glyphData.get(i).get(right).x()-xx);
 	
-					LWJGUIUtil.fillRect(context, getAbsoluteX() + xx, getAbsoluteY() + yy, width, height, Theme.currentTheme().getSelectionAlt());
+					LWJGUIUtil.fillRect(context, getX() + xx, getY() + yy, width, height, Theme.currentTheme().getSelectionAlt());
 				}
 			}
 			
 			// Draw text
 			for (int i = 0; i < linesDraw.size(); i++) {
-				int mx = (int)getAbsoluteX();
-				int my = (int)getAbsoluteY() + (fontSize*i);
+				int mx = (int)getX();
+				int my = (int)getY() + (fontSize*i);
 				
 				// Quick bounds check
-				if ( my < internal.getAbsoluteY()-(fontSize*i))
+				if ( my < internal.getY()-(fontSize*i))
 					continue;
-				if ( my > internal.getAbsoluteY()+internal.getHeight())
+				if ( my > internal.getY()+internal.getHeight())
 					continue;
 				
 				long vg = context.getNVG();
@@ -1178,8 +1178,8 @@ public abstract class TextInputControl extends Control {
 			if ( editing ) {
 				int line = getRowFromCaret(caretPosition);
 				int index = getIndexFromCaret(caretPosition);
-				int cx = (int) (getAbsoluteX()-1);
-				int cy = (int) (getAbsoluteY() + (line * fontSize));
+				int cx = (int) (getX()-1);
+				int cy = (int) (getY() + (line * fontSize));
 				if ( glyphData.size() > 0 ) {
 					
 					// Check if caret goes past the line

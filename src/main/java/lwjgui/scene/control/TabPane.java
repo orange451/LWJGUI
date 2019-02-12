@@ -196,8 +196,8 @@ public class TabPane extends Control {
 		
 		@Override
 		public void render(Context context) {
-			LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), getBackground());
-			LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY()+getHeight()-1, getWidth(), 1, Theme.currentTheme().getControlOutline());
+			LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), getBackground());
+			LWJGUIUtil.fillRect(context, getX(), getY()+getHeight()-1, getWidth(), 1, Theme.currentTheme().getControlOutline());
 			for (int i = 0; i < children.size(); i++) {
 				clip(context);
 				children.get(i).render(context);

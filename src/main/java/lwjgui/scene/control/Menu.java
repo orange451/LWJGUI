@@ -61,7 +61,7 @@ public class Menu extends MenuItem {
 	public void open() {
 		((MenuBar)(getParent().getParent())).isOpen = true;
 		((MenuBar)(getParent().getParent())).currentMenu = Menu.this;
-		context.show(Menu.this.getScene(), getAbsoluteX(), getAbsoluteY()+getHeight());
+		context.show(Menu.this.getScene(), getX(), getY()+getHeight());
 	}
 
 	public void close() {

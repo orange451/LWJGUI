@@ -40,8 +40,8 @@ public class CodeArea extends TextArea {
 		
 		// Make sure line counter is on the left side of the area.
 		this.internal.setPadding(new Insets(internal.getPadding().getTop(), internal.getPadding().getRight(), internal.getPadding().getBottom(), lineCounter.getWidth()+2));
-		double a = this.internal.getAbsoluteX()+this.internal.getPadding().getLeft();
-		double b = this.internal.getContent().getAbsoluteX();
+		double a = this.internal.getX()+this.internal.getPadding().getLeft();
+		double b = this.internal.getContent().getX();
 		double c = b-a;
 		this.lineCounter.offset(-internal.getPadding().getLeft()-c, 0);
 		this.lineCounter.updateChildren();
@@ -62,17 +62,17 @@ public class CodeArea extends TextArea {
 			if ( editing ) {
 				Color c1 = Theme.currentTheme().getSelection();
 				Color c2 = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 32);
-				double xx = getAbsoluteX();
-				double yy = getAbsoluteY()+getRowFromCaret(getCaretPosition())*fontSize;
-				LWJGUIUtil.fillRect(context, xx+1, yy, CodeArea.this.getWidth()-2-(xx-CodeArea.this.getAbsoluteX()), fontSize, c2);
+				double xx = getX();
+				double yy = getY()+getRowFromCaret(getCaretPosition())*fontSize;
+				LWJGUIUtil.fillRect(context, xx+1, yy, CodeArea.this.getWidth()-2-(xx-CodeArea.this.getX()), fontSize, c2);
 			}
 			
 			// Render normal text
 			super.render(context);
 			
 			// Draw line counter background
-			LWJGUIUtil.fillRect(context, lineCounter.getAbsoluteX()+1, CodeArea.this.getAbsoluteY()+1, lineCounter.getWidth(), CodeArea.this.getHeight()-2, Theme.currentTheme().getPane());
-			LWJGUIUtil.fillRect(context, lineCounter.getAbsoluteX()+lineCounter.getWidth(), CodeArea.this.getAbsoluteY()+1, 1, CodeArea.this.getHeight()-2, Theme.currentTheme().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, lineCounter.getX()+1, CodeArea.this.getY()+1, lineCounter.getWidth(), CodeArea.this.getHeight()-2, Theme.currentTheme().getPane());
+			LWJGUIUtil.fillRect(context, lineCounter.getX()+lineCounter.getWidth(), CodeArea.this.getY()+1, 1, CodeArea.this.getHeight()-2, Theme.currentTheme().getSelectionPassive());
 		}
 	}
 	

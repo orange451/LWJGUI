@@ -22,7 +22,7 @@ public class TestNode extends Node {
 		clip(context);
 		
 		NanoVG.nvgBeginPath(context.getNVG());
-		NanoVG.nvgRoundedRect(context.getNVG(), (float)getAbsoluteX(), (float)getAbsoluteY(), (float)getWidth(), (float)getHeight(), 4);
+		NanoVG.nvgRoundedRect(context.getNVG(), (float)getX(), (float)getY(), (float)getWidth(), (float)getHeight(), 4);
 		NanoVG.nvgFillColor(context.getNVG(), Color.AQUA.getNVG());
 		NanoVG.nvgFill(context.getNVG());
 		

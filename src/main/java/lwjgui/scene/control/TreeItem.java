@@ -199,7 +199,7 @@ class TreeNode<E> extends HBox {
 						ContextMenu context = item.context;
 						System.out.println(context);
 						if ( context != null ) {
-							context.show(getScene(), getAbsoluteX(), getAbsoluteY()+getHeight());
+							context.show(getScene(), getX(), getY()+getHeight());
 						}
 					}
 				}
@@ -250,7 +250,7 @@ class TreeNode<E> extends HBox {
 		// Draw fancy outline
 		if ( selected && active ) {
 			this.clip(context);
-			LWJGUIUtil.outlineRect(context, getAbsoluteX(), getAbsoluteY()+1, getWidth()-1, getHeight()-3, Theme.currentTheme().getSelectionAlt());
+			LWJGUIUtil.outlineRect(context, getX(), getY()+1, getWidth()-1, getHeight()-3, Theme.currentTheme().getSelectionAlt());
 		}
 	}
 }

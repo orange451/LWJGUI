@@ -142,9 +142,9 @@ public class Context {
 		//System.out.println(root.getClass().getSimpleName() + " / " + root.getWidth());
 		
 		// If mouse is out of our bounds, we're not clickable
-		if ( mouseX <= root.getAbsoluteX() || mouseX > root.getAbsoluteX() + root.getWidth() )
+		if ( mouseX <= root.getX() || mouseX > root.getX() + root.getWidth() )
 			return parent;
-		if ( mouseY <= root.getAbsoluteY() || mouseY > root.getAbsoluteY() + root.getHeight() )
+		if ( mouseY <= root.getY() || mouseY > root.getY() + root.getHeight() )
 			return parent;
 
 		// Check children

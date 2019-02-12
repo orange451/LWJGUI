@@ -392,6 +392,9 @@ public abstract class TextInputControl extends Control {
 		int line = getRowFromCaret(caretPosition);
 		String str = lines.get(line);
 		caretPosition = this.getCaretFromRowLine(line, str.length());
+		
+		if ( str.length() > 0 && str.charAt(str.length()-1) == '\n' )
+			caretPosition--;
 	}
 	
 	public void tab() {
@@ -901,8 +904,6 @@ public abstract class TextInputControl extends Control {
 			
 			// Home
 			if ( key == GLFW.GLFW_KEY_HOME ) {
-				if ( isShiftDown )
-					selectionStartPosition = caretPosition;
 				
 				if ( isCtrlDown ) {
 					caretPosition = 0;
@@ -910,7 +911,9 @@ public abstract class TextInputControl extends Control {
 					home();
 				}
 
-				if ( isShiftDown )
+				if ( !isShiftDown )
+					deselect();
+				else
 					selectionEndPosition = caretPosition;
 				
 				this.consume();
@@ -918,16 +921,16 @@ public abstract class TextInputControl extends Control {
 			
 			// End
 			if ( key == GLFW.GLFW_KEY_END ) {
-				if ( isShiftDown )
-					selectionStartPosition = caretPosition;
-				
+					
 				if ( isCtrlDown ) {
 					caretPosition = getLength();
 				} else {
 					end();
 				}
 				
-				if ( isShiftDown )
+				if ( !isShiftDown )
+					deselect();
+				else
 					selectionEndPosition = caretPosition;
 
 				this.consume();

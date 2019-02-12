@@ -21,10 +21,10 @@ import lwjgui.scene.Context;
 import lwjgui.scene.Window;
 
 public class Font {
-	public static Font SANS = new Font("sans", "Roboto-Regular.ttf", "Roboto-Bold.ttf", "Roboto-Light.ttf", "Roboto-Italic.ttf");
-	public static Font COURIER = new Font("courier", "Courier-New-Regular.ttf", "Courier-New-Bold.ttf", null, "Courier-New-Italic.ttf");
-	public static Font CONSOLAS = new Font("consolas", "Consolas-Regular.ttf", "Consolas-Bold.ttf", null, "Consolas-Italic.ttf");
-	public static Font ARIAL = new Font("arial", "Arial-Unicode.ttf");
+	public static Font SANS = new Font("lwjgui/scene/layout/", "Roboto-Regular.ttf", "Roboto-Bold.ttf", "Roboto-Italic.ttf", "Roboto-Light.ttf");
+	public static Font COURIER = new Font("lwjgui/scene/layout/", "Courier-New-Regular.ttf", "Courier-New-Bold.ttf", "Courier-New-Italic.ttf", null);
+	public static Font CONSOLAS = new Font("lwjgui/scene/layout/", "Consolas-Regular.ttf", "Consolas-Bold.ttf", "Consolas-Italic.ttf", null);
+	public static Font ARIAL = new Font("lwjgui/scene/layout/", "Arial-Unicode.ttf");
 
 	private static ByteBuffer fallbackSansEmoji;
 	private static ByteBuffer fallbackRegularEmoji;
@@ -42,7 +42,7 @@ public class Font {
 		}
 	}
 	
-	private String name;
+	private String fontPath;
 	private String fontNameRegular;
 	private String fontNameBold;
 	private String fontNameLight;
@@ -53,17 +53,32 @@ public class Font {
 	private HashMap<Long,String> fontDataItalic = new HashMap<Long,String>();
 	private ArrayList<ByteBuffer> bufs = new ArrayList<ByteBuffer>();
 	
-	private Font(String name, String regular, String bold, String light, String italic) {
-		this.fontNameRegular = regular;
-		this.fontNameBold = bold;
-		this.fontNameLight = light;
-		this.fontNameItalic = italic;
-		this.name = name;
+	/**
+	 * Creates a new font with the given settings.
+	 * 
+	 * @param fontPath - the folder path of the font files
+	 * @param regularFileName - the filename of the regular font TTF (e.g. fontName.ttf)
+	 * @param boldFileName - the filename of the bold font TTF
+	 * @param italicFileName - the filename of the italic font TTF
+	 * @param lightFileName - the filename of the light font TTF
+	 */
+	public Font(String fontPath, String regularFileName, String boldFileName, String italicFileName, String lightFileName) {
+		this.fontPath = fontPath;
+		this.fontNameRegular = regularFileName;
+		this.fontNameBold = boldFileName;
+		this.fontNameLight = lightFileName;
+		this.fontNameItalic = italicFileName;
 	}	
+	/**
+	 * Creates a new font with the given settings. Only the regular font is set and made available.
+	 * 
+	 * @param fontPath - the folder path of the font files
+	 * @param regularFileName - the filename of the regular font TTF (e.g. fontName.ttf)
+	 */
 	
-	private Font(String name, String regular ) {
-		this.fontNameRegular = regular;
-		this.name = name;
+	public Font(String fontPath, String regularFileName) {
+		this.fontPath = fontPath;
+		this.fontNameRegular = regularFileName;
 	}
 
 	private static InputStream inputStream(String path) throws IOException {
@@ -95,6 +110,12 @@ public class Font {
 		return buffer.toByteArray();
 	}
 
+	/**
+	 * Loads the resource via ByteBuffer
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
 	public static ByteBuffer resourceToByteBuffer(String path) throws IOException {
 		ByteBuffer data = null;
 		InputStream stream = inputStream(path);
@@ -107,7 +128,14 @@ public class Font {
 		return data;
 	}
 
-	private void loadFont(String loadName, String suffix, HashMap<Long, String> map) {
+	/**
+	 * Loads a given Font
+	 * @param fontPath
+	 * @param loadName
+	 * @param suffix
+	 * @param map
+	 */
+	private void loadFont(String fontPath, String loadName, HashMap<Long, String> map) {
 		if ( loadName == null ) {
 			return;
 		}
@@ -117,13 +145,12 @@ public class Font {
 		int fontCallback;
 		
 		try {
-			String fontName = name+suffix;
-			String path = "lwjgui/scene/layout/" + loadName;
+			String path = fontPath + loadName;
 			
 			// Create normal font
 			ByteBuffer buf = resourceToByteBuffer(path);
-			fontCallback = nvgCreateFontMem(vg, fontName, buf, 0);
-			map.put(vg,fontName);
+			fontCallback = nvgCreateFontMem(vg, loadName, buf, 0);
+			map.put(vg, loadName);
 			bufs.add(buf);
 			
 			// Fallback emoji font
@@ -149,6 +176,12 @@ public class Font {
 		return getFont(FontStyle.REGULAR);
 	}
 
+	/**
+	 * Gets the font with the given style. If the font hasn't been loaded yet, this function will do so.
+	 * 
+	 * @param style
+	 * @return
+	 */
 	public String getFont(FontStyle style) {
 		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
 		if ( window == null )
@@ -159,10 +192,10 @@ public class Font {
 
 		HashMap<Long,String> using = fontDataRegular;
 		if ( fontDataRegular.get(vg) == null ) {
-			loadFont(fontNameRegular, "-Regular", fontDataRegular);
-			loadFont(fontNameBold, "-Bold", fontDataBold);
-			loadFont(fontNameLight, "-Light", fontDataLight);
-			loadFont(fontNameItalic, "-Italic", fontDataItalic);
+			loadFont(fontPath, fontNameRegular, fontDataRegular);
+			loadFont(fontPath, fontNameBold, fontDataBold);
+			loadFont(fontPath, fontNameLight, fontDataLight);
+			loadFont(fontPath, fontNameItalic, fontDataItalic);
 		}
 
 		if ( style == FontStyle.BOLD && fontDataBold.get(vg) != null )

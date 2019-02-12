@@ -10,6 +10,10 @@ import lwjgui.scene.Region;
 public class FloatingPane extends Region {
 	private double absx;
 	private double absy;
+	
+	public FloatingPane() {
+		this.setPrefSize(0, 0);
+	}
 
 	/**
 	 *

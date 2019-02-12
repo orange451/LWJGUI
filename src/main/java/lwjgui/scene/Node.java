@@ -250,7 +250,7 @@ public abstract class Node implements Resizable {
 			if ( child == null )
 				continue;
 			
-			double tempX = child.getX() + child.getWidth();
+			double tempX = (child.getAbsoluteX()-this.getAbsoluteX()) + child.getWidth();
 			if ( tempX > runningX ) {
 				runningX = tempX;
 			}
@@ -266,7 +266,7 @@ public abstract class Node implements Resizable {
 			if ( child == null )
 				continue;
 			
-			double tempY = child.getY() + child.getHeight();
+			double tempY = (child.getAbsoluteY()-this.getAbsoluteY()) + child.getHeight();
 			if ( tempY > runningY ) {
 				runningY = tempY;
 			}

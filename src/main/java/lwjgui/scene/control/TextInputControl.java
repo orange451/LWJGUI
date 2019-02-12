@@ -201,13 +201,34 @@ public abstract class TextInputControl extends Control {
 				positions = NVGGlyphPosition.malloc(1);
 			}
 			
+			// Create glyph data for each character in the line
 			NanoVG.nvgTextGlyphPositions(cached_context.getNVG(), 0, 0, drawLine, positions);
 			int j = 0;
 			while (j < drawLine.length()) {
-				glyphEntry.add(fixGlyph(positions.get(), drawLine.substring(j, j+1)));
+				GlyphData currentGlyph = fixGlyph(positions.get(), drawLine.substring(j, j+1));
+				glyphEntry.add(currentGlyph);
 				j++;
 			}
 			positions.free();
+			
+			// Add blank glyph to end of line
+			GlyphData last = glyphEntry.size()== 0 ? new GlyphData(0,0,"") : glyphEntry.get(glyphEntry.size()-1);
+			glyphEntry.add(new GlyphData( last.x()+last.width, 0, "" ));
+			
+			// Hack to fix spacing of special characters
+			for (int i = 0; i < glyphEntry.size()-1; i++) {
+				GlyphData currentGlyph = glyphEntry.get(i);
+				if ( currentGlyph.SPECIAL ) {
+					GlyphData t = glyphEntry.get(i+1);
+					float tOff = t.x()-currentGlyph.x();
+					float newOff = currentGlyph.width()-tOff;
+					
+					for (int k = i+1; k < glyphEntry.size(); k++) {
+						GlyphData fixGlyph = glyphEntry.get(k);
+						fixGlyph.x += newOff;
+					}
+				}
+			}
 			
 			// Word Wrap not yet properly implemented properly. Will be rewritten.
 			int vWid = (int) (this.internal.getViewport().getWidth() - 16);
@@ -578,7 +599,7 @@ public abstract class TextInputControl extends Control {
 		return width;
 	}
 	
-	private GlyphData getGlyphFromRowLine(int line, int index) {
+	/*private GlyphData getGlyphFromRowLine(int line, int index) {
 		if ( cached_context == null )
 			return null;
 		if ( line < 0 )
@@ -594,15 +615,12 @@ public abstract class TextInputControl extends Control {
 		
 		bindFont();
 		org.lwjgl.nanovg.NVGGlyphPosition.Buffer positions = NVGGlyphPosition.malloc(str.length());
-		NanoVG.nvgTextGlyphPositions(cached_context.getNVG(), 0, 0, str, positions);
-		NVGGlyphPosition lastPosition = positions.get(index);
+		NanoVG.nvgTextGlyphPositions(cached_context.getNVG(), 0, 0, str.replace("\t", " "), positions);
+		NVGGlyphPosition glyphAtIndex = positions.get(index);
 		positions.free();
-		return fixGlyph(lastPosition, str.substring(index,index+1));
-	}
-	
-	private GlyphData getGlyphFromRowLine(int caret) {
-		return getGlyphFromRowLine(getRowFromCaret(caret),getIndexFromCaret(caret));
-	}
+		
+		return fixGlyph(glyphAtIndex, str.substring(index,index+1));
+	}*/
 	
 	private void bindFont() {
 		if ( cached_context == null )
@@ -614,11 +632,11 @@ public abstract class TextInputControl extends Control {
 		NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
 	}
 	
-	protected GlyphData fixGlyph(NVGGlyphPosition glyph, String string) {
-		if ( string.equals("\t") )
-			return new GlyphData( 0, 32, string );
+	protected GlyphData fixGlyph(NVGGlyphPosition glyph, String originalCharacter) {
+		if ( originalCharacter.equals("\t") )
+			return new GlyphData( glyph.x(), 32, originalCharacter, true );
 		
-		return new GlyphData( glyph.minx(), glyph.maxx(), string );
+		return new GlyphData( glyph.x(), glyph.maxx()-glyph.x(), originalCharacter );
 	}
 	
 	private int getCaretFromRowLine(int row, int index) {
@@ -652,23 +670,22 @@ public abstract class TextInputControl extends Control {
 		// Find first character clicked in row
 		int index = 0;
 		int tempx = 0;
-		ArrayList<GlyphData> glyphLine = new ArrayList<GlyphData>(glyphData.get(row));
+		ArrayList<GlyphData> glyphLine = glyphData.get(row);
 		GlyphData lastGlyph = null;
 		for (int i = 0; i < glyphLine.size(); i++) {
 			GlyphData dat = glyphLine.get(i);
 			lastGlyph = dat;
 			if ( dat.character().equals("\n"))
 				break;
-			if ( tempx+dat.width() > pixelX )
+			if ( dat.x()+dat.width/2-3 > pixelX )
 				break;
-			tempx += dat.width();
 			index++;
 		}
 		
 		// If mouse is halfway over, move to next character (provided the character exists, and it isn't a new line)
 		if ( pixelX > tempx + lastGlyph.width()/2) {
 			if ( getRowFromCaret(getCaretFromRowLine(row,index+1)) == row ) {
-				index++;
+				//index++;
 			}
 		}
 		
@@ -777,32 +794,32 @@ public abstract class TextInputControl extends Control {
 	}
 	
 	static class GlyphData { // This class could be avoided if NanoVG author wouldn't ignore me.
-		private float minx;
-		private float maxx;
 		private float width;
+		private float x;
 		private String c;
+		private boolean SPECIAL;
 		
-		public GlyphData( float minx, float maxx, String string ) {
-			this.minx = minx;
-			this.maxx = maxx;
-			this.c = string;
-			this.width = Math.abs(maxx-minx);
+		public GlyphData( float x, float width, String car ) {
+			this.c = car;
+			this.x = x;
+			this.width = width;
+		}
+		
+		public GlyphData( float x, float width, String car, boolean special ) {
+			this( x, width, car );
+			this.SPECIAL = special;
 		}
 		
 		public String character() {
 			return c;
 		}
 		
+		public float x() {
+			return x;
+		}
+		
 		public float width() {
 			return width;
-		}
-		
-		public float minx() {
-			return minx;
-		}
-		
-		public float maxx() {
-			return maxx;
 		}
 	}
 	
@@ -1090,18 +1107,12 @@ public abstract class TextInputControl extends Control {
 					if ( i != startLine )
 						left = 0;
 
-					int xx = (int)(getAbsoluteX());
-					int yy = (int)getAbsoluteY() + (fontSize*i);
+					int xx = (int)(glyphData.get(i).get(left).x());
+					int yy = (int)(fontSize*i);
 					int height = fontSize;
-					int width = 0;
-					for (int j = 0; j < left; j++) {
-						xx += glyphData.get(i).get(j).width();
-					}
-					for (int j = left; j < right; j++) {
-						GlyphData g = glyphData.get(i).get(j);
-						width += g.width();
-					}
-					LWJGUIUtil.fillRect(context, xx, yy, width, height, Theme.currentTheme().getSelectionAlt());
+					int width = (int) (glyphData.get(i).get(right).x()-xx);
+	
+					LWJGUIUtil.fillRect(context, getAbsoluteX() + xx, getAbsoluteY() + yy, width, height, Theme.currentTheme().getSelectionAlt());
 				}
 			}
 			
@@ -1126,7 +1137,8 @@ public abstract class TextInputControl extends Control {
 				if ( glyphData.size() > 0 ) {
 					ArrayList<GlyphData> dat = glyphData.get(i);
 					if ( dat.size() > 0 ) {
-						int x = 0;
+						float x = 0;
+						
 						for (int j = 0; j < text.length(); j++) {
 							boolean draw = true;
 							String c = text.substring(j, j+1);
@@ -1140,6 +1152,9 @@ public abstract class TextInputControl extends Control {
 							}
 							GlyphData g = dat.get(j);
 							
+							// Get current x offset
+							x = g.x();
+							
 							if ( draw ) {
 								NanoVG.nvgBeginPath(vg);
 								NanoVG.nvgFontBlur(vg,0);
@@ -1147,7 +1162,7 @@ public abstract class TextInputControl extends Control {
 								NanoVG.nvgText(vg, mx+x, my, c);
 							}
 							
-							x += g.width();
+							//x += g.width();
 						}
 					}
 				}
@@ -1160,19 +1175,22 @@ public abstract class TextInputControl extends Control {
 				int cx = (int) (getAbsoluteX()-1);
 				int cy = (int) (getAbsoluteY() + (line * fontSize));
 				if ( glyphData.size() > 0 ) {
-					int offsetX = 0;
-					for (int j = 0; j < index; j++) {
-						if ( glyphData.size() <= line )
-							continue;
-						if ( glyphData.get(line).size() <= j)
-							continue;
-						
-						offsetX += glyphData.get(line).get(j).width();
+					
+					// Check if caret goes past the line
+					boolean addWid = false;
+					while ( index >= glyphData.get(line).size() ) {
+						index--;
+						addWid = true;
 					}
-					cx += offsetX;
+
+					// Get current x offset
+					float offsetX = glyphData.get(line).get(index).x();
+					if ( addWid ) {
+						offsetX += glyphData.get(line).get(index).width();
+					}
 					
 					if ( Math.sin(renderCaret*1/150f) < 0 ) {
-						LWJGUIUtil.fillRect(context, cx, cy, 2, fontSize, Color.BLACK);
+						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, Color.BLACK);
 					}
 				}
 			}

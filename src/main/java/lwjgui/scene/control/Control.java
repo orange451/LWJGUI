@@ -2,9 +2,9 @@ package lwjgui.scene.control;
 
 import org.lwjgl.glfw.GLFW;
 
-import lwjgui.scene.Region;
+import lwjgui.scene.FillableRegion;
 
-public abstract class Control extends Region {
+public abstract class Control extends FillableRegion {
 	private ContextMenu context;
 	
 	public Control() {

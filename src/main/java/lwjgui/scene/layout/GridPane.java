@@ -137,7 +137,7 @@ public class GridPane extends Pane {
 				cell.setBackground(null);
 				row.getChildren().add(cell);
 				
-				if ( element.getAlignment() != null && element.getAlignment().getHpos().equals(HPos.RIGHT) ) {
+				if ( element.usingAlignment() != null && element.usingAlignment().getHpos().equals(HPos.RIGHT) ) {
 					cell.getChildren().add(sizer);
 					cell.getChildren().add(element);
 				} else {

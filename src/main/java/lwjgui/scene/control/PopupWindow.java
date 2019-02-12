@@ -1,10 +1,10 @@
 package lwjgui.scene.control;
 
 import lwjgui.scene.Context;
-import lwjgui.scene.Region;
+import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Scene;
 
-public abstract class PopupWindow extends Region {
+public abstract class PopupWindow extends FillableRegion {
 	protected double absoluteX;
 	protected double absoluteY;
 	

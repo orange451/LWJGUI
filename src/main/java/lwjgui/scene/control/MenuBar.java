@@ -9,11 +9,11 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.scene.Region;
+import lwjgui.scene.FillableRegion;
 import lwjgui.scene.layout.HBox;
 import lwjgui.theme.Theme;
 
-public class MenuBar extends Region {
+public class MenuBar extends FillableRegion {
 	
 	private ObservableList<Menu> items = new ObservableList<Menu>();
 	private HBox internalBox;

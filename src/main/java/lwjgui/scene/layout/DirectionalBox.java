@@ -1,5 +1,7 @@
 package lwjgui.scene.layout;
 
+import lwjgui.geometry.Pos;
+
 public abstract class DirectionalBox extends Pane {
 	protected float spacing;
 	
@@ -7,6 +9,7 @@ public abstract class DirectionalBox extends Pane {
 		//this.setFillToParentHeight(true);
 		//this.setFillToParentWidth(true);
 		this.setPrefSize(0, 0);
+		this.setAlignment(Pos.TOP_LEFT);
 	}
 	
 	public void setSpacing(double d) {

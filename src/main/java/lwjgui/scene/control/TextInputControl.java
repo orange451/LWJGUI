@@ -14,6 +14,7 @@ import lwjgui.collections.StateStack;
 import lwjgui.event.EventHandler;
 import lwjgui.event.KeyEvent;
 import lwjgui.geometry.Insets;
+import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Cursor;
 import lwjgui.scene.layout.Font;
@@ -1075,6 +1076,8 @@ public abstract class TextInputControl extends Control {
 		public TextAreaContent() {
 			this.setMouseTransparent(true);
 			this.setBackground(null);
+			
+			this.setAlignment(Pos.TOP_LEFT);
 		}
 		
 		private long lastTime;

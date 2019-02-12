@@ -1,5 +1,7 @@
 package lwjgui.scene.layout;
 
+import lwjgui.geometry.HPos;
+import lwjgui.geometry.VPos;
 import lwjgui.scene.Node;
 
 public class HBox extends DirectionalBox {
@@ -16,11 +18,19 @@ public class HBox extends DirectionalBox {
 		if ( getAlignment().getHpos() == HPos.RIGHT)
 			xMult = 1;*/
 		
+		double yMult = 0;
+		if ( getAlignment().getVpos() == VPos.CENTER )
+			yMult = 0.5;
+		if ( getAlignment().getVpos() == VPos.BOTTOM )
+			yMult = 1;
+		
 		int xStart = (int) ((getWidth()*xMult)-(totalWidth*xMult));
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			
-			child.setLocalPosition(this, xStart,child.getY());
+			double yy = (this.getHeight()-child.getHeight())*yMult;
+			
+			child.setLocalPosition(this, xStart, yy);
 			xStart += child.getWidth();
 			xStart += this.getSpacing();
 		}

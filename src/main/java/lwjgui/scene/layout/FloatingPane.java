@@ -33,7 +33,6 @@ public class FloatingPane extends Region {
 	protected void position(Node parent) {
 		super.position(parent);
 
-		this.localPosition.set(0, 0);
 		this.absolutePosition.set(absx,absy);
 	}
 

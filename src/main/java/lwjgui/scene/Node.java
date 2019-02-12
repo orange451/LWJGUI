@@ -26,7 +26,7 @@ public abstract class Node implements Resizable {
 	protected Vector2d prefsize = new Vector2d();
 	protected LayoutBounds layoutBounds = new LayoutBounds(0,0,Integer.MAX_VALUE,Integer.MAX_VALUE);
 	protected Insets padding = new Insets(0,0,0,0);
-	protected Pos alignment;
+	protected Pos alignment = Pos.CENTER;
 	protected Node parent;
 
 	protected EventHandler<MouseEvent> mousePressedEvent;
@@ -49,11 +49,21 @@ public abstract class Node implements Resizable {
 	protected Context cached_context;
 	
 	public void setLocalPosition(Node parent, double x, double y) {
-		double changex = x-this.getX();
-		double changey = y-this.getY();
+		//double changex = x-this.getX();
+		//double changey = y-this.getY();
 		this.parent = parent;
-		this.localPosition.x = x;
-		this.localPosition.y = y;
+		//this.localPosition.x = x;
+		//this.localPosition.y = y;
+		
+		LayoutBounds bounds = parent.getInnerBounds();
+		
+		float topLeftX = (float) (parent.absolutePosition.x + bounds.minX);
+		float topLeftY = (float) (parent.absolutePosition.y + bounds.minY);
+		
+		double changex = (topLeftX + x)-absolutePosition.x;
+		double changey = (topLeftY + y)-absolutePosition.y;
+		
+		//offset(changex, changey);
 		this.absolutePosition.x += changex;
 		this.absolutePosition.y += changey;
 		
@@ -62,7 +72,8 @@ public abstract class Node implements Resizable {
 			if ( child == null )
 				continue;
 			
-			child.setLocalPosition(this, child.getX(), child.getY());
+			//child.offset(changex, changey);
+			//child.setLocalPosition(this, x, y);
 		}
 	}
 	
@@ -98,7 +109,7 @@ public abstract class Node implements Resizable {
 		updateChildren();
 		resize();
 		
-		Pos useAlignment = getAlignment();
+		Pos useAlignment = usingAlignment();
 		
 		double xMult = 0;
 		if ( useAlignment.getHpos() == HPos.CENTER)
@@ -115,14 +126,14 @@ public abstract class Node implements Resizable {
 		if ( parent != null ) {
 			LayoutBounds bounds = parent.getInnerBounds();
 			
-			localPosition.x = (bounds.getWidth()-size.x)*xMult;
-			localPosition.y = (bounds.getHeight()-size.y)*yMult;
+			double offsetX = (bounds.getWidth()-size.x)*xMult;
+			double offsetY = (bounds.getHeight()-size.y)*yMult;
 			
 			float topLeftX = (float) (parent.absolutePosition.x + bounds.minX);
 			float topLeftY = (float) (parent.absolutePosition.y + bounds.minY);
 			
-			absolutePosition.x = topLeftX + localPosition.x;
-			absolutePosition.y = topLeftY + localPosition.y;
+			absolutePosition.x = topLeftX + offsetX;
+			absolutePosition.y = topLeftY + offsetY;
 		}
 	}
 	
@@ -427,6 +438,14 @@ public abstract class Node implements Resizable {
 	 * @return
 	 */
 	public Pos getAlignment() {
+		return this.alignment;
+	}
+	
+	/**
+	 * Return the layout alignment used to position this node.
+	 * @return
+	 */
+	public Pos usingAlignment() {
 		Pos useAlignment = null;
 		Node p = this.getParent();
 		int t = 0;

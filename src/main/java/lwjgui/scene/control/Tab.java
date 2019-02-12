@@ -13,7 +13,7 @@ import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.scene.Region;
+import lwjgui.scene.FillableRegion;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.theme.Theme;
@@ -51,7 +51,7 @@ public class Tab {
 		closeRequestEvent = e;
 	}
 
-	class TabButton extends Region {
+	class TabButton extends FillableRegion {
 		protected HBox internal;
 		protected Label label;
 		protected boolean pressed;

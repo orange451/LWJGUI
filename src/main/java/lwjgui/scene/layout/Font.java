@@ -43,26 +43,26 @@ public class Font {
 	}
 	
 	private String name;
-	private String fontNameNormal;
+	private String fontNameRegular;
 	private String fontNameBold;
 	private String fontNameLight;
 	private String fontNameItalic;
-	private HashMap<Long,String> fontDataNormal = new HashMap<Long,String>();
+	private HashMap<Long,String> fontDataRegular = new HashMap<Long,String>();
 	private HashMap<Long,String> fontDataBold = new HashMap<Long,String>();
 	private HashMap<Long,String> fontDataLight = new HashMap<Long,String>();
 	private HashMap<Long,String> fontDataItalic = new HashMap<Long,String>();
 	private ArrayList<ByteBuffer> bufs = new ArrayList<ByteBuffer>();
 	
-	private Font(String name, String normal, String bold, String light, String italic) {
-		this.fontNameNormal = normal;
+	private Font(String name, String regular, String bold, String light, String italic) {
+		this.fontNameRegular = regular;
 		this.fontNameBold = bold;
 		this.fontNameLight = light;
 		this.fontNameItalic = italic;
 		this.name = name;
 	}	
 	
-	private Font(String name, String normal ) {
-		this.fontNameNormal = normal;
+	private Font(String name, String regular ) {
+		this.fontNameRegular = regular;
 		this.name = name;
 	}
 
@@ -157,9 +157,9 @@ public class Font {
 		Context context = window.getContext();
 		long vg = context.getNVG();
 
-		HashMap<Long,String> using = fontDataNormal;
-		if ( fontDataNormal.get(vg) == null ) {
-			loadFont(fontNameNormal, "-Regular", fontDataNormal);
+		HashMap<Long,String> using = fontDataRegular;
+		if ( fontDataRegular.get(vg) == null ) {
+			loadFont(fontNameRegular, "-Regular", fontDataRegular);
 			loadFont(fontNameBold, "-Bold", fontDataBold);
 			loadFont(fontNameLight, "-Light", fontDataLight);
 			loadFont(fontNameItalic, "-Italic", fontDataItalic);

@@ -63,6 +63,9 @@ public class Color {
 
 	public final static Color aqua      = new Color(3, 158, 211);
 	public final static Color AQUA 		= aqua;
+	
+	public final static Color coral      = new Color("#FF7F50");
+	public final static Color CORAL 	 = coral;
 
 	public final static Color transparent = new Color(255,255,255,0);
 	public final static Color TRANSPARENT = transparent;
@@ -186,6 +189,17 @@ public class Color {
 		this( (int) (r*255), (int) (g*255), (int) (b*255));
 	}
 
+	/**
+	 * Creates a Color from a given HEX value.
+	 * 
+	 * @param hex e.g. #FFFFFF for white.
+	 */
+	public Color(String hex) {
+		   this(Integer.valueOf(hex.substring( 1, 3 ), 16 ), 
+				Integer.valueOf(hex.substring( 3, 5 ), 16 ), 
+				Integer.valueOf(hex.substring( 5, 7 ), 16 ));
+		}
+	
 	/**
 	 * Returns a NanoVG color with the same component values.
 	 * @return

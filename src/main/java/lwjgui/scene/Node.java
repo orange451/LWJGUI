@@ -80,6 +80,14 @@ public abstract class Node implements Resizable {
 		this.absolutePosition.set(x,y);
 	}
 	
+	public double getAbsoluteX() {
+		return absolutePosition.x;
+	}
+	
+	public double getAbsoluteY() {
+		return absolutePosition.y;
+	}
+	
 	public void offset( double x, double y ) {
 		//this.localPosition.add(x, y);
 		this.absolutePosition.add(x,y);
@@ -835,4 +843,5 @@ public abstract class Node implements Resizable {
 	public void setMouseTransparent(boolean t ) {
 		this.mouseTransparent = t;
 	}
+
 }

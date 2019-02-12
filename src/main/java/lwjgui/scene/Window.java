@@ -362,8 +362,6 @@ public class Window {
 		context.refresh();
 		NanoVG.nvgBeginFrame(context.getNVG(), (int)width, (int)height, ratio);
 		scene.render(context);
-		scene.render(context);
-		scene.render(context);
 		
         NanoVG.nvgRestore(context.getNVG());
 		NanoVG.nvgEndFrame(context.getNVG());

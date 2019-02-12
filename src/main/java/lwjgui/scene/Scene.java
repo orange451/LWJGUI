@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.control.PopupWindow;
+import lwjgui.transition.TransitionManager;
 
 /**
  * Every window has a Scene that contains various nodes that add functionality to the program. 
@@ -81,6 +82,9 @@ public class Scene extends Node {
 			PopupWindow p = popups.get(i);
 			p.render(context);
 		}
+		
+		// Tick Transitions
+		TransitionManager.tick();
 	}
 
 	public void showPopup(PopupWindow popup) {

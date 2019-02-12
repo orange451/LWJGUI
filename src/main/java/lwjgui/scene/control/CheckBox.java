@@ -21,6 +21,7 @@ public class CheckBox extends ButtonBase {
 	public CheckBox(String name) {
 		super(name);
 
+		this.setAlignment(Pos.CENTER_LEFT);
 		this.internalLabel = new Label(checkmark);
 		this.internalLabel2 = new Label(checkmark);
 		this.internalLabel2.setTextFill(Theme.currentTheme().getControl());
@@ -61,6 +62,7 @@ public class CheckBox extends ButtonBase {
 		super.render(context);
 
 		if ( checked ) {
+			
 			internalLabel.setAlignment(Pos.CENTER_LEFT);
 			internalLabel2.setAlignment(Pos.CENTER_LEFT);
 

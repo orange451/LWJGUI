@@ -5,6 +5,7 @@ import java.awt.Point;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.geometry.Insets;
+import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 
 public class RadioButton extends ToggleButton {
@@ -13,6 +14,7 @@ public class RadioButton extends ToggleButton {
 	public RadioButton( String name, ToggleGroup group ) {
 		super(name, group);
 		this.setPadding(Insets.EMPTY);
+		this.setAlignment(Pos.CENTER_LEFT);
 		
 		this.textOffset = 24;
 	}

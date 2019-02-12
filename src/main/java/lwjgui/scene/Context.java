@@ -48,6 +48,11 @@ public class Context {
 	public boolean isFocused() {
 		return focused;
 	}
+	
+	protected void setContextSize( int width, int height ) {
+		this.windowWidth = width;
+		this.windowHeight = height;
+	}
 
 	protected void updateContext() {
 		int[] windowWidthArr = {0}, windowHeightArr = {0};

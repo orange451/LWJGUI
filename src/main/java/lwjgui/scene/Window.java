@@ -1,5 +1,13 @@
 package lwjgui.scene;
 
+import static lwjgui.event.listener.EventListener.EventListenerType.CURSOR_POS_LISTENER;
+import static lwjgui.event.listener.EventListener.EventListenerType.KEY_LISTENER;
+import static lwjgui.event.listener.EventListener.EventListenerType.MOUSE_BUTTON_LISTENER;
+import static lwjgui.event.listener.EventListener.EventListenerType.MOUSE_WHEEL_LISTENER;
+import static lwjgui.event.listener.EventListener.EventListenerType.WINDOW_CLOSE_LISTENER;
+import static lwjgui.event.listener.EventListener.EventListenerType.WINDOW_SIZE_LISTENER;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
+
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -14,7 +22,6 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallbackI;
 import org.lwjgl.glfw.GLFWWindowCloseCallbackI;
 import org.lwjgl.glfw.GLFWWindowFocusCallbackI;
-import org.lwjgl.glfw.GLFWWindowRefreshCallbackI;
 import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.stb.STBImage;
@@ -35,9 +42,6 @@ import lwjgui.event.listener.WindowFocusListener;
 import lwjgui.event.listener.WindowSizeListener;
 import lwjgui.gl.Renderer;
 
-import static lwjgui.event.listener.EventListener.EventListenerType.*;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
-
 public class Window {
 	private Context context;
 	private Scene scene;
@@ -46,6 +50,9 @@ public class Window {
 	private Renderer renderCallback;
 	private boolean autoDraw = true;
 	private boolean autoClear = true;
+
+	private int lastWidth;
+	private int lastHeight;
 	
 	private HashMap<EventListenerType, ArrayList<EventListener>> eventListeners = new HashMap<>();
 	
@@ -252,15 +259,10 @@ public class Window {
 				 */
 				
 				windowResizing = true;
+				lastWidth = width;
+				lastHeight = height;
 				render();
 				windowResizing = false;
-			}
-		});
-		
-		GLFW.glfwSetWindowRefreshCallback(context.getWindowHandle(), new GLFWWindowRefreshCallbackI() {
-			@Override
-			public void invoke(long arg0) {
-				render();
 			}
 		});
 		
@@ -337,6 +339,13 @@ public class Window {
 		int width = context.getWidth();
 		int height = context.getHeight();
 		int ratio = context.getPixelRatio();
+		
+		// Use resize height if resizing
+		if ( this.windowResizing ) {
+			context.setContextSize( lastWidth, lastHeight );
+			width = lastWidth;
+			height = lastHeight;
+		}
 		
 		// Set correct sizes
 		scene.setMinSize(width, height);

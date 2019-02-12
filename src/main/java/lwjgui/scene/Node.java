@@ -428,7 +428,7 @@ public abstract class Node implements Resizable {
 	 */
 	public Pos getAlignment() {
 		Pos useAlignment = null;
-		Node p = this;
+		Node p = this.getParent();
 		int t = 0;
 		while ( p != null && useAlignment == null && t < 32 ) {
 			useAlignment = p.alignment;

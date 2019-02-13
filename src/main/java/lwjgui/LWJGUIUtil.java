@@ -110,12 +110,14 @@ public class LWJGUIUtil {
 	/**
 	 * Restarts the Java virtual machine and forces it to run on the first thread. This allows your LWJGL3 program to run on Mac properly. 
 	 * 
-	 * To implement this method, simply put it on the first line of your main(args) function.
+	 * To implement this method, simply put it on the first line of your main(args) function. 
 	 * 
-	 * @param startFirstThread
-	 * @param needsOutput
-	 * @param customClass
-	 * @param args
+	 * Credit goes to Spasi on JGO for making this utility.
+	 * 
+	 * @param startFirstThread - VM argument for setting XstartOnFirstThread.
+	 * @param needsOutput - Whether or not the JVM should print to System.out.println
+	 * @param customClass - Class where the main method is stored
+	 * @param args - the usual String[] args used in the main method
 	 * @return
 	 */
     public static boolean restartJVM(boolean startFirstThread, boolean needsOutput, Class<?> customClass, String... args) {

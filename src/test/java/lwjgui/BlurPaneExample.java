@@ -18,8 +18,6 @@ import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-
-import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Insets;
@@ -28,7 +26,6 @@ import lwjgui.gl.Renderer;
 import lwjgui.scene.Context;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
-import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.BlurPane;
 import lwjgui.scene.layout.BorderPane;
 
@@ -68,26 +65,16 @@ public class BlurPaneExample {
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(16,16,16,16));
 		root.setBackground(null);
+
+		// Set the pane as the scenes root
 		scene.setRoot(root);
 
-		// Put a Blurred Pane in the scene.
-		// The blurred pane works by taking anything drawn underneath it in
-		// the same FBO, and blurs the section of it that the pane overlaps.
+		// Put a label in the pane
 		BlurPane pane = new BlurPane();
 		pane.setPrefSize(150, 150);
 		root.setCenter(pane);
-		
-		// Add a label
-		Label l = new Label("Hello World!");
-		l.setTextFill(Color.WHITE_SMOKE);
-		pane.getChildren().add(l);
 	}
 
-	/**
-	 * This is a generic testing class to test OpenGL Rendering
-	 * @author Andrew
-	 *
-	 */
 	private static class RenderingCallbackTest implements Renderer {
 		private GenericShader shader;
 		private int vao;
@@ -150,16 +137,9 @@ public class BlurPaneExample {
 			stackPop();
 		}
 
-		private long lastTime = System.currentTimeMillis();
 		@Override
 		public void render(Context context) {
-			
-			// Calculate delta
-			long delta = System.currentTimeMillis()-lastTime;
-			lastTime = System.currentTimeMillis();
-			
-			// Calculate not rotation for triangle
-			rot += delta * 1.0e-3;
+			rot += 1.0e-3f;
 			
 			// Bind shader for drawing
 			shader.bind();

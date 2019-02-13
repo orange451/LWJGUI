@@ -69,7 +69,7 @@ public class ButtonExample2 {
 			label.setAlignment(Pos.BOTTOM_CENTER);
 			
 			Button button = new Button("No Click");
-			button.setOnAction(event -> {
+			button.setOnAction( (event)-> {
 				label.setText("No Means No!!");
 			});
 			

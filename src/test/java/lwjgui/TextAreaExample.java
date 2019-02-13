@@ -12,10 +12,12 @@ import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.control.Button;
 import lwjgui.scene.control.PasswordField;
 import lwjgui.scene.control.TextArea;
 import lwjgui.scene.control.TextField;
 import lwjgui.scene.layout.BorderPane;
+import lwjgui.scene.layout.HBox;
 
 public class TextAreaExample {
 	public static final int WIDTH   = 320;
@@ -51,20 +53,32 @@ public class TextAreaExample {
 		pane.setPadding(new Insets(8,8,8,8));
 		scene.setRoot(pane);
 		
+		HBox hbox = new HBox();
+		hbox.setSpacing(8);
+		pane.setTop(hbox);
+		
 		// Create an Input Field
 		TextField f = new TextField();
 		f.setPrompt("Text Field");
-		pane.setTop(f);
-		
-		// Create a Text Area
-		TextArea t = new TextArea();
-		t.setPreferredColumnCount(22);
-		t.setPreferredRowCount(8);
-		pane.setCenter(t);
+		hbox.getChildren().add(f);
 		
 		// Password field
 		PasswordField p = new PasswordField();
 		p.setPrompt("Password Field");
-		pane.setBottom(p);
+		hbox.getChildren().add(p);
+		
+		// Create a Text Area
+		TextArea t = new TextArea();
+		t.setWordWrap(true);
+		t.setPreferredColumnCount(22);
+		t.setPreferredRowCount(8);
+		pane.setCenter(t);
+		
+		// Clear text button
+		Button b = new Button("Clear Text");
+		b.setOnAction((event)->{
+			t.clear();
+		});
+		pane.setBottom(b);
 	}
 }

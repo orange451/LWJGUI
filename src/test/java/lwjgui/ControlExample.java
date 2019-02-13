@@ -69,6 +69,7 @@ public class ControlExample {
 		
 		// Create a vbox to store examples vertically
 		VBox vbox = new VBox();
+		vbox.setAlignment(Pos.CENTER);
 		vbox.setSpacing(32);
 		background.getChildren().add(vbox);
 		
@@ -128,6 +129,7 @@ public class ControlExample {
 		
 		// Various ways to add checkboxes
 		CheckBox b = new CheckBox("Hello World");
+		b.setDisabled(true);
 		pane.getChildren().add(b);
 		pane.getChildren().add(new CheckBox("Testing"));
 		pane.getChildren().add(new CheckBox("Check if you are cool!"));

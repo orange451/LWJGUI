@@ -67,7 +67,7 @@ public class ScrollPaneExample {
 		
 		// Create a button
 		Button button = new Button("Click me");
-		button.setOnAction(event -> {
+		button.setOnAction((event)->{
 			test.getChildren().add(new Label("WOAH THIS IS SOME REALLY LONG TEXT!"));
 		});
 		pane.setBottom(button);

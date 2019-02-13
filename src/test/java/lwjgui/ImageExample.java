@@ -48,7 +48,7 @@ public class ImageExample {
 		scene.setRoot(pane);
 		
 		// Create an image
-		Image img = new Image("lwjgui/flower.jpg");
+		Image img = new Image("flower.jpg");
 		
 		// Create a viewable pane for that image
 		ImageView view = new ImageView();

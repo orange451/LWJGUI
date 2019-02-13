@@ -28,6 +28,7 @@ import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.OpenGLPane;
 import lwjgui.scene.layout.StackPane;
+import lwjgui.scene.layout.VBox;
 
 public class OpenGLPaneExample {
 	public static final int WIDTH   = 320;
@@ -62,23 +63,21 @@ public class OpenGLPaneExample {
 		StackPane root = new StackPane();
 		scene.setRoot(root);
 		
+		VBox vbox = new VBox();
+		root.getChildren().add(vbox);
+		
 		// Create an OpenGL pane (canvas)
 		OpenGLPane ogl = new OpenGLPane();
-		ogl.setPrefSize(100, 100);
-		root.getChildren().add(ogl);
+		ogl.setPrefSize(24, 24);
 		
 		// Add a rendering callback to the opengl pane
 		ogl.setRendererCallback(new RenderingCallbackTest());
 		
-		// Add a label on top of the OpenGL pane
-		ogl.getChildren().add(new Label("Hello World"));
+		// Create label, set icon to opengl pane
+		Label testLabel = new Label( "This label's icon is rendered with OpenGL!", ogl );
+		vbox.getChildren().add(testLabel);
 	}
 
-	/**
-	 * This is a generic testing class to test OpenGL Rendering
-	 * @author Andrew
-	 *
-	 */
 	static class RenderingCallbackTest implements Renderer {
 		private GenericShader shader;
 		private int vao;

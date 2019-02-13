@@ -26,10 +26,11 @@ public class HelloWorld {
 		long window = LWJGUIUtil.createOpenGLCoreWindow("Hello World", WIDTH, HEIGHT, true, false);
 		
 		// Initialize lwjgui for this window
-		Window lwjguiWindow = LWJGUI.initialize(window);
+		Window newWindow = LWJGUI.initialize(window);
+		Scene scene = newWindow.getScene();
 		
 		// Add some components
-		addComponents(lwjguiWindow.getScene());
+		addComponents(scene);
 		
 		// Game Loop
 		while (!GLFW.glfwWindowShouldClose(window)) {

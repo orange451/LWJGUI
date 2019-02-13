@@ -47,6 +47,7 @@ public class PanesInPanes {
 
 	private static void addComponents(Scene scene) {
 		StackPane background = new StackPane();
+		background.setAlignment(Pos.CENTER);
 		background.setFillToParentHeight(true);
 		background.setFillToParentWidth(true);
 		background.setPadding(new Insets(4,4,4,4));
@@ -68,8 +69,13 @@ public class PanesInPanes {
 		pane2.setBackground(Color.DARK_GRAY);
 		pane.getChildren().add(pane2);
 		
-		Label label = new Label("Hello World! LONG TEXT!");
+		Label label = new Label("Hello World! LONG TEXT");
 		label.setTextFill(Color.WHITE_SMOKE);
 		pane2.getChildren().add(label);
+		
+		
+		LWJGUI.runLater(() -> {
+			System.out.println(pane2.getWidth());
+		});
 	}
 }

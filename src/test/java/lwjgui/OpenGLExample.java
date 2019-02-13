@@ -22,6 +22,7 @@ import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Insets;
+import lwjgui.geometry.Pos;
 import lwjgui.gl.GenericShader;
 import lwjgui.gl.Renderer;
 import lwjgui.scene.Context;
@@ -30,6 +31,7 @@ import lwjgui.scene.Window;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.BorderPane;
+import lwjgui.scene.layout.VBox;
 
 public class OpenGLExample {
 	public static final int WIDTH   = 320;
@@ -68,26 +70,36 @@ public class OpenGLExample {
 		// Create a simple pane
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(16,16,16,16));
-		root.setBackground(null);
+		root.setBackground(null); // See through, so we don't block the opengl drawn underneath
 
 		// Set the pane as the scenes root
 		scene.setRoot(root);
 
-		// Put a label in the pane
-		Label label = new Label("Hello World!");
-		label.setTextFill(Color.WHITE);
-		root.setCenter(label);
+		// Put labels in pane
+		{
+			VBox vbox = new VBox();
+			vbox.setAlignment(Pos.CENTER);
+			vbox.setBackground(null);
+			root.setCenter(vbox);
+
+			Label label1 = new Label("Hello World!");
+			label1.setTextFill(Color.WHITE);
+			vbox.getChildren().add(label1);
+			
+			Label label2 = new Label("OpenGL drawn straight to window.");
+			label2.setTextFill(Color.BLACK);
+			vbox.getChildren().add(label2);
+			
+			Label label3 = new Label("LWJGUI ontop!");
+			label3.setTextFill(Color.CORAL);
+			vbox.getChildren().add(label3);
+		}
 		
 		// Add a checkbox
 		spinBox = new CheckBox("Spin");
 		root.setBottom(spinBox);
 	}
 
-	/**
-	 * This is a generic testing class to test OpenGL Rendering
-	 * @author Andrew
-	 *
-	 */
 	private static class RenderingCallbackTest implements Renderer {
 		private GenericShader shader;
 		private int vao;

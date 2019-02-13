@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
+import lwjgui.event.ButtonEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
@@ -58,7 +59,7 @@ public class PopupWindowExample {
 
 		// Create the button for the box
 		Button button = new Button("Click Me!");
-		button.setOnAction(event -> {
+		button.setOnAction((event)-> {
 			popup("Test Popup");
 		});
 		
@@ -85,7 +86,7 @@ public class PopupWindowExample {
 		// Create a button
 		Button b = new Button("Claim prize");
 		root.setBottom(b);
-		b.setOnAction(event -> {
+		b.setOnAction((event)-> {
 			GLFW.glfwSetWindowShouldClose(pWin, true);
 		});
 	}

@@ -54,6 +54,7 @@ public class SplitPaneExample {
 		
 		// Create vertical layout
 		VBox box = new VBox();
+		box.setAlignment(Pos.CENTER);
 		box.setFillToParentHeight(true);
 		box.setFillToParentWidth(true);
 		pane.getChildren().add(box);
@@ -81,10 +82,6 @@ public class SplitPaneExample {
 
 		SplitPane.setResizableWithParent(split.getItems().get(0), false);
 		SplitPane.setResizableWithParent(split.getItems().get(2), false);
-		
-		LWJGUI.runLater(() -> {
-			split.setDividerPosition(0, 0.35);
-			split.setDividerPosition(1, 0.65);
-		});
+		//split.setDividerPosition(0, 0.4);
 	}
 }

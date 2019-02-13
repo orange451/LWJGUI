@@ -114,11 +114,16 @@ public class LWJGUIUtil {
 	 * 
 	 * Credit goes to Spasi on JGO for making this utility.
 	 * 
+	 * Example of usage (first line in main() method):
+	 * if (LWJGUIUtil.restartJVM(true, true, class, args)) {
+	 *		return;
+	 * }
+	 * 
 	 * @param startFirstThread - VM argument for setting XstartOnFirstThread.
 	 * @param needsOutput - Whether or not the JVM should print to System.out.println
 	 * @param customClass - Class where the main method is stored
 	 * @param args - the usual String[] args used in the main method
-	 * @return
+	 * @return true if xstartOnFirstThread is enabled
 	 */
     public static boolean restartJVM(boolean startFirstThread, boolean needsOutput, Class<?> customClass, String... args) {
         if ( startFirstThread ) {

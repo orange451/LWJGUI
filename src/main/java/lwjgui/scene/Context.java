@@ -45,6 +45,10 @@ public class Context {
 		}
 	}
 
+	/**
+	 * Returns if this context is the current focused context.
+	 * @return
+	 */
 	public boolean isFocused() {
 		return focused;
 	}
@@ -159,62 +163,118 @@ public class Context {
 		//}
 		return root;
 	}
-
+	
+	/**
+	 * Returns the current height of the context window.
+	 * @return
+	 */
 	public int getWidth() {
 		return windowWidth;
 	}
 
+	/**
+	 * Returns the current width of the context window.
+	 * @return
+	 */
 	public int getHeight() {
 		return windowHeight;
 	}
 
+	/**
+	 * Returns the current pixel ratio for this context.<br>
+	 * Retina displays will commonly return 2. Screens with a larger pixel ratio pack more detail in a smaller space.
+	 * @return
+	 */
 	public int getPixelRatio() {
 		return screenPixelRatio;
 	}
 
+	/**
+	 * Returns the internal NanoVG pointer.
+	 * @return
+	 */
 	public long getNVG() {
 		return nvgContext;
 	}
 
+	/**
+	 * Returns the OpenGL window handle.
+	 * @return
+	 */
 	public long getWindowHandle() {
 		return windowHandle;
 	}
 
+	/**
+	 * Tests if the given node is the current selected node.
+	 * @param node
+	 * @return
+	 */
 	public boolean isSelected(Node node) {
 		if ( selected == null ) {
 			return false;
 		}
-		return node.equals(selected);
+		return node.equals(getSelected());
 	}
 
+	/**
+	 * Tests if the given node is the current hovered node.
+	 * @param node
+	 * @return
+	 */
 	public boolean isHovered(Node node) {
 		if ( hovered == null )
 			return false;
-		return node.equals(hovered);
+		if ( node == null )
+			return false;
+		return node.equals(getHovered());
 	}
 
+	/**
+	 * Sets the current selected node for this context.
+	 * @param node
+	 */
 	public void setSelected(Node node) {
 		this.selected = node;
 	}
-
+	
+	/**
+	 * Returns the mouses X position relative to this context.
+	 * @return
+	 */
 	public double getMouseX() {
 		return mouseX;
 	}
 
+	/**
+	 * Returns the mouses Y position relative to this context.
+	 * @return
+	 */
 	public double getMouseY() {
 		return mouseY;
 	}
 
+	/**
+	 * Returns the current hovered node.
+	 * @return
+	 */
 	public Node getHovered() {
 		return hovered;
 	}
 
+	/**
+	 * Returns a list of all current popups within the window.
+	 * @return
+	 */
 	protected ObservableList<PopupWindow> getPopups() {
 		Window window = LWJGUI.getWindowFromContext(windowHandle);
 		Scene scene = window.getScene();
 		return scene.getPopups();
 	}
 
+	/**
+	 * Close all open popups.
+	 */
 	protected void closePopups() {
 		ObservableList<PopupWindow> popups = getPopups();
 		while (popups.size() > 0 ) {
@@ -222,15 +282,35 @@ public class Context {
 		}
 	}
 
+	/**
+	 * Force resets the OpenGL Viewport to fit the window.
+	 */
 	public void refresh() {
 		GL11.glViewport(0, 0, (int)(getWidth()*getPixelRatio()), (int)(getHeight()*getPixelRatio()));
 	}
 
+	/**
+	 * Returns whether the internal renderer is using modern opengl (OpenGL 3.2+)
+	 * @return
+	 */
 	public boolean isModernOpenGL() {
 		return this.modernOpenGL;
 	}
 
+	/**
+	 * Returns the current selected node.
+	 * @return
+	 */
 	public Node getSelected() {
 		return this.selected;
+	}
+
+	/**
+	 * Returns whether the mouse intersects a node.
+	 * @param node
+	 * @return
+	 */
+	public boolean isMouseInside(Node node) {
+		return mouseX > node.getX() && mouseX < node.getX() + node.getWidth() && mouseY > node.getY() && mouseY < node.getY() + node.getHeight();
 	}
 }

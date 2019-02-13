@@ -19,10 +19,7 @@ public class DraggablePane extends StickyPane {
 	 * 
 	 * @return true if dragging
 	 */
-	public boolean isDraggingControlsTriggered() {
-		if ( this.cached_context.getHovered() == null )
-			return false;
-		
+	public boolean isDraggingControlsTriggered() {		
 		return (GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
 	}
 	
@@ -35,7 +32,7 @@ public class DraggablePane extends StickyPane {
 		double mouseY = this.cached_context.getMouseY();
 		
 		if (isDraggingControlsTriggered()) {
-			if ( !dragging && !failedClick) {
+			if ( !isBeingDragged() && !failedClick) {
 				if (this.cached_context.isMouseInside(this) && this.cached_context.getHovered().isDescendentOf(this)) {
 					double diffx = mouseX - this.getX();
 					double diffy = mouseY - this.getY();

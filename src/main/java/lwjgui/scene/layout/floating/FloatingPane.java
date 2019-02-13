@@ -1,4 +1,4 @@
-package lwjgui.scene.layout;
+package lwjgui.scene.layout.floating;
 
 import org.lwjgl.nanovg.NanoVG;
 

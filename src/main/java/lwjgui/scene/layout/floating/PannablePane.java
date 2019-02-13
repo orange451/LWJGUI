@@ -6,7 +6,10 @@ public class PannablePane extends DraggablePane {
 	public PannablePane() {
 		this.flag_clip = true;
 		
+		// Center the pane
 		this.center();
+		
+		// Recenter next frame, as the parents might not yet have been defined/positioned
 		LWJGUI.runLater(()->{
 			this.center();
 		});
@@ -15,7 +18,7 @@ public class PannablePane extends DraggablePane {
 	public boolean isDraggingControlsTriggered() {
 		//Doesn't allow the PannablePane to be dragged if the mouse is over one of its DraggablePane children.
 		if (!this.isBeingDragged()) {
-			if ( !this.cached_context.getHovered().equals(this) )
+			if ( !this.equals(this.cached_context.getHovered()) )
 				return false;
 		}
 		

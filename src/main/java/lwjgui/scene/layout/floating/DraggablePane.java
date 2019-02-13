@@ -20,6 +20,9 @@ public class DraggablePane extends StickyPane {
 	 * @return true if dragging
 	 */
 	public boolean isDraggingControlsTriggered() {
+		if ( this.cached_context.getHovered() == null )
+			return false;
+		
 		return (GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
 	}
 	

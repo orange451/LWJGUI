@@ -200,10 +200,17 @@ public class Color {
 	}
 	
 	public void set(int r, int g, int b, int a) {
+		//Reset the cache for the vector/nvg colors
+		vector = null;
+		nvg = null;
+		
+		//Set the new color value
 		value = ((a & 0xFF) << 24) |
 				((r & 0xFF) << 16) |
 				((g & 0xFF) << 8)  |
 				((b & 0xFF) << 0);
+		
+		//Ensure that the color is valid
 		testColorValueRange(r,g,b,a);
 	}
 	

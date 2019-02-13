@@ -7,7 +7,7 @@ import lwjgui.theme.Theme;
 public abstract class Shape extends Node {
 	protected Color fill = Theme.currentTheme().getText();
 	
-	public void setFill( Color color ) { 
+	public void setFill(Color color) { 
 		this.fill = color;
 	}
 

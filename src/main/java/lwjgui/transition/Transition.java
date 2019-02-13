@@ -54,10 +54,13 @@ public abstract class Transition {
 	public double getProgress() {
 		long currentTime = System.currentTimeMillis();
 		
-		double distance = endStamp = currentTime;
 		double maxDistance = endStamp - startStamp;
+		double distance = Math.max(endStamp - currentTime, 0);
+		double progress = 1f - (distance / maxDistance);
 		
-		return Math.min((distance / maxDistance), 1.0);
+		//System.err.println(maxDistance + " " + distance + " -> " + progress);
+		
+		return progress;
 	}
 	
 	public boolean isFinished() {

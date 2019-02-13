@@ -10,21 +10,25 @@ public class DraggablePane extends StickyPane {
 	private boolean failedClick;
 	private Vector2d dragOffset;
 	
+	protected int mouseButton;
+	
 	public DraggablePane() {
 		this.dragOffset = new Vector2d();
+		
+		mouseButton = GLFW.GLFW_MOUSE_BUTTON_LEFT;
 	}
 	
 	@Override
 	public void position(Node parent) {
 		super.position(parent);
 		
-		int mouse = GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		int mouse = GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), mouseButton);
 		double mouseX = this.cached_context.getMouseX();
 		double mouseY = this.cached_context.getMouseY();
 		
 		if ( mouse == GLFW.GLFW_PRESS ) {
 			if ( !dragging && !failedClick ) {
-				if ( this.cached_context.isMouseInside(this) ) {
+				if ( this.cached_context.isMouseInside(this) && this.cached_context.getHovered().isDescendentOf(this) ) {
 					double diffx = mouseX - this.getX();
 					double diffy = mouseY - this.getY();
 					

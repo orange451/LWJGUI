@@ -123,7 +123,7 @@ public abstract class Region extends Parent {
 			}
 			totalWidth += childWid;
 		}
-		totalWidth += this.getPadding().getWidth();
+		totalWidth += this.getPadding().getWidth()/2;
 		
 		return totalWidth;
 	}
@@ -138,7 +138,7 @@ public abstract class Region extends Parent {
 			}
 			totalHeight += temp;
 		}
-		totalHeight += this.getPadding().getHeight();
+		totalHeight += this.getPadding().getHeight()/2;
 		
 		return totalHeight;
 	}

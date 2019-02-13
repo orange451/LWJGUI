@@ -6,7 +6,7 @@ import lwjgui.Color;
 import lwjgui.scene.Context;
 
 public class Rectangle extends Shape {
-	private float corderRadius = 0;
+	protected float cornerRadius = 0;
 	
 	public Rectangle() {
 		this(0);
@@ -22,12 +22,12 @@ public class Rectangle extends Shape {
 		this.setFill(color);
 	}
 	
-	public void setCornerRadius( float radius ) {
-		this.corderRadius = radius;
+	public void setCornerRadius( float cornerRadius ) {
+		this.cornerRadius = cornerRadius;
 	}
 	
 	public float getCornerRadius() {
-		return this.corderRadius;
+		return this.cornerRadius;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class Rectangle extends Shape {
 		clip(context);
 		
 		NanoVG.nvgBeginPath(context.getNVG());
-		NanoVG.nvgRoundedRect(context.getNVG(), (float)getX(), (float)getY(), (float)getWidth(), (float)getHeight(), corderRadius);
+		NanoVG.nvgRoundedRect(context.getNVG(), (float)getX(), (float)getY(), (float)getWidth(), (float)getHeight(), cornerRadius);
 		NanoVG.nvgFillColor(context.getNVG(), fill.getNVG());
 		NanoVG.nvgFill(context.getNVG());
 	}

@@ -45,6 +45,11 @@ public abstract class Transition {
 	public abstract void tick(double progress);
 	
 	/**
+	 * Callback for when the transition is finished and is about to be removed from the TransitionManager.
+	 */
+	public void completedCallback() {}
+	
+	/**
 	 * @return a value from 0 to 1 based on the transition time.
 	 */
 	public double getProgress() {

@@ -44,6 +44,13 @@ public class ObservableList<E> {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void removeAll(E... elements) {
+		for (int i = 0; i < elements.length; i++) {
+			remove(elements[i]);
+		}
+	}
+	
 	public void add(E element) {
 		internal.add(element);
 

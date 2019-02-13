@@ -68,6 +68,14 @@ public abstract class Node implements Resizable {
 		this.absolutePosition.set(x,y);
 	}
 	
+	public double getAbsoluteX() {
+		return absolutePosition.x;
+	}
+	
+	public double getAbsoluteY() {
+		return absolutePosition.y;
+	}
+	
 	public void offset( double x, double y ) {
 		//this.localPosition.add(x, y);
 		setAbsolutePosition( this.getX()+x, this.getY()+y);

@@ -144,7 +144,7 @@ public class LWJGUIUtil {
 		}
 
 		if (callingClassName == null) {
-			throw new RuntimeException("Error: unable to determine Application class");
+			throw new RuntimeException("Error: unable to determine main class");
 		}
 
 		try {
@@ -152,7 +152,6 @@ public class LWJGUIUtil {
 			
 			return restartJVMOnFirstThread( needsOutput, theClass, args );
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

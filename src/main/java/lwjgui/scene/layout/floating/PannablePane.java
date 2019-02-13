@@ -1,7 +1,5 @@
 package lwjgui.scene.layout.floating;
 
-import org.lwjgl.glfw.GLFW;
-
 import lwjgui.LWJGUI;
 
 public class PannablePane extends DraggablePane {
@@ -15,21 +13,13 @@ public class PannablePane extends DraggablePane {
 	}
 	
 	public boolean isDraggingControlsTriggered() {
-		
 		//Doesn't allow the PannablePane to be dragged if the mouse is over one of its DraggablePane children.
 		if (!this.isBeingDragged()) {
-			for (int i = 0; i < getChildren().size(); i++) {
-				if (getChildren().get(i) instanceof DraggablePane) {
-					DraggablePane pane = (DraggablePane) getChildren().get(i);
-					
-					if (this.cached_context.isMouseInside(pane)) {
-						return false;
-					}
-				}
-			}
+			if ( !this.cached_context.getHovered().equals(this) )
+				return false;
 		}
 		
-		return (GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
+		return super.isDraggingControlsTriggered();
 	}
 	
 	/**

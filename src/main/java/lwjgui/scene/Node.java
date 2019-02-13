@@ -199,7 +199,6 @@ public abstract class Node implements Resizable {
 				size.y = this.getMaxHeight();
 			
 		}
-		//System.out.println("    " + getWidth());
 	}
 	
 	protected double getMaxPotentialWidth() {
@@ -207,11 +206,18 @@ public abstract class Node implements Resizable {
 		Node p = this;
 		
 		while ( p != null ) {
-			double pWid = p.getWidth();
+			/*double pWid = p.getWidth();
 			double padding = pWid-p.getInnerBounds().getWidth();
 			double use = p.getMaxWidth()-padding;
 			if ( use > Double.MAX_VALUE*0.9 )
 				use = pWid-padding;
+			
+			max = Math.min(max, use);
+			p = p.parent;*/
+			
+			double use = p.getMaxWidth();
+			if ( use > Double.MAX_VALUE*0.9 )
+				use = p.getWidth();
 			
 			max = Math.min(max, use);
 			p = p.parent;

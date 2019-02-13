@@ -12,4 +12,9 @@ public class StickyPane extends FloatingPane {
 			children.get(i).offset(deltaX, deltaY);
 		}
 	}
+	
+	@Override
+	public void offset( double x, double y ) {
+		setAbsolutePosition( getX()+x, getY()+y );
+	}
 }

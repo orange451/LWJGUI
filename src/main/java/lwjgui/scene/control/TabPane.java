@@ -6,8 +6,6 @@ import lwjgui.event.ChangeEvent;
 import lwjgui.event.ElementCallback;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
-import lwjgui.event.MouseEvent;
-import lwjgui.event.TabDragEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
@@ -29,7 +27,7 @@ public class TabPane extends Control {
 	private TabPaneButtonBox tabButtons;
 	private StackPane contentPane;
 	
-	private TabDragEvent tabDragEvent;
+	//private TabDragEvent tabDragEvent;
 	private EventHandler<ChangeEvent<Tab>> selectionChangeEvent;
 	
 	public TabPane() {
@@ -205,9 +203,9 @@ public class TabPane extends Control {
 		}
 	}
 
-	public void setTabDraggedEvent(TabDragEvent event) {
+	/*public void setTabDraggedEvent(TabDragEvent event) {
 		this.tabDragEvent = event;
-	}
+	}*/
 	
 	public void setOnSelectionChange( EventHandler<ChangeEvent<Tab>> event ) {
 		this.selectionChangeEvent = event;

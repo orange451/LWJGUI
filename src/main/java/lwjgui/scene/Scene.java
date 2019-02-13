@@ -62,6 +62,10 @@ public class Scene extends Node {
 		if ( root == null )
 			return;
 		
+		// Tick Transitions first so that any changes are reflected in the rendering
+		TransitionManager.tick();
+		
+		//Root fills the entire screen if it's a FillableRegion
 		if ( root instanceof FillableRegion ) {
 			((FillableRegion) root).setFillToParentHeight(true);
 			((FillableRegion) root).setFillToParentWidth(true);
@@ -82,9 +86,6 @@ public class Scene extends Node {
 			PopupWindow p = popups.get(i);
 			p.render(context);
 		}
-		
-		// Tick Transitions
-		TransitionManager.tick();
 	}
 
 	public void showPopup(PopupWindow popup) {

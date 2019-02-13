@@ -44,7 +44,6 @@ public abstract class Node implements Resizable {
 	protected boolean flag_clip = false;
 	protected boolean mousePressed = false;
 	
-	@Deprecated
 	protected Context cached_context;
 	
 	public void setLocalPosition(Node parent, double x, double y) {

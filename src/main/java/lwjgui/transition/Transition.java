@@ -1,7 +1,5 @@
 package lwjgui.transition;
 
-import lwjgui.scene.Node;
-
 /**
  * Transitions are objects that allow the smooth animation of Nodes via the use of timestamps.
  * 
@@ -10,15 +8,13 @@ import lwjgui.scene.Node;
  */
 public abstract class Transition {
 	
-	protected Node[] nodes;
 	private long durationInMillis;
 	
 	private boolean isPlaying = false;
 	private long startStamp;
 	private long endStamp;
 	
-	public Transition(long durationInMillis, Node...nodes) {
-		this.nodes = nodes;
+	public Transition(long durationInMillis) {
 		this.durationInMillis = durationInMillis;
 	}
 	

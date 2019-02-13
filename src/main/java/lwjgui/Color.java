@@ -371,6 +371,18 @@ public class Color {
 				Math.max((int)(getBlue() *FACTOR), 0),
 				getAlpha());
 	}
+	
+	/**
+	 * Returns a new Color that's identical this one, but with the opacity tweaked by the given factor. 
+	 * 
+	 * The opacity will be calculated to be: 255 * factor, thus normalized values should be used.
+	 * 
+	 * @param factor - a value between 0 and 1 (where 1 is full visible and 0 is not visible at all)
+	 * @return
+	 */
+	public Color opaque(double factor) {
+		return new Color(getRed(), getGreen(), getBlue(), (int) (factor * 255));
+	}
 
 	public String toString() {
 		int r = getRed();

@@ -8,7 +8,6 @@ import lwjgui.LWJGUI;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
-import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;

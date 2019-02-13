@@ -69,11 +69,19 @@ public class GridPane extends Pane {
 		});
 	}
 	
+	/**
+	 * Sets the horizontal space between Nodes added to this pane.
+	 * @param gap
+	 */
 	public void setHgap(int gap) {
 		this.hgap = gap;
 		update();
 	}
 	
+	/**
+	 * Sets the vertical space between Nodes added to this pane.
+	 * @param gap
+	 */
 	public void setVgap(int gap) {
 		this.vgap = gap;
 		update();
@@ -87,6 +95,15 @@ public class GridPane extends Pane {
 		return this.vgap;
 	}
 	
+	/**
+	 * Adds the given element at the x/y position in the GridPane. E.G. Add an element at 1, 1 (one grid space right, one grid space down). 
+	 * 
+	 * The distance between the Nodes is determined by setHgap/setVgap().
+	 * 
+	 * @param element
+	 * @param x
+	 * @param y
+	 */
 	public void add(Node element, int x, int y) {
 		elements[x][y] = element;
 		modified = true;

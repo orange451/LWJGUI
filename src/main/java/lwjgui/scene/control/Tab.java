@@ -9,7 +9,6 @@ import lwjgui.LWJGUIUtil;
 import lwjgui.event.Event;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
-import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;

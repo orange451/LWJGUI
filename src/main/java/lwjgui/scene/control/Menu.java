@@ -2,7 +2,6 @@ package lwjgui.scene.control;
 
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
-import lwjgui.event.MouseEvent;
 import lwjgui.scene.Context;
 
 public class Menu extends MenuItem {

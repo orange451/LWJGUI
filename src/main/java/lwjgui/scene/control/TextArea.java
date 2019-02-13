@@ -3,7 +3,6 @@ package lwjgui.scene.control;
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.scene.control.ScrollPane.ScrollBarPolicy;
-import lwjgui.scene.control.TextInputControl.TextInputControlKeyInput;
 
 public class TextArea extends TextInputControl {
 	public TextArea() {

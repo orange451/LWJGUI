@@ -11,7 +11,8 @@ public class ThemeWhite extends Theme {
 	public static Color selectColorPassive	= Color.LIGHT_GRAY;
 	public static Color shadow				= new Color(32, 32, 32, 100);
 	public static Color textColor			= Color.DARK_GRAY;
-	public static Color controlColor			= new Color(240, 240, 240);
+	public static Color textColorAlt		= Color.WHITE_SMOKE;
+	public static Color controlColor		= new Color(240, 240, 240);
 	public static Color controlColorAlt		= new Color(230, 230, 230);
 	public static Color controlHoverColor	= Color.WHITE;
 	public static Color controlOutlineColor	= Color.DIM_GRAY;
@@ -49,6 +50,11 @@ public class ThemeWhite extends Theme {
 	@Override
 	public Color getText() {
 		return textColor;
+	}
+	
+	@Override
+	public Color getTextAlt() {
+		return textColorAlt;
 	}
 
 	@Override

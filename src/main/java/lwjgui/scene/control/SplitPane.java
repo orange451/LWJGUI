@@ -13,7 +13,6 @@ import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
-import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;

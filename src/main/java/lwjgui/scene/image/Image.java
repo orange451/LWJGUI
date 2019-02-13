@@ -81,6 +81,7 @@ public class Image {
 		return newBuffer;
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected static URL ioResourceGetURL( String resource ) {
 		URL url = Image.class.getClassLoader().getResource(resource);
 		if (url == null) {

@@ -19,6 +19,7 @@ public class TransitionManager {
 			t.tick(t.getProgress());
 			
 			if (t.isFinished()) {
+				t.completedCallback();
 				activeTransitions.remove(i);
 				i--;
 			}

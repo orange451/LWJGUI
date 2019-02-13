@@ -10,25 +10,30 @@ public class DraggablePane extends StickyPane {
 	private boolean failedClick;
 	private Vector2d dragOffset;
 	
-	protected int mouseButton;
-	
 	public DraggablePane() {
 		this.dragOffset = new Vector2d();
-		
-		mouseButton = GLFW.GLFW_MOUSE_BUTTON_LEFT;
 	}
 	
-	@Override
-	public void position(Node parent) {
-		super.position(parent);
-		
-		int mouse = GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), mouseButton);
+	/**
+	 * Checks if the controls for dragging this DraggablePane are being triggered. By default, it checks if the left mouse button is down.
+	 * 
+	 * @return true if dragging
+	 */
+	public boolean isDraggingControlsTriggered() {
+		return (GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
+	}
+	
+	public boolean isBeingDragged() {
+		return dragging;
+	}
+	
+	protected void drag() {
 		double mouseX = this.cached_context.getMouseX();
 		double mouseY = this.cached_context.getMouseY();
 		
-		if ( mouse == GLFW.GLFW_PRESS ) {
-			if ( !dragging && !failedClick ) {
-				if ( this.cached_context.isMouseInside(this) && this.cached_context.getHovered().isDescendentOf(this) ) {
+		if (isDraggingControlsTriggered()) {
+			if ( !dragging && !failedClick) {
+				if (this.cached_context.isMouseInside(this) && this.cached_context.getHovered().isDescendentOf(this)) {
 					double diffx = mouseX - this.getX();
 					double diffy = mouseY - this.getY();
 					
@@ -43,8 +48,14 @@ public class DraggablePane extends StickyPane {
 			failedClick = false;
 		}
 		
-		if ( dragging ) {
+		if (dragging) {
 			this.setAbsolutePosition(mouseX-dragOffset.x, mouseY-dragOffset.y);
 		}
+	}
+	
+	@Override
+	public void position(Node parent) {
+		super.position(parent);
+		drag();
 	}
 }

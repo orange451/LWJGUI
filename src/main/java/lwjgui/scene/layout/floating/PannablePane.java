@@ -3,8 +3,6 @@ package lwjgui.scene.layout.floating;
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
-import lwjgui.event.EventHandler;
-import lwjgui.event.ScrollEvent;
 
 public class PannablePane extends DraggablePane {
 	public PannablePane() {
@@ -14,19 +12,24 @@ public class PannablePane extends DraggablePane {
 		LWJGUI.runLater(()->{
 			this.center();
 		});
+	}
+	
+	public boolean isDraggingControlsTriggered() {
 		
-		// Draggable by scrolling (for laptops)
-		this.mouseScrollEventInternal = new EventHandler<ScrollEvent>() {
-			@Override
-			public void handle(ScrollEvent event) {
-				if ( isDescendentHovered() ) {
-					PannablePane.this.offset(-event.x, -event.y);
+		//Doesn't allow the PannablePane to be dragged if the mouse is over one of its DraggablePane children.
+		if (!this.isBeingDragged()) {
+			for (int i = 0; i < getChildren().size(); i++) {
+				if (getChildren().get(i) instanceof DraggablePane) {
+					DraggablePane pane = (DraggablePane) getChildren().get(i);
+					
+					if (this.cached_context.isMouseInside(pane)) {
+						return false;
+					}
 				}
 			}
-		};
+		}
 		
-		// Draggable using mouse wheel AS A BUTTON
-		this.mouseButton = GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+		return (GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
 	}
 	
 	/**

@@ -17,6 +17,14 @@ import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.nanovg.NanoVG;
@@ -98,4 +106,98 @@ public class LWJGUIUtil {
 		fillRect( context, x, y, 1, h, color );
 		fillRect( context, x+w, y, 1, h, color );
 	}
+	
+	/**
+	 * Restarts the Java virtual machine and forces it to run on the first thread. This allows your LWJGL3 program to run on Mac properly. 
+	 * 
+	 * To implement this method, simply put it on the first line of your main(args) function.
+	 * 
+	 * @param startFirstThread
+	 * @param needsOutput
+	 * @param customClass
+	 * @param args
+	 * @return
+	 */
+    public static boolean restartJVM(boolean startFirstThread, boolean needsOutput, Class<?> customClass, String... args) {
+        if ( startFirstThread ) {
+            String startOnFirstThread = System.getProperty("XstartOnFirstThread");
+            if ( startOnFirstThread != null && startOnFirstThread.equals("true") )
+                return false;
+ 
+            // if not a mac return false
+            String osName = System.getProperty("os.name");
+            if (!osName.startsWith("Mac") && !osName.startsWith("Darwin")) {
+                return false;
+            }
+        }
+ 
+        // get current jvm process pid
+        String pid = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
+        // get environment variable on whether XstartOnFirstThread is enabled
+        String env = System.getenv("JAVA_STARTED_ON_FIRST_THREAD_" + pid);
+ 
+        // if environment variable is "1" then XstartOnFirstThread is enabled
+        if (env != null && env.equals("1") && startFirstThread) {
+            return false;
+        }
+ 
+        // restart jvm with -XstartOnFirstThread
+        String separator = System.getProperty("file.separator");
+        String classpath = System.getProperty("java.class.path");
+        String mainClass = System.getenv("JAVA_MAIN_CLASS_" + pid);
+        String jvmPath = System.getProperty("java.home") + separator + "bin" + separator + "java";
+ 
+        List<String> inputArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
+ 
+        ArrayList<String> jvmArgs = new ArrayList<String>();
+ 
+ 
+        jvmArgs.add(jvmPath);
+        if ( startFirstThread )
+            jvmArgs.add("-XstartOnFirstThread");
+        jvmArgs.addAll(inputArguments);
+        jvmArgs.add("-cp");
+        jvmArgs.add(classpath);
+ 
+        if ( customClass == null ) {
+            jvmArgs.add(mainClass);
+        } else {
+            jvmArgs.add(customClass.getName());
+        }
+        for (int i = 0; i < args.length; i++) {
+            jvmArgs.add(args[i]);
+        }
+ 
+        // if you don't need console output, just enable these two lines
+        // and delete bits after it. This JVM will then terminate.
+        if ( !needsOutput ) {
+            try {
+                ProcessBuilder processBuilder = new ProcessBuilder(jvmArgs);
+                processBuilder.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                ProcessBuilder processBuilder = new ProcessBuilder(jvmArgs);
+                processBuilder.redirectErrorStream(true);
+                Process process = processBuilder.start();
+ 
+                InputStream is = process.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+                String line;
+ 
+                while ((line = br.readLine()) != null) {
+                    System.out.println(line);
+                }
+                System.exit(0);
+                process.waitFor();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+ 
+        return true;
+    }
 }

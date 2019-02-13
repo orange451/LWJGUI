@@ -22,6 +22,10 @@ public class Rectangle extends Shape {
 		this.setFill(color);
 	}
 	
+	public Rectangle( int width, int height ) {
+		this.setPrefSize(width, height);
+	}
+	
 	public void setCornerRadius( float cornerRadius ) {
 		this.cornerRadius = cornerRadius;
 	}

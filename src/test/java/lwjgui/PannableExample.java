@@ -20,8 +20,8 @@ import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.floating.DraggablePane;
-import lwjgui.scene.layout.floating.FloatingPane;
 import lwjgui.scene.layout.floating.PannablePane;
+import lwjgui.scene.shape.Rectangle;
 
 public class PannableExample {
 	public static final int WIDTH   = 320;
@@ -71,7 +71,6 @@ public class PannableExample {
 		LWJGUI.runLater(()->{
 			floatPane.offset(-floatPane.getWidth()/2, -floatPane.getHeight()/2);
 		});
-		
 
 		// Create a second draggable pane
 		DraggablePane d = new DraggablePane();
@@ -95,6 +94,11 @@ public class PannableExample {
 			b.setOnAction((event)->{
 				pane.center();
 			});
-		}	
+		}
+		
+		// This crosshair represents the center
+		pane.getChildren().add(new Rectangle(2, 2));
+		pane.getChildren().add(new Rectangle(1, 10));
+		pane.getChildren().add(new Rectangle(10, 1));
 	}
 }

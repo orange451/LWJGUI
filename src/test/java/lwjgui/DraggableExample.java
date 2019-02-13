@@ -15,7 +15,7 @@ import lwjgui.scene.Node;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
-import lwjgui.scene.layout.FloatingPane;
+import lwjgui.scene.layout.floating.FloatingPane;
 import lwjgui.scene.layout.StackPane;
 
 public class DraggableExample {

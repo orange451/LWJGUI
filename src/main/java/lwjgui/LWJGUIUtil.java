@@ -125,26 +125,25 @@ public class LWJGUIUtil {
 	 * @param args - the usual String[] args used in the main method
 	 * @return true if xstartOnFirstThread is enabled
 	 */
-    public static boolean restartJVMOnFirstThread(boolean startFirstThread, boolean needsOutput, Class<?> customClass, String... args) {
-        if ( startFirstThread ) {
-            String startOnFirstThread = System.getProperty("XstartOnFirstThread");
-            if ( startOnFirstThread != null && startOnFirstThread.equals("true") )
-                return false;
- 
-            // if not a mac return false
-            String osName = System.getProperty("os.name");
-            if (!osName.startsWith("Mac") && !osName.startsWith("Darwin")) {
-                return false;
-            }
-        }
- 
+    public static boolean restartJVMOnFirstThread(boolean needsOutput, Class<?> customClass, String... args) {
+
+		String startOnFirstThread = System.getProperty("XstartOnFirstThread");
+		if (startOnFirstThread != null && startOnFirstThread.equals("true"))
+			return false;
+
+		// if not a mac return false
+		String osName = System.getProperty("os.name");
+		if (!osName.startsWith("Mac") && !osName.startsWith("Darwin")) {
+			return false;
+		}
+
         // get current jvm process pid
         String pid = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
         // get environment variable on whether XstartOnFirstThread is enabled
         String env = System.getenv("JAVA_STARTED_ON_FIRST_THREAD_" + pid);
  
         // if environment variable is "1" then XstartOnFirstThread is enabled
-        if (env != null && env.equals("1") && startFirstThread) {
+        if (env != null && env.equals("1")) {
             return false;
         }
  
@@ -160,8 +159,7 @@ public class LWJGUIUtil {
  
  
         jvmArgs.add(jvmPath);
-        if ( startFirstThread )
-            jvmArgs.add("-XstartOnFirstThread");
+        jvmArgs.add("-XstartOnFirstThread");
         jvmArgs.addAll(inputArguments);
         jvmArgs.add("-cp");
         jvmArgs.add(classpath);

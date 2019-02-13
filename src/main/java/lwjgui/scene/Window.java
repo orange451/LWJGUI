@@ -7,6 +7,11 @@ import static lwjgui.event.listener.EventListener.EventListenerType.MOUSE_WHEEL_
 import static lwjgui.event.listener.EventListener.EventListenerType.WINDOW_CLOSE_LISTENER;
 import static lwjgui.event.listener.EventListener.EventListenerType.WINDOW_SIZE_LISTENER;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -26,6 +31,7 @@ import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.stb.STBImage;
 
+import lwjgui.Color;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.EventHelper;
 import lwjgui.event.KeyEvent;
@@ -41,6 +47,7 @@ import lwjgui.event.listener.WindowCloseListener;
 import lwjgui.event.listener.WindowFocusListener;
 import lwjgui.event.listener.WindowSizeListener;
 import lwjgui.gl.Renderer;
+import lwjgui.theme.Theme;
 
 public class Window {
 	private Context context;
@@ -332,6 +339,13 @@ public class Window {
 		if ( GLFW.glfwGetCurrentContext() != context.getWindowHandle() ) {
 			System.err.println("Error rendering window. Incorrect GLFW context");
 			return;
+		}
+		
+		// Clear screen
+		if ( isWindowAutoClear() ) {
+			Color c = Theme.currentTheme().getBackground();
+			glClearColor(c.getRed()/255f, c.getGreen()/255f, c.getBlue()/255f,1);
+			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 		}
 		
 		// Update context

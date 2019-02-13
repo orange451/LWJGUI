@@ -3,7 +3,6 @@ package lwjgui.scene.image;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.LWJGUIUtil;
 import lwjgui.scene.Context;
 import lwjgui.scene.FillableRegion;

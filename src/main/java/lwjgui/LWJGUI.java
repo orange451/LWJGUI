@@ -1,12 +1,6 @@
 package lwjgui;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -72,12 +66,6 @@ public class LWJGUI {
 				// Close window
 				if ( GLFW.glfwWindowShouldClose(context) ) {
 					windowsToClose.add(context);
-				}
-	
-				// Clear screen
-				if ( window.isWindowAutoClear() ) {
-					glClearColor(0,0,0,0);
-					glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 				}
 				
 				// Render window

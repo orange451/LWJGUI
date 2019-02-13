@@ -11,6 +11,7 @@ import lwjgui.Color;
 import lwjgui.gl.OffscreenBuffer;
 import lwjgui.gl.Renderer;
 import lwjgui.scene.Context;
+import lwjgui.theme.Theme;
 
 public class OpenGLPane extends StackPane {
 	private Vector2i oldSize = new Vector2i(1,1);
@@ -22,6 +23,8 @@ public class OpenGLPane extends StackPane {
 	
 	public OpenGLPane() {
 		resizeBuffer();
+		
+		this.setBackground(Theme.currentTheme().getPane());
 	}
 	
 	private void resizeBuffer() {
@@ -52,7 +55,11 @@ public class OpenGLPane extends StackPane {
 	@Override
 	public void setBackground(Color color) {
 		this.internalBackground = color;
-		super.setBackground(null);
+	}
+	
+	@Override
+	public Color getBackground() {
+		return null;
 	}
 	
 	@Override

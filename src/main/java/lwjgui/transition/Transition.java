@@ -1,5 +1,7 @@
 package lwjgui.transition;
 
+import lwjgui.scene.Node;
+
 /**
  * Transitions are objects that allow the smooth animation of Nodes via the use of timestamps.
  * 
@@ -8,13 +10,15 @@ package lwjgui.transition;
  */
 public abstract class Transition {
 	
+	protected Node[] nodes;
 	private long durationInMillis;
 	
 	private boolean isPlaying = false;
 	private long startStamp;
 	private long endStamp;
 	
-	public Transition(long durationInMillis) {
+	public Transition(long durationInMillis, Node...nodes) {
+		this.nodes = nodes;
 		this.durationInMillis = durationInMillis;
 	}
 	
@@ -50,13 +54,10 @@ public abstract class Transition {
 	public double getProgress() {
 		long currentTime = System.currentTimeMillis();
 		
+		double distance = endStamp = currentTime;
 		double maxDistance = endStamp - startStamp;
-		double distance = Math.max(endStamp - currentTime, 0);
-		double progress = 1f - (distance / maxDistance);
 		
-		//System.err.println(maxDistance + " " + distance + " -> " + progress);
-		
-		return progress;
+		return Math.min((distance / maxDistance), 1.0);
 	}
 	
 	public boolean isFinished() {

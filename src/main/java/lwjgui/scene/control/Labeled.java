@@ -3,6 +3,7 @@ package lwjgui.scene.control;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
+import lwjgui.geometry.VPos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.Font;
@@ -18,7 +19,7 @@ public abstract class Labeled extends Control {
 	private FontStyle fontStyle = FontStyle.REGULAR;
 	private Color textColor;
 	
-	private static final String ELIPSES = "...";
+	private static final String ELIPSES = "\u2026";
 
 	public Labeled() {
 		textColor = Theme.currentTheme().getText();
@@ -74,13 +75,14 @@ public abstract class Labeled extends Control {
 			// Get some text bounds
 			float[] bounds = getTextBounds( cached_context, text, font, fontStyle, fontSize);
 			float[] elipBnd = getTextBounds( cached_context, ELIPSES, font, fontStyle, fontSize);
-			double curWid = bounds[2]-bounds[0]+gWid + this.getPadding().getWidth();
+			//double curWid = bounds[2]-bounds[0]+gWid + this.getPadding().getWidth();
+			double curWid = getTextWidth() + this.getPadding().getWidth();
 			double prefWid = curWid;
 			this.setPrefWidth(prefWid);
 			
 			// If we're too large for the parent element...
 			if ( this.getPrefWidth() >= this.getAvailableSize().x ) {
-				this.setPrefWidth(maxWid);
+				this.setPrefWidth(prefWid);
 				float eWid = elipBnd[2]-elipBnd[0];
 				curWid += eWid;
 				
@@ -93,14 +95,13 @@ public abstract class Labeled extends Control {
 				}
 			}
 			
-			// Set final bounds
+			// Compute preferred height
 			double hei = (bounds[3] - bounds[1]) + this.padding.getHeight();
 			this.setMinHeight(hei);
-			this.setMaxHeight(hei);
+			this.setPrefHeight(hei);
 		}
 		
 		super.position(parent);
-
 	}
 	
 	private static float[] getTextBounds(Context context, String string, Font font, FontStyle style, float size) {
@@ -133,7 +134,15 @@ public abstract class Labeled extends Control {
 		if ( gWid >= 0 ) {
 			graphic.setAbsolutePosition(absX, absY);
 			graphic.render(context);
+			
 			absX += gWid;
+			
+			double yMult = 0;
+			if ( this.getAlignment().getVpos() == VPos.CENTER )
+				yMult = 0.5f;
+			if ( this.getAlignment().getVpos() == VPos.BOTTOM )
+				yMult = 1.0f;
+			absY += (this.getHeight()-fontSize)*yMult;
 		}
 
 		// Setup font

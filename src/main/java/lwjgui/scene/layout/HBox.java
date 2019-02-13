@@ -1,6 +1,5 @@
 package lwjgui.scene.layout;
 
-import lwjgui.geometry.HPos;
 import lwjgui.geometry.VPos;
 import lwjgui.scene.Node;
 

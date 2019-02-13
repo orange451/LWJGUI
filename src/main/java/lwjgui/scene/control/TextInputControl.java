@@ -232,21 +232,19 @@ public abstract class TextInputControl extends Control {
 			}
 			
 			// Word Wrap not yet properly implemented properly. Will be rewritten.
-			int vWid = (int) (this.internal.getViewport().getWidth() - 16);
+			int vWid = (int) (this.internal.getViewport().getWidth() - 24);
 			int maxWidth = (int) (wordWrap?vWid:Integer.MAX_VALUE);
 			int index = 0;
-			int curWid = 0;
-			while ( index < glyphEntry.size() ) {
+			while ( index < originalText.length() ) {
 				GlyphData entry = glyphEntry.get(index);
 				
-				if ( curWid >= maxWidth ) {
+				if ( entry.x()+entry.width() >= maxWidth ) {
 					addRow(originalText.substring(0, index));
 					addRow(originalText.substring(index,originalText.length()));
 					//index--;
 					return;
 				}
 				
-				curWid += entry.width();
 				index++;
 			}
 			

@@ -1,6 +1,7 @@
 package lwjgui.scene.layout;
 
 import lwjgui.collections.ObservableList;
+import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
 
 public class BorderPane extends Pane {
@@ -20,12 +21,14 @@ public class BorderPane extends Pane {
 		this.setFillToParentWidth(true);
 		
 		this.internalVBox = new VBox();
+		this.internalVBox.setAlignment(Pos.CENTER);
 		this.internalVBox.setBackground(null);
 		this.internalVBox.setFillToParentHeight(true);
 		this.internalVBox.setFillToParentWidth(true);
 		this.children.add(this.internalVBox);
 		
 		this.internalHBox = new HBox();
+		this.internalHBox.setAlignment(Pos.CENTER);
 		this.internalHBox.setBackground(null);
 		this.internalHBox.setFillToParentHeight(true);
 		this.internalHBox.setFillToParentWidth(true);
@@ -104,9 +107,6 @@ public class BorderPane extends Pane {
 	private void update() {
 		this.internalHBox.getChildren().clear();
 		this.internalVBox.getChildren().clear();
-		
-		this.internalHBox.setAlignment(this.getAlignment());
-		this.internalVBox.setAlignment(this.getAlignment());
 		
 		this.internalHBox.setSpacing(spacing);
 		this.internalVBox.setSpacing(spacing);

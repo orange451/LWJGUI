@@ -113,7 +113,7 @@ public abstract class Region extends Parent {
 		super.resize();
 	}
 	
-	protected double getMinimumPotentialWidth() {
+	protected double getMaximumPotentialWidth() {
 		float totalWidth = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
@@ -128,7 +128,7 @@ public abstract class Region extends Parent {
 		return totalWidth;
 	}
 	
-	protected double getMinimumPotentialHeight() {
+	protected double getMaximumPotentialHeight() {
 		float totalHeight = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);

@@ -111,27 +111,18 @@ public class BorderPane extends Pane {
 		this.internalHBox.setSpacing(spacing);
 		this.internalVBox.setSpacing(spacing);
 		
+		// Top
 		if ( top != null ) {
 			this.internalVBox.getChildren().add(top);
 		}
 		
-		if ( center != null || left != null || right != null ) {
-			this.internalVBox.getChildren().add(this.internalHBox);
-			
-			if ( this.left != null ) {
-				
-				this.internalHBox.getChildren().add(sp(left, false));
-			}
-			
-			if ( this.center != null ) {
-				this.internalHBox.getChildren().add(sp(center, true));
-			}
-			
-			if ( this.right != null ) {
-				this.internalHBox.getChildren().add(sp(right, false));
-			}
-		}
+		// Center box
+		this.internalVBox.getChildren().add(this.internalHBox);
+		this.internalHBox.getChildren().add(sp(left, false));
+		this.internalHBox.getChildren().add(sp(center, true));
+		this.internalHBox.getChildren().add(sp(right, false));
 		
+		// Bottom
 		if ( bottom != null ) {
 			this.internalVBox.getChildren().add(bottom);
 		}
@@ -142,8 +133,10 @@ public class BorderPane extends Pane {
 		ret.setFillToParentHeight(true);
 		ret.setFillToParentWidth(fitWid);
 		ret.setAlignment(this.alignment);
-		ret.getChildren().add(node);
-		ret.setPrefWidth(node.getPrefWidth());
+		if ( node != null ) {
+			ret.getChildren().add(node);
+			ret.setPrefWidth(node.getPrefWidth());
+		}
 		ret.setBackground(null);
 		ret.setPrefHeight(1);
 		

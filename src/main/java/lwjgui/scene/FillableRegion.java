@@ -42,7 +42,7 @@ public abstract class FillableRegion extends Region {
 			LayoutBounds bounds = parent.getInnerBounds();
 			double potential = 0;
 			if ( parent instanceof FillableRegion ) {
-				potential = ((FillableRegion)parent).getMinimumPotentialWidth();
+				potential = ((FillableRegion)parent).getMaximumPotentialWidth();
 			}
 			double wid = bounds.getWidth()-potential;
 			this.size.x = wid;
@@ -51,7 +51,7 @@ public abstract class FillableRegion extends Region {
 			LayoutBounds bounds = parent.getInnerBounds();
 			double potential = 0;
 			if ( parent instanceof FillableRegion ) {
-				potential = ((FillableRegion)parent).getMinimumPotentialHeight();
+				potential = ((FillableRegion)parent).getMaximumPotentialHeight();
 			}
 			double hei = bounds.getHeight()-potential;
 			this.size.y = hei;

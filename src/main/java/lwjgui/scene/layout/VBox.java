@@ -38,17 +38,12 @@ public class VBox extends DirectionalBox {
 	}
 	
 	@Override
-	protected double getMaxElementHeight() {
-		return getMinimumPotentialHeight();
+	protected double getMaximumPotentialHeight() {
+		return super.getMaximumPotentialHeight() + (Math.max(0, children.size()-1)*spacing);
 	}
 	
 	@Override
-	protected double getMinimumPotentialHeight() {
-		return super.getMinimumPotentialHeight() + (Math.max(0, children.size()-1)*spacing);
-	}
-	
-	@Override
-	protected double getMinimumPotentialWidth() {
+	protected double getMaximumPotentialWidth() {
 		//return this.getMaxElementWidth();
 		return getWidth()-this.getInnerBounds().getWidth();
 	}

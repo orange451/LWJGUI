@@ -14,7 +14,7 @@ public class Pane extends FillableRegion {
 	
 	public Pane() {
 		this.setBackground(Theme.currentTheme().getPane());
-		this.setPrefSize(100, 100);
+		this.setPrefSize(1, 1);
 		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 	}
 	

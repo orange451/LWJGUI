@@ -136,7 +136,7 @@ class TreeNode<E> extends HBox {
 		getChildren().add(stateButton);
 		getChildren().add(item.label);
 		
-		stateButton.setMousePressedEvent( event -> {
+		stateButton.setOnMousePressed( event -> {
 			if ( event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
 				if ( item.getItems().size() == 0 )
 					return;
@@ -147,7 +147,7 @@ class TreeNode<E> extends HBox {
 			event.consume();
 		});
 		
-		this.setMousePressedEvent(new EventHandler<MouseEvent>() {
+		this.setOnMousePressed(new EventHandler<MouseEvent>() {
 			//long lastPressed = -1;
 			
 			@Override

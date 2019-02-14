@@ -32,7 +32,7 @@ public class Menu extends MenuItem {
 			}
 		});
 		
-		this.setMousePressedEvent( event -> {
+		this.setOnMousePressed( event -> {
 			open();
 		});
 		

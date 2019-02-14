@@ -1025,17 +1025,17 @@ public abstract class TextInputControl extends Control {
 			this.setPadding(new Insets(4,4,4,4));
 
 			// Enter
-			this.getViewport().setMouseEnteredEvent(event -> {
+			this.getViewport().setOnMouseEntered(event -> {
 				getScene().setCursor(Cursor.IBEAM);
 			});
 
 			// Leave
-			this.getViewport().setMouseExitedEvent(event -> {
+			this.getViewport().setOnMouseExited(event -> {
 				getScene().setCursor(Cursor.NORMAL);
 			});
 			
 			// Clicked
-			this.getViewport().setMousePressedEvent(event -> {
+			this.getViewport().setOnMousePressed(event -> {
 				if ( cached_context == null )
 					return;
 				
@@ -1053,7 +1053,7 @@ public abstract class TextInputControl extends Control {
 			});
 			
 			// Drag mouse
-			this.getViewport().setMouseDraggedEvent(event -> {
+			this.getViewport().setOnMouseDragged(event -> {
 				caretPosition = getCaretAtMouse();
 				selectionEndPosition = caretPosition;
 			});

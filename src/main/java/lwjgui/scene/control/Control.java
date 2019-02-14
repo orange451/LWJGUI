@@ -10,7 +10,7 @@ public abstract class Control extends FillableRegion {
 	public Control() {
 		this.flag_clip = true;
 		
-		this.setMousePressedEvent(e -> {
+		this.setOnMousePressed(e -> {
 			if ( e.button == GLFW.GLFW_MOUSE_BUTTON_RIGHT ) {
 				if ( context != null ) {
 					context.show(getScene(), getX(), getY()+getHeight());

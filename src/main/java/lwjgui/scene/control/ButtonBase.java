@@ -36,7 +36,7 @@ public abstract class ButtonBase extends Labeled {
 		this.setMinSize(32, 24);
 		this.setPadding(new Insets(4,8,4,8));
 		
-		this.setMouseReleasedEvent( new EventHandler<MouseEvent>() {
+		this.setOnMouseReleased( new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				if ( disabled )

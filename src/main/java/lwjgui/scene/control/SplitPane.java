@@ -62,7 +62,7 @@ public class SplitPane extends Control {
 			}
 		});
 
-		this.setMouseReleasedEvent(event -> {
+		this.setOnMouseReleased(event -> {
 			System.out.println("A");
 		});
 

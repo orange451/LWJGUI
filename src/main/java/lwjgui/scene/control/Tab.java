@@ -71,7 +71,7 @@ public class Tab {
 			this.x.setFontSize(16);
 			this.internal.getChildren().add(x);
 			
-			this.x.setMouseReleasedEvent(event -> {
+			this.x.setOnMouseReleased(event -> {
 				boolean close = true;
 				
 				if ( closeRequestEvent != null ) {
@@ -127,9 +127,9 @@ public class Tab {
 			int w = (int) this.getWidth();
 			int h = (int) this.getHeight();
 
-			internal.setMousePressedEvent(this.mousePressedEvent);
-			internal.setMouseReleasedEvent(this.mouseReleasedEvent);
-			internal.setMouseDraggedEvent(this.mouseDraggedEvent);
+			internal.setOnMousePressed(this.mousePressedEvent);
+			internal.setOnMouseReleased(this.mouseReleasedEvent);
+			internal.setOnMouseDragged(this.mouseDraggedEvent);
 			
 			// Background
 			NanoVG.nvgBeginPath(vg);

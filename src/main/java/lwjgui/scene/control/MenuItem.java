@@ -33,7 +33,7 @@ public class MenuItem extends Node {
 		
 		background = Theme.currentTheme().getPane();
 		
-		this.setMouseReleasedEvent( event -> {
+		this.setOnMouseReleased( event -> {
 			if ( event.button == 0 ) {
 				if ( buttonEvent != null ) 
 					EventHelper.fireEvent(buttonEvent, new ButtonEvent());

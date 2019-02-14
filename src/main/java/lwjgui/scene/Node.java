@@ -735,7 +735,7 @@ public abstract class Node implements Resizable {
 		return mouseEnteredEvent;
 	}
 	
-	public void setMouseEnteredEvent( EventHandler<Event> event ) {
+	public void setOnMouseEntered( EventHandler<Event> event ) {
 		this.mouseEnteredEvent = event;
 	}
 	
@@ -743,7 +743,7 @@ public abstract class Node implements Resizable {
 		return this.mouseExitedEvent;
 	}
 	
-	public void setMouseExitedEvent( EventHandler<Event> event ) {
+	public void setOnMouseExited( EventHandler<Event> event ) {
 		this.mouseExitedEvent = event;
 	}
 	
@@ -751,7 +751,7 @@ public abstract class Node implements Resizable {
 		return this.mousePressedEvent;
 	}
 	
-	public void setMousePressedEvent( EventHandler<MouseEvent> event ) {
+	public void setOnMousePressed( EventHandler<MouseEvent> event ) {
 		this.mousePressedEvent = event;
 	}
 	
@@ -759,7 +759,7 @@ public abstract class Node implements Resizable {
 		return this.mouseReleasedEvent;
 	}
 	
-	public void setMouseReleasedEvent( EventHandler<MouseEvent> event ) {
+	public void setOnMouseReleased( EventHandler<MouseEvent> event ) {
 		this.mouseReleasedEvent = event;
 	}
 	
@@ -775,7 +775,7 @@ public abstract class Node implements Resizable {
 		return this.mouseScrollEvent;
 	}
 	
-	public void setMouseScrollGestureEvent( EventHandler<ScrollEvent> event ) {
+	public void setOnMouseScrolled( EventHandler<ScrollEvent> event ) {
 		this.mouseScrollEvent = event;
 	}
 	
@@ -783,7 +783,7 @@ public abstract class Node implements Resizable {
 		return this.mouseDraggedEvent;
 	}
 	
-	public void setMouseDraggedEvent( EventHandler<MouseEvent> event ) {
+	public void setOnMouseDragged( EventHandler<MouseEvent> event ) {
 		this.mouseDraggedEvent = event;
 	}
 	

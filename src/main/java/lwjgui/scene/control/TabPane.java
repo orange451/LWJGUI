@@ -58,17 +58,17 @@ public class TabPane extends Control {
 				tabButtons.getChildren().add(changed.button);
 				changed.tabPane = TabPane.this;
 				
-				changed.button.setMousePressedEvent(event -> {
+				changed.button.setOnMousePressed(event -> {
 					select(changed);
 					event.consume();
 				});
 				
-				changed.button.setMouseReleasedEvent(event -> {
+				changed.button.setOnMouseReleased(event -> {
 					select(changed);
 					event.consume();
 				});
 				
-				changed.button.setMouseDraggedEvent(event -> {
+				changed.button.setOnMouseDragged(event -> {
 					System.out.println("Not implemented yet");
 				});
 			}

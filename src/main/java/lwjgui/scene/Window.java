@@ -452,12 +452,22 @@ public class Window {
 		}
 	}
 	
+	/**
+	 * Adds the following files as icons of varying sizes for the window.
+	 * 
+	 * @param iconFiles - the array of files to check/load
+	 */
+	public void setIcon(File[] iconFiles) {
+		setIcon(null, iconFiles);
+	}
 	
 	/**
 	 * Adds the following files as icons of varying sizes for the window.
-	 * @param iconFiles
+	 * 
+	 * @param filetype - only uses the Files that end with this file extension. Set to null to just use any file.
+	 * @param iconFiles - the array of files to check/load
 	 */
-	public void setIcon(File[] iconFiles) {
+	public void setIcon(String filetype, File[] iconFiles) {
 		int numIcons = iconFiles.length;
 		
 		GLFWImage.Buffer icons = GLFWImage.malloc(numIcons);
@@ -471,8 +481,10 @@ public class Window {
 		for(int i = 0; i < numIcons; i++) {
 			File f = iconFiles[i];
 			
-			ByteBuffer data = datas[i] = STBImage.stbi_load(f.getAbsolutePath(), w, h, c, 4);
-			icons.get(i).set(w[0], h[0], data);
+			if (filetype != null && f.getName().endsWith(filetype)) {
+				ByteBuffer data = datas[i] = STBImage.stbi_load(f.getAbsolutePath(), w, h, c, 4);
+				icons.get(i).set(w[0], h[0], data);
+			}
 		}
 		
 		glfwSetWindowIcon(context.getWindowHandle(), icons);

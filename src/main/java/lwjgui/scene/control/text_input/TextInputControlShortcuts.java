@@ -21,31 +21,31 @@ class TextInputControlShortcuts {
 		// Delete
 		if (event.key == GLFW.GLFW_KEY_DELETE ) {
 			tic.deleteNextCharacter();
-			//consume();
+			event.consume();
 		}
 		
 		// Select All
 		if (event.key == GLFW.GLFW_KEY_A && event.isCtrlDown) {
 			tic.selectAll();
-			//consume();
+			event.consume();
 		}
 		
 		// Paste
 		if (event.key == GLFW.GLFW_KEY_V && event.isCtrlDown ) {
 			tic.paste();
-			//consume();
+			event.consume();
 		}
 		
 		// Copy
 		if (event.key == GLFW.GLFW_KEY_C && event.isCtrlDown ) {
 			tic.copy();
-			//consume();
+			event.consume();
 		}
 		
 		// Cut
 		if (event.key == GLFW.GLFW_KEY_X && event.isCtrlDown ) {
 			tic.cut();
-			//consume();
+			event.consume();
 		}
 		
 		// Undo/Redo
@@ -56,7 +56,7 @@ class TextInputControlShortcuts {
 				tic.undo();
 			}
 			
-			//consume();
+			event.consume();
 		}
 		
 		// Home
@@ -74,7 +74,7 @@ class TextInputControlShortcuts {
 				tic.selectionEndPosition = tic.caretPosition;
 			}
 			
-			//consume();
+			event.consume();
 		}
 		
 		// End
@@ -92,7 +92,7 @@ class TextInputControlShortcuts {
 				tic.selectionEndPosition = tic.caretPosition;
 			}
 			
-			//consume();
+			event.consume();
 		}
 		
 		// Left
@@ -109,7 +109,7 @@ class TextInputControlShortcuts {
 				}
 			}
 			
-			//consume();
+			event.consume();
 		}
 		
 		// Right
@@ -126,7 +126,7 @@ class TextInputControlShortcuts {
 				}
 			}
 			
-			//consume();
+			event.consume();
 		}
 		
 		// Up
@@ -150,7 +150,7 @@ class TextInputControlShortcuts {
 				tic.selectionEndPosition = tic.caretPosition;
 			}
 			
-			//consume();
+			event.consume();
 		}
 		
 		// Down
@@ -174,7 +174,7 @@ class TextInputControlShortcuts {
 				tic.selectionEndPosition = tic.caretPosition;
 			}
 			
-			//consume();
+			event.consume();
 		}
 	}
 }

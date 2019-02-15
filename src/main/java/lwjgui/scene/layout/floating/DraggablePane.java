@@ -3,15 +3,36 @@ package lwjgui.scene.layout.floating;
 import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFW;
 
+import lwjgui.event.MouseEvent;
 import lwjgui.scene.Node;
 
 public class DraggablePane extends StickyPane {
-	private boolean dragging;
-	private boolean failedClick;
-	private Vector2d dragOffset;
-	
+	private Vector2d anchor = new Vector2d();
+
 	public DraggablePane() {
-		this.dragOffset = new Vector2d();
+		setOnMousePressedInternal(e -> {
+			if (isDragInputDown() && cached_context.getSelected() == null) {
+				select(e);
+			}
+		});
+		
+		setOnMouseDraggedInternal(e -> {
+			drag(e);
+		});
+	}
+	
+	protected void select(MouseEvent e) {
+		anchor.set(e.mouseX - this.getX(), e.mouseY - this.getY());
+		cached_context.setSelected(this);
+	}
+
+	@Override
+	public void position(Node parent) {
+		super.position(parent);
+		
+		if (!isDragInputDown() && cached_context.isSelected(this)) {
+			cached_context.setSelected(null);
+		}
 	}
 	
 	/**
@@ -19,43 +40,11 @@ public class DraggablePane extends StickyPane {
 	 * 
 	 * @return true if dragging
 	 */
-	public boolean isDraggingControlsTriggered() {		
+	protected boolean isDragInputDown() {		
 		return (GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
 	}
-	
-	public boolean isBeingDragged() {
-		return dragging;
-	}
-	
-	protected void drag() {
-		double mouseX = this.cached_context.getMouseX();
-		double mouseY = this.cached_context.getMouseY();
-		
-		if (isDraggingControlsTriggered()) {
-			if ( !isBeingDragged() && !failedClick) {
-				if (this.cached_context.isMouseInside(this) && this.cached_context.getHovered().isDescendentOf(this)) {
-					double diffx = mouseX - this.getX();
-					double diffy = mouseY - this.getY();
-					
-					dragOffset.set(diffx,diffy);
-					dragging = true;
-				} else {
-					failedClick = true;
-				}
-			}
-		} else {
-			dragging = false;
-			failedClick = false;
-		}
-		
-		if (dragging) {
-			this.setAbsolutePosition(mouseX-dragOffset.x, mouseY-dragOffset.y);
-		}
-	}
-	
-	@Override
-	public void position(Node parent) {
-		super.position(parent);
-		drag();
+
+	protected void drag(MouseEvent e) {
+		setAbsolutePosition(e.mouseX - anchor.x, e.mouseY - anchor.y);
 	}
 }

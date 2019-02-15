@@ -185,7 +185,7 @@ class TreeNode<E> extends HBox {
 						// Double click
 						setOnMouseClicked(cc -> {
 							EventHandler<MouseEvent> t = item.getOnMouseClicked();
-							MouseEvent ev = new MouseEvent(cc.button,cc.getClickCount());
+							MouseEvent ev = new MouseEvent(cc.mouseX, cc.mouseY, cc.button,cc.getClickCount());
 							if ( t != null )
 								t.handle(ev);
 							

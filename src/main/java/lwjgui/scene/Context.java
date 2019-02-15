@@ -233,10 +233,7 @@ public class Context {
 	 * @return
 	 */
 	public boolean isSelected(Node node) {
-		if ( selected == null ) {
-			return false;
-		}
-		return node.equals(getSelected());
+		return (node == selected);
 	}
 
 	/**

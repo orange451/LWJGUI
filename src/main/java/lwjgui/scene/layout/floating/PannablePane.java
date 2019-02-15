@@ -15,14 +15,8 @@ public class PannablePane extends DraggablePane {
 		});
 	}
 	
-	public boolean isDraggingControlsTriggered() {
-		//Doesn't allow the PannablePane to be dragged if the mouse is over one of its DraggablePane children.
-		if (!this.isBeingDragged()) {
-			if ( !this.equals(this.cached_context.getHovered()) )
-				return false;
-		}
-		
-		return super.isDraggingControlsTriggered();
+	protected boolean getDragButton() {	
+		return false;
 	}
 	
 	/**

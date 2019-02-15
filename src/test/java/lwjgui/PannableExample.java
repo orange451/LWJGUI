@@ -62,9 +62,11 @@ public class PannableExample {
 		
 		// Create a draggable pane
 		DraggablePane floatPane = new DraggablePane();
-		floatPane.setBackground(Color.green);
+		floatPane.setBackground(Color.GREEN);
 		floatPane.setPrefSize(64, 64);
-		floatPane.getChildren().add(new Label("I'm draggable!"));
+		Label label = new Label("I'm draggable!");
+		label.setMouseTransparent(true);
+		floatPane.getChildren().add(label);
 		pane.getChildren().add(floatPane);
 		
 		// Center the floating pane
@@ -75,9 +77,11 @@ public class PannableExample {
 		// Create a second draggable pane
 		DraggablePane d = new DraggablePane();
 		d.setAbsolutePosition(32, 48);
-		d.setBackground(Color.red);
+		d.setBackground(Color.RED);
 		d.setPrefSize(64, 64);
-		d.getChildren().add(new Label("Me too!"));
+		Label label2 = new Label("Me too!");
+		label2.setMouseTransparent(true);
+		d.getChildren().add(label2);
 		pane.getChildren().add(d);
 		
 		// Overlapping UI

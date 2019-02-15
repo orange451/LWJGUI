@@ -1,4 +1,4 @@
-package lwjgui.scene.control;
+package lwjgui.scene.control.text_input;
 
 import lwjgui.Color;
 import lwjgui.LWJGUIUtil;
@@ -6,6 +6,7 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.Font;
 import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;

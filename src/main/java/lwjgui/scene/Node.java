@@ -12,6 +12,7 @@ import lwjgui.event.EventHelper;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.event.ScrollEvent;
+import lwjgui.event.TypeEvent;
 import lwjgui.geometry.HPos;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
@@ -57,11 +58,14 @@ public abstract class Node implements Resizable {
 	protected EventHandler<ScrollEvent> mouseScrollEvent;
 	protected EventHandler<ScrollEvent> mouseScrollEventInternal;
 	
-	protected EventHandler<KeyEvent> textInputEvent;
-	protected EventHandler<KeyEvent> textInputEventInternal;
+	protected EventHandler<TypeEvent> textInputEvent;
+	protected EventHandler<TypeEvent> textInputEventInternal;
 	
 	protected EventHandler<KeyEvent> keyPressedEvent;
 	protected EventHandler<KeyEvent> keyPressedEventInternal;
+	
+	protected EventHandler<KeyEvent> keyRepeatEvent;
+	protected EventHandler<KeyEvent> keyRepeatEventInternal;
 	
 	protected EventHandler<KeyEvent> keyReleasedEvent;
 	protected EventHandler<KeyEvent> keyReleasedEventInternal;
@@ -850,11 +854,11 @@ public abstract class Node implements Resizable {
 		this.mouseDraggedEvent = event;
 	}
 	
-	public EventHandler<KeyEvent> getOnTextInput() {
+	public EventHandler<TypeEvent> getOnTextInput() {
 		return this.textInputEvent;
 	}
 	
-	public void setOnTextInput( EventHandler<KeyEvent> event ) {
+	public void setOnTextInput( EventHandler<TypeEvent> event ) {
 		this.textInputEvent = event;
 	}
 	
@@ -864,6 +868,18 @@ public abstract class Node implements Resizable {
 	
 	public void setOnKeyPressed( EventHandler<KeyEvent> event ) {
 		this.keyPressedEvent = event;
+	}
+	
+	protected EventHandler<KeyEvent> getKeyRepeatEvent() {
+		return keyRepeatEvent;
+	}
+	
+	protected void setOnKeyRepeat(EventHandler<KeyEvent> keyRepeatEvent) {
+		this.keyRepeatEvent = keyRepeatEvent;
+	}
+	
+	protected void setOnKeyPressedAndRepeat(EventHandler<KeyEvent> keyPressAndRepeatEvent) {
+		keyPressedEvent = keyRepeatEvent = keyPressAndRepeatEvent;
 	}
 	
 	public EventHandler<KeyEvent> getOnKeyReleased() {
@@ -936,11 +952,11 @@ public abstract class Node implements Resizable {
 		this.mouseScrollEventInternal = mouseScrollEventInternal;
 	}
 	
-	protected EventHandler<KeyEvent> getTextInputEventInternal() {
+	protected EventHandler<TypeEvent> getTextInputEventInternal() {
 		return textInputEventInternal;
 	}
 	
-	protected void setOnTextInputInternal(EventHandler<KeyEvent> textInputEventInternal) {
+	protected void setOnTextInputInternal(EventHandler<TypeEvent> textInputEventInternal) {
 		this.textInputEventInternal = textInputEventInternal;
 	}
 	
@@ -951,7 +967,19 @@ public abstract class Node implements Resizable {
 	protected void setOnKeyPressedInternal(EventHandler<KeyEvent> keyPressedEventInternal) {
 		this.keyPressedEventInternal = keyPressedEventInternal;
 	}
+	
+	protected EventHandler<KeyEvent> getKeyRepeatEventInternal() {
+		return keyRepeatEventInternal;
+	}
+	
+	protected void setOnKeyRepeatInternal(EventHandler<KeyEvent> keyRepeatEventInternal) {
+		this.keyRepeatEventInternal = keyRepeatEventInternal;
+	}
 
+	protected void setOnKeyPressedAndRepeatInternal(EventHandler<KeyEvent> keyPressAndRepeatEventInternal) {
+		keyPressedEventInternal = keyRepeatEventInternal = keyPressAndRepeatEventInternal;
+	}
+	
 	protected EventHandler<KeyEvent> getKeyReleasedEventInternal() {
 		return keyReleasedEventInternal;
 	}

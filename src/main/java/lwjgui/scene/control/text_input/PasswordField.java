@@ -1,4 +1,4 @@
-package lwjgui.scene.control;
+package lwjgui.scene.control.text_input;
 
 import lwjgui.scene.layout.Font;
 import lwjgui.scene.layout.FontStyle;

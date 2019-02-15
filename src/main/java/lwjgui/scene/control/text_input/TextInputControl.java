@@ -1,4 +1,4 @@
-package lwjgui.scene.control;
+package lwjgui.scene.control.text_input;
 
 import java.util.ArrayList;
 
@@ -12,29 +12,32 @@ import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.StateStack;
 import lwjgui.event.EventHandler;
-import lwjgui.event.KeyEvent;
+import lwjgui.event.TypeEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Cursor;
+import lwjgui.scene.control.Control;
+import lwjgui.scene.control.IndexRange;
+import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.layout.Font;
 import lwjgui.scene.layout.FontStyle;
 import lwjgui.scene.layout.Pane;
 import lwjgui.theme.Theme;
 
 public abstract class TextInputControl extends Control {
-	private ArrayList<String> lines;
+	ArrayList<String> lines;
 	private ArrayList<ArrayList<GlyphData>> glyphData;
 	private ArrayList<String> linesDraw;
 	private String source;
-	private int caretPosition;
+	int caretPosition;
 	protected boolean editing = false;
 	protected boolean editable = true;
 	
 	private boolean wordWrap; // Buggy AF
 	
-	private int selectionStartPosition;
-	private int selectionEndPosition;
+	int selectionStartPosition;
+	int selectionEndPosition;
 	
 	protected TextAreaScrollPane internal;
 	protected TextAreaContent fakeBox;
@@ -59,6 +62,10 @@ public abstract class TextInputControl extends Control {
 	private boolean underlineEnabled = false;
 	
 	public TextInputControl() {
+		this(new TextInputControlShortcuts());
+	}
+	
+	public TextInputControl(TextInputControlShortcuts specialKeyInputs) {
 		this.undoStack = new StateStack<TextState>();
 		this.setText("");
 		this.saveState();
@@ -72,34 +79,29 @@ public abstract class TextInputControl extends Control {
 		
 		this.flag_clip = true;
 		
-		this.setOnTextInput( new EventHandler<KeyEvent>() {
+		setOnTextInputInternal( new EventHandler<TypeEvent>() {
 			int charCount = Integer.MAX_VALUE/2;
 
 			@Override
-			public void handle(KeyEvent event) {
-				if ( !editing )
-					return;
+			public void handle(TypeEvent event) {
+				if (!editing) return;
 				
 				charCount++;
 				deleteSelection();
-				insertText(caretPosition, ""+(char)event.getKey());
+				insertText(caretPosition, event.getCharacterString());
 				setCaretPosition(caretPosition+1);
 				deselect();
 				
 				// If you press space or if it hasen't saved in 10 chars --> Save history
-				if ( (char)event.getKey() == ' ' || charCount > 6 ) {
+				if (event.character == ' ' || charCount > 6) {
 					charCount = 0;
 					saveState();
 				}
 			}
 		});
 		
-		this.setOnKeyPressed( event -> {
-			TextInputControlKeyInput t = new TextInputControlKeyInput(event.key, event.mods, event.isCtrlDown, event.isAltDown, event.isShiftDown);
-			if ( t.isConsumed() ) {
-				event.consume();
-				return;
-			}
+		setOnKeyPressedAndRepeatInternal( event -> {
+			specialKeyInputs.process(this, event);
 		});
 	}
 	
@@ -658,7 +660,7 @@ public abstract class TextInputControl extends Control {
 		return c;
 	}
 	
-	private int getPixelOffsetFromCaret( int caret ) {
+	int getPixelOffsetFromCaret( int caret ) {
 		int row = getRowFromCaret( caret );
 		int offset = getIndexFromCaret( caret );
 		
@@ -671,7 +673,7 @@ public abstract class TextInputControl extends Control {
 		return temp;
 	}
 	
-	private int getCaretFromPixelOffset( int row, int pixelX ) {
+	int getCaretFromPixelOffset( int row, int pixelX ) {
 		String line = linesDraw.get(row);
 		
 		if ( line.length() == 0 )
@@ -878,177 +880,6 @@ public abstract class TextInputControl extends Control {
 	abstract class TextParser {
 		public abstract String parseText(String input);
 	}
-	
-	protected class TextInputControlKeyInput extends KeyEvent {
-		public TextInputControlKeyInput(int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
-			super(key, mods, isCtrlDown, isAltDown, isShiftDown);
-			
-			if ( !editing )
-				return;
-			
-			// Return if consued
-			if ( this.isConsumed() )
-				return;
-			
-			// Backspace
-			if ( key == GLFW.GLFW_KEY_BACKSPACE ) {
-				deletePreviousCharacter();
-				this.consume();
-			}
-			
-			// Delete
-			if ( key == GLFW.GLFW_KEY_DELETE ) {
-				deleteNextCharacter();
-				this.consume();
-			}
-			
-			// Select All
-			if ( key == GLFW.GLFW_KEY_A && isCtrlDown) {
-				selectAll();
-				this.consume();
-			}
-			
-			// Paste
-			if ( key == GLFW.GLFW_KEY_V && isCtrlDown ) {
-				paste();
-				this.consume();
-			}
-			
-			// Copy
-			if ( key == GLFW.GLFW_KEY_C && isCtrlDown ) {
-				copy();
-				this.consume();
-			}
-			
-			// Cut
-			if ( key == GLFW.GLFW_KEY_X && isCtrlDown ) {
-				cut();
-				this.consume();
-			}
-			
-			// Undo/Redo
-			if ( key == GLFW.GLFW_KEY_Z && isCtrlDown ) {
-				if ( isShiftDown ) {
-					redo();
-				} else {
-					undo();
-				}
-				this.consume();
-			}
-			
-			// Home
-			if ( key == GLFW.GLFW_KEY_HOME ) {
-				
-				if ( isCtrlDown ) {
-					caretPosition = 0;
-				} else {
-					home();
-				}
-
-				if ( !isShiftDown )
-					deselect();
-				else
-					selectionEndPosition = caretPosition;
-				
-				this.consume();
-			}
-			
-			// End
-			if ( key == GLFW.GLFW_KEY_END ) {
-					
-				if ( isCtrlDown ) {
-					caretPosition = getLength();
-				} else {
-					end();
-				}
-				
-				if ( !isShiftDown )
-					deselect();
-				else
-					selectionEndPosition = caretPosition;
-
-				this.consume();
-			}
-			
-			// Left
-			if ( key == GLFW.GLFW_KEY_LEFT ) {
-				if ( !isShiftDown && getSelection().getLength()>0 ) {
-					deselect();
-				} else {
-					setCaretPosition(caretPosition-1);
-					if ( isShiftDown ) {
-						selectionEndPosition = caretPosition;
-					} else {
-						selectionStartPosition = caretPosition;
-						selectionEndPosition = caretPosition;
-					}
-				}
-				this.consume();
-			}
-			
-			// Right
-			if ( key == GLFW.GLFW_KEY_RIGHT ) {
-				if ( !isShiftDown && getSelection().getLength()>0 ) {
-					deselect();
-				} else {
-					setCaretPosition(caretPosition+1);
-					if ( isShiftDown ) {
-						selectionEndPosition = caretPosition;
-					} else {
-						selectionStartPosition = caretPosition;
-						selectionEndPosition = caretPosition;
-					}
-				}
-				this.consume();
-			}
-			
-			// Up
-			if ( key == GLFW.GLFW_KEY_UP ) {
-				if ( !isShiftDown && getSelection().getLength()>0 ) {
-					deselect();
-				}
-				
-				int nextRow = getRowFromCaret(caretPosition)-1;
-				if ( nextRow < 0 ) {
-					setCaretPosition(0);
-				} else {
-					int pixelX = (int) getPixelOffsetFromCaret(caretPosition);
-					int index = getCaretFromPixelOffset(nextRow, pixelX);
-					setCaretPosition(index);
-				}
-				if ( isShiftDown ) {
-					selectionEndPosition = caretPosition;
-				} else {
-					selectionStartPosition = caretPosition;
-					selectionEndPosition = caretPosition;
-				}
-				this.consume();
-			}
-			
-			// Down
-			if ( key == GLFW.GLFW_KEY_DOWN ) {
-				if ( !isShiftDown && getSelection().getLength()>0 ) {
-					deselect();
-				}
-				
-				int nextRow = getRowFromCaret(caretPosition)+1;
-				if ( nextRow >= lines.size() ) {
-					setCaretPosition(getLength());
-				} else {
-					int pixelX = (int) getPixelOffsetFromCaret(caretPosition);
-					int index = getCaretFromPixelOffset(nextRow, pixelX);
-					setCaretPosition(index);
-				}
-				if ( isShiftDown ) {
-					selectionEndPosition = caretPosition;
-				} else {
-					selectionStartPosition = caretPosition;
-					selectionEndPosition = caretPosition;
-				}
-				this.consume();
-			}
-		}
-	};
 	
 	class TextAreaScrollPane extends ScrollPane {
 		

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCharCallback;
 import org.lwjgl.glfw.GLFWCharModsCallbackI;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -37,6 +38,7 @@ import lwjgui.event.EventHelper;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.event.ScrollEvent;
+import lwjgui.event.TypeEvent;
 import lwjgui.event.listener.CursorPositionListener;
 import lwjgui.event.listener.EventListener;
 import lwjgui.event.listener.EventListener.EventListenerType;
@@ -98,7 +100,7 @@ public class Window {
 			}
 		});
 		
-		GLFW.glfwSetCharModsCallback(context.getWindowHandle(), new GLFWCharModsCallbackI() {
+		/*GLFW.glfwSetCharModsCallback(context.getWindowHandle(), new GLFWCharModsCallbackI() {
 			@Override
 			public void invoke(long handle, int key, int mods) {
 				boolean isCtrlDown = (mods & GLFW.GLFW_MOD_CONTROL) == GLFW.GLFW_MOD_CONTROL || (mods & GLFW.GLFW_MOD_SUPER) == GLFW.GLFW_MOD_SUPER;
@@ -110,7 +112,7 @@ public class Window {
 
 			private void notifyTextInput(Node root, int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
 				boolean consumed = false;
-				KeyEvent event = new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown);
+				KeyEvent event = new KeyEvent(key, -1, mods, isCtrlDown, isAltDown, isShiftDown);
 				
 				if (root.textInputEventInternal != null && EventHelper.fireEvent(root.textInputEventInternal, event)) {
 					consumed = true;
@@ -127,8 +129,35 @@ public class Window {
 					notifyTextInput(children.get(i), key, mods, isCtrlDown, isAltDown, isShiftDown);
 				}
 			}
-		});
+		});*/
 		
+		GLFW.glfwSetCharCallback(context.getWindowHandle(), new GLFWCharCallback() {
+
+			@Override
+			public void invoke(long window, int codepoint) {
+				notifyTextInput(scene, new TypeEvent(codepoint));
+			}
+			
+			private void notifyTextInput(Node root, TypeEvent event) {
+				boolean consumed = false;
+
+				if (root.textInputEventInternal != null && EventHelper.fireEvent(root.textInputEventInternal, event)) {
+					consumed = true;
+				}
+				
+				if (root.textInputEvent != null && EventHelper.fireEvent(root.textInputEvent, event)) {
+					consumed = true;
+				}
+				
+				if (consumed) return;
+				
+				ObservableList<Node> children = root.getChildren();
+				for (int i = 0; i < children.size(); i++) {
+					notifyTextInput(children.get(i), event);
+				}
+			}
+		});
+
 		GLFW.glfwSetKeyCallback(context.getWindowHandle(), new GLFWKeyCallback() {
 
 			@Override
@@ -136,7 +165,7 @@ public class Window {
 				boolean isCtrlDown = (mods & GLFW.GLFW_MOD_CONTROL) == GLFW.GLFW_MOD_CONTROL || (mods & GLFW.GLFW_MOD_SUPER) == GLFW.GLFW_MOD_SUPER;
 				boolean isAltDown = (mods & GLFW.GLFW_MOD_ALT) == GLFW.GLFW_MOD_ALT;
 				boolean isShiftDown = (mods & GLFW.GLFW_MOD_SHIFT) == GLFW.GLFW_MOD_SHIFT;
-				
+			
 				/*
 				 * Call window event listeners
 				 */
@@ -145,44 +174,61 @@ public class Window {
 				for (int i = 0; i < listeners.size(); i++) {
 					((KeyListener) listeners.get(i)).invoke(handle, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
 				}
-				
+
 				/*
 				 * Call scene node listeners
 				 */
-				
-				notifyKeyInput( scene, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown );
-			}
 
+				notifyKeyInput(scene, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+				
+			}
+			
 			private void notifyKeyInput(Node root, int key, int scancode, int action, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
 				ObservableList<Node> children = root.getChildren();
 				for (int i = 0; i < children.size(); i++) {
 					notifyKeyInput(children.get(i), key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
 				}
 				
+				KeyEvent event = new KeyEvent(key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+				
 				/*
-				 * Key pressed (internal/user)
+				 * Key pressed 
 				 */
-				if (action == GLFW.GLFW_PRESS) {
-					
-					if (root.keyPressedEventInternal != null && EventHelper.fireEvent(root.keyPressedEventInternal, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown))) {
+				
+				if (event.action == GLFW.GLFW_PRESS) {
+					if (root.keyPressedEventInternal != null && EventHelper.fireEvent(root.keyPressedEventInternal, event)) {
 						return;
 					}
 						
-					if (root.keyPressedEvent != null && EventHelper.fireEvent(root.keyPressedEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown))) {
+					if (root.keyPressedEvent != null && EventHelper.fireEvent(root.keyPressedEvent, event)) {
 						return;
 					}
 				}
 				
 				/*
-				 * Key released (internal/user)
+				 * Key repeat (e.g. holding backspace to "spam" it)
 				 */
 				
-				if (action == GLFW.GLFW_RELEASE) {
-					if (root.keyReleasedEventInternal != null && EventHelper.fireEvent(root.keyReleasedEventInternal, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown))) {
+				if (event.action == GLFW.GLFW_REPEAT) {
+					if (root.keyRepeatEventInternal != null && EventHelper.fireEvent(root.keyRepeatEventInternal, event)) {
+						return;
+					}
+						
+					if (root.keyRepeatEvent != null && EventHelper.fireEvent(root.keyRepeatEvent, event)) {
+						return;
+					}
+				}
+				
+				/*
+				 * Key released 
+				 */
+				
+				if (event.action == GLFW.GLFW_RELEASE) {
+					if (root.keyReleasedEventInternal != null && EventHelper.fireEvent(root.keyReleasedEventInternal, event)) {
 						return;
 					}
 					
-					if (root.keyReleasedEvent != null && EventHelper.fireEvent(root.keyReleasedEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown))) {
+					if (root.keyReleasedEvent != null && EventHelper.fireEvent(root.keyReleasedEvent, event)) {
 						return;
 					}
 				}

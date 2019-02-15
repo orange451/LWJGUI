@@ -1,8 +1,10 @@
 package lwjgui.scene;
 
+import static org.lwjgl.glfw.GLFW.GLFW_DONT_CARE;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeLimits;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVGGL2;
@@ -58,6 +60,28 @@ public class Context {
 		this.windowHeight = height;
 	}
 
+	/**
+	 * Set the minWidth/minHeight of the Window.
+	 * 
+	 * @param minWidth
+	 * @param minHeight
+	 */
+	public void setContextSizeLimits(int minWidth, int minHeight){
+		setContextSizeLimits(minWidth, minHeight, GLFW_DONT_CARE, GLFW_DONT_CARE);
+	}
+	
+	/**
+	 * Set the minWidth/minHeight/maxWidth/maxHeight of the Window.
+	 * 
+	 * @param minWidth
+	 * @param minHeight
+	 * @param maxWidth
+	 * @param maxHeight
+	 */
+	public void setContextSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight){
+		glfwSetWindowSizeLimits(windowHandle, minWidth, minHeight, maxWidth, maxHeight);
+	}
+	
 	protected void updateContext() {
 		int[] windowWidthArr = {0}, windowHeightArr = {0};
 		int[] frameBufferWidthArr = {0}, frameBufferHeightArr = {0};

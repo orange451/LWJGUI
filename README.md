@@ -1,5 +1,5 @@
 # LWJGUI
-Simple library to add a user interface in LWJGL3.
+An LWJGL3-based JavaFX alternative for making user-interfaces in Java.
 
 
 # Current Features

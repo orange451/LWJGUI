@@ -41,5 +41,5 @@ Simple library to add a user interface in LWJGL3.
 - [NanoVG](https://github.com/memononen/nanovg) (Can download with [LWJGL](https://www.lwjgl.org/customize))
 
 # Projects That Use LWJGUI
-- [JDialogue - branching dialogue editor video games](https://github.com/SkyAphid/JDialogue)
+- [JDialogue - branching dialogue editor for video games](https://github.com/SkyAphid/JDialogue)
 

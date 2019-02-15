@@ -11,9 +11,10 @@ public class TextArea extends TextInputControl {
 		this.setPreferredRowCount(8);
 		
 		// Allow for Tab and Enter inputs
-		this.setOnKeyPressed( event -> {
+		setOnKeyPressedInternal( event -> {
 			TextInputControlKeyInput t = new TextAreaKeyInput(event.key, event.mods, event.isCtrlDown, event.isAltDown, event.isShiftDown);
-			if ( t.isConsumed() ) {
+			
+			if (t.isConsumed()) {
 				event.consume();
 				return;
 			}

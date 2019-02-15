@@ -109,15 +109,18 @@ public class Window {
 			}
 
 			private void notifyTextInput(Node root, int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
-				if (root.textInputEventInternal != null) {
-					boolean consumed = EventHelper.fireEvent(root.textInputEventInternal, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown));
-					if (consumed) return;
+				boolean consumed = false;
+				KeyEvent event = new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown);
+				
+				if (root.textInputEventInternal != null && EventHelper.fireEvent(root.textInputEventInternal, event)) {
+					consumed = true;
 				}
 				
-				if (root.textInputEvent != null) {
-					boolean consumed = EventHelper.fireEvent(root.textInputEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown));
-					if (consumed) return;
+				if (root.textInputEvent != null && EventHelper.fireEvent(root.textInputEvent, event)) {
+					consumed = true;
 				}
+				
+				if (consumed) return;
 				
 				ObservableList<Node> children = root.getChildren();
 				for (int i = 0; i < children.size(); i++) {

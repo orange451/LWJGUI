@@ -152,6 +152,8 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
+	public abstract void render(Context context);
+
 	/**
 	 * Returns the scene that contains this node.
 	 * @return
@@ -786,6 +788,12 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
+	/*
+	 * 
+	 * Public event handler setters/getters
+	 * 
+	 */
+	
 	public EventHandler<Event> getMouseEnteredEvent() {
 		return mouseEnteredEvent;
 	}
@@ -866,7 +874,91 @@ public abstract class Node implements Resizable {
 		this.keyReleasedEvent = event;
 	}
 
-	public abstract void render(Context context);
+	/*
+	 * 
+	 * Internal Event Handlers setters/getters
+	 * 
+	 */
+	
+	protected EventHandler<MouseEvent> getMousePressedEventInternal() {
+		return mousePressedEventInternal;
+	}
+	
+	protected void setOnMousePressedInternal(EventHandler<MouseEvent> mousePressedEventInternal) {
+		this.mousePressedEventInternal = mousePressedEventInternal;
+	}
+
+	protected EventHandler<MouseEvent> getMouseReleasedEventInternal() {
+		return mouseReleasedEventInternal;
+	}
+
+	protected void setOnMouseReleasedInternal(EventHandler<MouseEvent> mouseReleasedEventInternal) {
+		this.mouseReleasedEventInternal = mouseReleasedEventInternal;
+	}
+
+	protected EventHandler<MouseEvent> getMouseClickedEventInternal() {
+		return mouseClickedEventInternal;
+	}
+
+	protected void setOnMouseClickedInternal(EventHandler<MouseEvent> mouseClickedEventInternal) {
+		this.mouseClickedEventInternal = mouseClickedEventInternal;
+	}
+
+	protected EventHandler<Event> getMouseEnteredEventInternal() {
+		return mouseEnteredEventInternal;
+	}
+
+	protected void setOnMouseEnteredInternal(EventHandler<Event> mouseEnteredEventInternal) {
+		this.mouseEnteredEventInternal = mouseEnteredEventInternal;
+	}
+
+	protected EventHandler<Event> getMouseExitedEventInternal() {
+		return mouseExitedEventInternal;
+	}
+
+	protected void setOnMouseExitedInternal(EventHandler<Event> mouseExitedEventInternal) {
+		this.mouseExitedEventInternal = mouseExitedEventInternal;
+	}
+
+	protected EventHandler<ScrollEvent> getMouseDraggedEventInternal() {
+		return mouseDraggedEventInternal;
+	}
+
+	protected void setOnMouseDraggedInternal(EventHandler<ScrollEvent> mouseDraggedEventInternal) {
+		this.mouseDraggedEventInternal = mouseDraggedEventInternal;
+	}
+
+	protected EventHandler<ScrollEvent> getMouseScrollEventInternal() {
+		return mouseScrollEventInternal;
+	}
+
+	protected void setOnMouseScrollInternal(EventHandler<ScrollEvent> mouseScrollEventInternal) {
+		this.mouseScrollEventInternal = mouseScrollEventInternal;
+	}
+	
+	protected EventHandler<KeyEvent> getTextInputEventInternal() {
+		return textInputEventInternal;
+	}
+	
+	protected void setOnTextInputInternal(EventHandler<KeyEvent> textInputEventInternal) {
+		this.textInputEventInternal = textInputEventInternal;
+	}
+	
+	protected EventHandler<KeyEvent> getKeyPressedEventInternal() {
+		return keyPressedEventInternal;
+	}
+	
+	protected void setOnKeyPressedInternal(EventHandler<KeyEvent> keyPressedEventInternal) {
+		this.keyPressedEventInternal = keyPressedEventInternal;
+	}
+
+	protected EventHandler<KeyEvent> getKeyReleasedEventInternal() {
+		return keyReleasedEventInternal;
+	}
+
+	protected void setOnKeyReleasedInternal(EventHandler<KeyEvent> keyReleasedEventInternal) {
+		this.keyReleasedEventInternal = keyReleasedEventInternal;
+	}
 
 	/**
 	 * Returns whether or not this node (and all of hits children) will ignore the mouse.

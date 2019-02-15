@@ -86,8 +86,14 @@ public class Window {
 				if ( selected == null )
 					return;
 				
-				if ( selected.mousePressed && selected.mouseDraggedEvent != null ) {
-					EventHelper.fireEvent(selected.mouseDraggedEvent, new MouseEvent(GLFW.GLFW_MOUSE_BUTTON_LEFT));
+				if ( selected.mousePressed) {
+					if (selected.mouseDraggedEvent != null) {
+						EventHelper.fireEvent(selected.mouseDraggedEvent, new MouseEvent(GLFW.GLFW_MOUSE_BUTTON_LEFT));
+					} 
+					
+					if (selected.mouseDraggedEventInternal != null) {
+						EventHelper.fireEvent(selected.mouseDraggedEventInternal, new MouseEvent(GLFW.GLFW_MOUSE_BUTTON_LEFT));
+					}
 				}
 			}
 		});
@@ -103,10 +109,14 @@ public class Window {
 			}
 
 			private void notifyTextInput(Node root, int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
-				if ( root.textInputEvent != null ) {
+				if (root.textInputEventInternal != null) {
+					boolean consumed = EventHelper.fireEvent(root.textInputEventInternal, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown));
+					if (consumed) return;
+				}
+				
+				if (root.textInputEvent != null) {
 					boolean consumed = EventHelper.fireEvent(root.textInputEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown));
-					if ( consumed )
-						return;
+					if (consumed) return;
 				}
 				
 				ObservableList<Node> children = root.getChildren();
@@ -146,16 +156,32 @@ public class Window {
 					notifyKeyInput(children.get(i), key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
 				}
 				
-				if ( action == GLFW.GLFW_PRESS && root.keyPressedEvent != null ) {
-					boolean consumed = EventHelper.fireEvent(root.keyPressedEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown));
-					if ( consumed )
+				/*
+				 * Key pressed (internal/user)
+				 */
+				if (action == GLFW.GLFW_PRESS) {
+					
+					if (root.keyPressedEventInternal != null && EventHelper.fireEvent(root.keyPressedEventInternal, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown))) {
 						return;
+					}
+						
+					if (root.keyPressedEvent != null && EventHelper.fireEvent(root.keyPressedEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown))) {
+						return;
+					}
 				}
 				
-				if ( action == GLFW.GLFW_RELEASE && root.keyReleasedEvent != null ) {
-					boolean consumed = EventHelper.fireEvent(root.keyReleasedEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown));
-					if ( consumed )
+				/*
+				 * Key released (internal/user)
+				 */
+				
+				if (action == GLFW.GLFW_RELEASE) {
+					if (root.keyReleasedEventInternal != null && EventHelper.fireEvent(root.keyReleasedEventInternal, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown))) {
 						return;
+					}
+					
+					if (root.keyReleasedEvent != null && EventHelper.fireEvent(root.keyReleasedEvent, new KeyEvent(key, mods, isCtrlDown, isAltDown, isShiftDown))) {
+						return;
+					}
 				}
 			}
 		});

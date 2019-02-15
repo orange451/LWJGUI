@@ -19,27 +19,56 @@ import lwjgui.geometry.Resizable;
 import lwjgui.geometry.VPos;
 
 public abstract class Node implements Resizable {
+	
+	protected Node parent;
 	protected ObservableList<Node> children = new ObservableList<Node>();
+	
+	/*
+	 * Positioning settings
+	 */
 	protected Vector2d absolutePosition = new Vector2d();
 	protected Vector2d size = new Vector2d();
 	protected Vector2d prefsize = new Vector2d();
 	protected LayoutBounds layoutBounds = new LayoutBounds(0,0,Integer.MAX_VALUE,Integer.MAX_VALUE);
 	protected Insets padding = new Insets(0,0,0,0);
 	protected Pos alignment = Pos.CENTER;
-	protected Node parent;
 
+	/*
+	 * Event Handlers
+	 */
 	protected EventHandler<MouseEvent> mousePressedEvent;
+	protected EventHandler<MouseEvent> mousePressedEventInternal;
+	
 	protected EventHandler<MouseEvent> mouseReleasedEvent;
+	protected EventHandler<MouseEvent> mouseReleasedEventInternal;
+	
 	protected EventHandler<MouseEvent> mouseClickedEvent;
+	protected EventHandler<MouseEvent> mouseClickedEventInternal;
+	
 	protected EventHandler<Event> mouseEnteredEvent;
+	protected EventHandler<Event> mouseEnteredEventInternal;
+	
 	protected EventHandler<Event> mouseExitedEvent;
+	protected EventHandler<Event> mouseExitedEventInternal;
+	
 	protected EventHandler<MouseEvent> mouseDraggedEvent;
+	protected EventHandler<ScrollEvent> mouseDraggedEventInternal;
+	
 	protected EventHandler<ScrollEvent> mouseScrollEvent;
 	protected EventHandler<ScrollEvent> mouseScrollEventInternal;
-	protected EventHandler<KeyEvent> textInputEvent;
-	protected EventHandler<KeyEvent> keyPressedEvent;
-	protected EventHandler<KeyEvent> keyReleasedEvent;
 	
+	protected EventHandler<KeyEvent> textInputEvent;
+	protected EventHandler<KeyEvent> textInputEventInternal;
+	
+	protected EventHandler<KeyEvent> keyPressedEvent;
+	protected EventHandler<KeyEvent> keyPressedEventInternal;
+	
+	protected EventHandler<KeyEvent> keyReleasedEvent;
+	protected EventHandler<KeyEvent> keyReleasedEventInternal;
+	
+	/*
+	 * Other settings
+	 */
 	private boolean mouseTransparent = false;
 	protected boolean flag_clip = false;
 	protected boolean mousePressed = false;
@@ -682,52 +711,78 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
-	protected boolean onMousePressed( int button ) {
+	protected void onMousePressed( int button ) {
 		mousePressed = true;
 		
-		if ( mousePressedEvent != null ) {
-			return EventHelper.fireEvent(this.mousePressedEvent, new MouseEvent(button));
+		MouseEvent event = new MouseEvent(button);
+		
+		if (mousePressedEventInternal != null) {
+			EventHelper.fireEvent(mousePressedEventInternal, event);
 		}
-		return false;
+		
+		if (mousePressedEvent != null) {
+			EventHelper.fireEvent(mousePressedEvent, event);
+		}
 	}
 	
-	@Deprecated
 	private long _lastClick = 0;
-	@Deprecated
 	private int _flag_clicks = 0;
 	
 	protected boolean onMouseReleased( int button ) {
-		if ( !mousePressed )
-			return false;
+		if (!mousePressed) return false;
 		mousePressed = false;
 		
 		// Clicked
-		if ( this.mouseClickedEvent != null ) {
+		if (mouseClickedEventInternal != null || mouseClickedEvent != null) {
 			long time = System.currentTimeMillis()-_lastClick;
+			
 			if ( time > 300 ) {
 				_flag_clicks = 0;
 			}
+			
 			_flag_clicks++;
 			_lastClick = System.currentTimeMillis();
-			EventHelper.fireEvent(this.mouseClickedEvent, new MouseEvent(button, _flag_clicks));
+			
+			if (mouseClickedEventInternal != null) {
+				EventHelper.fireEvent(mouseClickedEventInternal, new MouseEvent(button, _flag_clicks));
+			}
+			
+			if (mouseClickedEvent != null) {
+				EventHelper.fireEvent(mouseClickedEvent, new MouseEvent(button, _flag_clicks));
+			}
 		}
 		
 		// Released
-		if ( mouseReleasedEvent != null ) {
-			return EventHelper.fireEvent(this.mouseReleasedEvent, new MouseEvent(button));
+		boolean consumed = false;
+		
+		if (mouseReleasedEventInternal != null && EventHelper.fireEvent(mouseReleasedEventInternal, new MouseEvent(button))) {
+			consumed = true;
 		}
-		return false;
+		
+		if (mouseReleasedEvent != null && EventHelper.fireEvent(mouseReleasedEvent, new MouseEvent(button))) {
+			consumed = true;
+		}
+		
+		return consumed;
 	}
 	
 	protected void onMouseEntered() {
-		if ( this.mouseEnteredEvent != null ) {
-			EventHelper.fireEvent(this.mouseEnteredEvent, new Event());
+		if (mouseEnteredEventInternal != null) {
+			EventHelper.fireEvent(mouseEnteredEventInternal, new Event());
+		}
+		
+		if (mouseEnteredEvent != null) {
+			EventHelper.fireEvent(mouseEnteredEvent, new Event());
 		}
 	}
 	
 	protected void onMouseExited() {
-		if ( this.mouseExitedEvent != null ) {
-			EventHelper.fireEvent(this.mouseExitedEvent, new Event());
+		if (mouseExitedEventInternal != null) {
+			EventHelper.fireEvent(mouseExitedEventInternal, new Event());
+		}
+		
+		if (mouseExitedEvent != null) {
+			EventHelper.fireEvent(mouseExitedEvent, new Event());
 		}
 	}
 	

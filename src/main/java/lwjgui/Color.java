@@ -4,71 +4,29 @@ import org.joml.Vector4f;
 import org.lwjgl.nanovg.NVGColor;
 
 public class Color {
-	public final static Color white		= new Color(255, 255, 255);
-	public final static Color WHITE 		= white;
-
-	public final static Color lightGray  = new Color(211, 211, 211);
-	public final static Color LIGHT_GRAY = lightGray;
-
-	public final static Color silver = new Color(192, 192, 192);
-	public final static Color SILVER = silver;
-
-	public final static Color gray 		= new Color(128, 128, 128);
-	public final static Color GRAY 		= gray;
-
-	public final static Color dimgray	= new Color(169, 169, 169);
-	public final static Color DIM_GRAY	= dimgray;
-
-	public final static Color darkGray  = new Color(64, 64, 64);
-	public final static Color DARK_GRAY = darkGray;
-
-	public final static Color lightBlack  = new Color( 10, 10, 10 );
-	public final static Color LIGHT_BLACK = lightBlack;
-
-	public final static Color whiteSmoke  = new Color( 245, 245, 245 );
-	public final static Color WHITE_SMOKE = whiteSmoke;
-
-	public final static Color black     = new Color(0, 0, 0);
-	public final static Color BLACK 	= black;
-
-	public final static Color red       = new Color(255, 0, 0);
-	public final static Color RED 		= red;
-
-	public final static Color pink      = new Color(255, 175, 175);
-	public final static Color PINK 		= pink;
-
-	public final static Color orange    = new Color(255, 200, 0);
-	public final static Color ORANGE 	= orange;
-
-	public final static Color yellow    = new Color(255, 255, 0);
-	public final static Color YELLOW 	= yellow;
-
-	public final static Color lightYellow  = new Color(255, 238, 158);
-	public final static Color LIGHT_YELLOW = lightYellow;
-
-	public final static Color lightBlue  = new Color(158, 238, 255);
-	public final static Color LIGHT_BLUE = lightBlue;
-
-	public final static Color green     = new Color(0, 255, 0);
-	public final static Color GREEN 	= green;
-
-	public final static Color magenta   = new Color(255, 0, 255);
-	public final static Color MAGENTA 	= magenta;
-
-	public final static Color cyan      = new Color(0, 255, 255);
-	public final static Color CYAN 		= cyan;
-
-	public final static Color blue      = new Color(0, 0, 255);
-	public final static Color BLUE 		= blue;
-
-	public final static Color aqua      = new Color(3, 158, 211);
-	public final static Color AQUA 		= aqua;
-	
-	public final static Color coral      = new Color("#FF7F50");
-	public final static Color CORAL 	 = coral;
-
-	public final static Color transparent = new Color(255,255,255,0);
-	public final static Color TRANSPARENT = transparent;
+	public final static Color WHITE = new Color(255, 255, 255);
+	public final static Color LIGHT_GRAY = new Color(211, 211, 211);
+	public final static Color SILVER = new Color(192, 192, 192);
+	public final static Color GRAY = new Color(128, 128, 128);
+	public final static Color DIM_GRAY = new Color(169, 169, 169);
+	public final static Color DARK_GRAY = new Color(64, 64, 64);
+	public final static Color LIGHT_BLACK = new Color( 10, 10, 10 );
+	public final static Color WHITE_SMOKE = new Color( 245, 245, 245 );
+	public final static Color BLACK = new Color(0, 0, 0);
+	public final static Color RED = new Color(255, 0, 0);
+	public final static Color PINK = new Color(255, 175, 175);
+	public final static Color ORANGE = new Color(255, 200, 0);
+	public final static Color YELLOW = new Color(255, 255, 0);
+	public final static Color LIGHT_YELLOW = new Color(255, 238, 158);
+	public final static Color LIGHT_BLUE = new Color(158, 238, 255);
+	public final static Color GREEN = new Color(0, 255, 0);
+	public final static Color MAGENTA = new Color(255, 0, 255);
+	public final static Color CYAN = new Color(0, 255, 255);
+	public final static Color BLUE = new Color(0, 0, 255);
+	public final static Color AQUA = new Color(3, 158, 211);
+	public final static Color CORAL = new Color("#FF7F50");
+	public final static Color VIOLET = new Color("#8A2BE2");
+	public final static Color TRANSPARENT = new Color(255,255,255,0);
 
 	private int value;
 	private NVGColor nvg;

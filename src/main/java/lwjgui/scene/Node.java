@@ -53,7 +53,7 @@ public abstract class Node implements Resizable {
 	protected EventHandler<Event> mouseExitedEventInternal;
 	
 	protected EventHandler<MouseEvent> mouseDraggedEvent;
-	protected EventHandler<ScrollEvent> mouseDraggedEventInternal;
+	protected EventHandler<MouseEvent> mouseDraggedEventInternal;
 	
 	protected EventHandler<ScrollEvent> mouseScrollEvent;
 	protected EventHandler<ScrollEvent> mouseScrollEventInternal;
@@ -494,6 +494,20 @@ public abstract class Node implements Resizable {
 	protected ObservableList<Node> getChildren() {
 		return this.children;
 	}
+	
+	/**
+	 * Get number of children Nodes this Node has.
+	 */
+	public int getNumChildren() {
+		return children.size();
+	}
+	
+	/**
+	 * Get child node (intended for external use). Use together with getNumChildren() to make for loops outside of Nodes.
+	 */
+	public Node getChild(int index) {
+		return children.get(index);
+	}
 
 	/**
 	 * Return the absolute x position of this node.
@@ -717,10 +731,10 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
-	protected void onMousePressed( int button ) {
+	protected void onMousePressed(double mouseX, double mouseY, int button) {
 		mousePressed = true;
 		
-		MouseEvent event = new MouseEvent(button);
+		MouseEvent event = new MouseEvent(mouseX, mouseY, button);
 		
 		if (mousePressedEventInternal != null) {
 			EventHelper.fireEvent(mousePressedEventInternal, event);
@@ -734,7 +748,7 @@ public abstract class Node implements Resizable {
 	private long _lastClick = 0;
 	private int _flag_clicks = 0;
 	
-	protected boolean onMouseReleased( int button ) {
+	protected boolean onMouseReleased(double mouseX, double mouseY, int button) {
 		if (!mousePressed) return false;
 		mousePressed = false;
 		
@@ -750,22 +764,22 @@ public abstract class Node implements Resizable {
 			_lastClick = System.currentTimeMillis();
 			
 			if (mouseClickedEventInternal != null) {
-				EventHelper.fireEvent(mouseClickedEventInternal, new MouseEvent(button, _flag_clicks));
+				EventHelper.fireEvent(mouseClickedEventInternal, new MouseEvent(mouseX, mouseY, button, _flag_clicks));
 			}
 			
 			if (mouseClickedEvent != null) {
-				EventHelper.fireEvent(mouseClickedEvent, new MouseEvent(button, _flag_clicks));
+				EventHelper.fireEvent(mouseClickedEvent, new MouseEvent(mouseX, mouseY, button, _flag_clicks));
 			}
 		}
 		
 		// Released
 		boolean consumed = false;
 		
-		if (mouseReleasedEventInternal != null && EventHelper.fireEvent(mouseReleasedEventInternal, new MouseEvent(button))) {
+		if (mouseReleasedEventInternal != null && EventHelper.fireEvent(mouseReleasedEventInternal, new MouseEvent(mouseX, mouseY, button))) {
 			consumed = true;
 		}
 		
-		if (mouseReleasedEvent != null && EventHelper.fireEvent(mouseReleasedEvent, new MouseEvent(button))) {
+		if (mouseReleasedEvent != null && EventHelper.fireEvent(mouseReleasedEvent, new MouseEvent(mouseX, mouseY, button))) {
 			consumed = true;
 		}
 		
@@ -936,11 +950,11 @@ public abstract class Node implements Resizable {
 		this.mouseExitedEventInternal = mouseExitedEventInternal;
 	}
 
-	protected EventHandler<ScrollEvent> getMouseDraggedEventInternal() {
+	protected EventHandler<MouseEvent> getMouseDraggedEventInternal() {
 		return mouseDraggedEventInternal;
 	}
 
-	protected void setOnMouseDraggedInternal(EventHandler<ScrollEvent> mouseDraggedEventInternal) {
+	protected void setOnMouseDraggedInternal(EventHandler<MouseEvent> mouseDraggedEventInternal) {
 		this.mouseDraggedEventInternal = mouseDraggedEventInternal;
 	}
 

@@ -84,51 +84,19 @@ public class Window {
 				 * Call scene node listeners
 				 */
 				Node selected = context.getSelected();
-				if ( selected == null )
-					return;
+				if ( selected == null ) return;
 				
-				if ( selected.mousePressed) {
+				if (selected.mousePressed) {
 					if (selected.mouseDraggedEvent != null) {
-						EventHelper.fireEvent(selected.mouseDraggedEvent, new MouseEvent(GLFW.GLFW_MOUSE_BUTTON_LEFT));
+						EventHelper.fireEvent(selected.mouseDraggedEvent, new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
 					} 
 					
 					if (selected.mouseDraggedEventInternal != null) {
-						EventHelper.fireEvent(selected.mouseDraggedEventInternal, new MouseEvent(GLFW.GLFW_MOUSE_BUTTON_LEFT));
+						EventHelper.fireEvent(selected.mouseDraggedEventInternal, new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
 					}
 				}
 			}
 		});
-		
-		/*GLFW.glfwSetCharModsCallback(context.getWindowHandle(), new GLFWCharModsCallbackI() {
-			@Override
-			public void invoke(long handle, int key, int mods) {
-				boolean isCtrlDown = (mods & GLFW.GLFW_MOD_CONTROL) == GLFW.GLFW_MOD_CONTROL || (mods & GLFW.GLFW_MOD_SUPER) == GLFW.GLFW_MOD_SUPER;
-				boolean isAltDown = (mods & GLFW.GLFW_MOD_ALT) == GLFW.GLFW_MOD_ALT;
-				boolean isShiftDown = (mods & GLFW.GLFW_MOD_SHIFT) == GLFW.GLFW_MOD_SHIFT;
-				
-				notifyTextInput( scene, key, mods, isCtrlDown, isAltDown, isShiftDown);
-			}
-
-			private void notifyTextInput(Node root, int key, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
-				boolean consumed = false;
-				KeyEvent event = new KeyEvent(key, -1, mods, isCtrlDown, isAltDown, isShiftDown);
-				
-				if (root.textInputEventInternal != null && EventHelper.fireEvent(root.textInputEventInternal, event)) {
-					consumed = true;
-				}
-				
-				if (root.textInputEvent != null && EventHelper.fireEvent(root.textInputEvent, event)) {
-					consumed = true;
-				}
-				
-				if (consumed) return;
-				
-				ObservableList<Node> children = root.getChildren();
-				for (int i = 0; i < children.size(); i++) {
-					notifyTextInput(children.get(i), key, mods, isCtrlDown, isAltDown, isShiftDown);
-				}
-			}
-		});*/
 		
 		GLFW.glfwSetCharCallback(context.getWindowHandle(), new GLFWCharCallback() {
 
@@ -235,7 +203,7 @@ public class Window {
 		});
 		
         GLFW.glfwSetMouseButtonCallback(context.getWindowHandle(), new GLFWMouseButtonCallback() {
-    			Node lastPressed = null;
+    		Node lastPressed = null;
     			
 			@Override
 			public void invoke(long window, int button, int downup, int modifier) {
@@ -260,19 +228,14 @@ public class Window {
 					
 					Node hovered = context.getHovered();
 					if ( hovered != null ) {
-						hovered.onMousePressed(button);
+						hovered.onMousePressed(context.getMouseX(), context.getMouseY(), button);
 					}
 					lastPressed = hovered;
 				} else { // Release
 					
 					Node hovered = context.getHovered();
 					if ( hovered != null && hovered.mousePressed ) {
-						boolean consumed = hovered.onMouseReleased(button);
-						
-						// If not consumed, set selected
-						if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT && !consumed) {
-							context.setSelected(hovered);
-						}
+						hovered.onMouseReleased(context.getMouseX(), context.getMouseY(), button);
 					}
 					
 					if ( lastPressed != null ) {

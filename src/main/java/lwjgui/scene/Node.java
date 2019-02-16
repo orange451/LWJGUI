@@ -729,6 +729,14 @@ public abstract class Node implements Resizable {
 		public float getHeight() {
 			return maxY - minY;
 		}
+
+		public double getX() {
+			return minX;
+		}
+
+		public double getY() {
+			return minY;
+		}
 	}
 	
 	protected void onMousePressed(double mouseX, double mouseY, int button) {

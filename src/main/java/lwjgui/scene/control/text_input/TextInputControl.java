@@ -719,7 +719,7 @@ public abstract class TextInputControl extends Control {
 		return backgroundEnabled;
 	}
 
-	public void setBackgroundEnabled(boolean backgroundEnabled) {
+	public void setDecorated(boolean backgroundEnabled) {
 		this.backgroundEnabled = backgroundEnabled;
 	}
 	

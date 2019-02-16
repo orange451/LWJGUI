@@ -50,8 +50,8 @@ public class CodeAreaExample {
 		// Create code area
 		CodeArea c = new CodeArea();
 		c.setText("printf(\"Hello World\");");
-		c.setPreferredColumnCount(28);
-		c.setPreferredRowCount(14);
+		//c.setPreferredColumnCount(28);
+		//c.setPreferredRowCount(14);
 		pane.setCenter(c);
 	}
 }

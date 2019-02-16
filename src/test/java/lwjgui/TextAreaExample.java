@@ -70,8 +70,8 @@ public class TextAreaExample {
 		// Create a Text Area
 		TextArea t = new TextArea();
 		t.setWordWrap(true);
-		t.setPreferredColumnCount(22);
-		t.setPreferredRowCount(8);
+		//t.setPreferredColumnCount(22);
+		//t.setPreferredRowCount(8);
 		pane.setCenter(t);
 		
 		// Clear text button

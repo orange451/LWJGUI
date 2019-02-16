@@ -55,7 +55,7 @@ public abstract class TextInputControl extends Control {
 
 	private static final int MAX_LINES = 10_000;
 	
-	private boolean backgroundEnabled = true;
+	private boolean decorated = true;
 	private boolean underlineEnabled = false;
 	
 	public TextInputControl() {
@@ -715,12 +715,12 @@ public abstract class TextInputControl extends Control {
 		return getCaretFromPixelOffset(row, (int) mx);
 	}
 	
-	public boolean isBackgroundEnabled() {
-		return backgroundEnabled;
+	public boolean isDecorated() {
+		return decorated;
 	}
 
 	public void setDecorated(boolean backgroundEnabled) {
-		this.backgroundEnabled = backgroundEnabled;
+		this.decorated = backgroundEnabled;
 	}
 	
 	public boolean isUnderlineEnabled() {
@@ -745,7 +745,7 @@ public abstract class TextInputControl extends Control {
 		this.clip(context,4);
 		
 		// Selection graphic
-		if (isDescendentSelected() && backgroundEnabled) {
+		if (isDescendentSelected() && isDecorated()) {
 			int feather = 4;
 			Color color = context.isFocused()?Theme.currentTheme().getSelection():Theme.currentTheme().getSelectionPassive();
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
@@ -759,7 +759,7 @@ public abstract class TextInputControl extends Control {
 		}
 		
 		// Outline
-		if (backgroundEnabled) {
+		if (isDecorated()) {
 			Color outlineColor = this.isDescendentSelected()?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRoundedRect(context.getNVG(), x, y, w, h, (float) 2);
@@ -775,13 +775,13 @@ public abstract class TextInputControl extends Control {
 		}
 		
 		// Background
-		if (backgroundEnabled && getBackground() != null ) {	
+		if (isDecorated() && getBackground() != null ) {	
 			int inset = 1;
 			LWJGUIUtil.fillRect(context, getX()+inset, getY()+inset, w-inset*2, h-inset*2, this.getBackground());
 		}
 		
 		// Dropshadow
-		if (backgroundEnabled) {
+		if (isDecorated()) {
 			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.currentTheme().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRect(vg, x, y, w, 4);

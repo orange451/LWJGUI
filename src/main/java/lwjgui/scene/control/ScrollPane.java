@@ -251,7 +251,7 @@ public class ScrollPane extends Control {
 		// Pane Outline
 		if ( this.getBackground() != null ) {
 			Color outlineColor = this.isDescendentSelected()?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
-			LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth(), getHeight(), outlineColor);
+			LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth(), getHeight(), 1, outlineColor);
 		}
 	}
 	

@@ -42,24 +42,4 @@ public class FloatingPane extends Region {
 		this.absx = x;
 		this.absy = y;
 	}
-
-	public void render(Context context) {
-		clip(context);
-
-		if ( getBackground() != null ) {
-			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRect(context.getNVG(), (int)getX(), (int)getY(), (float)getWidth(), (float)getHeight());
-			NanoVG.nvgFillColor(context.getNVG(), getBackground().getNVG());
-			NanoVG.nvgFill(context.getNVG());
-		}
-
-		for (int i = 0; i < children.size(); i++) {
-			// Clip to my bounds
-			clip(context);
-
-			// Draw child
-			Node child = children.get(i);
-			child.render(context);
-		}
-	}
 }

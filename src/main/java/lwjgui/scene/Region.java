@@ -1,6 +1,7 @@
 package lwjgui.scene;
 
 import org.joml.Vector2d;
+import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
 import lwjgui.geometry.Insets;
@@ -9,6 +10,7 @@ public abstract class Region extends Parent {
 	protected Insets padding = Insets.EMPTY;
 	
 	private Color backgroundColor;
+	private Color paddingColor;
 	
 	/**
 	 * Set the background color of this node.
@@ -26,6 +28,22 @@ public abstract class Region extends Parent {
 	 */
 	public Color getBackground() {
 		return this.backgroundColor;
+	}
+	
+	/**
+	 * Sets the color of this nodes padding. If the color is null, nothing will be drawn.
+	 * @param color
+	 */
+	public void setPaddingColor(Color color) {
+		this.paddingColor = color;
+	}
+	
+	/**
+	 * Returns the color used to draw the padding. If the color is null, nothing will be drawn.
+	 * @return
+	 */
+	public Color getPaddingColor() {
+		return this.paddingColor;
 	}
 	
 	/*@Override
@@ -82,6 +100,66 @@ public abstract class Region extends Parent {
 		t.maxY -= padding.getBottom();
 		
 		return t;
+	}
+	
+
+	public void render(Context context) {
+		clip(context);
+
+		if ( getBackground() != null ) {
+			NanoVG.nvgBeginPath(context.getNVG());
+			NanoVG.nvgRect(context.getNVG(), (int)getX(), (int)getY(), (float)getWidth(), (float)getHeight());
+			NanoVG.nvgFillColor(context.getNVG(), getBackground().getNVG());
+			NanoVG.nvgFill(context.getNVG());
+		}
+		
+		if ( this.getPaddingColor() != null ) {
+			
+			if ( this.getPadding().getTop() > 0 ) {
+				int xx1 = (int) (this.getX()+this.getInnerBounds().getX());
+				int yy1 = (int) (this.getY());
+				NanoVG.nvgBeginPath(context.getNVG());
+				NanoVG.nvgRect(context.getNVG(), xx1, yy1, (float)this.getInnerBounds().getWidth(), (float)this.getPadding().getTop());
+				NanoVG.nvgFillColor(context.getNVG(), getPaddingColor().getNVG());
+				NanoVG.nvgFill(context.getNVG());
+			}
+
+			if ( this.getPadding().getBottom() > 0 ) {
+				int xx1 = (int) (this.getX()+this.getInnerBounds().getX());
+				int yy1 = (int) (this.getY()+getHeight()-this.getPadding().getBottom());
+				NanoVG.nvgBeginPath(context.getNVG());
+				NanoVG.nvgRect(context.getNVG(), xx1, yy1, this.getInnerBounds().getWidth(), (float)this.getPadding().getBottom());
+				NanoVG.nvgFillColor(context.getNVG(), getPaddingColor().getNVG());
+				NanoVG.nvgFill(context.getNVG());
+			}
+			
+			if ( this.getPadding().getRight() > 0 ) {
+				int xx1 = (int) (this.getX()+getWidth()-this.getPadding().getRight());
+				int yy1 = (int) (this.getY());
+				NanoVG.nvgBeginPath(context.getNVG());
+				NanoVG.nvgRect(context.getNVG(), xx1, yy1, (float)this.getPadding().getRight(), (float)this.getHeight());
+				NanoVG.nvgFillColor(context.getNVG(), getPaddingColor().getNVG());
+				NanoVG.nvgFill(context.getNVG());
+			}
+			
+			if ( this.getPadding().getLeft() > 0 ) {
+				int xx1 = (int) (this.getX());
+				int yy1 = (int) (this.getY());
+				NanoVG.nvgBeginPath(context.getNVG());
+				NanoVG.nvgRect(context.getNVG(), xx1, yy1, (float)this.getPadding().getLeft(), (float)this.getHeight());
+				NanoVG.nvgFillColor(context.getNVG(), getPaddingColor().getNVG());
+				NanoVG.nvgFill(context.getNVG());
+			}
+		}
+
+		for (int i = 0; i < children.size(); i++) {
+			// Clip to my bounds
+			clip(context);
+
+			// Draw child
+			Node child = children.get(i);
+			child.render(context);
+		}
 	}
 	
 	protected boolean canPackElementWidth() {

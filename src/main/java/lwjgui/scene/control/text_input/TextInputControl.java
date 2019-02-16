@@ -61,7 +61,6 @@ public abstract class TextInputControl extends Control {
 	private boolean decorated = true;
 	
 	private Color caretFill = Color.BLACK;
-	private boolean caretFading = false;
 	
 	public TextInputControl() {
 		this(new TextInputControlShortcuts());
@@ -448,19 +447,6 @@ public abstract class TextInputControl extends Control {
 
 	public void setCaretFill(Color caretFill) {
 		this.caretFill = caretFill;
-	}
-
-	public boolean isCaretFading() {
-		return caretFading;
-	}
-
-	/**
-	 * If set to true, the caret will fade in and out instead of blink in and out.
-	 * 
-	 * @param caretFading
-	 */
-	public void setCaretFading(boolean caretFading) {
-		this.caretFading = caretFading;
 	}
 
 	public String getSelectedText() {
@@ -941,8 +927,6 @@ public abstract class TextInputControl extends Control {
 	private float renderCaret = 0;
 	class TextAreaContent extends Pane {
 		
-		private Color modCaretFill = null;
-		
 		public TextAreaContent() {
 			this.setMouseTransparent(true);
 			this.setBackground(null);
@@ -1065,16 +1049,7 @@ public abstract class TextInputControl extends Control {
 						offsetX += glyphData.get(line).get(index).width();
 					}
 					
-					if (caretFading) {
-						float opacity = (float) Math.sin(renderCaret * 0.0025f);
-						if (modCaretFill == null) {
-							modCaretFill = new Color(caretFill);
-						} else {
-							modCaretFill.opaque(opacity);
-						}
-						
-						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFill);
-					} else if ( Math.sin(renderCaret*1/150f) < 0 ) {
+					if ( Math.sin(renderCaret*1/150f) < 0 ) {
 						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFill);
 					}
 				}

@@ -8,7 +8,12 @@ public class TextField extends TextInputControl {
 	public TextField(String text) {
 		super();
 		this.setText(text);
-		this.setPrefSize(120, 24);
+		this.setPrefWidth(120);
+	}
+	
+	@Override
+	public double getPrefHeight() {
+		return this.fontSize+8;
 	}
 	
 	@Override

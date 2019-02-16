@@ -10,7 +10,7 @@ public class TextArea extends TextInputControl {
 		super(new TextAreaShortcuts());
 		
 		// Make it larger by default
-		this.setPrefSize(240, 200);
+		this.setPrefSize(240, 160);
 		
 		// Allow for scroll bars
 		this.internal.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);

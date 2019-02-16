@@ -191,10 +191,10 @@ public abstract class Node implements Resizable {
 		synchronized(size) {
 			//System.out.println(this.getClass() + "   /   preferred width: " + this.getPrefWidth());
 			// Size up to pref size
-			if ( size.x < prefsize.x )
-				size.x = prefsize.x;
-			if ( size.y < prefsize.y )
-				size.y = prefsize.y;
+			if ( size.x < this.getPrefWidth() )
+				size.x = this.getPrefWidth();
+			if ( size.y < this.getPrefHeight() )
+				size.y = this.getPrefHeight();
 			
 			// Get available size
 			Vector2d available = this.getAvailableSize();

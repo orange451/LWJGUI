@@ -99,7 +99,6 @@ public class ContextMenu extends PopupWindow {
 		// Position the menu
 		recalculate();
 		this.position(this.getScene());
-		this.setAbsolutePosition( absoluteX, absoluteY );
 		
 		// Reposition if outside of screen
 		if ( this.getY() + this.getHeight() > this.getScene().getHeight() )

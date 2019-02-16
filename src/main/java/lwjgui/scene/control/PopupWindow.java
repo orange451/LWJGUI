@@ -1,24 +1,13 @@
 package lwjgui.scene.control;
 
 import lwjgui.scene.Context;
-import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Scene;
+import lwjgui.scene.layout.floating.FloatingPane;
 
-public abstract class PopupWindow extends FillableRegion {
-	protected double absoluteX;
-	protected double absoluteY;
-	
+public abstract class PopupWindow extends FloatingPane {
 	protected boolean mouseEntered;
 	protected boolean autoHide;
 	private boolean open;
-	
-	public abstract void render(Context context);
-
-	public void setAbsolutePosition(double absoluteX, double absoluteY) {
-		this.absolutePosition.set(absoluteX, absoluteY);
-		this.absoluteX = absoluteX;
-		this.absoluteY = absoluteY;
-	}
 	
 	public void show(Scene scene, double absoluteX, double absoluteY) {
 		this.position(scene);
@@ -49,6 +38,13 @@ public abstract class PopupWindow extends FillableRegion {
 		if ( mouseEntered && autoHide ) {
 			close();
 		}
+	}
+	
+	@Override
+	public void render(Context context) {
+		this.position(this.getScene());
+		
+		super.render(context);
 	}
 }
 

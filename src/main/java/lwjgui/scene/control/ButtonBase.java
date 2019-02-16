@@ -18,7 +18,7 @@ import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 
 public abstract class ButtonBase extends Labeled {
-	private EventHandler<ButtonEvent> buttonEvent;
+	protected EventHandler<ButtonEvent> buttonEvent;
 
 	protected double cornerNW = 3.0;
 	protected double cornerNE = 3.0;
@@ -34,7 +34,7 @@ public abstract class ButtonBase extends Labeled {
 		this.setText(name);
 		
 		this.setMinSize(32, 24);
-		this.setPadding(new Insets(4,8,4,8));
+		this.setPadding(new Insets(4,6,4,6));
 		
 		this.setOnMouseReleased( new EventHandler<MouseEvent>() {
 			@Override

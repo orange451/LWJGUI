@@ -1,9 +1,6 @@
 package lwjgui.scene.layout.floating;
 
-import org.lwjgl.nanovg.NanoVG;
-
 import lwjgui.collections.ObservableList;
-import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.Region;
 

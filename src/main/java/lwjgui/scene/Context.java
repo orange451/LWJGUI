@@ -233,9 +233,11 @@ public class Context {
 	 * @return
 	 */
 	public boolean isSelected(Node node) {
-		return (node == selected);
+		if ( selected == null )
+			return false;
+		
+		return selected.equals(node);
 	}
-
 	/**
 	 * Tests if the given node is the current hovered node.
 	 * @param node

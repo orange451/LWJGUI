@@ -32,6 +32,7 @@ public class DropShadow extends Shape {
 		NanoVG.nvgRect(vg, x, y, w, h);
 		NanoVG.nvgFillPaint(vg, paint);
 		NanoVG.nvgFill(vg);
+		NanoVG.nvgClosePath(context.getNVG());
 	}
 
 	@Override

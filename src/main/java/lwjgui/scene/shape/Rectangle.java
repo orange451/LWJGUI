@@ -47,6 +47,7 @@ public class Rectangle extends Shape {
 		NanoVG.nvgRoundedRect(context.getNVG(), (float)getX(), (float)getY(), (float)getWidth(), (float)getHeight(), cornerRadius);
 		NanoVG.nvgFillColor(context.getNVG(), fill.getNVG());
 		NanoVG.nvgFill(context.getNVG());
+		NanoVG.nvgClosePath(context.getNVG());
 	}
 
 }

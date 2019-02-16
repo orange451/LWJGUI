@@ -42,6 +42,7 @@ public class Circle extends Shape {
 		//NanoVG.nvgRoundedRect(context.getNVG(), (float)getAbsoluteX(), (float)getAbsoluteY(), (float)getWidth(), (float)getHeight(), 4);
 		NanoVG.nvgFillColor(context.getNVG(), fill.getNVG());
 		NanoVG.nvgFill(context.getNVG());
+		NanoVG.nvgClosePath(context.getNVG());
 	}
 
 }

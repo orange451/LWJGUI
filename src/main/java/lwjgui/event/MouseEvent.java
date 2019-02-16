@@ -18,4 +18,13 @@ public class MouseEvent extends Event {
 	public final int getClickCount() {
 		return clicks;
 	}
+	public double getMouseX() {
+		return mouseX;
+	}
+	public double getMouseY() {
+		return mouseY;
+	}
+	public int getButton() {
+		return button;
+	}
 }

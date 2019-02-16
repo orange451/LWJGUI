@@ -42,11 +42,6 @@ public abstract class TextInputControl extends Control {
 	protected TextAreaScrollPane internal;
 	protected TextAreaContent fakeBox;
 	
-	protected int fontSize = 16;
-	protected Font font = Font.SANS;
-	protected Color fontFill = Theme.currentTheme().getText();
-	protected FontStyle style = FontStyle.REGULAR;
-	
 	private StateStack<TextState> undoStack;
 	
 	private String prompt = null;
@@ -55,8 +50,18 @@ public abstract class TextInputControl extends Control {
 
 	private static final int MAX_LINES = 10_000;
 	
+	/*
+	 * Customization
+	 */
+	protected int fontSize = 16;
+	protected Font font = Font.SANS;
+	protected Color fontFill = Theme.currentTheme().getText();
+	protected FontStyle style = FontStyle.REGULAR;
+	
 	private boolean decorated = true;
-	private boolean underlineEnabled = false;
+	
+	private Color caretFill = Color.BLACK;
+	private boolean caretFading = false;
 	
 	public TextInputControl() {
 		this(new TextInputControlShortcuts());
@@ -436,7 +441,28 @@ public abstract class TextInputControl extends Control {
 		if ( this.caretPosition > getLength() )
 			this.caretPosition = getLength();
 	}
-	
+
+	public Color getCaretFill() {
+		return caretFill;
+	}
+
+	public void setCaretFill(Color caretFill) {
+		this.caretFill = caretFill;
+	}
+
+	public boolean isCaretFading() {
+		return caretFading;
+	}
+
+	/**
+	 * If set to true, the caret will fade in and out instead of blink in and out.
+	 * 
+	 * @param caretFading
+	 */
+	public void setCaretFading(boolean caretFading) {
+		this.caretFading = caretFading;
+	}
+
 	public String getSelectedText() {
 		return getText(getSelection());
 	}
@@ -723,14 +749,6 @@ public abstract class TextInputControl extends Control {
 		this.decorated = backgroundEnabled;
 	}
 	
-	public boolean isUnderlineEnabled() {
-		return underlineEnabled;
-	}
-
-	public void setUnderlineEnabled(boolean underlineEnabled) {
-		this.underlineEnabled = underlineEnabled;
-	}
-
 	@Override
 	public void render(Context context) {
 		long vg = context.getNVG();
@@ -764,13 +782,6 @@ public abstract class TextInputControl extends Control {
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRoundedRect(context.getNVG(), x, y, w, h, (float) 2);
 			NanoVG.nvgFillColor(context.getNVG(), outlineColor.getNVG());
-			NanoVG.nvgFill(context.getNVG());
-		}
-		
-		if (underlineEnabled) {
-			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRoundedRect(context.getNVG(), x, y + h, w, 2, 2);
-			NanoVG.nvgFillColor(context.getNVG(), Theme.currentTheme().getControlOutline().getNVG());
 			NanoVG.nvgFill(context.getNVG());
 		}
 		
@@ -1052,8 +1063,10 @@ public abstract class TextInputControl extends Control {
 						offsetX += glyphData.get(line).get(index).width();
 					}
 					
-					if ( Math.sin(renderCaret*1/150f) < 0 ) {
-						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, Color.BLACK);
+					if (caretFading) {
+						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFill.opaque(Math.sin(renderCaret * 0.0025f)));
+					} else if ( Math.sin(renderCaret*1/150f) < 0 ) {
+						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFill);
 					}
 				}
 			}

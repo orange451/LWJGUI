@@ -554,6 +554,8 @@ public abstract class TextInputControl extends Control {
 		
 		super.resize();
 		
+		System.out.println(this.getHeight());
+		
 		/*int prefX = (int) (this.preferredColumnCount*(fontSize*(2/3f)));
 		int prefY = (int) ((this.preferredRowCount*fontSize)+this.internal.getPadding().getHeight()+1);
 		prefX = (int) Math.min(prefX, this.getMaxPotentialWidth());
@@ -733,12 +735,14 @@ public abstract class TextInputControl extends Control {
 	@Override
 	public void render(Context context) {
 		long vg = context.getNVG();
-		float x = (int)getX();
-		float y = (int)getY();
-		float w = (int)getWidth();
-		float h = (int)getHeight();
+		float x = (int)(getX()+this.getInnerBounds().getX());
+		float y = (int)(getY()+this.getInnerBounds().getY());
+		float w = (int)this.getInnerBounds().getWidth();
+		float h = (int)this.getInnerBounds().getHeight();
 		float r = 2;
 		
+
+		super.render(context);
 		this.clip(context,4);
 		
 		// Selection graphic
@@ -774,7 +778,7 @@ public abstract class TextInputControl extends Control {
 		// Background
 		if (backgroundEnabled && getBackground() != null ) {	
 			int inset = 1;
-			LWJGUIUtil.fillRect(context, getX()+inset, getY()+inset, getWidth()-inset*2, getHeight()-inset*2, this.getBackground());
+			LWJGUIUtil.fillRect(context, getX()+inset, getY()+inset, w-inset*2, h-inset*2, this.getBackground());
 		}
 		
 		// Dropshadow

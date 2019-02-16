@@ -101,8 +101,8 @@ public class CodeArea extends TextArea {
 		@Override
 		public void render( Context context ) {
 			// Draw line counter background
-			LWJGUIUtil.fillRect(context, getX()+1, CodeArea.this.getY()+1, getWidth(), CodeArea.this.getHeight()-2, Theme.currentTheme().getPane());
-			LWJGUIUtil.fillRect(context, getX()+getWidth(), CodeArea.this.getY()+1, 1, CodeArea.this.getHeight()-2, Theme.currentTheme().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getX()+1, CodeArea.this.getY()+1, getWidth(), CodeArea.this.getInnerBounds().getHeight()-2, Theme.currentTheme().getPane());
+			LWJGUIUtil.fillRect(context, getX()+getWidth(), CodeArea.this.getY()+1, 1, CodeArea.this.getInnerBounds().getHeight()-2, Theme.currentTheme().getSelectionPassive());
 			
 			super.render(context);
 		}

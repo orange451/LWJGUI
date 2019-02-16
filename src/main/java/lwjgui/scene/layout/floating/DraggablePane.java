@@ -11,7 +11,7 @@ public class DraggablePane extends StickyPane {
 
 	public DraggablePane() {
 		setOnMousePressedInternal(e -> {
-			if (isDragInputDown() && cached_context.getSelected() == null) {
+			if (isDragInputDown()) {
 				select(e);
 			}
 		});

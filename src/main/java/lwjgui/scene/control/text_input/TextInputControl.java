@@ -941,6 +941,8 @@ public abstract class TextInputControl extends Control {
 	private float renderCaret = 0;
 	class TextAreaContent extends Pane {
 		
+		private Color modCaretFill = null;
+		
 		public TextAreaContent() {
 			this.setMouseTransparent(true);
 			this.setBackground(null);
@@ -1064,7 +1066,14 @@ public abstract class TextInputControl extends Control {
 					}
 					
 					if (caretFading) {
-						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFill.opaque(Math.sin(renderCaret * 0.0025f)));
+						float opacity = (float) Math.sin(renderCaret * 0.0025f);
+						if (modCaretFill == null) {
+							modCaretFill = new Color(caretFill);
+						} else {
+							modCaretFill.opaque(opacity);
+						}
+						
+						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFill);
 					} else if ( Math.sin(renderCaret*1/150f) < 0 ) {
 						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFill);
 					}

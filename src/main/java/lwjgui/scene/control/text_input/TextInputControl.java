@@ -547,14 +547,13 @@ public abstract class TextInputControl extends Control {
 	
 	@Override
 	protected void resize() {
+		this.setAlignment(Pos.TOP_LEFT);
 		internal.setPrefSize(getPrefWidth(), getPrefHeight());
 		
 		int width = getMaxTextWidth();
 		this.fakeBox.setMinSize(width, lines.size()*fontSize);
 		
 		super.resize();
-		
-		System.out.println(this.getHeight());
 		
 		/*int prefX = (int) (this.preferredColumnCount*(fontSize*(2/3f)));
 		int prefY = (int) ((this.preferredRowCount*fontSize)+this.internal.getPadding().getHeight()+1);

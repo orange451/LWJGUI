@@ -22,7 +22,7 @@ public abstract class Labeled extends Control {
 	private static final String ELIPSES = "\u2026";
 
 	public Labeled() {
-		textColor = Theme.currentTheme().getText();
+		textColor = Theme.current().getText();
 		this.flag_clip = false;
 	}
 

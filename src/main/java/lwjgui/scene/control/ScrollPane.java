@@ -43,7 +43,7 @@ public class ScrollPane extends Control {
 		this.flag_clip = true;
 		this.viewportSize = new Vector2i();
 		
-		this.setBackground(Theme.currentTheme().getPane());
+		this.setBackground(Theme.current().getPane());
 		
 		this.vBar = new ScrollBar(Orientation.VERTICAL);
 		this.hBar = new ScrollBar(Orientation.HORIZONTAL);
@@ -232,13 +232,13 @@ public class ScrollPane extends Control {
 		
 		this.clip(context);
 		if ( vBar.active ) // Vertical scrollbar track
-			LWJGUIUtil.fillRect(context, getX()+viewportSize.x-0.5, getY()+1, getWidth()-viewportSize.x-1, getHeight()-2, Theme.currentTheme().getControl());
+			LWJGUIUtil.fillRect(context, getX()+viewportSize.x-0.5, getY()+1, getWidth()-viewportSize.x-1, getHeight()-2, Theme.current().getControl());
 		if ( hBar.active ) // Horizontal scrollbar track
-			LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y, getWidth()-2, getHeight()-viewportSize.y-1, Theme.currentTheme().getControl());
+			LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y, getWidth()-2, getHeight()-viewportSize.y-1, Theme.current().getControl());
 		if ( vBar.active ) // Vertical scrollbar track outline
-			LWJGUIUtil.fillRect(context, getX()+viewportSize.x-1.5, getY()+1, 1, viewportSize.y-2, Theme.currentTheme().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getX()+viewportSize.x-1.5, getY()+1, 1, viewportSize.y-2, Theme.current().getSelectionPassive());
 		if ( hBar.active ) // Horizontal scrollbar track outline
-			LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y-1, viewportSize.x-1, 1, Theme.currentTheme().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y-1, viewportSize.x-1, 1, Theme.current().getSelectionPassive());
 		
 		// Draw bars
 		for (int i = 0; i < scrollBars.size(); i++) {
@@ -250,7 +250,7 @@ public class ScrollPane extends Control {
 		
 		// Pane Outline
 		if ( this.getBackground() != null ) {
-			Color outlineColor = this.isDescendentSelected()?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
+			Color outlineColor = this.isDescendentSelected()?Theme.current().getSelection():Theme.current().getControlOutline();
 			LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth(), getHeight(), outlineColor);
 		}
 	}
@@ -363,7 +363,7 @@ public class ScrollPane extends Control {
 				y2 = bd.y;
 				len = x2-x1;
 			}
-			Color color = Theme.currentTheme().getControlOutline();
+			Color color = Theme.current().getControlOutline();
 			LWJGUIUtil.fillRoundRect(context, x1, y1, barThickness, barThickness, barThickness/2f, color);
 			LWJGUIUtil.fillRoundRect(context, x2, y2, barThickness, barThickness, barThickness/2f, color);
 			if ( len > 0 ) {

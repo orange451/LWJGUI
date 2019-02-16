@@ -4,34 +4,41 @@ import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
 import lwjgui.scene.Context;
+import lwjgui.theme.Theme;
 
 public class Rectangle extends Shape {
 	protected float cornerRadius = 0;
 	
-	public Rectangle() {
-		this(0);
+	protected Color strokeFill = null;
+	
+	public Rectangle(int width, int height, Color color) {
+		this(width, height, 0, color);
 	}
 	
-	public Rectangle( float radius ) {
-		this.setPrefSize(16, 16);
-		this.setCornerRadius(radius);
-	}
-	
-	public Rectangle( int width, int height, Color color ) {
+	public Rectangle(int width, int height, int cornerRadius, Color color) {
+		super(color);
 		this.setPrefSize(width, height);
-		this.setFill(color);
+		this.cornerRadius = cornerRadius;
 	}
 	
-	public Rectangle( int width, int height ) {
-		this.setPrefSize(width, height);
+	public Rectangle(int width, int height) {
+		this(width, height, 0, Theme.current().getText());
 	}
 	
-	public void setCornerRadius( float cornerRadius ) {
+	public void setCornerRadius(float cornerRadius) {
 		this.cornerRadius = cornerRadius;
 	}
 	
 	public float getCornerRadius() {
 		return this.cornerRadius;
+	}
+
+	public Color getStrokeFill() {
+		return strokeFill;
+	}
+
+	public void setStrokeFill(Color strokeFill) {
+		this.strokeFill = strokeFill;
 	}
 
 	@Override
@@ -43,11 +50,26 @@ public class Rectangle extends Shape {
 	public void render(Context context) {
 		clip(context);
 		
-		NanoVG.nvgBeginPath(context.getNVG());
-		NanoVG.nvgRoundedRect(context.getNVG(), (float)getX(), (float)getY(), (float)getWidth(), (float)getHeight(), cornerRadius);
-		NanoVG.nvgFillColor(context.getNVG(), fill.getNVG());
-		NanoVG.nvgFill(context.getNVG());
-		NanoVG.nvgClosePath(context.getNVG());
+		long vg = context.getNVG();
+		float x = (float) getX();
+		float y = (float) getY();
+		float w = (float) getWidth();
+		float h = (float) getHeight();
+		
+		NanoVG.nvgBeginPath(vg);
+		NanoVG.nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+		NanoVG.nvgFillColor(vg, fill.getNVG());
+		NanoVG.nvgFill(vg);
+		NanoVG.nvgClosePath(vg);
+		
+		if (strokeFill != null) {
+			NanoVG.nvgBeginPath(vg);
+			NanoVG.nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+			NanoVG.nvgStrokeColor(vg, strokeFill.getNVG());
+			NanoVG.nvgStroke(vg);
+			NanoVG.nvgClosePath(vg);
+		}
+		
 	}
 
 }

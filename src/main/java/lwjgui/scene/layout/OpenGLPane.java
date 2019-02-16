@@ -24,7 +24,7 @@ public class OpenGLPane extends StackPane {
 	public OpenGLPane() {
 		resizeBuffer();
 		
-		this.setBackground(Theme.currentTheme().getPane());
+		this.setBackground(Theme.current().getPane());
 	}
 	
 	private void resizeBuffer() {

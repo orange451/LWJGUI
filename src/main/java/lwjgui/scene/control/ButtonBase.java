@@ -108,9 +108,9 @@ public abstract class ButtonBase extends Labeled {
 			if ( context.isSelected(this) && context.isFocused() ) {
 				int feather = 4;
 				float c = (float) Math.max(cornerNW,Math.max(cornerNE,Math.max(cornerSE,cornerSW)));
-				NVGColor sel = Theme.currentTheme().getSelection().getNVG();
+				NVGColor sel = Theme.current().getSelection().getNVG();
 				if ( isDisabled() )
-					sel = Theme.currentTheme().getSelectionPassive().getNVG();
+					sel = Theme.current().getSelectionPassive().getNVG();
 				
 				NVGPaint paint = NanoVG.nvgBoxGradient(vg, x,y, w,h,c, feather, sel, Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 				NanoVG.nvgBeginPath(vg);
@@ -121,15 +121,15 @@ public abstract class ButtonBase extends Labeled {
 			}
 			
 			// Draw button outline
-			Color outlineColor = (context.isSelected(this)&&context.isFocused()&&!isDisabled())?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
+			Color outlineColor = (context.isSelected(this)&&context.isFocused()&&!isDisabled())?Theme.current().getSelection():Theme.current().getControlOutline();
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x,y,w,h,+1);
 			NanoVG.nvgFillColor(vg, outlineColor.getNVG());
 			NanoVG.nvgFill(vg);	
 			
 			// Draw main background
-			Color buttonColor = isPressed()?Theme.currentTheme().getControlOutline():((context.isHovered(this)&&!isDisabled())?Theme.currentTheme().getControlHover():Theme.currentTheme().getControl());
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*3, buttonColor.getNVG(), Theme.currentTheme().getControlOutline().getNVG(), NVGPaint.calloc());
+			Color buttonColor = isPressed()?Theme.current().getControlOutline():((context.isHovered(this)&&!isDisabled())?Theme.current().getControlHover():Theme.current().getControl());
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*3, buttonColor.getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x+1,y+1,w-2,h-2, 0);
 			NanoVG.nvgFillPaint(vg, bg);
@@ -138,8 +138,8 @@ public abstract class ButtonBase extends Labeled {
 			// Draw inset outline
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x+1,y+1,w-2,h-2, 0);
-			NVGColor c1 = Theme.currentTheme().getControlHover().getNVG();
-			NVGColor c2 = Theme.currentTheme().getControlAlt().getNVG();
+			NVGColor c1 = Theme.current().getControlHover().getNVG();
+			NVGColor c2 = Theme.current().getControlAlt().getNVG();
 			if ( isPressed() ) {
 				c2 = buttonColor.darker().getNVG();
 				c1 = c2;
@@ -150,9 +150,9 @@ public abstract class ButtonBase extends Labeled {
 			
 			// internal selection graphic
 			if ( context.isSelected(this) && context.isFocused() ) {
-				Color sel = Theme.currentTheme().getSelection();
+				Color sel = Theme.current().getSelection();
 				if ( isDisabled() )
-					sel = Theme.currentTheme().getSelectionPassive();
+					sel = Theme.current().getSelectionPassive();
 				Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);
 				NanoVG.nvgBeginPath(vg);
 				float inset = 1.25f;
@@ -167,7 +167,7 @@ public abstract class ButtonBase extends Labeled {
 		//NanoVG.nvgTranslate(context.getNVG(), (int)-getAbsoluteX(), (int)-getAbsoluteY());
 		
 		if ( isDisabled() ) {
-			this.setTextFill(Theme.currentTheme().getShadow());
+			this.setTextFill(Theme.current().getShadow());
 		}
 
 		this.offset(textOffset, 0);

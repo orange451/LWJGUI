@@ -373,7 +373,7 @@ public class SplitPane extends Control {
 
 			// Main bar
 			hovered = getDividerUnderMouse();
-			Color col = Theme.currentTheme().getControlOutline();
+			Color col = Theme.current().getControlOutline();
 			NanoVG.nnvgBeginPath(vg);
 			NanoVG.nvgFillColor(vg, col.getNVG());
 			NanoVG.nvgRect(vg, (int)bounds.x, (int)bounds.y, (int)bounds.z, (int)bounds.w);
@@ -392,13 +392,13 @@ public class SplitPane extends Control {
 			// Inner Gradient
 			NanoVG.nvgTranslate(vg, (int)bounds.x, (int)bounds.y);
 			if ( this.orientation.equals(Orientation.VERTICAL) ) {
-				NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, (int)bounds.z, 0, Theme.currentTheme().getControlHover().getNVG(), Theme.currentTheme().getControlOutline().getNVG(), NVGPaint.calloc());
+				NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, (int)bounds.z, 0, Theme.current().getControlHover().getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.calloc());
 				NanoVG.nvgBeginPath(vg);
 				NanoVG.nvgRect(vg, 1, 0, (int)bounds.z-2,(int)bounds.w);
 				NanoVG.nvgFillPaint(vg, bg);
 				NanoVG.nvgFill(vg);
 			} else {
-				NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (int)bounds.w, Theme.currentTheme().getControlHover().getNVG(), Theme.currentTheme().getControlOutline().getNVG(), NVGPaint.calloc());
+				NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (int)bounds.w, Theme.current().getControlHover().getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.calloc());
 				NanoVG.nvgBeginPath(vg);
 				NanoVG.nvgRect(vg, 0, 1, (int)bounds.z,(int)bounds.w-2);
 				NanoVG.nvgFillPaint(vg, bg);
@@ -407,7 +407,7 @@ public class SplitPane extends Control {
 			NanoVG.nvgTranslate(vg, (int)-bounds.x, (int)-bounds.y);
 		}
 
-		Color outlineColor = Theme.currentTheme().getControlOutline();
+		Color outlineColor = Theme.current().getControlOutline();
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgRect(vg, (int)this.getX(), (int)this.getY(), (int)getWidth(), (int)getHeight());
 		NanoVG.nvgStrokeColor(vg, outlineColor.getNVG());

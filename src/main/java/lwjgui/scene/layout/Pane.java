@@ -10,7 +10,7 @@ public class Pane extends FillableRegion {
 	//private boolean scrollableY;
 	
 	public Pane() {
-		this.setBackground(Theme.currentTheme().getPane());
+		this.setBackground(Theme.current().getPane());
 		this.setPrefSize(1, 1);
 		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 	}

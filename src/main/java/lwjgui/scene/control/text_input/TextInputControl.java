@@ -55,10 +55,11 @@ public abstract class TextInputControl extends Control {
 	 */
 	protected int fontSize = 16;
 	protected Font font = Font.SANS;
-	protected Color fontFill = Theme.currentTheme().getText();
+	protected Color fontFill = Theme.current().getText();
 	protected FontStyle style = FontStyle.REGULAR;
 	
 	private boolean decorated = true;
+	private boolean selectionOutlineEnabled = true;
 	
 	private Color caretFill = Color.BLACK;
 	private boolean caretFading = false;
@@ -74,7 +75,7 @@ public abstract class TextInputControl extends Control {
 		
 		this.fakeBox = new TextAreaContent();
 
-		this.setBackground(Theme.currentTheme().getControlHover());
+		this.setBackground(Theme.current().getControlHover());
 		this.internal = new TextAreaScrollPane();
 		this.children.add(internal);
 		this.internal.setContent(fakeBox);
@@ -749,6 +750,14 @@ public abstract class TextInputControl extends Control {
 		this.decorated = backgroundEnabled;
 	}
 	
+	public boolean isSelectionOutlineEnabled() {
+		return selectionOutlineEnabled;
+	}
+
+	public void setSelectionOutlineEnabled(boolean selectionOutlineEnabled) {
+		this.selectionOutlineEnabled = selectionOutlineEnabled;
+	}
+
 	@Override
 	public void render(Context context) {
 		long vg = context.getNVG();
@@ -765,7 +774,7 @@ public abstract class TextInputControl extends Control {
 		// Selection graphic
 		if (isDescendentSelected() && isDecorated()) {
 			int feather = 4;
-			Color color = context.isFocused()?Theme.currentTheme().getSelection():Theme.currentTheme().getSelectionPassive();
+			Color color = context.isFocused()?Theme.current().getSelection():Theme.current().getSelectionPassive();
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
 				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w,h, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 				NanoVG.nvgBeginPath(vg);
@@ -778,7 +787,7 @@ public abstract class TextInputControl extends Control {
 		
 		// Outline
 		if (isDecorated()) {
-			Color outlineColor = this.isDescendentSelected()?Theme.currentTheme().getSelection():Theme.currentTheme().getControlOutline();
+			Color outlineColor = this.isDescendentSelected()?Theme.current().getSelection():Theme.current().getControlOutline();
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRoundedRect(context.getNVG(), x, y, w, h, (float) 2);
 			NanoVG.nvgFillColor(context.getNVG(), outlineColor.getNVG());
@@ -793,7 +802,7 @@ public abstract class TextInputControl extends Control {
 		
 		// Dropshadow
 		if (isDecorated()) {
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.currentTheme().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRect(vg, x, y, w, 4);
 			NanoVG.nvgFillPaint(vg, bg);
@@ -813,7 +822,7 @@ public abstract class TextInputControl extends Control {
 			// Draw
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgFontBlur(vg,0);
-			NanoVG.nvgFillColor(vg, Theme.currentTheme().getShadow().getNVG());
+			NanoVG.nvgFillColor(vg, Theme.current().getShadow().getNVG());
 			NanoVG.nvgText(vg, xx, yy, prompt);
 		}
 		
@@ -822,9 +831,9 @@ public abstract class TextInputControl extends Control {
 		this.internal.render(context);
 		
 		// internal selection graphic
-		if ( this.isDescendentSelected() ) {
+		if (isDescendentSelected() && isSelectionOutlineEnabled()) {
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
-			Color sel = context.isFocused() ? Theme.currentTheme().getSelection() : Theme.currentTheme().getSelectionPassive();
+			Color sel = context.isFocused() ? Theme.current().getSelection() : Theme.current().getSelectionPassive();
 			Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);
 			NanoVG.nvgBeginPath(vg);
 				float inset = 1.33f;
@@ -988,7 +997,7 @@ public abstract class TextInputControl extends Control {
 					int height = fontSize;
 					int width = (int) (glyphData.get(i).get(right).x()-xx);
 	
-					LWJGUIUtil.fillRect(context, getX() + xx, getY() + yy, width, height, Theme.currentTheme().getSelectionAlt());
+					LWJGUIUtil.fillRect(context, getX() + xx, getY() + yy, width, height, Theme.current().getSelectionAlt());
 				}
 			}
 			
@@ -1071,8 +1080,10 @@ public abstract class TextInputControl extends Control {
 						} else if (!caretFillCopy.rgbMatches(caretFill)){
 							caretFillCopy.set(caretFill);
 						}
-
-						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFillCopy.alpha((float) (1f - Math.sin(renderCaret * 0.004f))));
+						
+						float alpha = 1.0f-(float) (Math.sin(renderCaret * 0.004f)*0.5+0.5);
+						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFillCopy.alpha(alpha));
+						
 					} else if ( Math.sin(renderCaret*1/150f) < 0 ) {
 						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFill);
 					}

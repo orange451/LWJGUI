@@ -18,7 +18,7 @@ public abstract class Theme {
 	
 	private static Theme currentTheme = new ThemeWhite();
 	
-	public static Theme currentTheme() {
+	public static Theme current() {
 		return currentTheme;
 	}
 	public static void setTheme(Theme theme) {

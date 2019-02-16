@@ -189,13 +189,13 @@ public class TabPane extends Control {
 			this.setSpacing(2);
 			this.setPadding(new Insets(6,4,0,4));
 			this.setPrefHeight(28);
-			this.setBackground(Theme.currentTheme().getSelectionPassive());
+			this.setBackground(Theme.current().getSelectionPassive());
 		}
 		
 		@Override
 		public void render(Context context) {
 			LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), getBackground());
-			LWJGUIUtil.fillRect(context, getX(), getY()+getHeight()-1, getWidth(), 1, Theme.currentTheme().getControlOutline());
+			LWJGUIUtil.fillRect(context, getX(), getY()+getHeight()-1, getWidth(), 1, Theme.current().getControlOutline());
 			for (int i = 0; i < children.size(); i++) {
 				clip(context);
 				children.get(i).render(context);

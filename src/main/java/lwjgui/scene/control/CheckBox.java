@@ -24,7 +24,7 @@ public class CheckBox extends ButtonBase {
 		this.setAlignment(Pos.CENTER_LEFT);
 		this.internalLabel = new Label(checkmark);
 		this.internalLabel2 = new Label(checkmark);
-		this.internalLabel2.setTextFill(Theme.currentTheme().getControl());
+		this.internalLabel2.setTextFill(Theme.current().getControl());
 		
 		this.textOffset = 24;
 

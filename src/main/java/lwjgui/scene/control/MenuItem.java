@@ -31,7 +31,7 @@ public class MenuItem extends Node {
 		this.internalLabel.setPadding(new Insets(0,padding,0,padding));
 		this.internalLabel.setFontSize(16);
 		
-		background = Theme.currentTheme().getPane();
+		background = Theme.current().getPane();
 		
 		this.setOnMouseReleased( event -> {
 			if ( event.button == 0 ) {
@@ -72,7 +72,7 @@ public class MenuItem extends Node {
 			}
 		}
 		
-		Color bg = isSelected()?Theme.currentTheme().getSelection():this.background;
+		Color bg = isSelected()?Theme.current().getSelection():this.background;
 		if ( bg != null ) {
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRect(context.getNVG(), (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
@@ -81,7 +81,7 @@ public class MenuItem extends Node {
 		}
 		
 		// Render text on menu item
-		this.internalLabel.setTextFill(isSelected()?Theme.currentTheme().getControlHover():Theme.currentTheme().getText());
+		this.internalLabel.setTextFill(isSelected()?Theme.current().getControlHover():Theme.current().getText());
 		this.internalLabel.render(context);
 	}
 	

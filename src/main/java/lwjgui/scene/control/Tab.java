@@ -134,12 +134,12 @@ public class Tab {
 			// Background
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x,y,w,h,1);
-			NanoVG.nvgFillColor(vg, Theme.currentTheme().getControlOutline().getNVG());
+			NanoVG.nvgFillColor(vg, Theme.current().getControlOutline().getNVG());
 			NanoVG.nvgFill(vg);
 			
 			// Draw main background
-			Color c1 = isPressed()?Theme.currentTheme().getControlOutline():(pressed?Theme.currentTheme().getControl():(isHovered()?Theme.currentTheme().getControlHover():Theme.currentTheme().getControl()));
-			Color c2 = pressed?Theme.currentTheme().getPane():Theme.currentTheme().getControlOutline();
+			Color c1 = isPressed()?Theme.current().getControlOutline():(pressed?Theme.current().getControl():(isHovered()?Theme.current().getControlHover():Theme.current().getControl()));
+			Color c2 = pressed?Theme.current().getPane():Theme.current().getControlOutline();
 			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*3, c1.getNVG(), c2.getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x+1,y+1,w-2,h-1,0);
@@ -148,16 +148,16 @@ public class Tab {
 			
 			// Draw dark line show this tab button is not selected
 			if ( !pressed ) {
-				LWJGUIUtil.fillRect(context, getX(), getY()+getHeight()-1, getWidth(), 1, Theme.currentTheme().getControlOutline());
+				LWJGUIUtil.fillRect(context, getX(), getY()+getHeight()-1, getWidth(), 1, Theme.current().getControlOutline());
 			}
 			
 			// Change color of X button
 			boolean xpressed = context.isHovered(this.x) && GLFW.glfwGetMouseButton(context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
-			Color c = Theme.currentTheme().getControlOutline();
+			Color c = Theme.current().getControlOutline();
 			if ( context.isHovered(this.x) )
-				c = Theme.currentTheme().getText();
+				c = Theme.current().getText();
 			if ( this.isPressed() || xpressed )
-				c = Theme.currentTheme().getControlOutline();
+				c = Theme.current().getControlOutline();
 			this.x.setTextFill(c);
 			
 			for (int i = 0; i < children.size(); i++) {

@@ -2,6 +2,7 @@ package lwjgui.scene.shape;
 
 import org.lwjgl.nanovg.NanoVG;
 
+import lwjgui.Color;
 import lwjgui.scene.Context;
 
 /**
@@ -9,14 +10,10 @@ import lwjgui.scene.Context;
  *
  */
 public class SectorCircle extends Shape {
-	private float radius = 20;
-	private float completion = 0.5f;
-	private float rotation = (float) Math.PI/2;
-	private int circlePoints = 50;
-	
-	public SectorCircle() {
-		//
-	}
+	private float radius;
+	private float completion;
+	private float rotation;
+	private int circlePoints;
 	
 	/**
 	 * Creates a circle with customizable attributes.
@@ -26,7 +23,8 @@ public class SectorCircle extends Shape {
 	 * @param rotation - the rotation of the circle in radians
 	 * @param circlePoints
 	 */
-	public SectorCircle(float radius, float completion,  float rotation, int circlePoints) {
+	public SectorCircle(Color fill, float radius, float completion, float rotation, int circlePoints) {
+		super(fill);
 		this.radius = radius;
 		this.completion = completion;
 		this.rotation = rotation;

@@ -58,7 +58,7 @@ public class CodeArea extends TextArea {
 		public void render(Context context) {
 			// Draw current selected line
 			if ( editing ) {
-				Color c1 = Theme.currentTheme().getSelection();
+				Color c1 = Theme.current().getSelection();
 				Color c2 = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 32);
 				double xx = getX();
 				double yy = getY()+getRowFromCaret(getCaretPosition())*fontSize;
@@ -101,8 +101,8 @@ public class CodeArea extends TextArea {
 		@Override
 		public void render( Context context ) {
 			// Draw line counter background
-			LWJGUIUtil.fillRect(context, getX()+1, CodeArea.this.getY()+1, getWidth(), CodeArea.this.getInnerBounds().getHeight()-2, Theme.currentTheme().getPane());
-			LWJGUIUtil.fillRect(context, getX()+getWidth(), CodeArea.this.getY()+1, 1, CodeArea.this.getInnerBounds().getHeight()-2, Theme.currentTheme().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getX()+1, CodeArea.this.getY()+1, getWidth(), CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getPane());
+			LWJGUIUtil.fillRect(context, getX()+getWidth(), CodeArea.this.getY()+1, 1, CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getSelectionPassive());
 			
 			super.render(context);
 		}

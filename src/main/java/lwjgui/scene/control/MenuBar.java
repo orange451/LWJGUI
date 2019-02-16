@@ -95,7 +95,7 @@ public class MenuBar extends FillableRegion {
 		long vg = context.getNVG();
 		
 		// Gradient
-		NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight(), Theme.currentTheme().getPane().getNVG(), Theme.currentTheme().getControlAlt().getNVG(), NVGPaint.calloc());
+		NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight(), Theme.current().getPane().getNVG(), Theme.current().getControlAlt().getNVG(), NVGPaint.calloc());
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgRect(vg, (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
 		NanoVG.nvgFillPaint(vg, bg);
@@ -104,7 +104,7 @@ public class MenuBar extends FillableRegion {
 		// Divider line
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgRect(vg, (int)getX(), (int)(getY()+getHeight()-1), (int)getWidth(), 1);
-		NanoVG.nvgFillColor(vg, Theme.currentTheme().getControlOutline().getNVG());
+		NanoVG.nvgFillColor(vg, Theme.current().getControlOutline().getNVG());
 		NanoVG.nvgFill(vg);
 		
 		// Render internal box

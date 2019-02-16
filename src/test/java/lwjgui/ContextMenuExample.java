@@ -79,9 +79,9 @@ public class ContextMenuExample {
 		{
 			// Create context menu
 			ContextMenu menu = new ContextMenu();
-			menu.getItems().add(new MenuItem("Option 1", new Rectangle()));
-			menu.getItems().add(new MenuItem("Option 2", new Rectangle(4)));
-			menu.getItems().add(new MenuItem("Option 3", new Circle()));
+			menu.getItems().add(new MenuItem("Option 1", new Rectangle(16, 16, 4, Color.RED)));
+			menu.getItems().add(new MenuItem("Option 2", new Rectangle(16, 16, 4, Color.BLUE)));
+			menu.getItems().add(new MenuItem("Option 3", new Circle(Color.RED, 8)));
 			menu.setAutoHide(false);
 			
 			// Create context node

@@ -240,17 +240,17 @@ class TreeNode<E> extends HBox {
 		// Set appropriate background color
 		boolean selected = root.isItemSelected(item);
 		boolean active = context.isFocused();
-		Color color = selected?(active?Theme.currentTheme().getSelection():Theme.currentTheme().getSelectionPassive()):null;
+		Color color = selected?(active?Theme.current().getSelection():Theme.current().getSelectionPassive()):null;
 		this.setBackground(color);
 		
 		// Set appropriate colors
-		item.label.label.setTextFill((selected&&active)?Theme.currentTheme().getPane():Theme.currentTheme().getText());
+		item.label.label.setTextFill((selected&&active)?Theme.current().getPane():Theme.current().getText());
 		openGraphic.setTextFill(item.label.label.getTextFill());
 		
 		// Draw fancy outline
 		if ( selected && active ) {
 			this.clip(context);
-			LWJGUIUtil.outlineRect(context, getX(), getY()+1, getWidth()-1, getHeight()-3, Theme.currentTheme().getSelectionAlt());
+			LWJGUIUtil.outlineRect(context, getX(), getY()+1, getWidth()-1, getHeight()-3, Theme.current().getSelectionAlt());
 		}
 	}
 }

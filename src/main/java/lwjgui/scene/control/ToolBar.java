@@ -100,9 +100,9 @@ public class ToolBar extends Control {
 		long vg = context.getNVG();
 		
 		// Gradient
-		NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight(), Theme.currentTheme().getPane().getNVG(), Theme.currentTheme().getControlAlt().getNVG(), NVGPaint.calloc());
+		NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight(), Theme.current().getPane().getNVG(), Theme.current().getControlAlt().getNVG(), NVGPaint.calloc());
 		if ( orientation.equals(Orientation.VERTICAL) ) {
-			bg = NanoVG.nvgLinearGradient(vg, 0, 0, (float)getWidth(), 0, Theme.currentTheme().getPane().getNVG(), Theme.currentTheme().getControlAlt().getNVG(), NVGPaint.calloc());
+			bg = NanoVG.nvgLinearGradient(vg, 0, 0, (float)getWidth(), 0, Theme.current().getPane().getNVG(), Theme.current().getControlAlt().getNVG(), NVGPaint.calloc());
 		}
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgRect(vg, (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
@@ -116,7 +116,7 @@ public class ToolBar extends Control {
 		} else {
 			NanoVG.nvgRect(vg, (int)getX(), (int)(getY()+getHeight()-1), (int)getWidth(), 1);
 		}
-		NanoVG.nvgFillColor(vg, Theme.currentTheme().getControlOutline().getNVG());
+		NanoVG.nvgFillColor(vg, Theme.current().getControlOutline().getNVG());
 		NanoVG.nvgFill(vg);
 		
 		// Render internal box

@@ -2,16 +2,14 @@ package lwjgui.scene.shape;
 
 import org.lwjgl.nanovg.NanoVG;
 
+import lwjgui.Color;
 import lwjgui.scene.Context;
 
 public class Circle extends Shape {
-	private float radius = 8;
-	
-	public Circle() {
-		//
-	}
-	
-	public Circle( float radius ) {
+	private float radius;
+
+	public Circle(Color fill, float radius) {
+		super(fill);
 		this.setRadius(radius);
 	}
 	
@@ -39,7 +37,6 @@ public class Circle extends Shape {
 		
 		NanoVG.nvgBeginPath(context.getNVG());
 		NanoVG.nvgCircle(context.getNVG(), (float)getX()+(float)this.getWidth()/2f, (float)getY()+(float)this.getHeight()/2f, radius);
-		//NanoVG.nvgRoundedRect(context.getNVG(), (float)getAbsoluteX(), (float)getAbsoluteY(), (float)getWidth(), (float)getHeight(), 4);
 		NanoVG.nvgFillColor(context.getNVG(), fill.getNVG());
 		NanoVG.nvgFill(context.getNVG());
 		NanoVG.nvgClosePath(context.getNVG());

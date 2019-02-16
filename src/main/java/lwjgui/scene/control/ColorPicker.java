@@ -56,8 +56,8 @@ public class ColorPicker extends ButtonBase {
 		
 		public ColorPopup() {
 			this.setPadding(new Insets(1));
-			this.setPaddingColor(Theme.currentTheme().getControlOutline());
-			this.setBackground(Theme.currentTheme().getBackground());
+			this.setPaddingColor(Theme.current().getControlOutline());
+			this.setBackground(Theme.current().getBackground());
 			
 			StackPane t = new StackPane();
 			t.setAlignment(Pos.TOP_CENTER);
@@ -139,7 +139,7 @@ public class ColorPicker extends ButtonBase {
 			
 			// Draw Drop Shadow
 			this.clip(context,16);
-			NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+2,y+3, w-2,h, 4, 8, Theme.currentTheme().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
+			NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+2,y+3, w-2,h, 4, 8, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRect(vg, x-16,y-16, w+32,h+32);
 			NanoVG.nvgFillPaint(vg, paint);

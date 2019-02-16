@@ -4,59 +4,36 @@ import org.joml.Vector4f;
 import org.lwjgl.nanovg.NVGColor;
 
 public class Color {
-	public final static Color WHITE = new Color(255, 255, 255);
-	public final static Color LIGHT_GRAY = new Color(211, 211, 211);
-	public final static Color SILVER = new Color(192, 192, 192);
-	public final static Color GRAY = new Color(128, 128, 128);
-	public final static Color DIM_GRAY = new Color(169, 169, 169);
-	public final static Color DARK_GRAY = new Color(64, 64, 64);
-	public final static Color LIGHT_BLACK = new Color( 10, 10, 10 );
-	public final static Color WHITE_SMOKE = new Color( 245, 245, 245 );
-	public final static Color BLACK = new Color(0, 0, 0);
-	public final static Color RED = new Color(255, 0, 0);
-	public final static Color PINK = new Color(255, 175, 175);
-	public final static Color ORANGE = new Color(255, 200, 0);
-	public final static Color YELLOW = new Color(255, 255, 0);
-	public final static Color LIGHT_YELLOW = new Color(255, 238, 158);
-	public final static Color LIGHT_BLUE = new Color(158, 238, 255);
-	public final static Color GREEN = new Color(0, 255, 0);
-	public final static Color MAGENTA = new Color(255, 0, 255);
-	public final static Color CYAN = new Color(0, 255, 255);
-	public final static Color BLUE = new Color(0, 0, 255);
-	public final static Color AQUA = new Color(3, 158, 211);
-	public final static Color CORAL = new Color("#FF7F50");
-	public final static Color VIOLET = new Color("#8A2BE2");
-	public final static Color TRANSPARENT = new Color(255,255,255,0);
+	public static final Color WHITE = new Color(255, 255, 255).immutable(true);
+	public static final Color LIGHT_GRAY = new Color(211, 211, 211).immutable(true);
+	public static final Color SILVER = new Color(192, 192, 192).immutable(true);
+	public static final Color GRAY = new Color(128, 128, 128).immutable(true);
+	public static final Color DIM_GRAY = new Color(169, 169, 169).immutable(true);
+	public static final Color DARK_GRAY = new Color(64, 64, 64).immutable(true);
+	public static final Color LIGHT_BLACK = new Color(10, 10, 10).immutable(true);
+	public static final Color WHITE_SMOKE = new Color(245, 245, 245).immutable(true);
+	public static final Color BLACK = new Color(0, 0, 0).immutable(true);
+	public static final Color RED = new Color(255, 0, 0).immutable(true);
+	public static final Color PINK = new Color(255, 175, 175).immutable(true);
+	public static final Color ORANGE = new Color(255, 200, 0).immutable(true);
+	public static final Color YELLOW = new Color(255, 255, 0).immutable(true);
+	public static final Color LIGHT_YELLOW = new Color(255, 238, 158).immutable(true);
+	public static final Color LIGHT_BLUE = new Color(158, 238, 255).immutable(true);
+	public static final Color GREEN = new Color(0, 255, 0).immutable(true);
+	public static final Color MAGENTA = new Color(255, 0, 255).immutable(true);
+	public static final Color CYAN = new Color(0, 255, 255).immutable(true);
+	public static final Color BLUE = new Color(0, 0, 255).immutable(true);
+	public static final Color AQUA = new Color(3, 158, 211).immutable(true);
+	public static final Color CORAL = new Color("#FF7F50").immutable(true);
+	public static final Color VIOLET = new Color("#8A2BE2").immutable(true);
+	public static final Color TRANSPARENT = new Color(255,255,255,0).immutable(true);
 
-	private int value;
+	private int rgba;
 	private NVGColor nvg;
 	private Vector4f vector;
 
-	private static void testColorValueRange(int r, int g, int b, int a) {
-		boolean rangeError = false;
-		String badComponentString = "";
-
-		if ( a < 0 || a > 255) {
-			rangeError = true;
-			badComponentString = badComponentString + " Alpha";
-		}
-		if ( r < 0 || r > 255) {
-			rangeError = true;
-			badComponentString = badComponentString + " Red";
-		}
-		if ( g < 0 || g > 255) {
-			rangeError = true;
-			badComponentString = badComponentString + " Green";
-		}
-		if ( b < 0 || b > 255) {
-			rangeError = true;
-			badComponentString = badComponentString + " Blue";
-		}
-		if ( rangeError == true ) {
-			throw new IllegalArgumentException("Color parameter outside of expected range: " + badComponentString);
-		}
-	}
-
+	private boolean immutable = false;
+	
 	/**
 	 * Creates an opaque sRGB color with the specified red, green,
 	 * and blue values in the range (0 - 255).
@@ -102,22 +79,22 @@ public class Color {
 	}
 
 	/**
-	 * Creates an opaque sRGB color with the specified combined RGB value
-	 * consisting of the red component in bits 16-23, the green component
+	 * Creates an opaque sRGBA color with the specified combined RGBA value
+	 * consisting of the alpha component in bits 31-24, red component in bits 16-23, the green component
 	 * in bits 8-15, and the blue component in bits 0-7.  The actual color
 	 * used in rendering depends on finding the best match given the
-	 * color space available for a particular output device.  Alpha is
-	 * defaulted to 255.
+	 * color space available for a particular output device. 
 	 *
-	 * @param rgb the combined RGB components
+	 * @param rgba the combined RGBA components
 	 * @see java.awt.image.ColorModel#getRGBdefault
 	 * @see #getRed
 	 * @see #getGreen
 	 * @see #getBlue
-	 * @see #getRGB
+	 * @see #getAlpha
+	 * @see #getRGBA
 	 */
-	public Color(int rgb) {
-		value = 0xff000000 | rgb;
+	public Color(int rgba) {
+		set(rgba);
 	}
 
 	/**
@@ -136,10 +113,10 @@ public class Color {
 	 * @see #getRed
 	 * @see #getGreen
 	 * @see #getBlue
-	 * @see #getRGB
+	 * @see #getRGBA
 	 */
 	public Color(float r, float g, float b) {
-		this( (int) (r*255), (int) (g*255), (int) (b*255));
+		this((int) (r*255), (int) (g*255), (int) (b*255));
 	}
 
 	/**
@@ -153,23 +130,235 @@ public class Color {
 				Integer.valueOf(hex.substring(5, 7), 16));
 	}
 	
+	
+	/**
+	 * Creates a Color from another Color (a copy).
+	 * 
+	 * @param color - the color to copy
+	 */
 	public Color(Color color) {
-		this.value = color.value;
+		set(color);
 	}
 	
-	public void set(int r, int g, int b, int a) {
-		//Reset the cache for the vector/nvg colors
-		vector = null;
-		nvg = null;
-		
+	/**
+	 * Sets whether or not this Color is immutable. Immutable Colors cannot be recycled, and any setters used will instead return a new Color object rather than internally modifying this color.
+	 * 
+	 * @param immutable 
+	 * @return
+	 */
+	public Color immutable(boolean immutable) {
+		this.immutable = immutable;
+		return this;
+	}
+	
+	/**
+	 * Creates a copy of this Color, however customization options such as immutable are not copied.
+	 * 
+	 * @return - the copy of this Color.
+	 */
+	public Color copy() {
+		return new Color(this);
+	}
+	
+	/**
+	 * Sets a Color from another Color (turns this Color into a copy of the given color)
+	 * 
+	 * @param color - the color to copy
+	 * 
+	 * @return this Color object if the Color is not mutable, or a new Color object if this Color is set to be immutable.
+	 */
+	public Color set(Color color) {
+		return set(color.getRGBA());
+	}
+	
+	/**
+	 * Sets an opaque sRGB color with the specified red, green, and blue
+	 * values in the range (0.0 - 1.0). The
+	 * actual color used in rendering depends on finding the best
+	 * match given the color space available for a particular output
+	 * device. Useful for when a Color object needs to be recycled.
+	 *
+	 * @throws IllegalArgumentException if <code>r</code>, <code>g</code>
+	 *        or <code>b</code> are outside of the range
+	 *        0.0 to 1.0, inclusive
+	 * @param r the red component
+	 * @param g the green component
+	 * @param b the blue component
+	 * @param a the alpha component
+	 * @see #getRed
+	 * @see #getGreen
+	 * @see #getBlue
+	 * @see #getRGBA
+	 * 
+	 * @return this Color object if the Color is not mutable, or a new Color object if this Color is set to be immutable.
+	 */
+	public Color set(float r, float g, float b, float a) {
+		return set((int) (r*255), (int) (g*255), (int) (b*255), (int) (a*255));
+	}
+	
+	/**
+	 * Sets the alpha value in the range (0.0 - 1.0). Useful for when a Color object needs to be recycled.
+	 *
+	 * @throws IllegalArgumentException if <code>r</code>, <code>g</code>
+	 *        or <code>b</code> are outside of the range
+	 *        0.0 to 1.0, inclusive
+	 * @param r the red component
+	 * @param g the green component
+	 * @param b the blue component
+	 * @param a the blue component
+	 * @see #getRed
+	 * @see #getGreen
+	 * @see #getBlue
+	 * @see #getRGBA
+	 * 
+	 * @return this Color object if the Color is not mutable, or a new Color object if this Color is set to be immutable.
+	 */
+	public Color alpha(float a) {
+		return set(getRed(), getGreen(), getBlue(), (int) (a*255));
+	}
+	
+	/**
+	 * Sets the red value in the range (0.0 - 1.0). Useful for when a Color object needs to be recycled.
+	 *
+	 * @throws IllegalArgumentException if <code>r</code>, <code>g</code>
+	 *        or <code>b</code> are outside of the range
+	 *        0.0 to 1.0, inclusive
+	 * @param r the red component
+	 * @param g the green component
+	 * @param b the blue component
+	 * @param a the blue component
+	 * @see #getRed
+	 * @see #getGreen
+	 * @see #getBlue
+	 * @see #getRGBA
+	 * 
+	 * @return this Color object if the Color is not mutable, or a new Color object if this Color is set to be immutable.
+	 */
+	public Color red(float r) {
+		return set((int) (r*255), getGreen(), getBlue(), getAlpha());
+	}
+	
+	/**
+	 * Sets the green value in the range (0.0 - 1.0). Useful for when a Color object needs to be recycled.
+	 *
+	 * @throws IllegalArgumentException if <code>r</code>, <code>g</code>
+	 *        or <code>b</code> are outside of the range
+	 *        0.0 to 1.0, inclusive
+	 * @param r the red component
+	 * @param g the green component
+	 * @param b the blue component
+	 * @param a the blue component
+	 * @see #getRed
+	 * @see #getGreen
+	 * @see #getBlue
+	 * @see #getRGBA
+	 * 
+	 * @return this Color object if the Color is not mutable, or a new Color object if this Color is set to be immutable.
+	 */
+	public Color green(float g) {
+		return set(getRed(), (int) (g * 255), getBlue(), getAlpha());
+	}
+	
+	/**
+	 * Sets the blue value in the range (0.0 - 1.0). Useful for when a Color object needs to be recycled.
+	 *
+	 * @throws IllegalArgumentException if <code>r</code>, <code>g</code>
+	 *        or <code>b</code> are outside of the range
+	 *        0.0 to 1.0, inclusive
+	 * @param r the red component
+	 * @param g the green component
+	 * @param b the blue component
+	 * @param a the blue component
+	 * @see #getRed
+	 * @see #getGreen
+	 * @see #getBlue
+	 * @see #getRGBA
+	 * 
+	 * @return this Color object if the Color is not mutable, or a new Color object if this Color is set to be immutable.
+	 */
+	public Color blue(float b) {
+		return set(getRed(), getGreen(), (int) (b * 255), getAlpha());
+	}
+	
+	/**
+	 * Sets an sRGB color with the specified red, green, blue, and alpha
+	 * values in the range (0 - 255). Useful for when a Color object needs to be recycled.
+	 *
+	 * @throws IllegalArgumentException if <code>r</code>, <code>g</code>,
+	 *        <code>b</code> or <code>a</code> are outside of the range
+	 *        0 to 255, inclusive
+	 * @param r the red component
+	 * @param g the green component
+	 * @param b the blue component
+	 * @param a the alpha component
+	 * @see #getRed
+	 * @see #getGreen
+	 * @see #getBlue
+	 * @see #getAlpha
+	 * @see #getRGBA
+	 * 
+	 * @return this Color object if the Color is not mutable, or a new Color object if this Color is set to be immutable.
+	 */
+	public Color set(int r, int g, int b, int a) {
 		//Set the new color value
-		value = ((a & 0xFF) << 24) |
+		int rgb = ((a & 0xFF) << 24) |
 				((r & 0xFF) << 16) |
 				((g & 0xFF) << 8)  |
 				((b & 0xFF) << 0);
 		
 		//Ensure that the color is valid
 		testColorValueRange(r,g,b,a);
+		
+		return set(rgb);
+	}
+	
+	/**
+	 * Sets an opaque sRGBA color with the specified combined RGBA value
+	 * consisting of the alpha component in bits 31-24, red component in bits 16-23, the green component
+	 * in bits 8-15, and the blue component in bits 0-7.  The actual color
+	 * used in rendering depends on finding the best match given the
+	 * color space available for a particular output device. 
+	 *
+	 * @param rgba the combined RGBA components
+	 * @see java.awt.image.ColorModel#getRGBdefault
+	 * @see #getRed
+	 * @see #getGreen
+	 * @see #getBlue
+	 * @see #getAlpha
+	 * @see #getRGB
+	 * 
+	 * @return this Color object if the Color is not mutable, or a new Color object if this Color is set to be immutable.
+	 */
+	public Color set(int rgba) {
+		if (immutable) {
+			return new Color(rgba);
+		} else {
+			this.rgba = rgba;
+			
+			//Create the NVGColor/update it
+			float fR = getRed()/255.0f;
+			float fG = getGreen()/255.0f;
+			float fB = getBlue()/255.0f;
+			float fA = getAlpha()/255.0f;
+			
+			if ( nvg == null ) {
+				nvg = NVGColor.calloc();
+			}
+			
+			nvg.r(fR);
+			nvg.g(fG);
+			nvg.b(fB);
+			nvg.a(fA);
+		
+			//Create the vector/update it
+			if ( vector == null ) {
+				vector = new Vector4f(fR, fG, fB, fA);
+			} else {
+				vector.set(fR, fG, fB, fA);
+			}
+			
+			return this;
+		}
 	}
 	
 	/**
@@ -177,14 +366,6 @@ public class Color {
 	 * @return
 	 */
 	public NVGColor getNVG() {
-		if ( nvg == null ) {
-			nvg = NVGColor.calloc();
-			nvg.r(getRed()/255.0f);
-			nvg.g(getGreen()/255.0f);
-			nvg.b(getBlue()/255.0f);
-			nvg.a(getAlpha()/255.0f);
-		}
-
 		return nvg;
 	}
 
@@ -193,10 +374,6 @@ public class Color {
 	 * @return
 	 */
 	public Vector4f getVector() {
-		if ( vector == null ) {
-			vector = new Vector4f(getRed()/255.0f, getGreen()/255.0f, getBlue()/255.0f, getAlpha()/255.0f);
-		}
-
 		return vector;
 	}
 
@@ -207,7 +384,7 @@ public class Color {
 	 * @see #getRGB
 	 */
 	public int getRed() {
-		return (getRGB() >> 16) & 0xFF;
+		return (getRGBA() >> 16) & 0xFF;
 	}
 
 	/**
@@ -217,7 +394,7 @@ public class Color {
 	 * @see #getRGB
 	 */
 	public int getGreen() {
-		return (getRGB() >> 8) & 0xFF;
+		return (getRGBA() >> 8) & 0xFF;
 	}
 
 	/**
@@ -227,7 +404,7 @@ public class Color {
 	 * @see #getRGB
 	 */
 	public int getBlue() {
-		return (getRGB() >> 0) & 0xFF;
+		return (getRGBA() >> 0) & 0xFF;
 	}
 
 	/**
@@ -236,7 +413,7 @@ public class Color {
 	 * @see #getRGB
 	 */
 	public int getAlpha() {
-		return (getRGB() >> 24) & 0xff;
+		return (getRGBA() >> 24) & 0xff;
 	}
 
 	/**
@@ -252,8 +429,8 @@ public class Color {
 	 * @see #getBlue
 	 * @since JDK1.0
 	 */
-	public int getRGB() {
-		return value;
+	public int getRGBA() {
+		return rgba;
 	}
 
 	public Color brighter(double factor) {
@@ -330,18 +507,6 @@ public class Color {
 				getAlpha());
 	}
 	
-	/**
-	 * Returns a new Color that's identical this one, but with the opacity tweaked by the given factor. 
-	 * 
-	 * The opacity will be calculated to be: 255 * factor, thus normalized values should be used.
-	 * 
-	 * @param factor - a value between 0 and 1 (where 1 is full visible and 0 is not visible at all)
-	 * @return
-	 */
-	public Color opaque(double factor) {
-		return new Color(getRed(), getGreen(), getBlue(), (int) (factor * 255));
-	}
-
 	public String toString() {
 		int r = getRed();
 		int g = getGreen();
@@ -356,6 +521,16 @@ public class Color {
 		array[0] = getRed()/255f;
 		array[1] = getGreen()/255f;
 		array[2] = getBlue()/255f;
+	}
+	
+	/**
+	 * Returns whether or not the RGB values of the given color match this one.
+	 * 
+	 * @param color
+	 * @return
+	 */
+	public boolean rgbMatches(Color color) {
+		return (getRed() == color.getRed() && getGreen() == color.getGreen() && getBlue() == color.getBlue());
 	}
 	
 	/**
@@ -387,4 +562,30 @@ public class Color {
 	public static double mix(double x, double y, double a){
 		return x + (y-x)*a;
 	}
+
+	private static void testColorValueRange(int r, int g, int b, int a) {
+		boolean rangeError = false;
+		String badComponentString = "";
+
+		if ( a < 0 || a > 255) {
+			rangeError = true;
+			badComponentString = badComponentString + " Alpha";
+		}
+		if ( r < 0 || r > 255) {
+			rangeError = true;
+			badComponentString = badComponentString + " Red";
+		}
+		if ( g < 0 || g > 255) {
+			rangeError = true;
+			badComponentString = badComponentString + " Green";
+		}
+		if ( b < 0 || b > 255) {
+			rangeError = true;
+			badComponentString = badComponentString + " Blue";
+		}
+		if ( rangeError == true ) {
+			throw new IllegalArgumentException("Color parameter outside of expected range: " + badComponentString);
+		}
+	}
+
 }

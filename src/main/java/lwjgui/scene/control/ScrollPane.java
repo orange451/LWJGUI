@@ -37,6 +37,15 @@ public class ScrollPane extends Control {
 	
 	private ObservableList<ScrollBar> scrollBars;
 	
+	/*
+	 * Customization
+	 */
+
+	private Color selectionFill = Theme.current().getSelection();
+	private Color selectionPassiveFill = Theme.current().getSelectionPassive();
+	private Color controlFill = Theme.current().getControl();
+	private Color controlOutlineFill = Theme.current().getControlOutline();
+	
 	public ScrollPane() {
 		this.setPrefSize(100, 100);
 		this.setAlignment(Pos.TOP_LEFT);
@@ -120,6 +129,38 @@ public class ScrollPane extends Control {
 		this.internalPane.setMinSize(x, y);
 		this.internalPane.setMaxSize(x, y);
 		this.internalPane.setPrefSize(x, y);
+	}
+
+	public Color getSelectionFill() {
+		return selectionFill;
+	}
+
+	public void setSelectionFill(Color selectionFill) {
+		this.selectionFill = selectionFill;
+	}
+
+	public Color getSelectionPassiveFill() {
+		return selectionPassiveFill;
+	}
+
+	public void setSelectionPassiveFill(Color selectionPassiveFill) {
+		this.selectionPassiveFill = selectionPassiveFill;
+	}
+
+	public Color getControlFill() {
+		return controlFill;
+	}
+
+	public void setControlFill(Color controlFill) {
+		this.controlFill = controlFill;
+	}
+
+	public Color getControlOutlineFill() {
+		return controlOutlineFill;
+	}
+
+	public void setControlOutlineFill(Color controlOutlineFill) {
+		this.controlOutlineFill = controlOutlineFill;
 	}
 
 	@Override
@@ -232,13 +273,13 @@ public class ScrollPane extends Control {
 		
 		this.clip(context);
 		if ( vBar.active ) // Vertical scrollbar track
-			LWJGUIUtil.fillRect(context, getX()+viewportSize.x-0.5, getY()+1, getWidth()-viewportSize.x-1, getHeight()-2, Theme.current().getControl());
+			LWJGUIUtil.fillRect(context, getX()+viewportSize.x-0.5, getY()+1, getWidth()-viewportSize.x-1, getHeight()-2, controlFill);
 		if ( hBar.active ) // Horizontal scrollbar track
-			LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y, getWidth()-2, getHeight()-viewportSize.y-1, Theme.current().getControl());
+			LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y, getWidth()-2, getHeight()-viewportSize.y-1, controlFill);
 		if ( vBar.active ) // Vertical scrollbar track outline
-			LWJGUIUtil.fillRect(context, getX()+viewportSize.x-1.5, getY()+1, 1, viewportSize.y-2, Theme.current().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getX()+viewportSize.x-1.5, getY()+1, 1, viewportSize.y-2, selectionPassiveFill);
 		if ( hBar.active ) // Horizontal scrollbar track outline
-			LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y-1, viewportSize.x-1, 1, Theme.current().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y-1, viewportSize.x-1, 1, selectionPassiveFill);
 		
 		// Draw bars
 		for (int i = 0; i < scrollBars.size(); i++) {
@@ -250,7 +291,7 @@ public class ScrollPane extends Control {
 		
 		// Pane Outline
 		if ( this.getBackground() != null ) {
-			Color outlineColor = this.isDescendentSelected()?Theme.current().getSelection():Theme.current().getControlOutline();
+			Color outlineColor = this.isDescendentSelected() ? selectionFill : controlOutlineFill;
 			LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth(), getHeight(), outlineColor);
 		}
 	}
@@ -363,7 +404,7 @@ public class ScrollPane extends Control {
 				y2 = bd.y;
 				len = x2-x1;
 			}
-			Color color = Theme.current().getControlOutline();
+			Color color = controlOutlineFill;
 			LWJGUIUtil.fillRoundRect(context, x1, y1, barThickness, barThickness, barThickness/2f, color);
 			LWJGUIUtil.fillRoundRect(context, x2, y2, barThickness, barThickness, barThickness/2f, color);
 			if ( len > 0 ) {

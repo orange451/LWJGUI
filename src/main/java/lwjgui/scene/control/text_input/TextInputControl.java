@@ -69,6 +69,12 @@ public abstract class TextInputControl extends Control {
 	private Color caretFill = Color.BLACK;
 	private boolean caretFading = false;
 	
+	private Color backgroundFill = Theme.current().getBackground();
+	private Color selectionFill = Theme.current().getSelection();
+	private Color selectionPassiveFill = Theme.current().getSelectionPassive();
+	private Color selectionAltFill = Theme.current().getSelectionAlt();
+	private Color controlOutlineFill = Theme.current().getControlOutline();
+	
 	public TextInputControl() {
 		this(new TextInputControlShortcuts());
 	}
@@ -80,7 +86,7 @@ public abstract class TextInputControl extends Control {
 		
 		this.fakeBox = new TextAreaContent();
 
-		this.setBackground(Theme.current().getBackground());
+		this.setBackground(backgroundFill);
 		this.internal = new TextAreaScrollPane();
 		this.children.add(internal);
 		this.internal.setContent(fakeBox);
@@ -348,6 +354,46 @@ public abstract class TextInputControl extends Control {
 		this.style = style;
 	}
 	
+	public Color getBackgroundFill() {
+		return backgroundFill;
+	}
+
+	public void setBackgroundFill(Color backgroundFill) {
+		this.backgroundFill = backgroundFill;
+	}
+
+	public Color getSelectionFill() {
+		return selectionFill;
+	}
+
+	public void setSelectionFill(Color selectionFill) {
+		this.selectionFill = selectionFill;
+	}
+
+	public Color getSelectionPassiveFill() {
+		return selectionPassiveFill;
+	}
+
+	public void setSelectionPassiveFill(Color selectionPassiveFill) {
+		this.selectionPassiveFill = selectionPassiveFill;
+	}
+
+	public Color getSelectionAltFill() {
+		return selectionAltFill;
+	}
+
+	public void setSelectionAltFill(Color selectionAltFill) {
+		this.selectionAltFill = selectionAltFill;
+	}
+
+	public Color getControlOutlineFill() {
+		return controlOutlineFill;
+	}
+
+	public void setControlOutlineFill(Color controlOutlineFill) {
+		this.controlOutlineFill = controlOutlineFill;
+	}
+
 	public void setOnSelected( EventHandler<Event> event ) {
 		this.onSelectEvent = event;
 	}
@@ -793,7 +839,7 @@ public abstract class TextInputControl extends Control {
 		// Selection graphic
 		if (isDescendentSelected() && isDecorated()) {
 			int feather = 4;
-			Color color = context.isFocused()?Theme.current().getSelection():Theme.current().getSelectionPassive();
+			Color color = context.isFocused() ? selectionFill : selectionPassiveFill;
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
 				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w,h, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 				NanoVG.nvgBeginPath(vg);
@@ -806,7 +852,7 @@ public abstract class TextInputControl extends Control {
 		
 		// Outline
 		if (isDecorated()) {
-			Color outlineColor = this.isDescendentSelected()?Theme.current().getSelection():Theme.current().getControlOutline();
+			Color outlineColor = this.isDescendentSelected()? selectionFill : controlOutlineFill;
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRoundedRect(context.getNVG(), x, y, w, h, (float) 2);
 			NanoVG.nvgFillColor(context.getNVG(), outlineColor.getNVG());
@@ -852,7 +898,7 @@ public abstract class TextInputControl extends Control {
 		// internal selection graphic
 		if (isDescendentSelected() && isSelectionOutlineEnabled()) {
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
-			Color sel = context.isFocused() ? Theme.current().getSelection() : Theme.current().getSelectionPassive();
+			Color sel = context.isFocused() ? selectionFill : selectionPassiveFill;
 			Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);
 			NanoVG.nvgBeginPath(vg);
 				float inset = 1.33f;
@@ -1016,7 +1062,7 @@ public abstract class TextInputControl extends Control {
 					int height = fontSize;
 					int width = (int) (glyphData.get(i).get(right).x()-xx);
 	
-					LWJGUIUtil.fillRect(context, getX() + xx, getY() + yy, width, height, Theme.current().getSelectionAlt());
+					LWJGUIUtil.fillRect(context, getX() + xx, getY() + yy, width, height, selectionAltFill);
 				}
 			}
 			

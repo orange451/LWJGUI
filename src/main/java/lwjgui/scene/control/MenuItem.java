@@ -10,6 +10,7 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.scene.layout.Font;
 import lwjgui.theme.Theme;
 
 public class MenuItem extends Node {
@@ -23,11 +24,21 @@ public class MenuItem extends Node {
 	}
 	
 	public MenuItem(String string, Node graphic) {
+		this(string, null, graphic);
+	}
+	
+	public MenuItem(String string, Font font, Node graphic) {
 		if ( string != null ) {
-			this.internalNode = new Label(string);
-			((Label)this.internalNode).setGraphic(graphic);
-			((Label)this.internalNode).setPadding(new Insets(0,padding,0,padding));
-			((Label)this.internalNode).setFontSize(16);
+			Label l = new Label(string);
+			l.setGraphic(graphic);
+			l.setPadding(new Insets(0,padding,0,padding));
+			l.setFontSize(16);
+			
+			if (font != null) {
+				l.setFont(font);
+			}
+			
+			this.internalNode = l;
 			this.internalNode.setMouseTransparent(true);
 			this.children.add(internalNode);
 		}

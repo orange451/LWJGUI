@@ -11,8 +11,7 @@ public class LWJGUIDialog {
 	public enum DialogType {
 		OK("ok"),
 		OK_CANCEL("okcancel"),
-		YES_NO("yesno"),
-		YES_NO_CANCEL("yesnocancel");
+		YES_NO("yesno");
 		
 		String key;
 		

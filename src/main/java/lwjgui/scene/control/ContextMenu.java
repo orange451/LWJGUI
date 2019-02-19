@@ -6,30 +6,21 @@ import org.lwjgl.nanovg.NanoVG;
 import lwjgui.Color;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
-import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
 
 public class ContextMenu extends PopupWindow {
-	private ContextVBox internalBox;
+	private VBox internalBox;
 	private ContextMenu childMenu;
 	
 	private ObservableList<MenuItem> items = new ObservableList<MenuItem>();
 	
-	static class ContextVBox extends VBox {
-		@Override
-		public void position(Node parent) {
-			super.position(parent);
-		}
-	}
-	
 	public ContextMenu() {
 		this.setAutoHide(true);
-		this.internalBox = new ContextVBox();
+		this.internalBox = new VBox();
 		this.children.add(this.internalBox);
 		
 		this.items.setAddCallback(new ElementCallback<MenuItem>() {
@@ -48,38 +39,15 @@ public class ContextMenu extends PopupWindow {
 	}
 	
 	private void recalculate() {
-		resize(Integer.MAX_VALUE,Integer.MAX_VALUE);
-		
 		// Fill the internal box with our items
 		internalBox.getChildren().clear();
 		for (int i = 0; i < items.size(); i++) {
 			internalBox.getChildren().add(items.get(i));
 		}
-		
-		// Position the internalbox? This is really hacky... Something is wrong internally...
-		for (int i = 0; i < 4; i++) {
-			internalBox.position(this);
-		}
-		
-		float wid = (float) internalBox.getWidth();
-		float hei = (float) internalBox.getHeight();
-		
-		// Make our size it's size.
-		if ( wid > 0 && hei > 0 ) {
-			resize(wid, hei);	
-		}
 	}
 
 	public ContextMenu getChild() {
 		return this.childMenu;
-	}
-	
-	protected void resize( double sx, double sy ) {
-		this.setMinSize(sx, sy);
-		this.setMaxSize(sx, sy);
-		//this.setPrefSize(sx, sy);
-		//internalBox.setMaxSize(1024, 1024);
-		//internalBox.setPrefSize(sx, sy);
 	}
 	
 	@Override
@@ -99,8 +67,8 @@ public class ContextMenu extends PopupWindow {
 	@Override
 	public void render(Context context) {
 		// Position the menu
-		recalculate();
-		this.position(this.getScene());
+		//recalculate();
+		this.position(getParent());
 		
 		// Reposition if outside of screen
 		if ( this.getY() + this.getHeight() > this.getScene().getHeight() )
@@ -110,7 +78,7 @@ public class ContextMenu extends PopupWindow {
 		
 		// Position internal box inside menu
 		this.setAlignment(Pos.TOP_LEFT);
-		internalBox.position(this);
+		//internalBox.position(this);
 		
 		// Get my width, and resize internal buttons so that they match the width of the box
 		double innerWidth = this.getInnerBounds().getWidth();
@@ -147,32 +115,11 @@ public class ContextMenu extends PopupWindow {
 		NanoVG.nvgFill(context.getNVG());
 		
 		// Render insides
-		this.internalBox.render(context);
+		//this.internalBox.render(context);
+		super.render(context);
 	}
-	
-	private class ContextMenuSeparator extends MenuItem {
-
-		public ContextMenuSeparator() {
-			super("", null);
-			
-			StackPane separatorPane = new StackPane();
-			separatorPane.setPrefHeight(16);
-			
-			StackPane separator = new StackPane();
-			separator.setPadding(new Insets(0, 0, 1, 0));
-			separator.setPaddingColor(Color.RED);
-			
-			separatorPane.getChildren().add(separator);
-			
-			setGraphic(separatorPane);
-		}
-	};
 
 	public ObservableList<MenuItem> getItems() {
 		return this.items;
-	}
-	
-	public ContextMenuSeparator newSeparator() {
-		return new ContextMenuSeparator();
 	}
 }

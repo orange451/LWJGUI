@@ -30,6 +30,8 @@ public class MenuBar extends FillableRegion {
 		this.setPadding(new Insets(0, 6, 0, 6));
 		
 		this.internalBox = new HBox();
+		this.internalBox.setAlignment(Pos.TOP_LEFT);
+		this.internalBox.setFillToParentHeight(true);
 		this.internalBox.setBackground(null);
 		this.children.add(internalBox);
 		
@@ -52,6 +54,10 @@ public class MenuBar extends FillableRegion {
 		internalBox.getChildren().clear();
 		for (int i = 0; i < items.size(); i++) {
 			internalBox.getChildren().add(items.get(i));
+			items.get(i).setPrefHeight(getHeight());
+		}
+		if ( getParent() != null ) {
+			position(getParent());
 		}
 	}
 	
@@ -67,6 +73,11 @@ public class MenuBar extends FillableRegion {
 	@Override
 	public void position(Node parent) {
 		this.setAlignment(Pos.TOP_LEFT);
+		
+		for (int i = 0; i < items.size(); i++) {
+			items.get(i).setPrefHeight(getHeight());
+		}
+		
 		super.position(parent);
 		
 		if ( !isOpen ) {

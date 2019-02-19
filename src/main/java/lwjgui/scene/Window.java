@@ -151,6 +151,9 @@ public class Window {
 			}
 			
 			private void notifyKeyInput(Node root, int key, int scancode, int action, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
+				if ( root == null )
+					return;
+				
 				ObservableList<Node> children = root.getChildren();
 				for (int i = 0; i < children.size(); i++) {
 					notifyKeyInput(children.get(i), key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);

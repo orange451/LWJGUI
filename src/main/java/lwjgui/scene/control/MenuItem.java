@@ -1,10 +1,8 @@
 package lwjgui.scene.control;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
-import lwjgui.LWJGUI;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
@@ -16,8 +14,7 @@ import lwjgui.theme.Theme;
 
 public class MenuItem extends Node {
 	protected EventHandler<ButtonEvent> buttonEvent;
-	private Labeled internalLabel;
-	private static final int prefHeight = 24;
+	private Node internalNode;
 	private static final int padding = 4;
 	protected Color background;
 	
@@ -25,19 +22,19 @@ public class MenuItem extends Node {
 		this(string, null);
 	}
 	
-	public MenuItem(Node graphic) {
-		this(null, graphic);
-	}
-	
 	public MenuItem(String string, Node graphic) {
-		this.internalLabel = new Label(string) {};
-		this.internalLabel.setGraphic(graphic);
-		this.internalLabel.setPadding(new Insets(0,padding,0,padding));
-		this.internalLabel.setFontSize(16);
+		this.internalNode = new Label(string);
+		((Label)this.internalNode).setGraphic(graphic);
+		((Label)this.internalNode).setPadding(new Insets(0,padding,0,padding));
+		((Label)this.internalNode).setFontSize(16);
+		this.internalNode.setMouseTransparent(true);
+		this.children.add(internalNode);
+		
+		this.setPrefHeight(24);
 		
 		background = Theme.current().getPane();
 		
-		this.setOnMouseReleasedInternal( event -> {
+		this.setOnMouseReleased( event -> {
 			if ( event.button == 0 ) {
 				if ( buttonEvent != null ) 
 					EventHelper.fireEvent(buttonEvent, new ButtonEvent());
@@ -47,28 +44,20 @@ public class MenuItem extends Node {
 		});
 	}
 	
-	public void setGraphic(Node node) {
-		this.internalLabel.setGraphic(node);
-	}
-	
 	@Override
 	protected void resize() {
-		super.resize();
-		
 		this.setAlignment(Pos.CENTER_LEFT);
-		this.resize(Integer.MAX_VALUE, prefHeight);
-		this.internalLabel.position(this);
-		//this.resize(internalLabel.graphicLabel.getMaximumPotentialWidth(), prefHeight);
-		this.resize(internalLabel.getWidth(), prefHeight);
+		super.resize();
+		this.updateChildren();
+		this.setMinSize(internalNode.getWidth(), getPrefHeight());
 	}
 	
 	protected boolean isSelected() {
-		return LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext().isHovered(this);
+		return this.cached_context.isHovered(this) || this.isDescendentHovered();
 	}
 
 	@Override
 	public void render(Context context) {
-		
 		// Outline
 		if ( isSelected() ) {
 			if ( this.parent.getParent() instanceof ContextMenu ) {
@@ -85,14 +74,10 @@ public class MenuItem extends Node {
 		}
 		
 		// Render text on menu item
-		this.internalLabel.setTextFill(isSelected()?Theme.current().getControlHover():Theme.current().getText());
-		this.internalLabel.render(context);
-	}
-	
-	private void resize( double x, double y ) {
-		this.setMinSize(x, y);
-		this.setMaxSize(x, y);
-		this.setPrefSize(x, y);
+		if ( this.internalNode instanceof Labeled ) {
+			((Labeled) this.internalNode).setTextFill(isSelected()?Theme.current().getControlHover():Theme.current().getText());
+		}
+		this.internalNode.render(context);
 	}
 
 	@Override

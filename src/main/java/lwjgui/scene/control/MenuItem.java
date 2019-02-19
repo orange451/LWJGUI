@@ -15,7 +15,7 @@ import lwjgui.theme.Theme;
 
 public class MenuItem extends Node {
 	protected EventHandler<ButtonEvent> buttonEvent;
-	private Node internalNode;
+	private Label internalLabel = null;
 	private static final int padding = 4;
 	protected Color background;
 	
@@ -32,19 +32,8 @@ public class MenuItem extends Node {
 	}
 	
 	public MenuItem(String string, Font font, Node graphic) {
-		if ( string != null ) {
-			Label l = new Label(string);
-			l.setGraphic(graphic);
-			l.setPadding(new Insets(0,padding,0,padding));
-			l.setFontSize(16);
-			
-			if (font != null) {
-				l.setFont(font);
-			}
-			
-			this.internalNode = l;
-			this.internalNode.setMouseTransparent(true);
-			this.children.add(internalNode);
+		if (string != null) {
+			setContent(string, font, graphic);
 		}
 		
 		this.setPrefHeight(24);
@@ -61,13 +50,31 @@ public class MenuItem extends Node {
 		});
 	}
 	
+	private void setContent(String string, Font font, Node graphic) {
+		if (internalLabel == null) {
+			internalLabel = new Label(string);
+		}
+		
+		internalLabel.setGraphic(graphic);
+		internalLabel.setPadding(new Insets(0, padding, 0, padding));
+		internalLabel.setFontSize(16);
+
+		if (font != null) {
+			internalLabel.setFont(font);
+		}
+
+		this.internalLabel.setMouseTransparent(true);
+		this.children.add(internalLabel);
+	}
+	
 	@Override
 	protected void resize() {
 		this.setAlignment(Pos.CENTER_LEFT);
 		super.resize();
 		this.updateChildren();
-		if ( internalNode != null ) {
-			this.setMinSize(internalNode.getWidth(), getPrefHeight());
+		
+		if ( internalLabel != null ) {
+			this.setMinSize(internalLabel.getWidth(), getPrefHeight());
 		}
 	}
 	
@@ -93,11 +100,11 @@ public class MenuItem extends Node {
 		}
 		
 		// Render text on menu item
-		if ( this.internalNode != null ) {
-			if ( this.internalNode instanceof Labeled ) {
-				((Labeled) this.internalNode).setTextFill(isSelected()?Theme.current().getTextAlt():Theme.current().getText());
+		if ( this.internalLabel != null ) {
+			if ( this.internalLabel instanceof Labeled ) {
+				((Labeled) this.internalLabel).setTextFill(isSelected()?Theme.current().getTextAlt():Theme.current().getText());
 			}
-			this.internalNode.render(context);
+			this.internalLabel.render(context);
 		}
 	}
 

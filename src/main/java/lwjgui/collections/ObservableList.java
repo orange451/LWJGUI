@@ -44,6 +44,14 @@ public class ObservableList<E> {
 		}
 	}
 	
+	public void add(int index, E element) {
+		internal.add(index, element);
+
+		if (addCallback != null) {
+			addCallback.onEvent(element);
+		}
+	}
+	
 	public void add(E element) {
 		internal.add(element);
 

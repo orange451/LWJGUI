@@ -1,5 +1,6 @@
 package lwjgui.scene.shape;
 
+import org.joml.Vector2f;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
@@ -10,10 +11,11 @@ import lwjgui.scene.Context;
  *
  */
 public class SectorCircle extends Shape {
-	private float radius;
-	private float completion;
-	private float rotation;
-	private int circlePoints;
+	protected float radius;
+	protected float completion;
+	protected float rotation;
+	protected int circlePoints;
+	protected Vector2f renderOffset = new Vector2f();
 	
 	/**
 	 * Creates a circle with customizable attributes.
@@ -56,8 +58,8 @@ public class SectorCircle extends Shape {
 		float x = (float) getX();
 		float y = (float) getY();
 		
-		float centerX = x + radius;
-		float centerY = y + radius;
+		float centerX = x + radius + renderOffset.x;
+		float centerY = y + radius + renderOffset.y;
 		
         float pi2 = (float) (Math.PI * 2) * completion;
 		

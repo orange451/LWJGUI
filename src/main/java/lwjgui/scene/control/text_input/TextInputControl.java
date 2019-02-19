@@ -80,7 +80,7 @@ public abstract class TextInputControl extends Control {
 		
 		this.fakeBox = new TextAreaContent();
 
-		this.setBackground(Theme.current().getControlHover());
+		this.setBackground(Theme.current().getBackground());
 		this.internal = new TextAreaScrollPane();
 		this.children.add(internal);
 		this.internal.setContent(fakeBox);

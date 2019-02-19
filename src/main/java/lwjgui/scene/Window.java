@@ -107,6 +107,9 @@ public class Window {
 			
 			private void notifyTextInput(Node root, TypeEvent event) {
 				boolean consumed = false;
+				
+				if ( root == null )
+					return;
 
 				if (root.textInputEventInternal != null && EventHelper.fireEvent(root.textInputEventInternal, event)) {
 					consumed = true;
@@ -338,6 +341,9 @@ public class Window {
 			}
 
 			private void notifyScroll(Node t, double x, double y) {
+				if ( t == null )
+					return;
+				
 				ObservableList<Node> children = t.getChildren();
 				for (int i = 0; i < children.size(); i++) {
 					notifyScroll(children.get(i), x, y);

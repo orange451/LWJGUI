@@ -50,7 +50,7 @@ public class MenuItem extends Node {
 		});
 	}
 	
-	private void setContent(String string, Font font, Node graphic) {
+	public void setContent(String string, Font font, Node graphic) {
 		if (internalLabel == null) {
 			internalLabel = new Label(string);
 		}

@@ -13,8 +13,8 @@ public class TextArea extends TextInputControl {
 		this.setPrefSize(240, 160);
 		
 		// Allow for scroll bars
-		this.internal.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-		this.internal.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		this.internalScrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		this.internalScrollPane.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 	}
 }
 

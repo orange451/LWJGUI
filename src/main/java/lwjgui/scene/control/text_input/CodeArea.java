@@ -20,7 +20,7 @@ public class CodeArea extends TextArea {
 		
 		// Replace content window with our custom one
 		this.fakeBox = new CodeAreaContent();
-		this.internal.setContent(fakeBox);
+		this.internalScrollPane.setContent(fakeBox);
 
 		// Add line counter to scrollpane
 		this.lineCounter = new LineCounterNode();
@@ -37,11 +37,11 @@ public class CodeArea extends TextArea {
 		super.position(parent);
 		
 		// Make sure line counter is on the left side of the area.
-		this.internal.setPadding(new Insets(internal.getPadding().getTop(), internal.getPadding().getRight(), internal.getPadding().getBottom(), lineCounter.getWidth()+2));
-		double a = this.internal.getX()+this.internal.getPadding().getLeft();
-		double b = this.internal.getContent().getX();
+		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
+		double a = this.internalScrollPane.getX()+this.internalScrollPane.getPadding().getLeft();
+		double b = this.internalScrollPane.getContent().getX();
 		double c = b-a;
-		this.lineCounter.offset(-internal.getPadding().getLeft()-c, 0);
+		this.lineCounter.offset(-internalScrollPane.getPadding().getLeft()-c, 0);
 		this.lineCounter.updateChildren();
 	}
 	

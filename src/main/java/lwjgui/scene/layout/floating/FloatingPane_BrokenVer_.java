@@ -1,7 +1,6 @@
 package lwjgui.scene.layout.floating;
 
 import org.joml.Vector2d;
-import org.joml.Vector2f;
 
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.Node;

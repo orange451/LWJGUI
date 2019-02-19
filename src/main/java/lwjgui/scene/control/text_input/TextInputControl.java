@@ -41,7 +41,7 @@ public abstract class TextInputControl extends Control {
 	int selectionStartPosition;
 	int selectionEndPosition;
 	
-	protected TextAreaScrollPane internal;
+	protected TextAreaScrollPane internalScrollPane;
 	protected TextAreaContent fakeBox;
 	
 	private StateStack<TextState> undoStack;
@@ -86,9 +86,9 @@ public abstract class TextInputControl extends Control {
 		this.fakeBox = new TextAreaContent();
 
 		this.setBackground(Theme.current().getBackground());
-		this.internal = new TextAreaScrollPane();
-		this.children.add(internal);
-		this.internal.setContent(fakeBox);
+		this.internalScrollPane = new TextAreaScrollPane();
+		this.children.add(internalScrollPane);
+		this.internalScrollPane.setContent(fakeBox);
 		
 		this.flag_clip = true;
 		
@@ -243,7 +243,7 @@ public abstract class TextInputControl extends Control {
 			}
 			
 			// Word Wrap not yet properly implemented properly. Will be rewritten.
-			int vWid = (int) (this.internal.getViewport().getWidth() - 24);
+			int vWid = (int) (this.internalScrollPane.getViewport().getWidth() - 24);
 			int maxWidth = (int) (wordWrap?vWid:Integer.MAX_VALUE);
 			int index = 0;
 			while ( index < originalText.length() ) {
@@ -281,7 +281,7 @@ public abstract class TextInputControl extends Control {
 		insertText(getLength(), text);
 		saveState();
 		
-		internal.scrollBottom();
+		internalScrollPane.scrollBottom();
 	}
 	
 	public void insertText(int index, String text) {
@@ -625,7 +625,7 @@ public abstract class TextInputControl extends Control {
 	@Override
 	protected void resize() {
 		this.setAlignment(Pos.TOP_LEFT);
-		internal.setPrefSize(getPrefWidth(), getPrefHeight());
+		internalScrollPane.setPrefSize(getPrefWidth(), getPrefHeight());
 		
 		int width = getMaxTextWidth();
 		this.fakeBox.setMinSize(width, lines.size()*fontSize);
@@ -786,8 +786,8 @@ public abstract class TextInputControl extends Control {
 	}
 	
 	private int getCaretAtMouse() {
-		double mx = cached_context.getMouseX()-internal.getContent().getX();
-		double my = cached_context.getMouseY()-internal.getContent().getY();
+		double mx = cached_context.getMouseX()-internalScrollPane.getContent().getX();
+		double my = cached_context.getMouseY()-internalScrollPane.getContent().getY();
 		
 		// Find row clicked
 		int row = (int) (my / (float)fontSize);
@@ -812,6 +812,10 @@ public abstract class TextInputControl extends Control {
 
 	public void setSelectionOutlineEnabled(boolean selectionOutlineEnabled) {
 		this.selectionOutlineEnabled = selectionOutlineEnabled;
+	}
+
+	public TextAreaScrollPane getInternalScrollPane() {
+		return internalScrollPane;
 	}
 
 	@Override
@@ -883,8 +887,8 @@ public abstract class TextInputControl extends Control {
 		}
 		
 		// Draw text
-		this.internal.setBackground(null);
-		this.internal.render(context);
+		this.internalScrollPane.setBackground(null);
+		this.internalScrollPane.render(context);
 		
 		// internal selection graphic
 		if (isDescendentSelected() && isSelectionOutlineEnabled()) {
@@ -1063,9 +1067,9 @@ public abstract class TextInputControl extends Control {
 				int my = (int)getY() + (fontSize*i);
 				
 				// Quick bounds check
-				if ( my < internal.getY()-(fontSize*i))
+				if ( my < internalScrollPane.getY()-(fontSize*i))
 					continue;
-				if ( my > internal.getY()+internal.getHeight())
+				if ( my > internalScrollPane.getY()+internalScrollPane.getHeight())
 					continue;
 				
 				long vg = context.getNVG();

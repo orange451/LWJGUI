@@ -11,7 +11,6 @@ import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.StateStack;
-import lwjgui.event.ButtonEvent;
 import lwjgui.event.Event;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;

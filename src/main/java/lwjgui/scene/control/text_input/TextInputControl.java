@@ -69,7 +69,6 @@ public abstract class TextInputControl extends Control {
 	private Color caretFill = Color.BLACK;
 	private boolean caretFading = false;
 	
-	private Color backgroundFill = Theme.current().getBackground();
 	private Color selectionFill = Theme.current().getSelection();
 	private Color selectionPassiveFill = Theme.current().getSelectionPassive();
 	private Color selectionAltFill = Theme.current().getSelectionAlt();
@@ -86,7 +85,7 @@ public abstract class TextInputControl extends Control {
 		
 		this.fakeBox = new TextAreaContent();
 
-		this.setBackground(backgroundFill);
+		this.setBackground(Theme.current().getBackground());
 		this.internal = new TextAreaScrollPane();
 		this.children.add(internal);
 		this.internal.setContent(fakeBox);
@@ -352,14 +351,6 @@ public abstract class TextInputControl extends Control {
 	
 	public void setFontStyle(FontStyle style) {
 		this.style = style;
-	}
-	
-	public Color getBackgroundFill() {
-		return backgroundFill;
-	}
-
-	public void setBackgroundFill(Color backgroundFill) {
-		this.backgroundFill = backgroundFill;
 	}
 
 	public Color getSelectionFill() {

@@ -52,9 +52,10 @@ public class MenuItem extends Node {
 	
 	public void setContent(String string, Font font, Node graphic) {
 		if (internalLabel == null) {
-			internalLabel = new Label(string);
+			internalLabel = new Label();
 		}
 		
+		internalLabel.setText(string);
 		internalLabel.setGraphic(graphic);
 		internalLabel.setPadding(new Insets(0, padding, 0, padding));
 		internalLabel.setFontSize(16);

@@ -10,7 +10,6 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.scene.layout.Font;
 import lwjgui.theme.Theme;
 
 public class MenuItem extends Node {
@@ -20,29 +19,15 @@ public class MenuItem extends Node {
 	protected Color background;
 	
 	public MenuItem(String string) {
-		this(string, null, null);
+		this(string, null);
 	}
 	
 	public MenuItem(String string, Node graphic) {
-		this(string, null, graphic);
-	}
-	
-	public MenuItem(String string, Font font) {
-		this(string, font, null);
-	}
-	
-	public MenuItem(String string, Font font, Node graphic) {
 		if ( string != null ) {
-			Label l = new Label(string);
-			l.setGraphic(graphic);
-			l.setPadding(new Insets(0,padding,0,padding));
-			l.setFontSize(16);
-			
-			if (font != null) {
-				l.setFont(font);
-			}
-			
-			this.internalNode = l;
+			this.internalNode = new Label(string);
+			((Label)this.internalNode).setGraphic(graphic);
+			((Label)this.internalNode).setPadding(new Insets(0,padding,0,padding));
+			((Label)this.internalNode).setFontSize(16);
 			this.internalNode.setMouseTransparent(true);
 			this.children.add(internalNode);
 		}
@@ -95,7 +80,7 @@ public class MenuItem extends Node {
 		// Render text on menu item
 		if ( this.internalNode != null ) {
 			if ( this.internalNode instanceof Labeled ) {
-				((Labeled) this.internalNode).setTextFill(isSelected()?Theme.current().getControlHover():Theme.current().getText());
+				((Labeled) this.internalNode).setTextFill(isSelected()?Theme.current().getTextAlt():Theme.current().getText());
 			}
 			this.internalNode.render(context);
 		}

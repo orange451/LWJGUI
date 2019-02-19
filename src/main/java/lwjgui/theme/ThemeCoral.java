@@ -47,12 +47,12 @@ public class ThemeCoral extends Theme {
 	
 	@Override
 	public Color getControl() {
-		return Color.CORAL.brighter(0.8);
+		return Color.CORAL.brighter(0.9);
 	}
 
 	@Override
 	public Color getControlAlt() {
-		return Color.CORAL.brighter(0.6);
+		return Color.CORAL.brighter(0.7);
 	}
 
 	@Override
@@ -62,6 +62,6 @@ public class ThemeCoral extends Theme {
 
 	@Override
 	public Color getControlHover() {
-		return getSelection().brighter(0.6);
+		return getSelection().brighter(0.8);
 	}
 }

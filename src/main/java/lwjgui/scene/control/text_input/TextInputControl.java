@@ -11,7 +11,10 @@ import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.StateStack;
+import lwjgui.event.ButtonEvent;
+import lwjgui.event.Event;
 import lwjgui.event.EventHandler;
+import lwjgui.event.EventHelper;
 import lwjgui.event.TypeEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
@@ -43,6 +46,9 @@ public abstract class TextInputControl extends Control {
 	protected TextAreaContent fakeBox;
 	
 	private StateStack<TextState> undoStack;
+
+	private EventHandler<Event> onSelectEvent;
+	private EventHandler<Event> onDeselectEvent;
 	
 	private String prompt = null;
 	
@@ -59,7 +65,6 @@ public abstract class TextInputControl extends Control {
 	protected FontStyle style = FontStyle.REGULAR;
 	
 	private boolean decorated = true;
-	private boolean selectionOutlineEnabled = true;
 	
 	private Color caretFill = Color.BLACK;
 	private boolean caretFading = false;
@@ -343,6 +348,14 @@ public abstract class TextInputControl extends Control {
 		this.style = style;
 	}
 	
+	public void setOnSelected( EventHandler<Event> event ) {
+		this.onSelectEvent = event;
+	}
+	
+	public void setOnDeselected( EventHandler<Event> event ) {
+		this.onDeselectEvent = event;
+	}
+	
 	public void undo() {
 		if ( this.undoStack.isCurrent() ) {
 			this.saveState();
@@ -589,9 +602,15 @@ public abstract class TextInputControl extends Control {
 		this.setPrefSize(prefX, prefY);*/
 		
 		if ( this.isDescendentSelected() && editable ) {
+			if ( !editing && onSelectEvent != null ) {
+				EventHelper.fireEvent(onSelectEvent, new Event());
+			}
 			editing = true;
 		} else {
 			if ( editing ) {
+				if ( onSelectEvent != null ) {
+					EventHelper.fireEvent(onDeselectEvent, new Event());
+				}
 				this.deselect();
 			}
 			this.editing = false;
@@ -750,14 +769,6 @@ public abstract class TextInputControl extends Control {
 		this.decorated = backgroundEnabled;
 	}
 	
-	public boolean isSelectionOutlineEnabled() {
-		return selectionOutlineEnabled;
-	}
-
-	public void setSelectionOutlineEnabled(boolean selectionOutlineEnabled) {
-		this.selectionOutlineEnabled = selectionOutlineEnabled;
-	}
-
 	@Override
 	public void render(Context context) {
 		long vg = context.getNVG();
@@ -831,7 +842,7 @@ public abstract class TextInputControl extends Control {
 		this.internal.render(context);
 		
 		// internal selection graphic
-		if (isDescendentSelected() && isSelectionOutlineEnabled()) {
+		if ( this.isDescendentSelected() ) {
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
 			Color sel = context.isFocused() ? Theme.current().getSelection() : Theme.current().getSelectionPassive();
 			Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);
@@ -1080,10 +1091,9 @@ public abstract class TextInputControl extends Control {
 						} else if (!caretFillCopy.rgbMatches(caretFill)){
 							caretFillCopy.set(caretFill);
 						}
-						
+
 						float alpha = 1.0f-(float) (Math.sin(renderCaret * 0.004f)*0.5+0.5);
 						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFillCopy.alpha(alpha));
-						
 					} else if ( Math.sin(renderCaret*1/150f) < 0 ) {
 						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFill);
 					}

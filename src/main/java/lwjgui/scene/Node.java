@@ -496,20 +496,6 @@ public abstract class Node implements Resizable {
 	}
 	
 	/**
-	 * Get number of children Nodes this Node has.
-	 */
-	public int getNumChildren() {
-		return children.size();
-	}
-	
-	/**
-	 * Get child node (intended for external use). Use together with getNumChildren() to make for loops outside of Nodes.
-	 */
-	public Node getChild(int index) {
-		return children.get(index);
-	}
-
-	/**
 	 * Return the absolute x position of this node.
 	 * @return
 	 */

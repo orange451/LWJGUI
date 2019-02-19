@@ -15,10 +15,6 @@ public class PannablePane extends DraggablePane {
 		});
 	}
 	
-	protected boolean getDragButton() {	
-		return false;
-	}
-	
 	/**
 	 * Puts the origin of the PannablePane (0,0) in the center of its container.
 	 */

@@ -25,6 +25,10 @@ public class MenuItem extends Node {
 		this(string, null);
 	}
 	
+	public MenuItem(Node graphic) {
+		this(null, graphic);
+	}
+	
 	public MenuItem(String string, Node graphic) {
 		this.internalLabel = new Label(string) {};
 		this.internalLabel.setGraphic(graphic);
@@ -33,7 +37,7 @@ public class MenuItem extends Node {
 		
 		background = Theme.current().getPane();
 		
-		this.setOnMouseReleased( event -> {
+		this.setOnMouseReleasedInternal( event -> {
 			if ( event.button == 0 ) {
 				if ( buttonEvent != null ) 
 					EventHelper.fireEvent(buttonEvent, new ButtonEvent());

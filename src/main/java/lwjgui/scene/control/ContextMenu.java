@@ -6,9 +6,11 @@ import org.lwjgl.nanovg.NanoVG;
 import lwjgui.Color;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
+import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
 
@@ -147,8 +149,30 @@ public class ContextMenu extends PopupWindow {
 		// Render insides
 		this.internalBox.render(context);
 	}
+	
+	private class ContextMenuSeparator extends MenuItem {
+
+		public ContextMenuSeparator() {
+			super("", null);
+			
+			StackPane separatorPane = new StackPane();
+			separatorPane.setPrefHeight(16);
+			
+			StackPane separator = new StackPane();
+			separator.setPadding(new Insets(0, 0, 1, 0));
+			separator.setPaddingColor(Color.RED);
+			
+			separatorPane.getChildren().add(separator);
+			
+			setGraphic(separatorPane);
+		}
+	};
 
 	public ObservableList<MenuItem> getItems() {
 		return this.items;
+	}
+	
+	public ContextMenuSeparator newSeparator() {
+		return new ContextMenuSeparator();
 	}
 }

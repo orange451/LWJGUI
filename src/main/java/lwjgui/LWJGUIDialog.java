@@ -1,4 +1,4 @@
-package lwjgui.util;
+package lwjgui;
 
 import java.io.File;
 
@@ -6,16 +6,46 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
-public class TinyFileDialogUtil {
+public class LWJGUIDialog {
 	
+	public enum DialogType {
+		OK("ok"),
+		OK_CANCEL("okcancel"),
+		YES_NO("yesno"),
+		YES_NO_CANCEL("yesnocancel");
+		
+		String key;
+		
+		private DialogType(String key) {
+			this.key = key;
+		}
+	}
 
+	public enum DialogIcon {
+		INFO("info"),
+		WARNING("warning"),
+		ERROR("error"),
+		QUESTION("question");
+		
+		String key;
+		
+		private DialogIcon(String key) {
+			this.key = key;
+		}
+	};
+	
 	/**
-	 * Shows a message dialog.
+	 * Shows a message dialog with the given window title and message.
+	 * 
 	 * @param title
 	 * @param message 
 	 */
-	public static void showMessage(String title, String message) {
-		TinyFileDialogs.tinyfd_messageBox(title, message, "", "", true);
+	public static void showMessageDialog(String title, String message, DialogIcon icon) {
+		TinyFileDialogs.tinyfd_messageBox(title, message, DialogType.OK.key, icon.key, true);
+	}
+	
+	public static boolean showConfirmDialog(String title, String message, DialogType type, DialogIcon icon, boolean defaultButtonIsOK) {
+		return TinyFileDialogs.tinyfd_messageBox(title, message, type.key, icon.key, defaultButtonIsOK);
 	}
 	
 	/**
@@ -29,7 +59,7 @@ public class TinyFileDialogUtil {
 	 * 
 	 * @return the selected file
 	 */
-	public static File openFileDialog(String title, File defaultPath, String filterDescription, String acceptedFileExtension, String... additionalAcceptedFileExtensions){
+	public static File showOpenFileDialog(String title, File defaultPath, String filterDescription, String acceptedFileExtension, String... additionalAcceptedFileExtensions){
 		
 		PointerBuffer filters = MemoryStack.stackMallocPointer(1 + additionalAcceptedFileExtensions.length);
 
@@ -64,7 +94,7 @@ public class TinyFileDialogUtil {
 	 * 
 	 * @return the selected file
 	 */
-	public static File saveFileDialog(String title, File defaultPath, String filterDescription, String fileExtension, boolean forceExtension){
+	public static File showSaveFileDialog(String title, File defaultPath, String filterDescription, String fileExtension, boolean forceExtension){
 		
 		PointerBuffer filters = MemoryStack.stackMallocPointer(1);
 

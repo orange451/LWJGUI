@@ -4,11 +4,11 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
+import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
-import lwjgui.scene.Node;
 import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
 
@@ -67,7 +67,6 @@ public class ContextMenu extends PopupWindow {
 	@Override
 	public void render(Context context) {
 		// Position the menu
-		//recalculate();
 		this.position(getParent());
 		
 		// Reposition if outside of screen
@@ -101,7 +100,7 @@ public class ContextMenu extends PopupWindow {
 		int h = (int) getHeight();
 		
 		// Draw Drop Shadow
-		this.clip(context,16);
+		//this.clip(context,16);
 		NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+2,y+3, w-2,h, 4, 12, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgRect(vg, x-16,y-16, w+32,h+32);

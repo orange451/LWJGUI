@@ -148,8 +148,8 @@ public abstract class Node implements Resizable {
 			double offsetX = (bounds.getWidth()-size.x)*xMult;
 			double offsetY = (bounds.getHeight()-size.y)*yMult;
 			
-			float topLeftX = (float) (parent.absolutePosition.x + bounds.minX);
-			float topLeftY = (float) (parent.absolutePosition.y + bounds.minY);
+			float topLeftX = (float) (parent.getX() + bounds.minX);
+			float topLeftY = (float) (parent.getY() + bounds.minY);
 			
 			absolutePosition.x = topLeftX + offsetX;
 			absolutePosition.y = topLeftY + offsetY;

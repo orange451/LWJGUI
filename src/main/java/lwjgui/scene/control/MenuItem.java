@@ -23,12 +23,14 @@ public class MenuItem extends Node {
 	}
 	
 	public MenuItem(String string, Node graphic) {
-		this.internalNode = new Label(string);
-		((Label)this.internalNode).setGraphic(graphic);
-		((Label)this.internalNode).setPadding(new Insets(0,padding,0,padding));
-		((Label)this.internalNode).setFontSize(16);
-		this.internalNode.setMouseTransparent(true);
-		this.children.add(internalNode);
+		if ( string != null ) {
+			this.internalNode = new Label(string);
+			((Label)this.internalNode).setGraphic(graphic);
+			((Label)this.internalNode).setPadding(new Insets(0,padding,0,padding));
+			((Label)this.internalNode).setFontSize(16);
+			this.internalNode.setMouseTransparent(true);
+			this.children.add(internalNode);
+		}
 		
 		this.setPrefHeight(24);
 		
@@ -49,7 +51,9 @@ public class MenuItem extends Node {
 		this.setAlignment(Pos.CENTER_LEFT);
 		super.resize();
 		this.updateChildren();
-		this.setMinSize(internalNode.getWidth(), getPrefHeight());
+		if ( internalNode != null ) {
+			this.setMinSize(internalNode.getWidth(), getPrefHeight());
+		}
 	}
 	
 	protected boolean isSelected() {
@@ -74,10 +78,12 @@ public class MenuItem extends Node {
 		}
 		
 		// Render text on menu item
-		if ( this.internalNode instanceof Labeled ) {
-			((Labeled) this.internalNode).setTextFill(isSelected()?Theme.current().getControlHover():Theme.current().getText());
+		if ( this.internalNode != null ) {
+			if ( this.internalNode instanceof Labeled ) {
+				((Labeled) this.internalNode).setTextFill(isSelected()?Theme.current().getControlHover():Theme.current().getText());
+			}
+			this.internalNode.render(context);
 		}
-		this.internalNode.render(context);
 	}
 
 	@Override

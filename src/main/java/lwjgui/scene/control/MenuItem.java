@@ -94,9 +94,9 @@ public class MenuItem extends Node {
 		
 		// Render text on menu item
 		if ( this.internalNode != null ) {
-			/*if ( this.internalNode instanceof Labeled ) {
+			if ( this.internalNode instanceof Labeled ) {
 				((Labeled) this.internalNode).setTextFill(isSelected()?Theme.current().getControlHover():Theme.current().getText());
-			}*/
+			}
 			this.internalNode.render(context);
 		}
 	}

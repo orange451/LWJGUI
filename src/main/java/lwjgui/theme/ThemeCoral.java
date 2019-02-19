@@ -62,7 +62,6 @@ public class ThemeCoral extends Theme {
 
 	@Override
 	public Color getControlHover() {
-		//Causes issues with ContextMenu, see my fix in MenuItem, Line 98
 		return getSelection().brighter(0.8);
 	}
 }

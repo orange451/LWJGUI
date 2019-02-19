@@ -4,9 +4,14 @@ import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
 import lwjgui.scene.Context;
+import lwjgui.theme.Theme;
 
 public class Circle extends Shape {
 	private float radius;
+	
+	public Circle( float radius ) {
+		this(Theme.current().getText(), radius);
+	}
 
 	public Circle(Color fill, float radius) {
 		super(fill);

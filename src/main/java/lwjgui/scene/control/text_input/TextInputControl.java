@@ -954,7 +954,7 @@ public abstract class TextInputControl extends Control {
 		public abstract String parseText(String input);
 	}
 	
-	class TextAreaScrollPane extends ScrollPane {
+	public class TextAreaScrollPane extends ScrollPane {
 		
 		public TextAreaScrollPane() {
 			this.setFillToParentHeight(true);

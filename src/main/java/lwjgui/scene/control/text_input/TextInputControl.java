@@ -65,6 +65,7 @@ public abstract class TextInputControl extends Control {
 	protected FontStyle style = FontStyle.REGULAR;
 	
 	private boolean decorated = true;
+	private boolean selectionOutlineEnabled = true;
 	
 	private Color caretFill = Color.BLACK;
 	private boolean caretFading = false;
@@ -768,7 +769,15 @@ public abstract class TextInputControl extends Control {
 	public void setDecorated(boolean backgroundEnabled) {
 		this.decorated = backgroundEnabled;
 	}
-	
+
+	public boolean isSelectionOutlineEnabled() {
+		return selectionOutlineEnabled;
+	}
+
+	public void setSelectionOutlineEnabled(boolean selectionOutlineEnabled) {
+		this.selectionOutlineEnabled = selectionOutlineEnabled;
+	}
+
 	@Override
 	public void render(Context context) {
 		long vg = context.getNVG();
@@ -842,7 +851,7 @@ public abstract class TextInputControl extends Control {
 		this.internal.render(context);
 		
 		// internal selection graphic
-		if ( this.isDescendentSelected() ) {
+		if (isDescendentSelected() && isSelectionOutlineEnabled()) {
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
 			Color sel = context.isFocused() ? Theme.current().getSelection() : Theme.current().getSelectionPassive();
 			Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);

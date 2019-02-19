@@ -20,11 +20,15 @@ public class MenuItem extends Node {
 	protected Color background;
 	
 	public MenuItem(String string) {
-		this(string, null);
+		this(string, null, null);
 	}
 	
 	public MenuItem(String string, Node graphic) {
 		this(string, null, graphic);
+	}
+	
+	public MenuItem(String string, Font font) {
+		this(string, font, null);
 	}
 	
 	public MenuItem(String string, Font font, Node graphic) {

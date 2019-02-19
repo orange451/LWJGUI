@@ -10,7 +10,7 @@ public class Menu extends MenuItem {
 	private ContextMenu context;
 	
 	public Menu(String string) {
-		super(string, null);
+		super(string);
 		background = null;
 		
 		context = new ContextMenu();

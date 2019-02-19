@@ -62,6 +62,6 @@ public class ThemeCoral extends Theme {
 
 	@Override
 	public Color getControlHover() {
-		return getSelection().brighter(0.8);
+		return getSelection().brighter(0.6);
 	}
 }

@@ -50,6 +50,16 @@ public class HelloWorld {
 		scene.setRoot(pane);
 		
 		// Put a label in the pane
-		pane.getChildren().add(new Label("Hello World!"));
+		Label label = new Label("Hello World!");
+		
+		label.setOnMouseEntered(e -> {
+			System.out.println("Mouse entered Hello World label.");
+		});
+		
+		label.setOnMouseExited(e -> {
+			System.out.println("Mouse exited Hello World label.");
+		});
+		
+		pane.getChildren().add(label);
 	}
 }

@@ -43,8 +43,32 @@ public class LWJGUIDialog {
 		TinyFileDialogs.tinyfd_messageBox(title, message, DialogType.OK.key, icon.key, true);
 	}
 	
+	/**
+	 * Show a confirm dialog with the given settings.
+	 * 
+	 * @param title - window title
+	 * @param message - window message
+	 * @param type - confirm type (buttons used)
+	 * @param icon - window icon
+	 * @param defaultButtonIsOK - if true, the default button highlighted will be the "yes" button.
+	 * 
+	 * @return true if "yes" or an equivalent is selected.
+	 */
 	public static boolean showConfirmDialog(String title, String message, DialogType type, DialogIcon icon, boolean defaultButtonIsOK) {
 		return TinyFileDialogs.tinyfd_messageBox(title, message, type.key, icon.key, defaultButtonIsOK);
+	}
+	
+	/**
+	 * Shows a dialog for selecting a folder. 
+	 * 
+	 * @param title - window title
+	 * @param defaultPath - default filepath to start from
+	 * 
+ 	 * @return the selected folder path in a File object
+	 */
+	public static File showOpenFolderDialog(String title, File defaultPath){
+        String result = TinyFileDialogs.tinyfd_selectFolderDialog(title, defaultPath.getAbsolutePath());
+		return result != null ? new File(result) : null; 
 	}
 	
 	/**

@@ -17,6 +17,7 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCharCallback;
@@ -518,7 +519,36 @@ public class Window {
 	 * @param filetype - only uses the Files that end with this file extension. Set to null to just use any file.
 	 * @param iconFiles - the array of files to check/load
 	 */
-	public void setIcon(String filetype, File[] iconFiles) {
+	public void setIcon(String filetype, File[] files) {
+		
+		/*
+		 * Check the listed files for images that can be used as icons
+		 */
+		
+		Stack<File> validFiles = new Stack<File>();
+		
+		for(int i = 0; i < files.length; i++) {
+			File f = files[i];
+			
+			if (filetype != null && f.getName().endsWith(filetype)) {
+				validFiles.push(f);
+			}
+		}
+		
+		/*
+		 * Compile an array of valid icons
+		 */
+		
+		File[] iconFiles = new File[validFiles.size()];
+		
+		for (int i = 0; i < iconFiles.length; i++) {
+			iconFiles[i] = validFiles.pop();
+		}
+		
+		/*
+		 * Set the icons
+		 */
+		
 		int numIcons = iconFiles.length;
 		
 		GLFWImage.Buffer icons = GLFWImage.malloc(numIcons);
@@ -530,14 +560,16 @@ public class Window {
 		ByteBuffer[] datas = new ByteBuffer[numIcons];
 		
 		for(int i = 0; i < numIcons; i++) {
-			File f = iconFiles[i];
-			
-			if (filetype != null && f.getName().endsWith(filetype)) {
-				ByteBuffer data = datas[i] = STBImage.stbi_load(f.getAbsolutePath(), w, h, c, 4);
-				icons.get(i).set(w[0], h[0], data);
-			}
+			ByteBuffer data = datas[i] = STBImage.stbi_load(iconFiles[i].getAbsolutePath(), w, h, c, 4);
+			icons.get(i).set(w[0], h[0], data);
 		}
 		
 		glfwSetWindowIcon(context.getWindowHandle(), icons);
+		
+		icons.free();
+		
+		for(int i = 0; i < numIcons; i++) {
+			STBImage.stbi_image_free(datas[i]);
+		}
 	}
 }

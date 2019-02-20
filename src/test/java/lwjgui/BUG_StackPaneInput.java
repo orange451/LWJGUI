@@ -25,8 +25,10 @@ import lwjgui.scene.layout.StackPane;
  * 
  * I've included two methods here: one where everything works, and one where everything breaks when you apply minor edits.
  *
+ * Delete this class once the problem is fixed.
+ *
  */
-public class LabelInputErrorExample {
+public class BUG_StackPaneInput {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
@@ -76,6 +78,7 @@ public class LabelInputErrorExample {
 		pane.getChildren().add(pane2);
 	}
 	
+	@SuppressWarnings("unused")
 	private static void addComponents_Works_As_Intended(Scene scene) {
 		StackPane pane = new StackPane();
 		pane.setAlignment(Pos.BOTTOM_LEFT);

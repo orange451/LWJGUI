@@ -16,7 +16,14 @@ import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.floating.FloatingPane;
 import lwjgui.scene.layout.StackPane;
 
-public class FloatingPaneBoundsIssueExample {
+/**
+ * This class showcases a bug where if a node is placed outside the parent node, its bounds are updated to reflect the change. Resulting in situations where the input 
+ * of said nodes aren't detected.
+ * 
+ * Once the bug is fixed, t2 should print out its println() when you click on it, like t does.
+ *
+ */
+public class BUG_FloatingPaneBounds {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 

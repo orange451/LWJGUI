@@ -77,7 +77,7 @@ public class LWJGUIDialog {
 	 * @param title window title
 	 * @param defaultPath default file path
 	 * @param filterDescription description of the accepted file extension(s)
-	 * @param acceptedFileExtension the first accepted file extension (use * for all)
+	 * @param acceptedFileExtension the first accepted file extension (example: "txt", use * for all)
 	 * @param additionalAcceptedFileExtensions any additional accepted file extensions
 	 * 
 	 * @return the selected file
@@ -112,7 +112,7 @@ public class LWJGUIDialog {
 	 * @param title window title
 	 * @param defaultPath default file path
 	 * @param filterDescription description of the accepted file extension(s)
-	 * @param fileExtension the file extension
+	 * @param fileExtension the file extension (example: "txt")
 	 * @param forceExtension the user can select any file regardless of extension. If this is set to true, then the given extension will be automatically added if the extension is wrong.
 	 * 
 	 * @return the selected file

@@ -638,6 +638,7 @@ public abstract class TextInputControl extends Control {
 		prefY = (int) Math.min(prefY, this.getMaxPotentialHeight());
 		this.setPrefSize(prefX, prefY);*/
 		
+		//TODO: Move htis into an actual input callback
 		if ( this.isDescendentSelected() && editable ) {
 			if ( !editing && onSelectEvent != null ) {
 				EventHelper.fireEvent(onSelectEvent, new Event());

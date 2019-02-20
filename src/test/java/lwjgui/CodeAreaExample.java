@@ -49,6 +49,15 @@ public class CodeAreaExample {
 		
 		// Create code area
 		CodeArea c = new CodeArea();
+		
+		c.setOnDeselected(e -> {
+			System.err.println("Deselected");
+		});
+		
+		c.setOnSelected(e -> {
+			System.err.println("Selected");
+		});
+		
 		c.setText("printf(\"Hello World\");");
 		//c.setPreferredColumnCount(28);
 		//c.setPreferredRowCount(14);

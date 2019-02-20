@@ -27,6 +27,11 @@ public class CodeArea extends TextArea {
 		this.fakeBox.getChildren().add(lineCounter);
 	}
 	
+	public CodeArea(String text) {
+		this();
+		setText(text);
+	}
+	
 	@Override
 	protected void position(Node parent) {
 		

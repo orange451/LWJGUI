@@ -16,6 +16,11 @@ public class TextArea extends TextInputControl {
 		this.internalScrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
 		this.internalScrollPane.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 	}
+	
+	public TextArea(String text) {
+		this();
+		setText(text);
+	}
 }
 
 class TextAreaShortcuts extends TextInputControlShortcuts {

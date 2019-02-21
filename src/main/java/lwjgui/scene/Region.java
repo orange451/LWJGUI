@@ -5,6 +5,7 @@ import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
 import lwjgui.geometry.Insets;
+import lwjgui.scene.layout.floating.FloatingPane;
 
 public abstract class Region extends Parent {
 	protected Insets padding = Insets.EMPTY;
@@ -169,54 +170,76 @@ public abstract class Region extends Parent {
 	protected boolean canPackElementHeight() {
 		return true;
 	}
+
+	@Override
+	protected double getMaxElementWidth() {
+		return super.getMaxElementWidth()+getPadding().getWidth();
+	}
+	
+	@Override
+	protected double getMaxElementHeight() {
+		return super.getMaxElementHeight()+getPadding().getHeight();
+	}
 	
 	@Override
 	protected void resize() {
-		Vector2d availableSize = this.getAvailableSize();
 		
-		// Fix this pane to the width of its elements. Provided it does not exceed max width
-		if ( canPackElementWidth() ) {
-			float maxWidthInside = (float) (getMaxElementWidth()+padding.getRight());
-			maxWidthInside = (float) Math.max(maxWidthInside, getPrefWidth());
-			size.x = Math.min(maxWidthInside, availableSize.x);
-		}
+		// Fit this pane to the width of its elements.
+		float maxWidthInside = (float) (getMaxElementWidth());
+		maxWidthInside = (float) Math.max(maxWidthInside, getPrefWidth());
+		size.x = maxWidthInside;
 		
-		// Fix this pane to the height of its elements. Provided it does not exceed max height
-		if ( canPackElementHeight() ) {
-			float maxHeightInside = (float) (getMaxElementHeight()+padding.getBottom());
-			maxHeightInside = (float) Math.max(maxHeightInside, getPrefHeight());
-			size.y = Math.min(maxHeightInside, availableSize.y);
-		}
-		
+		// Fit this pane to the height of its elements.
+		float maxHeightInside = (float) (getMaxElementHeight());
+		maxHeightInside = (float) Math.max(maxHeightInside, getPrefHeight());
+		size.y = maxHeightInside;
+	
+		// Apply normal resizing
 		super.resize();
 	}
 	
+	/**
+	 * Returns the widths of all direct children added together.
+	 * Treats fillable regions that stretch as size 0.
+	 * @return
+	 */
 	protected double getMaximumPotentialWidth() {
 		float totalWidth = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
-			float childWid = (float) child.getWidth();
+			double childWid = child.getWidth();
 			if ( child instanceof Region && !((Region)child).canPackElementWidth() ) {
 				childWid = 0;
 			}
+			if ( child instanceof FloatingPane ) {
+				double csw = child.getX()-getX()+child.getWidth();
+				childWid = Math.max(0, csw-getWidth());
+			}
 			totalWidth += childWid;
 		}
-		totalWidth += this.getPadding().getWidth()/2;
 		
 		return totalWidth;
 	}
 	
+	/**
+	 * Returns the heights of all direct children added together.
+	 * Treats fillable regions that stretch as size 0.
+	 * @return
+	 */
 	protected double getMaximumPotentialHeight() {
 		float totalHeight = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
-			float temp = (float) child.getHeight();
+			double temp = child.getHeight();
 			if ( child instanceof Region && !((Region)child).canPackElementHeight() ) {
 				temp = 0;
 			}
+			if ( child instanceof FloatingPane ) {
+				double csw = child.getY()-getY()+child.getHeight();
+				temp = Math.max(0, csw-getHeight());
+			}
 			totalHeight += temp;
 		}
-		totalHeight += this.getPadding().getHeight()/2;
 		
 		return totalHeight;
 	}

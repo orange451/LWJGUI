@@ -54,6 +54,8 @@ public class Scene extends Node {
 	public boolean isResizeable() {
 		return false;
 	}
+	
+	private boolean first = true;
 
 	@Override
 	public void render(Context context) {
@@ -64,6 +66,11 @@ public class Scene extends Node {
 		
 		// Tick Transitions first so that any changes are reflected in the rendering
 		TransitionManager.tick();
+
+		// Stretch to match screen
+		root.setPrefSize(getWidth(), getHeight());
+		root.setMinSize(getWidth(), getHeight());
+		root.setMaxSize(getWidth(), getHeight());
 		
 		//Root fills the entire screen if it's a FillableRegion
 		if ( root instanceof FillableRegion ) {
@@ -72,12 +79,13 @@ public class Scene extends Node {
 		}
 		
 		// Position elements
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < (first?20:2); i++) {
 			position(null);
 			root.position(this);
 		}
 		
 		// Render normal
+		first = false;
 		root.render(context);
 		
 		// Render popups

@@ -189,7 +189,7 @@ public abstract class Node implements Resizable {
 		
 		// Resize if smaller than pref size
 		synchronized(size) {
-			//System.out.println(this.getClass() + "   /   preferred width: " + this.getPrefWidth());
+			
 			// Size up to pref size
 			if ( size.x < this.getPrefWidth() )
 				size.x = this.getPrefWidth();
@@ -200,20 +200,6 @@ public abstract class Node implements Resizable {
 			Vector2d available = this.getAvailableSize();
 			double availableWidth = available.x;
 			double availableHeight = available.y;
-			
-			/*if ( parent != null )
-				System.out.println(parent.getClass().getSimpleName() + " / " + availableHeight + " / " + parent.getInnerBounds().getPadHeight()
-						+ " / " 
-						+ parent.getInnerBounds().maxY
-						+ " / " 
-						+ parent.getInnerBounds().minY
-						+ " / " 
-						+ parent.getHeight()
-						+ " ////////// " 
-						+ (parent.getInnerBounds().minY + (parent.getHeight()-parent.getInnerBounds().maxY)));*/
-			
-			//if ( size.x > prefsize.x && size.x < availableWidth && size.x < this.getMaxWidth() )
-				//size.x = prefsize.x;
 			
 			// Cap size to available size
 			if ( size.x > availableWidth )
@@ -232,7 +218,6 @@ public abstract class Node implements Resizable {
 				size.x = this.getMaxWidth();
 			if ( size.y > this.getMaxHeight() )
 				size.y = this.getMaxHeight();
-			
 		}
 	}
 	
@@ -241,15 +226,6 @@ public abstract class Node implements Resizable {
 		Node p = this;
 		
 		while ( p != null ) {
-			/*double pWid = p.getWidth();
-			double padding = pWid-p.getInnerBounds().getWidth();
-			double use = p.getMaxWidth()-padding;
-			if ( use > Double.MAX_VALUE*0.9 )
-				use = pWid-padding;
-			
-			max = Math.min(max, use);
-			p = p.parent;*/
-			
 			double use = p.getMaxWidth();
 			if ( use > Double.MAX_VALUE*0.9 )
 				use = p.getWidth();
@@ -281,6 +257,10 @@ public abstract class Node implements Resizable {
 		return max;
 	}
 	
+	/**
+	 * Get the width of the widest element inside this node.
+	 * @return
+	 */
 	protected double getMaxElementWidth() {
 		double runningX = 0;
 		for (int i = 0; i < children.size(); i++) {
@@ -288,7 +268,7 @@ public abstract class Node implements Resizable {
 			if ( child == null )
 				continue;
 			
-			double tempX = (child.getX()-this.getX()) + child.getWidth();
+			double tempX = child.getWidth();
 			if ( tempX > runningX ) {
 				runningX = tempX;
 			}
@@ -297,6 +277,10 @@ public abstract class Node implements Resizable {
 		return runningX;
 	}
 	
+	/**
+	 * Get the height of the highest element inside this node.
+	 * @return
+	 */
 	protected double getMaxElementHeight() {
 		double runningY = 0;
 		for (int i = 0; i < children.size(); i++) {
@@ -304,7 +288,7 @@ public abstract class Node implements Resizable {
 			if ( child == null )
 				continue;
 			
-			double tempY = (child.getY()-this.getY()) + child.getHeight();
+			double tempY = child.getHeight();
 			if ( tempY > runningY ) {
 				runningY = tempY;
 			}

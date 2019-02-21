@@ -37,27 +37,36 @@ public abstract class FillableRegion extends Region {
 	}
 	
 	@Override
-	protected void position(Node parent) {
+	protected void resize() {
+		
+		super.resize();
+		
 		if ( fillToParentWidth ) {
-			LayoutBounds bounds = parent.getInnerBounds();
-			double potential = 0;
-			if ( parent instanceof FillableRegion ) {
-				potential = ((FillableRegion)parent).getMaximumPotentialWidth();
+			if ( parent != null ) {
+				LayoutBounds bounds = parent.getInnerBounds();
+				double ocupiedSize = 0;
+				if ( parent instanceof Region ) {
+					ocupiedSize = ((Region)parent).getMaximumPotentialWidth();
+				}
+				double wid = bounds.getWidth()-ocupiedSize;
+				
+				if ( wid > this.getMinWidth() )
+					this.size.x = wid;
 			}
-			double wid = bounds.getWidth()-potential;
-			this.size.x = wid;
 		}
 		if ( fillToParentHeight ) {
-			LayoutBounds bounds = parent.getInnerBounds();
-			double potential = 0;
-			if ( parent instanceof FillableRegion ) {
-				potential = ((FillableRegion)parent).getMaximumPotentialHeight();
+			if ( parent != null ) {
+				LayoutBounds bounds = parent.getInnerBounds();
+				double ocupiedSize = 0;
+				if ( parent instanceof Region ) {
+					ocupiedSize = ((Region)parent).getMaximumPotentialHeight();
+				}
+				double hei = bounds.getHeight()-ocupiedSize;
+				
+				if ( hei > this.getMinHeight() )
+					this.size.y = hei;
 			}
-			double hei = bounds.getHeight()-potential;
-			this.size.y = hei;
 		}
-		
-		super.position(parent);
 	}
 
 	@Override

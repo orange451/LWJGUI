@@ -9,6 +9,7 @@ import lwjgui.scene.Region;
 public class FloatingPane extends Region {
 	private double absx;
 	private double absy;
+	private boolean moveToFitChildren;
 	
 	public FloatingPane() {
 		this.setPrefSize(0, 0);
@@ -26,6 +27,24 @@ public class FloatingPane extends Region {
 	@Override
 	public boolean isResizeable() {
 		return false;
+	}
+	
+	/**
+	 * Sets whether this node will try to move to fit its children.
+	 * If true, the node will move only in the negative direction to try to fit to its children.
+	 * This means its width/height will also increase.
+	 * @param moveToFit
+	 */
+	public void setMoveToFitChildren(boolean moveToFit) {
+		this.moveToFitChildren = moveToFit;
+	}
+	
+	/**
+	 * Returns whether this node will try to move to fit its children. See {@link FloatingPane#setMoveToFitChildren(boolean)}
+	 * @return
+	 */
+	public boolean getMoveToFitChildren() {
+		return moveToFitChildren;
 	}
 	
 	/*
@@ -53,15 +72,13 @@ public class FloatingPane extends Region {
 		this.absolutePosition.set(absx,absy);
 		
 		// If elements are inside us, but top the left/top of us, we need to resize!
-		double minx = getMinimumX(this, getX());
-		double miny = getMinimumY(this, getY());
-		double dx = getX()-minx;
-		double dy = getY()-miny;
-		//absx -= dx;
-		//absy -= dy;
-		//this.absolutePosition.set(absx,absy);
-		this.absolutePosition.sub(dx,dy);
-		//this.size.add(dx,dy);
+		if ( moveToFitChildren ) {
+			double minx = getMinimumX(this, getX());
+			double miny = getMinimumY(this, getY());
+			double dx = Math.floor(getX()-minx);
+			double dy = Math.floor(getY()-miny);
+			this.absolutePosition.sub(dx,dy);
+		}
 	}
 
 	private double getMinimumX(Node root, double current) {

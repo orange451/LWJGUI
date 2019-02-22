@@ -124,8 +124,6 @@ public class ScrollPane extends Control {
 		}
 		
 		updateBars();
-		
-		this.calculateNodeBounds();
 	}
 
 	public void setVvalue(double value) {

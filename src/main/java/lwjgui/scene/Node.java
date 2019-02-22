@@ -506,7 +506,7 @@ public abstract class Node implements Resizable {
 	}
 	
 	/**
-	 * Return the layout alignment used to position this node.
+	 * Return the labyout alignment used to position this node.
 	 * @return
 	 */
 	public Pos usingAlignment() {

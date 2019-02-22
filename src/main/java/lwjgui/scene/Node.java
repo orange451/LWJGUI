@@ -131,8 +131,6 @@ public abstract class Node implements Resizable {
 		
 		cached_context = LWJGUI.getCurrentContext();
 		
-		calculateNodeBounds();
-		
 		updateChildren();
 		resize();
 		

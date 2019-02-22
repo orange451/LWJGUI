@@ -45,6 +45,12 @@ public class ObservableList<E> {
 	}
 	
 	public void add(int index, E element) {
+		if (element == null) {
+			System.err.println("WARNING: Attempted to add null element to ObservableList.");
+			Thread.dumpStack();
+			return;
+		}
+		
 		internal.add(index, element);
 
 		if (addCallback != null) {

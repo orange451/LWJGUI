@@ -170,11 +170,12 @@ public class Context {
 		Bounds rootBounds = root.getNodeBounds();
 		
 		// If mouse is out of our bounds, we're not clickable
-		if (mouseX <= rootBounds.getX() || mouseX > rootBounds.getX() + rootBounds.getWidth()) {
-			return parent;
-		}
+		if (mouseX <= rootBounds.getX() || mouseX > rootBounds.getX() + rootBounds.getWidth()
+				|| mouseY <= rootBounds.getY() || mouseY > rootBounds.getY() + rootBounds.getHeight()) {
 
-		if (mouseY <= rootBounds.getY() || mouseY > rootBounds.getY() + rootBounds.getHeight()) {
+			/*System.err.println(parent + " " + root + " -> " 
+					+ "\n" + rootBounds.getX() + " " + rootBounds.getY() + " " + rootBounds.getWidth() + " " + rootBounds.getHeight() 
+					+ "\n" + root.getX() + " " + root.getY() + " " + root.getWidth() + " " + root.getHeight());*/
 			return parent;
 		}
 

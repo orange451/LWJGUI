@@ -1004,7 +1004,7 @@ public abstract class TextInputControl extends Control {
 		}
 
 		protected Pane getViewport() {
-			return this.internalPane;
+			return this.internalScrollCanvas;
 		}
 	}
 

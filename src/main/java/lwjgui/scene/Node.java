@@ -34,6 +34,8 @@ public abstract class Node implements Resizable {
 	protected Insets padding = new Insets(0,0,0,0);
 	protected Pos alignment = Pos.CENTER;
 
+	protected Bounds nodeBounds = new Bounds(0, 0, 0, 0);
+	
 	/*
 	 * Event Handlers
 	 */
@@ -97,11 +99,11 @@ public abstract class Node implements Resizable {
 		setAbsolutePosition( this.getX()+changex, this.getY()+changey);
 	}
 	
-	public void setAbsolutePosition( double x, double y ) {
+	public void setAbsolutePosition(double x, double y) {
 		this.absolutePosition.set(x,y);
 	}
 	
-	public void offset( double x, double y ) {
+	public void offset(double x, double y) {
 		//this.localPosition.add(x, y);
 		setAbsolutePosition( this.getX()+x, this.getY()+y);
 		
@@ -120,10 +122,16 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
+	/**
+	 * Computes the absolute position of this Node
+	 * @param parent
+	 */
 	protected void position(Node parent) {
 		this.parent = parent;
 		
 		cached_context = LWJGUI.getCurrentContext();
+		
+		calculateNodeBounds();
 		
 		updateChildren();
 		resize();
@@ -154,6 +162,48 @@ public abstract class Node implements Resizable {
 			absolutePosition.x = topLeftX + offsetX;
 			absolutePosition.y = topLeftY + offsetY;
 		}
+	}
+	
+	/**
+	 * Calculates the bounding of this node based on its own position and the positions of its children. Meant to be used for some rendering (E.G. filling in the background) 
+	 * and input handling (ensuring that every child in the node is clickable).
+	 */
+	public void calculateNodeBounds() {
+		double sx = getX();
+		double sy = getY();
+		double ex = sx + getWidth();
+		double ey = sy + getHeight();
+		
+		//System.out.println("calculateNodeBounds() "+ this + " -> " + sx + " " + sy + " " + getWidth() + " " + getHeight());
+		
+		for (int i = 0; i < children.size(); i++) {
+			Node n = children.get(i);
+			
+			if (n == null) continue;
+			
+			double nSX = n.getX();
+			double nSY = n.getY();
+			double nEX = nSX + n.getWidth();
+			double nEY = nSY + n.getHeight();
+			
+			if (nSX < sx) {
+				sx = nSX;
+			}
+			
+			if (nSY < sy) {
+				sy = nSY;
+			}
+			
+			if (nEX > ex) {
+				ex = nEX;
+			}
+			
+			if (nEY > ey) {
+				ey = nEY;
+			}
+		}
+		
+		nodeBounds.set(sx, sy, ex, ey);
 	}
 	
 	public abstract void render(Context context);
@@ -311,6 +361,11 @@ public abstract class Node implements Resizable {
 	
 	private LayoutBounds LAYOUT_CACHE = new LayoutBounds(0,0,0,0);
 	
+	/**
+	 * Sets the nanovg clip brush
+	 * @param context
+	 * @param padding
+	 */
 	protected void clip( Context context, int padding ) {
 		LayoutBounds clipBoundsTemp = new LayoutBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
 		LayoutBounds tempBounds = LAYOUT_CACHE;
@@ -477,6 +532,11 @@ public abstract class Node implements Resizable {
 	 */
 	protected ObservableList<Node> getChildren() {
 		return this.children;
+	}
+	
+	public Bounds getNodeBounds() {
+		calculateNodeBounds();
+		return nodeBounds;
 	}
 	
 	/**

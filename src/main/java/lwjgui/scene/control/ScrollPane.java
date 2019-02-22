@@ -22,7 +22,7 @@ import lwjgui.theme.Theme;
 public class ScrollPane extends Control {
 	
 	private Node content;
-	protected ScrollCanvas internalPane;
+	protected ScrollCanvas internalScrollCanvas;
 	private Vector2i viewportSize;
 	
 	private ScrollBar vBar;
@@ -62,7 +62,7 @@ public class ScrollPane extends Control {
 		this.scrollBars.add(vBar);
 		this.scrollBars.add(hBar);
 		
-		this.internalPane = new ScrollCanvas();
+		this.internalScrollCanvas = new ScrollCanvas();
 		
 		this.mouseScrollEventInternal = new EventHandler<ScrollEvent>() {
 			@Override
@@ -83,7 +83,7 @@ public class ScrollPane extends Control {
 	@Override
 	protected void position(Node parent) {
 		super.position(parent);
-
+		
 		viewportSize.set((int)getWidth(),(int)getHeight());
 		if ( vBar.active )
 			viewportSize.x -= (thickness+barPadding*2);
@@ -93,30 +93,39 @@ public class ScrollPane extends Control {
 		if ( content != null ) {
 			
 			// Update internal content
-			this.internalPane.setParent(null);
+			this.internalScrollCanvas.setParent(null);
 			this.updateChildren();
 			int px = (int) (viewportSize.x-getPadding().getWidth()-1);
 			int py = (int) (viewportSize.y-getPadding().getHeight()-1);
+			
 			//System.out.println(px + " / " + py);
 			sizeInternal(Integer.MAX_VALUE, Integer.MAX_VALUE);
 			content.setPrefSize(px, py);
-			children.add(internalPane);
-			internalPane.updateChildren();
-			children.remove(internalPane);
-			internalPane.setAbsolutePosition(this.getX()+1, this.getY()+1);
-			content.setAbsolutePosition(internalPane.getX()+this.padding.getLeft()-hBar.pixel, internalPane.getY()+this.padding.getTop()-vBar.pixel);
+			
+			children.add(internalScrollCanvas);
+			internalScrollCanvas.updateChildren();
+			children.remove(internalScrollCanvas);
+			
+			internalScrollCanvas.setAbsolutePosition(this.getX()+1, this.getY()+1);
+			content.setAbsolutePosition(internalScrollCanvas.getX()+this.padding.getLeft()-hBar.pixel, internalScrollCanvas.getY()+this.padding.getTop()-vBar.pixel);
+			
 			sizeInternal(viewportSize.x-1, viewportSize.y-1);
-			this.internalPane.setParent(this);
+			this.internalScrollCanvas.setParent(this);
 			
 			// Update scrollbars
 			vBar.update(viewportSize.y, content.getHeight()+this.padding.getHeight());
 			hBar.update(viewportSize.x, content.getWidth()+this.padding.getWidth());
+			
+			//
+			//internalScrollCanvas.calculateNodeBounds();
 		} else {
 			hBar.active = false;
 			vBar.active = false;
 		}
 		
 		updateBars();
+		
+		this.calculateNodeBounds();
 	}
 
 	public void setVvalue(double value) {
@@ -128,9 +137,9 @@ public class ScrollPane extends Control {
 	}
 	
 	private void sizeInternal(double x, double y) {
-		this.internalPane.setMinSize(x, y);
-		this.internalPane.setMaxSize(x, y);
-		this.internalPane.setPrefSize(x, y);
+		this.internalScrollCanvas.setMinSize(x, y);
+		this.internalScrollCanvas.setMaxSize(x, y);
+		this.internalScrollCanvas.setPrefSize(x, y);
 	}
 
 	public Color getSelectionFill() {
@@ -175,7 +184,7 @@ public class ScrollPane extends Control {
 
 	@Override
 	public ObservableList<Node> getChildren() {
-		return new ObservableList<Node>(internalPane);
+		return new ObservableList<Node>(internalScrollCanvas);
 	}
 	
 	private boolean click = false;
@@ -192,21 +201,23 @@ public class ScrollPane extends Control {
 		int mouse = GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT);
 		
 		// Check if we're clicking
-		if ( !click && mouse == GLFW.GLFW_PRESS && released )
+		if (!click && mouse == GLFW.GLFW_PRESS && released )
 			click = true;
 		else if ( click && mouse == GLFW.GLFW_PRESS) {
 			released = false;
 			click = false;
-		} else if ( mouse != GLFW.GLFW_PRESS )
+		} else if (mouse != GLFW.GLFW_PRESS) {
 			released = true;
+		}
 		
-		if ( click && hoveredBar != null ) {
+		if (click && hoveredBar != null) {
 			holdingBar = hoveredBar;
 			mouseGrabLocation.set(mx, my);
 		}
 		
-		if ( holdingBar == null )
+		if (holdingBar == null) {
 			return;
+		}
 		
 		// If mouse not pressed, not holding divider
 		if ( mouse != GLFW.GLFW_PRESS ) {
@@ -277,7 +288,7 @@ public class ScrollPane extends Control {
 			LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), this.getBackground());
 		}
 
-		this.internalPane.render(context);
+		this.internalScrollCanvas.render(context);
 		
 		hoveredBar = getBarUnderMouse();
 		
@@ -311,8 +322,8 @@ public class ScrollPane extends Control {
 	
 	public void setContent( Node content ) {
 		this.content = content;
-		this.internalPane.getChildren().clear();
-		this.internalPane.getChildren().add(content);
+		this.internalScrollCanvas.getChildren().clear();
+		this.internalScrollCanvas.getChildren().add(content);
 	}
 	
 	public Node getContent() {
@@ -329,6 +340,8 @@ public class ScrollPane extends Control {
 		public void setParent(Node node) {
 			this.parent = node;
 		}
+		
+		
 	}
 	
 	public enum ScrollBarPolicy {

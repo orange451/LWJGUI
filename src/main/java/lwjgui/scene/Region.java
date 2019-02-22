@@ -108,8 +108,13 @@ public abstract class Region extends Parent {
 		clip(context);
 
 		if ( getBackground() != null ) {
+			double boundsX = getNodeBounds().getX();
+			double boundsY = getNodeBounds().getY();
+			double boundsW = getNodeBounds().getWidth();
+			double boundsH = getNodeBounds().getHeight();
+			
 			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRect(context.getNVG(), (int)getX(), (int)getY(), (float)getWidth(), (float)getHeight());
+			NanoVG.nvgRect(context.getNVG(), (int) boundsX, (int) boundsY, (float) boundsW, (float) boundsH);
 			NanoVG.nvgFillColor(context.getNVG(), getBackground().getNVG());
 			NanoVG.nvgFill(context.getNVG());
 		}

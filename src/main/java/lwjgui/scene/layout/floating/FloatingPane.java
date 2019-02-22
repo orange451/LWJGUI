@@ -3,14 +3,12 @@ package lwjgui.scene.layout.floating;
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Node;
-import lwjgui.scene.Parent;
 import lwjgui.scene.Region;
 
 public class FloatingPane extends Region {
 	private double absx;
 	private double absy;
-	private boolean moveToFitChildren;
-	
+
 	public FloatingPane() {
 		this.setPrefSize(0, 0);
 	}
@@ -27,24 +25,6 @@ public class FloatingPane extends Region {
 	@Override
 	public boolean isResizeable() {
 		return false;
-	}
-	
-	/**
-	 * Sets whether this node will try to move to fit its children.
-	 * If true, the node will move only in the negative direction to try to fit to its children.
-	 * This means its width/height will also increase.
-	 * @param moveToFit
-	 */
-	public void setMoveToFitChildren(boolean moveToFit) {
-		this.moveToFitChildren = moveToFit;
-	}
-	
-	/**
-	 * Returns whether this node will try to move to fit its children. See {@link FloatingPane#setMoveToFitChildren(boolean)}
-	 * @return
-	 */
-	public boolean getMoveToFitChildren() {
-		return moveToFitChildren;
 	}
 	
 	/*
@@ -70,55 +50,9 @@ public class FloatingPane extends Region {
 	protected void position(Node parent) {
 		super.position(parent);
 		this.absolutePosition.set(absx,absy);
-		
-		// If elements are inside us, but top the left/top of us, we need to resize!
-		if ( moveToFitChildren ) {
-			double minx = getMinimumX(this, getX());
-			double miny = getMinimumY(this, getY());
-			double dx = Math.floor(getX()-minx);
-			double dy = Math.floor(getY()-miny);
-			this.absolutePosition.sub(dx,dy);
-		}
 	}
 
-	private double getMinimumX(Node root, double current) {
-		
-		double t = root.getX();
-		if ( root instanceof Parent ) {
-			for ( int i = 0; i < ((Parent)root).getChildren().size(); i++) {
-				Node child = ((Parent)root).getChildren().get(i);
-				double x = getMinimumX(child, t);
-				if ( x < t ) {
-					t = x;
-				}
-			}
-		}
-		
-		if ( t < current )
-			return t;
-		
-		return current;
-	}
-
-	private double getMinimumY(Node root, double current) {
-		
-		double t = root.getY();
-		if ( root instanceof Parent ) {
-			for ( int i = 0; i < ((Parent)root).getChildren().size(); i++) {
-				Node child = ((Parent)root).getChildren().get(i);
-				double x = getMinimumY(child, t);
-				if ( x < t ) {
-					t = x;
-				}
-			}
-		}
-		
-		if ( t < current )
-			return t;
-		
-		return current;
-	}
-	
+	@Override
 	protected double getMaxElementWidth() {
 		double runningX = 0;
 		for (int i = 0; i < children.size(); i++) {
@@ -138,6 +72,7 @@ public class FloatingPane extends Region {
 		return runningX;
 	}
 	
+	@Override
 	protected double getMaxElementHeight() {
 		double runningY = 0;
 		for (int i = 0; i < children.size(); i++) {

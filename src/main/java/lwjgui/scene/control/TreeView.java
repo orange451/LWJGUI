@@ -33,11 +33,11 @@ public class TreeView<E> extends TreeBase<E> {
 		this.selectedItems = new ObservableList<TreeItem<E>>();
 		this.visibleItems = new ObservableList<TreeItem<E>>();
 		
-		this.setOnMousePressed(event -> {
+		this.setOnMousePressedInternal(event -> {
 			clearSelectedItems();
 		});
 		
-		this.setOnKeyPressed(event -> {
+		this.setOnKeyPressedInternal(event -> {
 			if ( event.isConsumed() )
 				return;
 			

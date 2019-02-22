@@ -226,7 +226,7 @@ public class Window {
 				/*
 				 * Call scene node/etc listeners
 				 */
-				
+
 				if ( downup == 1 ) { // Press
 					if ( !context.hoveringOverPopup && context.getPopups().size() > 0 ) {
 						context.closePopups();

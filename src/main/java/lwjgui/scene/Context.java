@@ -167,13 +167,16 @@ public class Context {
 		if ( root.isMouseTransparent() )
 			return parent;
 
-		//System.out.println(root.getClass().getSimpleName() + " / " + root.getWidth());
+		Bounds rootBounds = root.getNodeBounds();
 		
 		// If mouse is out of our bounds, we're not clickable
-		if ( mouseX <= root.getX() || mouseX > root.getX() + root.getWidth() )
+		if (mouseX <= rootBounds.getX() || mouseX > rootBounds.getX() + rootBounds.getWidth()) {
 			return parent;
-		if ( mouseY <= root.getY() || mouseY > root.getY() + root.getHeight() )
+		}
+
+		if (mouseY <= rootBounds.getY() || mouseY > rootBounds.getY() + rootBounds.getHeight()) {
 			return parent;
+		}
 
 		// Check children
 		ObservableList<Node> children = root.getChildren();
@@ -332,6 +335,6 @@ public class Context {
 	 * @return
 	 */
 	public boolean isMouseInside(Node node) {
-		return mouseX > node.getX() && mouseX < node.getX() + node.getWidth() && mouseY > node.getY() && mouseY < node.getY() + node.getHeight();
+		return node.getNodeBounds().isInside(mouseX, mouseY);
 	}
 }

@@ -125,6 +125,8 @@ public abstract class Labeled extends Control {
 	@Override
 	public void render(Context context) {
 		//clip(context);
+		
+		super.render(context);
 
 		long vg = context.getNVG();
 		int absX = (int)(getX()-0.5 + this.padding.getLeft());

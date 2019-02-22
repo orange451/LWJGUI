@@ -137,6 +137,8 @@ class TreeNode<E> extends HBox {
 		getChildren().add(item.label);
 		
 		stateButton.setOnMousePressed( event -> {
+			Thread.dumpStack();
+			
 			if ( event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
 				if ( item.getItems().size() == 0 )
 					return;

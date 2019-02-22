@@ -18,6 +18,7 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.geometry.Resizable;
 import lwjgui.geometry.VPos;
+import lwjgui.util.Bounds;
 
 public abstract class Node implements Resizable {
 	

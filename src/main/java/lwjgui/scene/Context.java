@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL30;
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.control.PopupWindow;
+import lwjgui.util.Bounds;
 
 public class Context {
 	private long windowHandle;

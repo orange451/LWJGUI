@@ -1,4 +1,4 @@
-package lwjgui.scene;
+package lwjgui.util;
 
 public class Bounds {
 	protected double startX;

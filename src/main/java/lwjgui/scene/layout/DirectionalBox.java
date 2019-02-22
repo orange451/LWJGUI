@@ -1,7 +1,6 @@
 package lwjgui.scene.layout;
 
 import lwjgui.geometry.Pos;
-import lwjgui.scene.Node;
 
 public abstract class DirectionalBox extends Pane {
 	protected float spacing;

@@ -1,6 +1,5 @@
 package lwjgui.scene;
 
-import org.joml.Vector2d;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;

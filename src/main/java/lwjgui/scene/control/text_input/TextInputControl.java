@@ -42,7 +42,7 @@ public abstract class TextInputControl extends Control {
 	int selectionEndPosition;
 	
 	protected TextInputScrollPane internalScrollPane;
-	protected TextInputContent fakeBox;
+	protected TextInputContentRenderer fakeBox;
 	
 	private StateStack<TextState> undoStack;
 
@@ -98,7 +98,7 @@ public abstract class TextInputControl extends Control {
 		/*
 		 * Input setup
 		 */
-		this.fakeBox = new TextInputContent(this);
+		this.fakeBox = new TextInputContentRenderer(this);
 		
 		undoStack = new StateStack<TextState>();
 		setText("");
@@ -749,7 +749,7 @@ public abstract class TextInputControl extends Control {
 		return new GlyphData( glyph.x(), glyph.maxx()-glyph.x(), originalCharacter );
 	}
 	
-	private int getCaretFromRowLine(int row, int index) {
+	protected int getCaretFromRowLine(int row, int index) {
 		int c = 0;
 		for (int i = 0; i < row; i++) {
 			c += lines.get(i).length();

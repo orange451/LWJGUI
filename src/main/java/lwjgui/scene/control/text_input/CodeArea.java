@@ -61,7 +61,7 @@ public class CodeArea extends TextArea {
 		lineCounter.render(context);
 	}
 	
-	class CodeAreaContent extends TextInputContent {
+	class CodeAreaContent extends TextInputContentRenderer {
 		public CodeAreaContent(TextInputControl textInputControl) {
 			super(textInputControl);
 		}

@@ -40,19 +40,17 @@ public class CodeArea extends TextArea {
 	@Override
 	protected void position(Node parent) {
 		
-		// Only update if the amount of lines has changed
-		lineCounter.update(this.lines());
-		
 		// Normal positioning
 		super.position(parent);
 		
-		// Make sure line counter is on the left side of the area.
-		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
-		double a = this.internalScrollPane.getX()+this.internalScrollPane.getPadding().getLeft();
-		double b = this.internalScrollPane.getContent().getX();
-		double c = b-a;
-		this.lineCounter.offset(-internalScrollPane.getPadding().getLeft()-c, 0);
-		this.lineCounter.updateChildren();
+		// Only update if the amount of lines has changed
+		lineCounter.update(this.lines());
+		
+		// Position line counter
+		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));	
+		lineCounter.setAbsolutePosition(
+				getX()+internalScrollPane.getInnerBounds().getX()-internalScrollPane.getPadding().getLeft(),
+				getY()+internalScrollPane.getInnerBounds().getY());
 	}
 	
 	@Override

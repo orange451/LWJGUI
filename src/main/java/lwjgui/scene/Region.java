@@ -157,12 +157,12 @@ public abstract class Region extends Parent {
 			}
 		}
 		
-		for (int i = 0; i < children.size(); i++) {
+		for (int i = 0; i < getChildren().size(); i++) {
 			// Clip to my bounds
 			clip(context);
 
 			// Draw child
-			Node child = children.get(i);
+			Node child = getChildren().get(i);
 			if ( child == null )
 				continue;
 			child.render(context);

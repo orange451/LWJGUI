@@ -3,6 +3,7 @@ package lwjgui.scene.control;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
+import lwjgui.collections.ObservableList;
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.VPos;
@@ -46,6 +47,13 @@ public abstract class Labeled extends Control {
 			return;
 		
 		this.fontStyle = style;
+	}
+	
+	/**
+	 * Cannot add children to the label publicly.
+	 */
+	public ObservableList<Node> getChildren() {
+		return new ObservableList<Node>();
 	}
 
 	@Override

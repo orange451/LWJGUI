@@ -1,4 +1,4 @@
-package lwjgui.scene.layout;
+package lwjgui.font;
 
 import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
 
@@ -206,5 +206,29 @@ public class Font {
 			using = fontDataItalic;
 		
 		return using.get(vg);
+	}
+	
+	public float[] getTextBounds(Context context, String string, FontStyle style, float size) {
+		float[] bounds = new float[4];
+		
+		if (context == null) {
+			return bounds;
+		}
+		
+		String font = getFont(style);
+		
+		if (font == null) {
+			return bounds;
+		}
+		
+		NanoVG.nvgFontSize(context.getNVG(), size);
+		NanoVG.nvgFontFace(context.getNVG(), font);
+		NanoVG.nvgTextAlign(context.getNVG(), NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
+		
+		if (string != null) {
+			NanoVG.nvgTextBounds(context.getNVG(), 0, 0, string, bounds);
+		}
+		
+		return bounds;
 	}
 }

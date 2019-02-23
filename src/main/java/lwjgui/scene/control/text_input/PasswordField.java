@@ -1,7 +1,7 @@
 package lwjgui.scene.control.text_input;
 
-import lwjgui.scene.layout.Font;
-import lwjgui.scene.layout.FontStyle;
+import lwjgui.font.Font;
+import lwjgui.font.FontStyle;
 
 public class PasswordField extends TextField {
 	public PasswordField() {

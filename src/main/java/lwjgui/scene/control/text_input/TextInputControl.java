@@ -15,6 +15,8 @@ import lwjgui.event.Event;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.event.TypeEvent;
+import lwjgui.font.Font;
+import lwjgui.font.FontStyle;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
@@ -22,8 +24,6 @@ import lwjgui.scene.Cursor;
 import lwjgui.scene.control.Control;
 import lwjgui.scene.control.IndexRange;
 import lwjgui.scene.control.ScrollPane;
-import lwjgui.scene.layout.Font;
-import lwjgui.scene.layout.FontStyle;
 import lwjgui.scene.layout.Pane;
 import lwjgui.theme.Theme;
 

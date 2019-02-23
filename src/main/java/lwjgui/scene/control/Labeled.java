@@ -3,11 +3,11 @@ package lwjgui.scene.control;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.Color;
+import lwjgui.font.Font;
+import lwjgui.font.FontStyle;
 import lwjgui.geometry.VPos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.scene.layout.Font;
-import lwjgui.scene.layout.FontStyle;
 import lwjgui.theme.Theme;
 
 public abstract class Labeled extends Control {
@@ -73,8 +73,8 @@ public abstract class Labeled extends Control {
 			int remove = 0;
 			
 			// Get some text bounds
-			float[] bounds = getTextBounds( cached_context, text, font, fontStyle, fontSize);
-			float[] elipBnd = getTextBounds( cached_context, ELIPSES, font, fontStyle, fontSize);
+			float[] bounds = font.getTextBounds( cached_context, text, fontStyle, fontSize);
+			float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize);
 			//double curWid = bounds[2]-bounds[0]+gWid + this.getPadding().getWidth();
 			double curWid = getTextWidth() + this.getPadding().getWidth();
 			double prefWid = curWid;
@@ -90,7 +90,7 @@ public abstract class Labeled extends Control {
 				while ( (curWid >= maxWid) && (remove < text.length()) ) {
 					remove++;
 					useString = useString.substring(0, text.length()-remove)+ELIPSES;
-					bounds = getTextBounds( cached_context, useString, font, fontStyle, fontSize);
+					bounds = font.getTextBounds( cached_context, useString, fontStyle, fontSize);
 					curWid = bounds[2]-bounds[0]+gWid;
 				}
 			}
@@ -104,24 +104,6 @@ public abstract class Labeled extends Control {
 		super.position(parent);
 	}
 	
-	private static float[] getTextBounds(Context context, String string, Font font, FontStyle style, float size) {
-		float[] bounds = new float[4];
-		if ( context == null ) {
-			return bounds;
-		}
-		String fnt = font.getFont(style);
-		if ( fnt == null )
-			return bounds;
-		
-		NanoVG.nvgFontSize(context.getNVG(), size);
-		NanoVG.nvgFontFace(context.getNVG(), fnt);
-		NanoVG.nvgTextAlign(context.getNVG(),NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
-		if ( string != null ) {
-			NanoVG.nvgTextBounds(context.getNVG(), 0, 0, string, bounds);
-		}
-		return bounds;
-	}
-
 	@Override
 	public void render(Context context) {
 		//clip(context);
@@ -168,9 +150,9 @@ public abstract class Labeled extends Control {
 	}
 
 	public double getTextWidth() {
-		float[] bounds = getTextBounds(this.cached_context,text,font,fontStyle,fontSize);
+		float[] bounds = font.getTextBounds(this.cached_context, text, fontStyle, fontSize);
 		float gWid = (float) (graphic == null ? 0 : graphic.getWidth());
-		return bounds[2]-bounds[0] + gWid;
+		return bounds[2] - bounds[0] + gWid;
 	}
 
 	public String getText() {

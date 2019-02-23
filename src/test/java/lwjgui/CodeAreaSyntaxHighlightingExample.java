@@ -67,11 +67,7 @@ public class CodeAreaSyntaxHighlightingExample {
 		pane.setCenter(c);
 		
 		// Syntax highlighting variables
-		final String[] KEYWORDS = new String[] {
-				"print",
-				"var"
-		};
-		final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
+		final String KEYWORD_PATTERN = "\\b(" + String.join("|", new String[] {"print", "var"}) + ")\\b";
 		final String STRING_PATTERN = "(\\[\\[)(.|\\R)*?(\\]\\])" + "|" + "\"([^\"\\\\]|\\\\.)*\"";
 		final Pattern PATTERN = Pattern.compile(
 				"(?<KEYWORD>" + KEYWORD_PATTERN + ")"

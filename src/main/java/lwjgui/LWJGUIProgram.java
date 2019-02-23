@@ -13,11 +13,51 @@ import lwjgui.scene.Window;
 public abstract class LWJGUIProgram {
 	/**
 	 * Starts the given LWJGUI-based program.
+	 * The entry point of the program is the same class that calls this method.
+	 * 
+	 * @param args - the args passed through the main method
+	 */
+	public static void launch(String[] args) {
+		// Figure out the right class to call
+		StackTraceElement[] cause = Thread.currentThread().getStackTrace();
+
+		boolean foundThisMethod = false;
+		String callingClassName = null;
+		for (StackTraceElement se : cause) {
+			// Skip entries until we get to the entry for this class
+			String className = se.getClassName();
+			String methodName = se.getMethodName();
+			if (foundThisMethod) {
+				callingClassName = className;
+				break;
+			} else if (LWJGUIProgram.class.getName().equals(className) && "launch".equals(methodName)) {
+				foundThisMethod = true;
+			}
+		}
+
+		if (callingClassName == null) {
+			throw new RuntimeException("Error: unable to determine main class");
+		}
+
+		try {
+			Class<?> theClass = Class.forName(callingClassName, true, Thread.currentThread().getContextClassLoader());
+			launch((LWJGUIProgram) theClass.newInstance(),args);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Starts the given LWJGUI-based program.
 	 * 
 	 * @param program - a class that extends this one, meant to be the root of the program
 	 * @param args - the args passed through the main method
 	 */
-	public static void start(LWJGUIProgram program, String[] args) {
+	public static void launch(LWJGUIProgram program, String[] args) {
 		//Restarts the JVM if necessary on the first thread to ensure Mac compatibility
 		if (LWJGUIUtil.restartJVMOnFirstThread(true, args)) {
 			return;

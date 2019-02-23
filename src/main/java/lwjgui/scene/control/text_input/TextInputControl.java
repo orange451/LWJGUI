@@ -48,6 +48,7 @@ public abstract class TextInputControl extends Control {
 
 	private EventHandler<Event> onSelectEvent;
 	private EventHandler<Event> onDeselectEvent;
+	private EventHandler<Event> onTextChange;
 	
 	private String prompt = null;
 	
@@ -219,6 +220,11 @@ public abstract class TextInputControl extends Control {
 			}*/
 		}
 		setCaretPosition(oldCaret);
+		
+		// Fire on text change event
+		if ( onTextChange != null ) {
+			EventHelper.fireEvent(onTextChange, new Event());
+		}
 	}
 	
 	private void addRow(String originalText) {
@@ -413,6 +419,10 @@ public abstract class TextInputControl extends Control {
 	
 	public void setOnDeselected( EventHandler<Event> event ) {
 		this.onDeselectEvent = event;
+	}
+	
+	public void setOnTextChange( EventHandler<Event> event ) {
+		this.onTextChange = event;
 	}
 	
 	public void undo() {

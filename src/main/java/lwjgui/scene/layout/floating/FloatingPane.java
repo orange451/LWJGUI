@@ -52,6 +52,7 @@ public class FloatingPane extends Region {
 		this.absolutePosition.set(absx,absy);
 	}
 
+	/*
 	@Override
 	protected double getMaxElementWidth() {
 		double runningX = 0;
@@ -122,7 +123,7 @@ public class FloatingPane extends Region {
 		}
 		
 		return totalHeight;
-	}
+	}*/
 
 	@Override
 	public void setAbsolutePosition(double x, double y) {

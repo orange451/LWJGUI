@@ -26,7 +26,7 @@ An LWJGL3-based JavaFX alternative for making user-interfaces in Java.
 
 # Screenshots
 ![PicControlExample](https://i.imgur.com/NfH3uUB.png)
-![PicSplitPane](https://i.imgur.com/l3gsiYo.png)
+![SyntaxHighlight](http://magaimg.net/img/7cr8.png)
 ![PicOpenGL](https://i.imgur.com/jOHtsxJ.png)
 ![PicNoMeansNo](https://i.imgur.com/jqRl6NY.png)
 ![ScrollSplitPane](https://i.imgur.com/EKVvWdP.png)

@@ -16,6 +16,7 @@ import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.event.TypeEvent;
 import lwjgui.font.Font;
+import lwjgui.font.FontMetaData;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
@@ -646,7 +647,7 @@ public abstract class TextInputControl extends Control {
 	@Override
 	protected void resize() {
 		this.setAlignment(Pos.TOP_LEFT);
-		internalScrollPane.setPrefSize(getPrefWidth(), getPrefHeight());
+		internalScrollPane.setPrefSize(getWidth(), getHeight());
 		
 		int width = getMaxTextWidth();
 		this.fakeBox.setMinSize(width, lines.size()*fontSize);
@@ -707,36 +708,27 @@ public abstract class TextInputControl extends Control {
 		return width;
 	}
 	
-	/*private GlyphData getGlyphFromRowLine(int line, int index) {
-		if ( cached_context == null )
-			return null;
-		if ( line < 0 )
-			return null;
-		if ( line >= lines.size() )
-			return null;
-		
-		String original = linesDraw.get(line);
-		String str = original + " ";
-		
-		if ( index > original.length() )
-			index = original.length();
-		
-		bindFont();
-		org.lwjgl.nanovg.NVGGlyphPosition.Buffer positions = NVGGlyphPosition.malloc(str.length());
-		NanoVG.nvgTextGlyphPositions(cached_context.getNVG(), 0, 0, str.replace("\t", " "), positions);
-		NVGGlyphPosition glyphAtIndex = positions.get(index);
-		positions.free();
-		
-		return fixGlyph(glyphAtIndex, str.substring(index,index+1));
-	}*/
-	
-	void bindFont() {
+	protected void bindFont() {
 		if ( cached_context == null )
 			return;
 		
 		long vg = cached_context.getNVG();
 		NanoVG.nvgFontSize(vg, fontSize);
 		NanoVG.nvgFontFace(vg, font.getFont(style));
+		NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
+	}
+	
+	protected void bindFont(FontMetaData data) {
+		if ( cached_context == null )
+			return;
+		
+		int fs = fontSize;
+		Font f = data.getFont()==null?font:data.getFont();
+		FontStyle fst = data.getStyle()==null?style:data.getStyle();
+		
+		long vg = cached_context.getNVG();
+		NanoVG.nvgFontSize(vg, fs);
+		NanoVG.nvgFontFace(vg, f.getFont(fst));
 		NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
 	}
 	
@@ -838,6 +830,46 @@ public abstract class TextInputControl extends Control {
 
 	public TextInputScrollPane getInternalScrollPane() {
 		return internalScrollPane;
+	}
+	
+	public void setHighlighting(int startIndex, int endIndex, FontMetaData metaData) {
+		highlighting.add(new TextHighlighter( startIndex, endIndex, metaData) );
+	}
+	
+	public void resetHighlighting() {
+		highlighting.clear();
+	}
+	
+	private ArrayList<TextHighlighter> highlighting = new ArrayList<TextHighlighter>();
+	
+	protected TextHighlighter getHighlighting( int position ) {
+		for (int i = 0; i < highlighting.size(); i++) {
+			TextHighlighter t = highlighting.get(i);
+			if ( t.contains(position) )
+				return t;
+		}
+		
+		return null;
+	}
+	
+	static class TextHighlighter {
+		private int startIndex;
+		private int endIndex;
+		private FontMetaData metaData;
+		
+		public TextHighlighter(int startIndex, int endIndex, FontMetaData metaData) {
+			this.startIndex = startIndex;
+			this.endIndex = endIndex;
+			this.metaData = metaData;
+		}
+
+		public boolean contains(int position) {
+			return position >= startIndex && position <= endIndex;
+		}
+
+		public FontMetaData getMetaData() {
+			return this.metaData;
+		}
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.control.IndexRange;
+import lwjgui.scene.control.text_input.TextInputControl.TextHighlighter;
 import lwjgui.scene.layout.Pane;
 
 /**
@@ -70,6 +71,7 @@ class TextInputContent extends Pane {
 		}
 		
 		// Draw text
+		int currentPosition = 0;
 		for (int i = 0; i < this.textInputControl.linesDraw.size(); i++) {
 			int mx = (int)getX();
 			int my = (int)getY() + (this.textInputControl.fontSize*i);
@@ -109,13 +111,25 @@ class TextInputContent extends Pane {
 						x = g.x();
 						
 						if ( draw ) {
+							TextHighlighter highlight = textInputControl.getHighlighting(currentPosition);
+							Color color = textInputControl.fontFill;
+							if ( highlight == null ) {
+								textInputControl.bindFont();
+							} else {
+								textInputControl.bindFont(highlight.getMetaData());
+								if ( highlight.getMetaData().getColor() != null ) {
+									color = highlight.getMetaData().getColor();
+								}
+							}
+							
 							NanoVG.nvgBeginPath(vg);
 							NanoVG.nvgFontBlur(vg,0);
-							NanoVG.nvgFillColor(vg, this.textInputControl.fontFill.getNVG());
+							NanoVG.nvgFillColor(vg, color.getNVG());
 							NanoVG.nvgText(vg, mx+x, my, c);
 						}
 						
 						//x += g.width();
+						currentPosition++;
 					}
 				}
 			}

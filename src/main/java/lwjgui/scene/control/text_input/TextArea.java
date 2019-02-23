@@ -6,8 +6,11 @@ import lwjgui.event.KeyEvent;
 import lwjgui.scene.control.ScrollPane.ScrollBarPolicy;
 
 public class TextArea extends TextInputControl {
-	public TextArea() {
-		super(new TextAreaShortcuts());
+	
+	public TextArea(TextInputScrollPane internalScrollPane, String text) {
+		super(internalScrollPane, new TextAreaShortcuts());
+		
+		setText(text);
 		
 		// Make it larger by default
 		this.setPrefSize(240, 160);
@@ -18,8 +21,11 @@ public class TextArea extends TextInputControl {
 	}
 	
 	public TextArea(String text) {
-		this();
-		setText(text);
+		this(new TextInputScrollPane(), text);
+	}
+	
+	public TextArea() {
+		this("");
 	}
 }
 

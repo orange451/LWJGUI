@@ -81,6 +81,7 @@ public class LWJGUIUtil {
 		NanoVG.nvgRect(context.getNVG(), (int)x, (int)y, (int)width, (int)height);
 		NanoVG.nvgFillColor(context.getNVG(), color.getNVG());
 		NanoVG.nvgFill(context.getNVG());
+		NanoVG.nvgClosePath(context.getNVG());
 	}
 
 	public static void fillRoundRect(Context context, double x, double y, double width, double height, double radius, Color color) {
@@ -91,6 +92,7 @@ public class LWJGUIUtil {
 		NanoVG.nvgRoundedRect(context.getNVG(), (int)x, (int)y, (int)width, (int)height, (float)radius);
 		NanoVG.nvgFillColor(context.getNVG(), color.getNVG());
 		NanoVG.nvgFill(context.getNVG());
+		NanoVG.nvgClosePath(context.getNVG());
 	}
 
 	public static void outlineRect(Context context, double x, double y, double w, double h, Color color) {

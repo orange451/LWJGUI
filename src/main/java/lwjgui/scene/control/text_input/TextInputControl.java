@@ -17,20 +17,19 @@ import lwjgui.event.EventHelper;
 import lwjgui.event.TypeEvent;
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
-import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
-import lwjgui.scene.Cursor;
 import lwjgui.scene.control.Control;
 import lwjgui.scene.control.IndexRange;
-import lwjgui.scene.control.ScrollPane;
-import lwjgui.scene.layout.Pane;
 import lwjgui.theme.Theme;
 
+/**
+ * This class acts as the core controller for text input classes.
+ */
 public abstract class TextInputControl extends Control {
 	ArrayList<String> lines;
-	private ArrayList<ArrayList<GlyphData>> glyphData;
-	private ArrayList<String> linesDraw;
+	ArrayList<ArrayList<GlyphData>> glyphData;
+	ArrayList<String> linesDraw;
 	private String source;
 	int caretPosition;
 	protected boolean editing = false;
@@ -41,8 +40,8 @@ public abstract class TextInputControl extends Control {
 	int selectionStartPosition;
 	int selectionEndPosition;
 	
-	protected TextAreaScrollPane internalScrollPane;
-	protected TextAreaContent fakeBox;
+	protected TextInputScrollPane internalScrollPane;
+	protected TextInputContent fakeBox;
 	
 	private StateStack<TextState> undoStack;
 
@@ -56,7 +55,7 @@ public abstract class TextInputControl extends Control {
 	private static final int MAX_LINES = 10_000;
 	
 	/*
-	 * Customization
+	 * Visual customization
 	 */
 	protected int fontSize = 16;
 	protected Font font = Font.SANS;
@@ -66,30 +65,42 @@ public abstract class TextInputControl extends Control {
 	private boolean decorated = true;
 	private boolean selectionOutlineEnabled = true;
 	
-	private Color caretFill = Color.BLACK;
-	private boolean caretFading = false;
+	Color caretFill = Color.BLACK;
+	boolean caretFading = false;
 	
 	private Color selectionFill = Theme.current().getSelection();
 	private Color selectionPassiveFill = Theme.current().getSelectionPassive();
-	private Color selectionAltFill = Theme.current().getSelectionAlt();
+	Color selectionAltFill = Theme.current().getSelectionAlt();
 	private Color controlOutlineFill = Theme.current().getControlOutline();
 	
 	public TextInputControl() {
-		this(new TextInputControlShortcuts());
+		this(new TextInputScrollPane(), new TextInputControlShortcuts());
+	}
+	
+	public TextInputControl(TextInputScrollPane textAreaScrollPane) {
+		this(textAreaScrollPane, new TextInputControlShortcuts());
 	}
 	
 	public TextInputControl(TextInputControlShortcuts specialKeyInputs) {
-		this.undoStack = new StateStack<TextState>();
-		this.setText("");
-		this.saveState();
-		
-		this.fakeBox = new TextAreaContent();
+		this(new TextInputScrollPane(), specialKeyInputs);
+	}
+	
+	public TextInputControl(TextInputScrollPane textAreaScrollPane, TextInputControlShortcuts specialKeyInputs) {
 
-		this.setBackground(Theme.current().getBackground());
-		this.internalScrollPane = new TextAreaScrollPane();
-		this.children.add(internalScrollPane);
-		this.internalScrollPane.setContent(fakeBox);
+		/*
+		 * Visual setup
+		 */
 		
+		setBackground(Theme.current().getBackground());
+		
+		/*
+		 * Input setup
+		 */
+		this.fakeBox = new TextInputContent(this);
+		
+		undoStack = new StateStack<TextState>();
+		setText("");
+		saveState();
 		this.flag_clip = true;
 		
 		setOnTextInputInternal( new EventHandler<TypeEvent>() {
@@ -116,6 +127,16 @@ public abstract class TextInputControl extends Control {
 		setOnKeyPressedAndRepeatInternal( event -> {
 			specialKeyInputs.process(this, event);
 		});
+		
+		
+		/*
+		 * Scroll Pane setup
+		 */
+		
+		internalScrollPane = textAreaScrollPane;
+		internalScrollPane.setContent(fakeBox);
+		internalScrollPane.textInputControl = this;
+		children.add(internalScrollPane);
 	}
 	
 	protected void saveState() {
@@ -709,7 +730,7 @@ public abstract class TextInputControl extends Control {
 		return fixGlyph(glyphAtIndex, str.substring(index,index+1));
 	}*/
 	
-	private void bindFont() {
+	void bindFont() {
 		if ( cached_context == null )
 			return;
 		
@@ -786,7 +807,7 @@ public abstract class TextInputControl extends Control {
 		return getCaretFromRowLine(row,index);
 	}
 	
-	private int getCaretAtMouse() {
+	int getCaretAtMouse() {
 		double mx = cached_context.getMouseX()-internalScrollPane.getContent().getX();
 		double my = cached_context.getMouseY()-internalScrollPane.getContent().getY();
 		
@@ -815,7 +836,7 @@ public abstract class TextInputControl extends Control {
 		this.selectionOutlineEnabled = selectionOutlineEnabled;
 	}
 
-	public TextAreaScrollPane getInternalScrollPane() {
+	public TextInputScrollPane getInternalScrollPane() {
 		return internalScrollPane;
 	}
 
@@ -906,36 +927,6 @@ public abstract class TextInputControl extends Control {
 		}
 	}
 	
-	static class GlyphData { // This class could be avoided if NanoVG author wouldn't ignore me.
-		private float width;
-		private float x;
-		private String c;
-		private boolean SPECIAL;
-		
-		public GlyphData( float x, float width, String car ) {
-			this.c = car;
-			this.x = x;
-			this.width = width;
-		}
-		
-		public GlyphData( float x, float width, String car, boolean special ) {
-			this( x, width, car );
-			this.SPECIAL = special;
-		}
-		
-		public String character() {
-			return c;
-		}
-		
-		public float x() {
-			return x;
-		}
-		
-		public float width() {
-			return width;
-		}
-	}
-	
 	class TextState {
 		protected String text;
 		protected int caretPosition;
@@ -955,200 +946,5 @@ public abstract class TextInputControl extends Control {
 		public abstract String parseText(String input);
 	}
 	
-	public class TextAreaScrollPane extends ScrollPane {
-		
-		public TextAreaScrollPane() {
-			this.setFillToParentHeight(true);
-			this.setFillToParentWidth(true);
-			this.setVbarPolicy(ScrollBarPolicy.NEVER);
-			this.setHbarPolicy(ScrollBarPolicy.NEVER);
-			this.setPadding(new Insets(4,4,4,4));
-
-			// Enter
-			this.getViewport().setOnMouseEntered(event -> {
-				getScene().setCursor(Cursor.IBEAM);
-			});
-
-			// Leave
-			this.getViewport().setOnMouseExited(event -> {
-				getScene().setCursor(Cursor.NORMAL);
-			});
-			
-			// Clicked
-			this.getViewport().setOnMousePressed(event -> {
-				if ( cached_context == null )
-					return;
-				
-				LWJGUI.runLater(()-> {
-					cached_context.setSelected(getViewport());
-				});
-				
-				setCaretPosition(getCaretAtMouse());
-				selectionEndPosition = caretPosition;
-				
-				int state = GLFW.glfwGetKey(cached_context.getWindowHandle(), GLFW.GLFW_KEY_LEFT_SHIFT);
-				if ( state != GLFW.GLFW_PRESS ) {
-					selectionStartPosition = caretPosition;
-				}
-			});
-			
-			// Drag mouse
-			this.getViewport().setOnMouseDragged(event -> {
-				caretPosition = getCaretAtMouse();
-				selectionEndPosition = caretPosition;
-			});
-		}
-		
-		public void scrollBottom() {
-			this.setVvalue(1.0);
-		}
-
-		protected Pane getViewport() {
-			return this.internalScrollCanvas;
-		}
-	}
-
-	private float renderCaret = 0;
-	class TextAreaContent extends Pane {
-		
-		private Color caretFillCopy = null;
-		
-		public TextAreaContent() {
-			this.setMouseTransparent(true);
-			this.setBackground(null);
-			
-			this.setAlignment(Pos.TOP_LEFT);
-		}
-		
-		private long lastTime;
-		@Override
-		public void render(Context context) {
-			super.render(context);
-			
-			if ( glyphData.size() == 0 ) {
-				setText(getText());
-			}
-			
-			this.clip(context);
-			renderCaret += lastTime-System.currentTimeMillis();
-			lastTime = System.currentTimeMillis();
-			
-			// Render selection
-			IndexRange range = getSelection();
-			range.normalize();
-			int len = range.getLength();
-			int startLine = getRowFromCaret(range.getStart());
-			int endLine = getRowFromCaret(range.getEnd());
-			int a = getIndexFromCaret(range.getStart());
-			int b = getIndexFromCaret(range.getEnd());
-			if ( len > 0 ) {
-				for (int i = startLine; i <= endLine; i++) {
-					String l = lines.get(i);
-					
-					int left = a;
-					int right = b;
-					
-					if ( i != endLine )
-						right = l.length()-1;
-					if ( i != startLine )
-						left = 0;
-
-					int xx = (int)(glyphData.get(i).get(left).x());
-					int yy = (int)(fontSize*i);
-					int height = fontSize;
-					int width = (int) (glyphData.get(i).get(right).x()-xx);
-	
-					LWJGUIUtil.fillRect(context, getX() + xx, getY() + yy, width, height, selectionAltFill);
-				}
-			}
-			
-			// Draw text
-			for (int i = 0; i < linesDraw.size(); i++) {
-				int mx = (int)getX();
-				int my = (int)getY() + (fontSize*i);
-				
-				// Quick bounds check
-				if ( my < internalScrollPane.getY()-(fontSize*i))
-					continue;
-				if ( my > internalScrollPane.getY()+internalScrollPane.getHeight())
-					continue;
-				
-				long vg = context.getNVG();
-				String text = linesDraw.get(i);
-				
-				// Setup font
-				bindFont();
-				
-				// Inefficient Draw. Thanks NanoVG refusing to implement \t
-				if ( glyphData.size() > 0 ) {
-					ArrayList<GlyphData> dat = glyphData.get(i);
-					if ( dat.size() > 0 ) {
-						float x = 0;
-						
-						for (int j = 0; j < text.length(); j++) {
-							boolean draw = true;
-							String c = text.substring(j, j+1);
-							char[] cs = c.toCharArray();
-							
-							// Manual fix for drawing boxes of special characters of certain fonts
-							// NanoVG author ALSO refuses to fix this. Thanks again.
-							if ( cs.length == 1 ) {
-								if ( cs[0] < 32 )
-									draw = false;
-							}
-							GlyphData g = dat.get(j);
-							
-							// Get current x offset
-							x = g.x();
-							
-							if ( draw ) {
-								NanoVG.nvgBeginPath(vg);
-								NanoVG.nvgFontBlur(vg,0);
-								NanoVG.nvgFillColor(vg, fontFill.getNVG());
-								NanoVG.nvgText(vg, mx+x, my, c);
-							}
-							
-							//x += g.width();
-						}
-					}
-				}
-			}
-			
-			// Draw caret
-			if ( editing ) {
-				int line = getRowFromCaret(caretPosition);
-				int index = getIndexFromCaret(caretPosition);
-				int cx = (int) (getX()-1);
-				int cy = (int) (getY() + (line * fontSize));
-				if ( glyphData.size() > 0 ) {
-					
-					// Check if caret goes past the line
-					boolean addWid = false;
-					while ( index >= glyphData.get(line).size() ) {
-						index--;
-						addWid = true;
-					}
-
-					// Get current x offset
-					float offsetX = glyphData.get(line).get(index).x();
-					if ( addWid ) {
-						offsetX += glyphData.get(line).get(index).width();
-					}
-					
-					if (caretFading) {
-						if (caretFillCopy == null) {
-							caretFillCopy = caretFill.copy();
-						} else if (!caretFillCopy.rgbMatches(caretFill)){
-							caretFillCopy.set(caretFill);
-						}
-
-						float alpha = 1.0f-(float) (Math.sin(renderCaret * 0.004f)*0.5+0.5);
-						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFillCopy.alpha(alpha));
-					} else if ( Math.sin(renderCaret*1/150f) < 0 ) {
-						LWJGUIUtil.fillRect(context, cx+offsetX, cy, 2, fontSize, caretFill);
-					}
-				}
-			}
-		}
-	}
+	float renderCaret = 0;
 }

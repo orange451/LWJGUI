@@ -358,13 +358,24 @@ public class Window {
 			}
 		});
 		
-		// Hack to get window to focus on windows. Often using Windows 10 a GLFW window will not have focus when it's first on the screen...
-		GLFW.glfwHideWindow(context.getWindowHandle());
-		GLFW.glfwShowWindow(context.getWindowHandle());
+		focus();
 	}
 	
 	public Context getContext() {
 		return context;
+	}
+	
+	public void focus() {
+		GLFW.glfwFocusWindow(context.getWindowHandle());
+	}
+	
+	/**
+	 * Orange451's hack for forcing the window to focus in scenarios where GLFW's built-in function doesn't work.
+	 */
+	public void focusHack() {
+		// Hack to get window to focus on windows. Often using Windows 10 a GLFW window will not have focus when it's first on the screen...
+		GLFW.glfwHideWindow(context.getWindowHandle());
+		GLFW.glfwShowWindow(context.getWindowHandle());
 	}
 	
 	/**

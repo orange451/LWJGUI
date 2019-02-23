@@ -156,7 +156,7 @@ public abstract class Region extends Parent {
 				NanoVG.nvgFill(context.getNVG());
 			}
 		}
-
+		
 		for (int i = 0; i < children.size(); i++) {
 			// Clip to my bounds
 			clip(context);

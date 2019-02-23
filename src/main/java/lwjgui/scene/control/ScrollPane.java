@@ -280,27 +280,37 @@ public class ScrollPane extends Control {
 
 	@Override
 	public void render(Context context) {
-		this.clip(context);
-		
-		if ( this.getBackground() != null ) {
+		if (getBackground() != null) {
+			clip(context);
 			LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), this.getBackground());
 		}
 
 		this.internalScrollCanvas.render(context);
 		
 		hoveredBar = getBarUnderMouse();
-		
-		this.clip(context);
-		
+
 		if (visible) {
-			if ( vBar.active ) // Vertical scrollbar track
+			clip(context);
+			
+			// Vertical scrollbar track
+			if ( vBar.active ) {
 				LWJGUIUtil.fillRect(context, getX()+viewportSize.x-0.5, getY()+1, getWidth()-viewportSize.x-1, getHeight()-2, controlFill);
-			if ( hBar.active ) // Horizontal scrollbar track
+			} 
+			
+			// Horizontal scrollbar track
+			if ( hBar.active ) {
 				LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y, getWidth()-2, getHeight()-viewportSize.y-1, controlFill);
-			if ( vBar.active ) // Vertical scrollbar track outline
+			}
+			
+			// Vertical scrollbar track outline
+			if ( vBar.active ) {
 				LWJGUIUtil.fillRect(context, getX()+viewportSize.x-1.5, getY()+1, 1, viewportSize.y-2, selectionPassiveFill);
-			if ( hBar.active ) // Horizontal scrollbar track outline
+			}
+			
+			// Horizontal scrollbar track outline
+			if ( hBar.active ) {
 				LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y-1, viewportSize.x-1, 1, selectionPassiveFill);
+			}
 			
 			// Draw bars
 			for (int i = 0; i < scrollBars.size(); i++) {
@@ -311,7 +321,7 @@ public class ScrollPane extends Control {
 			}
 			
 			// Pane Outline
-			if ( this.getBackground() != null ) {
+			if (getBackground() != null) {
 				Color outlineColor = this.isDescendentSelected() ? selectionFill : controlOutlineFill;
 				LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth(), getHeight(), outlineColor);
 			}

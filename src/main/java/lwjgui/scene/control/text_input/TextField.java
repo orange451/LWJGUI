@@ -6,7 +6,11 @@ public class TextField extends TextInputControl {
 	}
 	
 	public TextField(String text) {
-		super();
+		this(new TextInputScrollPane(), text);
+	}
+	
+	public TextField(TextInputScrollPane internalScrollPane, String text) {
+		super(internalScrollPane);
 		this.setText(text);
 		this.setPrefWidth(120);
 	}

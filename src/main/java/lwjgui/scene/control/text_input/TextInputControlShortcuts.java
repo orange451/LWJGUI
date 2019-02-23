@@ -4,7 +4,10 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.event.KeyEvent;
 
-class TextInputControlShortcuts {
+/**
+ * Handles the special key shortcuts of TextInputControl (e.g. CTRL-V to paste)
+ */
+public class TextInputControlShortcuts {
 
 	public void process(TextInputControl tic, KeyEvent event) {
 		

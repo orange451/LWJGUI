@@ -587,6 +587,26 @@ public abstract class Node implements Resizable {
 	}
 	
 	/**
+	 * Forces the min, max, preferred, and actual width to the given value.
+	 */
+	public void forceWidth(double width) {
+		setMinWidth(width);
+		setPrefWidth(width);
+		setMaxWidth(width);
+		size.x = width;
+	}
+	
+	/**
+	 * Forces the min, max, preferred, and actual width to the given value.
+	 */
+	public void forceHeight(double height) {
+		setMinHeight(height);
+		setPrefHeight(height);
+		setMaxHeight(height);
+		size.y = height;
+	}
+	
+	/**
 	 * Set the preferred size of this node.
 	 * <br>
 	 * This size is not guaranteed.

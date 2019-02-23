@@ -104,7 +104,7 @@ public abstract class Region extends Parent {
 	
 
 	public void render(Context context) {
-		clip(context);
+		//clip(context);
 
 		if ( getBackground() != null ) {
 			double boundsX = getNodeBounds().getX();
@@ -163,6 +163,8 @@ public abstract class Region extends Parent {
 
 			// Draw child
 			Node child = children.get(i);
+			if ( child == null )
+				continue;
 			child.render(context);
 		}
 	}

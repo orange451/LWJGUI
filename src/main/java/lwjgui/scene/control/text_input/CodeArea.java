@@ -50,7 +50,7 @@ public class CodeArea extends TextArea {
 		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));	
 		lineCounter.setAbsolutePosition(
 				getX()+internalScrollPane.getInnerBounds().getX()-internalScrollPane.getPadding().getLeft(),
-				getY()+internalScrollPane.getInnerBounds().getY());
+				getY()+internalScrollPane.getContent().getY());
 	}
 	
 	@Override

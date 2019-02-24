@@ -14,7 +14,7 @@ public class CheckBox extends ButtonBase {
 	public Label internalLabel2;
 	private boolean checked;
 	
-	private int size = 18;
+	private int size = 16;
 	
 	private String checkmark = "\u2713";
 
@@ -78,7 +78,7 @@ public class CheckBox extends ButtonBase {
 			double diffX = this.size - internalLabel.getWidth();
 			double diffY = this.size - internalLabel.getHeight();
 			int ox = (int) (diffX/2f)+1;
-			int oy = (int) (diffY/2f)-1;
+			int oy = (int) (diffY/2f);
 			internalLabel.offset(ox, oy);
 			internalLabel2.offset(ox, oy+1);
 			

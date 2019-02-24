@@ -119,7 +119,6 @@ public abstract class Region extends Parent {
 		}
 		
 		if ( this.getPaddingColor() != null ) {
-			
 			if ( this.getPadding().getTop() > 0 ) {
 				int xx1 = (int) (this.getX()+this.getInnerBounds().getX());
 				int yy1 = (int) (this.getY());

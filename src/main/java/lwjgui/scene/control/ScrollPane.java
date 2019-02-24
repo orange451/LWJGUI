@@ -46,6 +46,8 @@ public class ScrollPane extends Control {
 	private Color selectionFill = Theme.current().getSelection();
 	private Color selectionPassiveFill = Theme.current().getSelectionPassive();
 	private Color controlFill = Theme.current().getControl();
+	
+	private boolean isOutlineEnabled = true;
 	private Color controlOutlineFill = Theme.current().getControlOutline();
 	
 	public ScrollPane() {
@@ -172,6 +174,14 @@ public class ScrollPane extends Control {
 		this.controlOutlineFill = controlOutlineFill;
 	}	
 	
+	public boolean isOutlineEnabled() {
+		return isOutlineEnabled;
+	}
+
+	public void setOutlineEnabled(boolean isOutlineEnabled) {
+		this.isOutlineEnabled = isOutlineEnabled;
+	}
+
 	public boolean isVisible() {
 		return visible;
 	}
@@ -277,7 +287,7 @@ public class ScrollPane extends Control {
 	public void setScrollBarThickness(double thickness) {
 		this.thickness = thickness;
 	}
-
+	
 	@Override
 	public void render(Context context) {
 		if (getBackground() != null) {
@@ -321,7 +331,7 @@ public class ScrollPane extends Control {
 			}
 			
 			// Pane Outline
-			if (getBackground() != null) {
+			if (isOutlineEnabled) {
 				Color outlineColor = this.isDescendentSelected() ? selectionFill : controlOutlineFill;
 				LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth(), getHeight(), outlineColor);
 			}

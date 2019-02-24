@@ -44,7 +44,7 @@ public class CodeArea extends TextArea {
 		super.position(parent);
 		
 		// Only update if the amount of lines has changed
-		lineCounter.update(this.lines());
+		lineCounter.update(this.getNumLines());
 		
 		// Position line counter
 		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));	

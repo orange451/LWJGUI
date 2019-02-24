@@ -33,8 +33,8 @@ class TextInputContentRenderer extends Pane {
 	public void render(Context context) {
 		super.render(context);
 		
-		if ( this.textInputControl.glyphData.size() == 0 ) {
-			this.textInputControl.setText(this.textInputControl.getText());
+		if (textInputControl.glyphData.size() == 0) {
+			textInputControl.setText(textInputControl.getText());
 		}
 		
 		this.clip(context);

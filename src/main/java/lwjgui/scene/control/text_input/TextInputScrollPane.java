@@ -21,7 +21,8 @@ public class TextInputScrollPane extends ScrollPane {
 		setVbarPolicy(ScrollBarPolicy.NEVER);
 		setHbarPolicy(ScrollBarPolicy.NEVER);
 		setPadding(new Insets(4,4,4,4));
-
+		setBackground(null);
+		
 		// Enter
 		getViewport().setOnMouseEntered(event -> {
 			getScene().setCursor(Cursor.IBEAM);
@@ -42,6 +43,7 @@ public class TextInputScrollPane extends ScrollPane {
 				cached_context.setSelected(getViewport());
 			});
 			
+			//Sets caret position at mouse
 			if (textInputControl != null) {
 				textInputControl.setCaretPosition(textInputControl.getCaretAtMouse());
 				textInputControl.selectionEndPosition = textInputControl.caretPosition;
@@ -61,9 +63,21 @@ public class TextInputScrollPane extends ScrollPane {
 			}
 		});
 	}
+
+	//TODO: Finish this
+	public void scrollToCaret() {
+		int caret = textInputControl.caretPosition;
+		//int numVisibleLines = textInputControl.getNumVisibleLines();
+		int numLines = textInputControl.getNumLines();
+		
+		//System.err.println(caret + " " + numVisibleLines + " " + numLines);
+		
+		double vValue = ((double) caret / (double) numLines);
+		//setVvalue(vValue);
+	}
 	
-	public void scrollBottom() {
-		this.setVvalue(1.0);
+	public void scrollToBottom() {
+		setVvalue(1.0);
 	}
 
 	protected Pane getViewport() {

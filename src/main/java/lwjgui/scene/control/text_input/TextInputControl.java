@@ -36,7 +36,7 @@ public abstract class TextInputControl extends Control {
 	protected boolean editing = false;
 	protected boolean editable = true;
 	
-	private boolean wordWrap; // Buggy AF
+	private boolean wordWrap;
 	
 	int selectionStartPosition;
 	int selectionEndPosition;
@@ -54,7 +54,7 @@ public abstract class TextInputControl extends Control {
 	
 	private TextParser textParser;
 
-	private static final int MAX_LINES = 10_000;
+	private static final int MAX_LINES = Integer.MAX_VALUE;
 	
 	/*
 	 * Visual customization
@@ -309,7 +309,7 @@ public abstract class TextInputControl extends Control {
 		insertText(getLength(), text);
 		saveState();
 		
-		internalScrollPane.scrollBottom();
+		internalScrollPane.scrollToBottom();
 	}
 	
 	public void insertText(int index, String text) {
@@ -596,7 +596,10 @@ public abstract class TextInputControl extends Control {
 		return getText(new IndexRange(start,end));
 	}
 	
-	public int lines() {
+	/**
+	 * @return the total number of lines in this text area.
+	 */
+	public int getNumLines() {
 		return this.lines.size();
 	}
 
@@ -657,8 +660,9 @@ public abstract class TextInputControl extends Control {
 	@Override
 	protected void resize() {
 		this.setAlignment(Pos.TOP_LEFT);
-		internalScrollPane.setPrefSize(getWidth(), getHeight());
 		
+		internalScrollPane.setPrefSize(getPrefWidth(), getPrefHeight());
+
 		int width = getMaxTextWidth();
 		this.fakeBox.setMinSize(width, lines.size()*fontSize);
 		
@@ -890,9 +894,7 @@ public abstract class TextInputControl extends Control {
 		float w = (int)this.getInnerBounds().getWidth();
 		float h = (int)this.getInnerBounds().getHeight();
 		float r = 2;
-		
 
-		super.render(context);
 		this.clip(context,4);
 		
 		// Selection graphic
@@ -951,8 +953,10 @@ public abstract class TextInputControl extends Control {
 		}
 		
 		// Draw text
-		this.internalScrollPane.setBackground(null);
-		this.internalScrollPane.render(context);
+		super.render(context);
+		
+		//Orange, you were calling both these, so I commented this one out. Feel free to switch it around later.
+		//this.internalScrollPane.render(context);
 		
 		// internal selection graphic
 		if (isDescendentSelected() && isSelectionOutlineEnabled()) {

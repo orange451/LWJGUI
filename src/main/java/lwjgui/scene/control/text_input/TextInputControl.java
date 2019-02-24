@@ -661,7 +661,7 @@ public abstract class TextInputControl extends Control {
 	protected void resize() {
 		this.setAlignment(Pos.TOP_LEFT);
 		
-		internalScrollPane.setPrefSize(getPrefWidth(), getPrefHeight());
+		internalScrollPane.setPrefSize(getWidth(), getHeight());
 
 		int width = getMaxTextWidth();
 		this.fakeBox.setMinSize(width, lines.size()*fontSize);

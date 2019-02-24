@@ -2,7 +2,6 @@ package lwjgui.scene.control;
 
 import java.awt.Point;
 
-import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
@@ -72,10 +71,11 @@ public abstract class ButtonBase extends Labeled {
 		return false;
 	}
 	
+	/*
 	@Override
 	public Vector2d getAvailableSize() {
 		return new Vector2d(getMaxWidth(),getMaxHeight());
-	}
+	}*/
 	
 	@Override
 	protected void resize() {

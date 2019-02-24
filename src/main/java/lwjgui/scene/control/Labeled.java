@@ -70,45 +70,50 @@ public abstract class Labeled extends Control {
 	}
 	
 	@Override
-	public void position(Node parent) {
+	protected void resize() {
+		super.resize();
+		
+		// Change label size if it's too large for its container (cut off text)
 		if (this.getParent() != null && cached_context != null) {
 			useString = text;
 			
 			// Get max width of parent element
-			double maxWid = this.getParent().getInnerBounds().getWidth();
-			double gWid = graphic == null ? 0 : graphic.getWidth();
-			
-			int remove = 0;
+			double graphicWid = graphic == null ? 0 : graphic.getWidth();
 			
 			// Get some text bounds
-			float[] bounds = font.getTextBounds( cached_context, text, fontStyle, fontSize);
 			float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize);
-			//double curWid = bounds[2]-bounds[0]+gWid + this.getPadding().getWidth();
 			double curWid = getTextWidth() + this.getPadding().getWidth();
-			double prefWid = curWid;
-			this.setPrefWidth(prefWid);
+			
+			// Set initial size
+			this.size.x = curWid;
 			
 			// If we're too large for the parent element...
-			if ( this.getPrefWidth() >= this.getAvailableSize().x ) {
-				this.setPrefWidth(prefWid);
+			if ( this.size.x > this.getAvailableSize().x ) {
+				
+				// Add ellipse width to string width
 				float eWid = elipBnd[2]-elipBnd[0];
 				curWid += eWid;
 				
 				// While we're too large, remove text off the end and replace with elipses
-				while ( (curWid >= maxWid) && (remove < text.length()) ) {
+				int remove = 0;
+				while ( (curWid > this.getAvailableSize().x) && (remove < text.length()) ) {
 					remove++;
 					useString = useString.substring(0, text.length()-remove)+ELIPSES;
-					bounds = font.getTextBounds( cached_context, useString, fontStyle, fontSize);
-					curWid = bounds[2]-bounds[0]+gWid;
+					float[] bounds = font.getTextBounds( cached_context, useString, fontStyle, fontSize);
+					curWid = (bounds[2]-bounds[0])+graphicWid;
 				}
+				this.size.x = curWid;
 			}
 			
 			// Compute preferred height
+			float[] bounds = font.getTextBounds(cached_context, useString, fontStyle, fontSize);
 			double hei = (bounds[3] - bounds[1]) + this.padding.getHeight();
-			this.setMinHeight(hei);
-			this.setPrefHeight(hei);
+			this.size.y = hei;
 		}
-		
+	}
+	
+	@Override
+	public void position(Node parent) {
 		super.position(parent);
 	}
 	

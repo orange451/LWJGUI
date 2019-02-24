@@ -583,4 +583,8 @@ public class Window {
 			STBImage.stbi_image_free(datas[i]);
 		}
 	}
+
+	public void setResizible(boolean resizable) {
+		GLFW.glfwSetWindowAttrib(getContext().getWindowHandle(), GLFW.GLFW_RESIZABLE, resizable?GLFW.GLFW_TRUE:GLFW.GLFW_FALSE);
+	}
 }

@@ -77,7 +77,7 @@ public class CheckBox extends ButtonBase {
 			// Offset a little bit
 			double diffX = this.size - internalLabel.getWidth();
 			double diffY = this.size - internalLabel.getHeight();
-			int ox = (int) (diffX/2f)+1;
+			int ox = (int) (diffX/2f);
 			int oy = (int) (diffY/2f);
 			internalLabel.offset(ox, oy);
 			internalLabel2.offset(ox, oy+1);

@@ -186,8 +186,8 @@ public abstract class TextInputControl extends Control {
 		text = text.replace("\r", "");
 		this.source = text;
 		
-		text = text + trail; // Add tail
-		String[] split = text.split("\n");
+		String temp = text + trail; // Add tail
+		String[] split = temp.split("\n");
 		for (int i = 0; i < split.length; i++) {
 			String tt = split[i];
 			tt = tt.replace(trail, ""); // Remove tail
@@ -255,9 +255,8 @@ public abstract class TextInputControl extends Control {
 				GlyphData entry = glyphEntry.get(index);
 				
 				if ( entry.x()+entry.width() >= maxWidth ) {
-					addRow(originalText.substring(0, index-1)+"\n");
+					addRow(originalText.substring(0, index-1));
 					addRow(originalText.substring(index-1,originalText.length()));
-					//index--;
 					return;
 				}
 				
@@ -528,7 +527,11 @@ public abstract class TextInputControl extends Control {
 		if ( selection.getLength() == 0 )
 			return "";
 		
-		return source.substring(Math.max(0, selection.getStart()),Math.min(selection.getEnd(),source.length()));
+		return source.substring(
+				Math.max(0, selection.getStart()),
+				Math.min(selection.getEnd(),source.length())
+		);
+		
 		/*
 		int startLine = getRowFromCaret(selection.getStart());
 		int endLine = getRowFromCaret(selection.getEnd());
@@ -586,11 +589,12 @@ public abstract class TextInputControl extends Control {
 	 * @return
 	 */
 	public int getLength() {
-		int len = 0;
+		/*int len = 0;
 		for (int i = 0; i < lines.size(); i++) {
 			len += lines.get(i).length();
 		}
-		return len;
+		return len;*/
+		return source.length();
 	}
 	
 	/**
@@ -602,7 +606,7 @@ public abstract class TextInputControl extends Control {
 		int line = getRowFromCaret(pos);
 		int a = 0;
 		for (int i = 0; i < line; i++) {
-			a += linesDraw.get(i).length();
+			a += lines.get(i).length();
 		}
 		return pos-a;
 	}
@@ -615,9 +619,10 @@ public abstract class TextInputControl extends Control {
 	protected int getRowFromCaret(int caret) {
 		int line = -1;
 		int a = 0;
-		while ( a <= caret && line < linesDraw.size()-1 ) {
+		
+		while ( a <= caret && line < lines.size()-1 ) {
 			line++;
-			String t = linesDraw.get(line);
+			String t = lines.get(line);
 			a += t.length();
 		}
 		return line;
@@ -772,13 +777,6 @@ public abstract class TextInputControl extends Control {
 			if ( dat.x()+dat.width/2-3 > pixelX )
 				break;
 			index++;
-		}
-		
-		// If mouse is halfway over, move to next character (provided the character exists, and it isn't a new line)
-		if ( pixelX > tempx + lastGlyph.width()/2) {
-			if ( getRowFromCaret(getCaretFromRowLine(row,index+1)) == row ) {
-				//index++;
-			}
 		}
 		
 		// Limit

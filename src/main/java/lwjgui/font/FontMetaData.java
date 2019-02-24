@@ -6,15 +6,25 @@ public class FontMetaData {
 	private Color color;
 	private Font font;
 	private FontStyle style;
+	private Double size;
 	
 	public FontMetaData color(Color color) {
 		this.color = color;
 		return this;
 	}
 	
+	public FontMetaData size(double size) {
+		this.size = new Double(size);
+		return this;
+	}
+	
 	public FontMetaData style(FontStyle style) {
 		this.style = style;
 		return this;
+	}
+	
+	public Double getSize() {
+		return this.size;
 	}
 
 	public Color getColor() {

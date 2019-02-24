@@ -736,12 +736,12 @@ public abstract class TextInputControl extends Control {
 		if ( cached_context == null )
 			return;
 		
-		int fs = fontSize;
+		double fs = data.getSize()==null?fontSize:data.getSize().doubleValue();
 		Font f = data.getFont()==null?font:data.getFont();
 		FontStyle fst = data.getStyle()==null?style:data.getStyle();
 		
 		long vg = cached_context.getNVG();
-		NanoVG.nvgFontSize(vg, fs);
+		NanoVG.nvgFontSize(vg, (float)fs);
 		NanoVG.nvgFontFace(vg, f.getFont(fst));
 		NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
 	}

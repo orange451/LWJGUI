@@ -926,14 +926,11 @@ public abstract class TextInputControl extends Control {
 			LWJGUIUtil.fillRect(context, getX()+inset, getY()+inset, w-inset*2, h-inset*2, this.getBackground());
 		}
 		
-		// Dropshadow
-		if (isDecorated()) {
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
-			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRect(vg, x, y, w, 4);
-			NanoVG.nvgFillPaint(vg, bg);
-			NanoVG.nvgFill(vg);
-		}
+		//Orange, you were calling both these, so I commented this one out. Feel free to switch it around later.
+		//this.internalScrollPane.render(context);
+		
+		// Draw text
+		super.render(context);
 		
 		// Draw Prompt
 		if ( getLength() == 0 && prompt != null && prompt.length() > 0 ) {
@@ -952,11 +949,14 @@ public abstract class TextInputControl extends Control {
 			NanoVG.nvgText(vg, xx, yy, prompt);
 		}
 		
-		//Orange, you were calling both these, so I commented this one out. Feel free to switch it around later.
-		//this.internalScrollPane.render(context);
-		
-		// Draw text
-		super.render(context);
+		// Dropshadow
+		if (isDecorated()) {
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+			NanoVG.nvgBeginPath(vg);
+			NanoVG.nvgRect(vg, x, y, w, 4);
+			NanoVG.nvgFillPaint(vg, bg);
+			NanoVG.nvgFill(vg);
+		}
 		
 		if (isDescendentSelected() && isSelectionOutlineEnabled()) {
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	

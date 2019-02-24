@@ -6,6 +6,7 @@ import lwjgui.Color;
 import lwjgui.collections.ObservableList;
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
+import lwjgui.geometry.HPos;
 import lwjgui.geometry.VPos;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
@@ -85,7 +86,8 @@ public abstract class Labeled extends Control {
 			double curWid = getTextWidth() + this.getPadding().getWidth();
 			
 			// Set initial size
-			this.size.x = curWid;
+			if ( size.x < curWid )
+				this.size.x = curWid;
 			
 			// If we're too large for the parent element...
 			if ( this.size.x > this.getAvailableSize().x ) {
@@ -123,11 +125,24 @@ public abstract class Labeled extends Control {
 		
 		super.render(context);
 
+		// get Absolute position
 		long vg = context.getNVG();
-		int absX = (int)(getX()-0.5 + this.padding.getLeft());
-		int absY = (int)(getY()+0.5 + this.padding.getTop());
-		
+		int absX = (int)(getX() + this.padding.getLeft());
+		int absY = (int)(getY() + this.padding.getTop());
+
+		// Get width of graphic
 		double gWid = graphic == null ? -1 : graphic.getWidth();
+		
+		// Offset the label if there's a difference between its size and its text width
+		double widthDifference = getWidth()-(getTextWidth()+gWid+getPadding().getWidth());
+		double xMult = 0;
+		if ( this.getAlignment().getHpos() == HPos.CENTER )
+			xMult = 0.5f;
+		if ( this.getAlignment().getHpos() == HPos.RIGHT )
+			xMult = 1.0f;
+		absX += widthDifference*xMult;
+		
+		// Offset graphic
 		if ( gWid >= 0 ) {
 			graphic.setAbsolutePosition(absX, absY);
 			graphic.render(context);

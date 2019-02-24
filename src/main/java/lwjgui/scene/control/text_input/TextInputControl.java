@@ -195,29 +195,6 @@ public abstract class TextInputControl extends Control {
 				tt += "\n";
 			}
 			addRow(tt);
-			/*String drawLine = tt;
-			if ( this.textParser != null )
-				drawLine = textParser.parseText(drawLine);
-
-			lines.add(tt);
-			linesDraw.add(drawLine);
-			
-			ArrayList<GlyphData> glyphEntry = new ArrayList<GlyphData>();
-			
-			int curWid = 0;
-			
-			if ( cached_context != null ) {
-				bindFont();
-				org.lwjgl.nanovg.NVGGlyphPosition.Buffer positions = NVGGlyphPosition.malloc(drawLine.length());
-				NanoVG.nvgTextGlyphPositions(cached_context.getNVG(), 0, 0, drawLine, positions);
-				int j = 0;
-				while (positions.hasRemaining()) {
-					glyphEntry.add(fixGlyph(positions.get(), drawLine.substring(j, j+1)));
-					j++;
-				}
-				positions.free();
-				glyphData.add(glyphEntry);
-			}*/
 		}
 		setCaretPosition(oldCaret);
 		
@@ -253,7 +230,7 @@ public abstract class TextInputControl extends Control {
 			
 			// Add blank glyph to end of line
 			GlyphData last = glyphEntry.size()== 0 ? new GlyphData(0,0,"") : glyphEntry.get(glyphEntry.size()-1);
-			glyphEntry.add(new GlyphData( last.x()+last.width, 0, "" ));
+			glyphEntry.add(new GlyphData( last.x()+last.width, 1, "" ));
 			
 			// Hack to fix spacing of special characters
 			for (int i = 0; i < glyphEntry.size()-1; i++) {
@@ -271,15 +248,15 @@ public abstract class TextInputControl extends Control {
 			}
 			
 			// Word Wrap not yet properly implemented properly. Will be rewritten.
-			int vWid = (int) (this.internalScrollPane.getViewport().getWidth() - 24);
+			int vWid = (int) (this.internalScrollPane.getViewport().getWidth() - 20);
 			int maxWidth = (int) (wordWrap?vWid:Integer.MAX_VALUE);
 			int index = 0;
 			while ( index < originalText.length() ) {
 				GlyphData entry = glyphEntry.get(index);
 				
 				if ( entry.x()+entry.width() >= maxWidth ) {
-					addRow(originalText.substring(0, index));
-					addRow(originalText.substring(index,originalText.length()));
+					addRow(originalText.substring(0, index-1)+"\n");
+					addRow(originalText.substring(index-1,originalText.length()));
 					//index--;
 					return;
 				}
@@ -333,15 +310,10 @@ public abstract class TextInputControl extends Control {
 	public void deleteText(IndexRange range) {
 		range.normalize();
 		
-		if ( range.getStart() < 0 )
-			return;
-		if ( range.getEnd() > getLength() )
-			return;
+		String before = getText(0, range.getStart());
+		String after = getText(range.getEnd(), getLength());
 		
-		String text = this.getText();
-		String prefix = text.substring(0, range.getStart());
-		String suffix = text.substring(range.getEnd(),text.length());
-		this.setText(prefix+suffix);
+		this.setText(before+after);
 		saveState();
 	}
 	
@@ -556,6 +528,8 @@ public abstract class TextInputControl extends Control {
 		if ( selection.getLength() == 0 )
 			return "";
 		
+		return source.substring(Math.max(0, selection.getStart()),Math.min(selection.getEnd(),source.length()));
+		/*
 		int startLine = getRowFromCaret(selection.getStart());
 		int endLine = getRowFromCaret(selection.getEnd());
 		int t = startLine;
@@ -576,7 +550,7 @@ public abstract class TextInputControl extends Control {
 			t++;
 		}
 		
-		return text;
+		return text;*/
 	}
 	
 	public String getText() {
@@ -628,7 +602,7 @@ public abstract class TextInputControl extends Control {
 		int line = getRowFromCaret(pos);
 		int a = 0;
 		for (int i = 0; i < line; i++) {
-			a += lines.get(i).length();
+			a += linesDraw.get(i).length();
 		}
 		return pos-a;
 	}
@@ -641,9 +615,9 @@ public abstract class TextInputControl extends Control {
 	protected int getRowFromCaret(int caret) {
 		int line = -1;
 		int a = 0;
-		while ( a <= caret && line < lines.size()-1 ) {
+		while ( a <= caret && line < linesDraw.size()-1 ) {
 			line++;
-			String t = lines.get(line);
+			String t = linesDraw.get(line);
 			a += t.length();
 		}
 		return line;
@@ -749,6 +723,10 @@ public abstract class TextInputControl extends Control {
 	protected GlyphData fixGlyph(NVGGlyphPosition glyph, String originalCharacter) {
 		if ( originalCharacter.equals("\t") )
 			return new GlyphData( glyph.x(), 32, originalCharacter, true );
+		
+		if ( originalCharacter.equals("\r") ) {
+			new GlyphData( glyph.x(), 0, originalCharacter );
+		}
 		
 		return new GlyphData( glyph.x(), glyph.maxx()-glyph.x(), originalCharacter );
 	}

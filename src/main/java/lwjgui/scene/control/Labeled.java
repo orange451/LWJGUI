@@ -115,11 +115,6 @@ public abstract class Labeled extends Control {
 	}
 	
 	@Override
-	public void position(Node parent) {
-		super.position(parent);
-	}
-	
-	@Override
 	public void render(Context context) {
 		//clip(context);
 		
@@ -134,13 +129,13 @@ public abstract class Labeled extends Control {
 		double gWid = graphic == null ? -1 : graphic.getWidth();
 		
 		// Offset the label if there's a difference between its size and its text width
-		double widthDifference = getWidth()-(getTextWidth()+gWid+getPadding().getWidth());
+		double widthDifference = getWidth()-(getTextWidth(useString)+getPadding().getWidth());
 		double xMult = 0;
 		if ( this.getAlignment().getHpos() == HPos.CENTER )
 			xMult = 0.5f;
 		if ( this.getAlignment().getHpos() == HPos.RIGHT )
 			xMult = 1.0f;
-		absX += widthDifference*xMult;
+		absX += Math.abs(widthDifference)*xMult;
 		
 		// Offset graphic
 		if ( gWid >= 0 ) {
@@ -178,7 +173,11 @@ public abstract class Labeled extends Control {
 	}
 
 	public double getTextWidth() {
-		float[] bounds = font.getTextBounds(this.cached_context, text, fontStyle, fontSize);
+		return getTextWidth(text);
+	}
+
+	private double getTextWidth(String string) {
+		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize);
 		float gWid = (float) (graphic == null ? 0 : graphic.getWidth());
 		return bounds[2] - bounds[0] + gWid;
 	}

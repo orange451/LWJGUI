@@ -50,11 +50,11 @@ public class OpenGLExample extends LWJGUIApplication {
 		{
 			VBox vbox = new VBox();
 			vbox.setAlignment(Pos.CENTER);
-			vbox.setBackground(null);
+			vbox.setBackground(Color.BLUE.alpha(0.2f));
 			root.setCenter(vbox);
 
 			Label label1 = new Label("Hello World!");
-			label1.setTextFill(Color.WHITE);
+			label1.setTextFill(Color.AQUA);
 			vbox.getChildren().add(label1);
 			
 			Label label2 = new Label("OpenGL drawn straight to window.");

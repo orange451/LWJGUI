@@ -1,54 +1,25 @@
 package lwjgui;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
-import java.io.IOException;
-
-import org.lwjgl.glfw.GLFW;
-
-import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Pos;
-import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 
-public class ButtonExample {
+public class ButtonExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
-	public static void main(String[] args) throws IOException {
-		if ( !glfwInit() )
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("Button Example", WIDTH, HEIGHT, true, false);
-		
-		// Initialize lwjgui for this window
-		Window newWindow = LWJGUI.initialize(window);
-		Scene scene = newWindow.getScene();
-		
-		// Add some components
-		addComponents(scene);
-		
-		// Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUI
-			LWJGUI.render();
-		}
-		
-		// Stop GLFW
-		glfwTerminate();
+	public static void main(String[] args) {
+		launch(args);
 	}
-
-	private static void addComponents(Scene scene) {
+	
+	@Override
+	public void start(String[] args, Window window) {
 		// Add background pane
 		StackPane pane = new StackPane();
-		scene.setRoot(pane);
+		window.getScene().setRoot(pane);
 		
 		// Create vertical box
 		VBox vbox = new VBox();
@@ -69,5 +40,26 @@ public class ButtonExample {
 										// Is because that will affect the layout of the button.
 										// Stylistically, we don't want the button to move when 
 										// the text comes onto the screen.
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getProgramName() {
+		return "Button Example";
+	}
+
+	@Override
+	public int getDefaultWindowWidth() {
+		return WIDTH;
+	}
+
+	@Override
+	public int getDefaultWindowHeight() {
+		return HEIGHT;
 	}
 }

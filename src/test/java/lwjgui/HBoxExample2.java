@@ -1,52 +1,23 @@
 package lwjgui;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
-import java.io.IOException;
-
-import org.lwjgl.glfw.GLFW;
-
 import lwjgui.Color;
-import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
-import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 
-public class HBoxExample2 {
+public class HBoxExample2 extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
-	public static void main(String[] args) throws IOException {
-		if ( !glfwInit() )
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		// Create a standard opengl 3.2 window.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("HBox Example 2", WIDTH, HEIGHT, true, false);
-
-		// Initialize lwjgui for this window
-		Window newWindow = LWJGUI.initialize(window);
-		Scene scene = newWindow.getScene();
-
-		// Add some components
-		addComponents(scene);
-		
-		// Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUI
-			LWJGUI.render();
-		}
-
-		// Stop GLFW
-		glfwTerminate();
+	public static void main(String[] args) {
+		launch(args);
 	}
 
-	private static void addComponents(Scene scene) {
+	@Override
+	public void start(String[] args, Window window) {
 		// Create a hbox that fills the screen
 		HBox box = new HBox();
-		scene.setRoot(box);
+		window.getScene().setRoot(box);
 		
 		// This is the left pane
 		StackPane p1 = new StackPane();
@@ -71,6 +42,25 @@ public class HBoxExample2 {
 		p3.setMinWidth(64);
 		p3.setBackground(Color.CYAN);
 		box.getChildren().add(p3);
-		
+	}
+
+	@Override
+	public void run() {
+		//
+	}
+
+	@Override
+	public String getProgramName() {
+		return "HBox Example 2";
+	}
+
+	@Override
+	public int getDefaultWindowWidth() {
+		return WIDTH;
+	}
+
+	@Override
+	public int getDefaultWindowHeight() {
+		return HEIGHT;
 	}
 }

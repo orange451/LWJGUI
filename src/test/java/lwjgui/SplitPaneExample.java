@@ -1,17 +1,7 @@
 package lwjgui;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
-import java.io.IOException;
-
-import org.lwjgl.glfw.GLFW;
-
-import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
-import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
@@ -19,38 +9,19 @@ import lwjgui.scene.control.SplitPane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 
-public class SplitPaneExample {
+public class SplitPaneExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
-	public static void main(String[] args) throws IOException {
-		if ( !glfwInit() )
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("Split Pane Example", WIDTH, HEIGHT, true, false);
-		
-		// Initialize lwjgui for this window
-		Window newWindow = LWJGUI.initialize(window);
-		Scene scene = newWindow.getScene();
-		
-		// Add some components
-		addComponents(scene);
-		
-		// Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUI
-			LWJGUI.render();
-		}
-		
-		// Stop GLFW
-		glfwTerminate();
+	public static void main(String[] args) {
+		launch(args);
 	}
 
-	private static void addComponents(Scene scene) {
+	@Override
+	public void start(String[] args, Window window) {
 		// Create background pane
 		StackPane pane = new StackPane();
-		scene.setRoot(pane);
+		window.getScene().setRoot(pane);
 		
 		// Create vertical layout
 		VBox box = new VBox();
@@ -80,8 +51,30 @@ public class SplitPaneExample {
 			p.getChildren().add(new Button("Hello World"));
 		}
 
-		SplitPane.setResizableWithParent(split.getItems().get(0), false);
-		SplitPane.setResizableWithParent(split.getItems().get(2), false);
-		//split.setDividerPosition(0, 0.4);
+		// After it's all setup, make sizes not rely on window size.
+		LWJGUI.runLater(()->{
+			SplitPane.setResizableWithParent(split.getItems().get(0), false);
+			SplitPane.setResizableWithParent(split.getItems().get(2), false);
+		});
+	}
+
+	@Override
+	public void run() {
+		//
+	}
+
+	@Override
+	public String getProgramName() {
+		return "Split Pane Example";
+	}
+
+	@Override
+	public int getDefaultWindowWidth() {
+		return WIDTH;
+	}
+
+	@Override
+	public int getDefaultWindowHeight() {
+		return HEIGHT;
 	}
 }

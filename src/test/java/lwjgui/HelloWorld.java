@@ -1,13 +1,13 @@
-package lwjgui;
+	package lwjgui;
 
 
-import lwjgui.LWJGUIProgram;
+import lwjgui.LWJGUIApplication;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
 
-public class HelloWorld extends LWJGUIProgram {
+public class HelloWorld extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
@@ -16,12 +16,9 @@ public class HelloWorld extends LWJGUIProgram {
 	}
 	
 	@Override
-	public void init(String[] args, Window window) {
+	public void start(String[] args, Window window) {
 		// Get the main scene of the window
 		Scene scene = window.getScene();
-
-		// Mark window as non-resizable
-		window.setResizible(false);
 		
 		// Create a simple pane
 		StackPane pane = new StackPane();

@@ -318,6 +318,7 @@ public class Window {
 				lastWidth = width;
 				lastHeight = height;
 				render();
+				render();
 				windowResizing = false;
 			}
 		});

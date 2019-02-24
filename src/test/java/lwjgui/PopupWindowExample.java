@@ -1,8 +1,5 @@
 package lwjgui;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import java.io.IOException;
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
@@ -17,38 +14,19 @@ import lwjgui.scene.layout.BorderPane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 
-public class PopupWindowExample {
+public class PopupWindowExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
-	public static void main(String[] args) throws IOException {
-		if ( !glfwInit() )
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("Popup Example", WIDTH, HEIGHT, true, false);
-		
-		// Initialize lwjgui for this window
-		Window newWindow = LWJGUI.initialize(window);
-		Scene scene = newWindow.getScene();
-		
-		// Add some components
-		addComponents(scene);
-		
-		// Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUIs
-			LWJGUI.render();
-		}
-		
-		// Stop GLFW
-		glfwTerminate();
+	public static void main(String[] args) {
+		launch(args);
 	}
 
-	private static void addComponents(Scene scene) {
+	@Override
+	public void start(String[] args, Window window) {
 		// Add background pane
 		StackPane pane = new StackPane();
-		scene.setRoot(pane);
+		window.getScene().setRoot(pane);
 		
 		// Create vertical box
 		VBox vbox = new VBox();
@@ -65,7 +43,7 @@ public class PopupWindowExample {
 		// Add the components
 		vbox.getChildren().add(button);
 	}
-
+	
 	protected static void popup(String popup) {
 		// Create a popup window
 		long pWin = LWJGUIUtil.createOpenGLCoreWindow(popup, 250, 150, false, true);
@@ -88,5 +66,25 @@ public class PopupWindowExample {
 		b.setOnAction((event)-> {
 			GLFW.glfwSetWindowShouldClose(pWin, true);
 		});
+	}
+
+	@Override
+	public void run() {
+		//
+	}
+
+	@Override
+	public String getProgramName() {
+		return "Popup Example";
+	}
+
+	@Override
+	public int getDefaultWindowWidth() {
+		return WIDTH;
+	}
+
+	@Override
+	public int getDefaultWindowHeight() {
+		return HEIGHT;
 	}
 }

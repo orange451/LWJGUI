@@ -1,17 +1,10 @@
 package lwjgui;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
-import java.io.IOException;
-
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Parent;
-import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
@@ -23,49 +16,19 @@ import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 
-public class ControlExample {
+public class ControlExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
-	public static void main(String[] args) throws IOException {
-		if ( !glfwInit() )
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("Control Buttons", WIDTH, HEIGHT, true, false);
-		
-		// Initialize lwjgui for this window
-		Window newWindow = LWJGUI.initialize(window);
-		Scene scene = newWindow.getScene();
-		
-		// Add some components
-		addComponents(scene);
-		
-		// Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUI
-			LWJGUI.render();
-		}
-		
-		// Stop GLFW
-		glfwTerminate();
+	public static void main(String[] args) {
+		launch(args);
 	}
 	
-	private static VBox exampleBox(String title) {
-		VBox pane = new VBox();
-		pane.setSpacing(4);
-		pane.setAlignment(Pos.CENTER_LEFT);
-		
-		Label t = new Label(title);
-		pane.getChildren().add(t);
-		
-		return pane;
-	}
-
-	private static void addComponents(Scene scene) {
+	@Override
+	public void start(String[] args, Window window) {
 		// Create background pane
 		StackPane background = new StackPane();
-		scene.setRoot(background);
+		window.getScene().setRoot(background);
 		
 		// Create a vbox to store examples vertically
 		VBox vbox = new VBox();
@@ -90,7 +53,17 @@ public class ControlExample {
 			// Redio Buttons
 			displayRadioButtons(hbox);
 		}
+	}
+	
+	private static VBox exampleBox(String title) {
+		VBox pane = new VBox();
+		pane.setSpacing(4);
+		pane.setAlignment(Pos.CENTER_LEFT);
 		
+		Label t = new Label(title);
+		pane.getChildren().add(t);
+		
+		return pane;
 	}
 
 	private static void displaySegmentedButton(Parent parent) {
@@ -137,5 +110,26 @@ public class ControlExample {
 		// Make the first checkbox selected visually and checked
 		b.setChecked(true);
 		LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext().setSelected(b);
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getProgramName() {
+		return "Control Example";
+	}
+
+	@Override
+	public int getDefaultWindowWidth() {
+		return WIDTH;
+	}
+
+	@Override
+	public int getDefaultWindowHeight() {
+		return HEIGHT;
 	}
 }

@@ -10,7 +10,7 @@ import lwjgui.scene.Window;
 /**
  * A utility class that quickly assembles a LWJGUI program. To implement this into your project, simply extend this class and call startProgram() in the main method.
  */
-public abstract class LWJGUIProgram {
+public abstract class LWJGUIApplication {
 	/**
 	 * Starts the given LWJGUI-based program.
 	 * The entry point of the program is the same class that calls this method.
@@ -30,7 +30,7 @@ public abstract class LWJGUIProgram {
 			if (foundThisMethod) {
 				callingClassName = className;
 				break;
-			} else if (LWJGUIProgram.class.getName().equals(className) && "launch".equals(methodName)) {
+			} else if (LWJGUIApplication.class.getName().equals(className) && "launch".equals(methodName)) {
 				foundThisMethod = true;
 			}
 		}
@@ -41,7 +41,7 @@ public abstract class LWJGUIProgram {
 
 		try {
 			Class<?> theClass = Class.forName(callingClassName, true, Thread.currentThread().getContextClassLoader());
-			launch((LWJGUIProgram) theClass.newInstance(),args);
+			launch((LWJGUIApplication) theClass.newInstance(),args);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -57,9 +57,9 @@ public abstract class LWJGUIProgram {
 	 * @param program - a class that extends this one, meant to be the root of the program
 	 * @param args - the args passed through the main method
 	 */
-	public static void launch(LWJGUIProgram program, String[] args) {
+	public static void launch(LWJGUIApplication program, String[] args) {
 		//Restarts the JVM if necessary on the first thread to ensure Mac compatibility
-		if (LWJGUIUtil.restartJVMOnFirstThread(true, args)) {
+		if (LWJGUIUtil.restartJVMOnFirstThread(true, program.getClass(), args)) {
 			return;
 		}
 		
@@ -73,7 +73,7 @@ public abstract class LWJGUIProgram {
 		Window window = LWJGUI.initialize(windowID);
 		
 		//Initialize the program
-		program.init(args, window);
+		program.start(args, window);
 		
 		//Run the program
 		program.loop(window);
@@ -99,7 +99,7 @@ public abstract class LWJGUIProgram {
 	 * @param args - the args passed through the main method
 	 * @param window - the newly created LWGUI window
 	 */
-	public abstract void init(String[] args, Window window);
+	public abstract void start(String[] args, Window window);
 
 	/**
 	 * Called from the program loop before rendering.

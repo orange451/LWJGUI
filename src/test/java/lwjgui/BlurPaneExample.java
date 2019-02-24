@@ -1,25 +1,26 @@
 package lwjgui;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.system.MemoryStack.stackMallocFloat;
-import static org.lwjgl.system.MemoryStack.stackPop;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.system.MemoryStack.stackMallocFloat;
+import static org.lwjgl.system.MemoryStack.stackPop;
+import static org.lwjgl.system.MemoryStack.stackPush;
 
-import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
+
 import lwjgui.geometry.Insets;
 import lwjgui.gl.GenericShader;
 import lwjgui.gl.Renderer;
@@ -29,38 +30,19 @@ import lwjgui.scene.Window;
 import lwjgui.scene.layout.BlurPane;
 import lwjgui.scene.layout.BorderPane;
 
-public class BlurPaneExample {
+public class BlurPaneExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
-	public static void main(String[] args) throws IOException {
-		if ( !glfwInit() )
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("OpenGL Example", WIDTH, HEIGHT, true, false);
-
-		// Initialize lwjgui for this window
-		Window newWindow = LWJGUI.initialize(window);
-		Scene scene = newWindow.getScene();
-
-		// Add some components
-		addComponents(scene);
-
-		// Add a rendering callback to the window. This is the first thing called when the window draws.
-		newWindow.setRenderingCallback(new RenderingCallbackTest());
-
-		// Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUI
-			LWJGUI.render();
-		}
-
-		// Stop GLFW
-		glfwTerminate();
+	public static void main(String[] args) {
+		launch(args);
 	}
 
-	private static void addComponents(Scene scene) {
+	@Override
+	public void start(String[] args, Window window) {
+		// Get the windows scene
+		Scene scene = window.getScene();
+		
 		// Create a simple pane
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(16,16,16,16));
@@ -73,8 +55,31 @@ public class BlurPaneExample {
 		BlurPane pane = new BlurPane();
 		pane.setPrefSize(150, 150);
 		root.setCenter(pane);
+		
+		// Window will call this callback when it draws
+		window.setRenderingCallback(new RenderingCallbackTest());
 	}
 
+	@Override
+	public void run() {
+		//
+	}
+
+	@Override
+	public String getProgramName() {
+		return "OpenGL Example";
+	}
+
+	@Override
+	public int getDefaultWindowWidth() {
+		return WIDTH;
+	}
+
+	@Override
+	public int getDefaultWindowHeight() {
+		return HEIGHT;
+	}
+	
 	private static class RenderingCallbackTest implements Renderer {
 		private GenericShader shader;
 		private int vao;

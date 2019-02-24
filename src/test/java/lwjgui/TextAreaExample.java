@@ -1,16 +1,8 @@
 package lwjgui;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
 import java.io.IOException;
 
-import org.lwjgl.glfw.GLFW;
-
-import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Insets;
-import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.text_input.PasswordField;
@@ -19,39 +11,20 @@ import lwjgui.scene.control.text_input.TextField;
 import lwjgui.scene.layout.BorderPane;
 import lwjgui.scene.layout.HBox;
 
-public class TextAreaExample {
+public class TextAreaExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
 	public static void main(String[] args) throws IOException {
-		if ( !glfwInit() )
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("Text Area Example", WIDTH, HEIGHT, true, false);
-		
-		// Initialize lwjgui for this window
-		Window newWindow = LWJGUI.initialize(window);
-		Scene scene = newWindow.getScene();
-		
-		// Add some components
-		addComponents(scene);
-		
-		// Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUI
-			LWJGUI.render();
-		}
-		
-		// Stop GLFW
-		glfwTerminate();
+		launch(args);
 	}
 
-	private static void addComponents(Scene scene) {
+	@Override
+	public void start(String[] args, Window window) {
 		// Create background pane
 		BorderPane pane = new BorderPane();
 		pane.setPadding(new Insets(8,8,8,8));
-		scene.setRoot(pane);
+		window.getScene().setRoot(pane);
 		
 		HBox hbox = new HBox();
 		hbox.setSpacing(8);
@@ -69,9 +42,8 @@ public class TextAreaExample {
 		
 		// Create a Text Area
 		TextArea t = new TextArea();
+		t.setPrefWidth(250);
 		t.setWordWrap(true);
-		//t.setPreferredColumnCount(22);
-		//t.setPreferredRowCount(8);
 		pane.setCenter(t);
 		
 		// Clear text button
@@ -80,5 +52,25 @@ public class TextAreaExample {
 			t.clear();
 		});
 		pane.setBottom(b);
+	}
+
+	@Override
+	public void run() {
+		//
+	}
+
+	@Override
+	public String getProgramName() {
+		return "Text Area Example";
+	}
+
+	@Override
+	public int getDefaultWindowWidth() {
+		return WIDTH;
+	}
+
+	@Override
+	public int getDefaultWindowHeight() {
+		return HEIGHT;
 	}
 }

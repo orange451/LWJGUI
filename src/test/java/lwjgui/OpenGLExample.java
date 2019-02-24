@@ -67,7 +67,7 @@ public class OpenGLExample extends LWJGUIApplication {
 		}
 		
 		// Add a checkbox
-		spinBox = new CheckBox("Spin");
+		spinBox = new CheckBox("Click To Spin");
 		root.setBottom(spinBox);
 		
 		// Render OpenGL Scene

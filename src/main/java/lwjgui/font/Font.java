@@ -25,6 +25,7 @@ public class Font {
 	public static Font COURIER = new Font("lwjgui/scene/layout/", "Courier-New-Regular.ttf", "Courier-New-Bold.ttf", "Courier-New-Italic.ttf", null);
 	public static Font CONSOLAS = new Font("lwjgui/scene/layout/", "Consolas-Regular.ttf", "Consolas-Bold.ttf", "Consolas-Italic.ttf", null);
 	public static Font ARIAL = new Font("lwjgui/scene/layout/", "Arial-Unicode.ttf");
+	public static Font DINGBAT = new Font("lwjgui/scene/layout/", "ErlerDingbats.ttf");
 
 	private static ByteBuffer fallbackSansEmoji;
 	private static ByteBuffer fallbackRegularEmoji;
@@ -208,7 +209,7 @@ public class Font {
 		return using.get(vg);
 	}
 	
-	public float[] getTextBounds(Context context, String string, FontStyle style, float size) {
+	public float[] getTextBounds(Context context, String string, FontStyle style, double size) {
 		float[] bounds = new float[4];
 		
 		if (context == null) {
@@ -221,7 +222,7 @@ public class Font {
 			return bounds;
 		}
 		
-		NanoVG.nvgFontSize(context.getNVG(), size);
+		NanoVG.nvgFontSize(context.getNVG(), (float)size);
 		NanoVG.nvgFontFace(context.getNVG(), font);
 		NanoVG.nvgTextAlign(context.getNVG(), NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
 		

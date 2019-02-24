@@ -86,8 +86,7 @@ public abstract class Labeled extends Control {
 			double curWid = getTextWidth() + this.getPadding().getWidth();
 			
 			// Set initial size
-			if ( size.x < curWid )
-				this.size.x = curWid;
+			size.x = Math.min( Math.max(curWid, size.x), getMaxWidth() );
 			
 			// If we're too large for the parent element...
 			if ( this.size.x > this.getAvailableSize().x ) {

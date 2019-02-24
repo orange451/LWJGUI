@@ -30,6 +30,11 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL;
 
+import lwjgui.font.Font;
+import lwjgui.font.FontStyle;
+import lwjgui.geometry.HPos;
+import lwjgui.geometry.Pos;
+import lwjgui.geometry.VPos;
 import lwjgui.scene.Context;
 
 public class LWJGUIUtil {
@@ -257,5 +262,38 @@ public class LWJGUIUtil {
 		}
 
 		return true;
+	}
+
+	public static void drawText(String text, Font font, FontStyle style, double size, Color color, double x, double y, Pos alignment) {
+		Context vg = LWJGUI.getCurrentContext();
+		
+		float[] bounds = font.getTextBounds(vg, text, style, size);
+		float width = bounds[2]-bounds[0];
+		float height = bounds[3]-bounds[1];
+		
+		float xMult = 0;
+		float yMult = 0;
+		if ( alignment.getHpos().equals(HPos.CENTER))
+			xMult = 0.5f;
+		if ( alignment.getHpos().equals(HPos.RIGHT))
+			xMult = 1;
+		if ( alignment.getVpos().equals(VPos.CENTER))
+			yMult = 0.5f;
+		if ( alignment.getVpos().equals(VPos.BOTTOM))
+			yMult = 1;
+		
+		double xx = x - width*xMult;
+		double yy = y - height*yMult;
+		
+		// Setup font
+		NanoVG.nvgFontSize(vg.getNVG(), (float)size);
+		NanoVG.nvgFontFace(vg.getNVG(), font.getFont(style));
+		NanoVG.nvgTextAlign(vg.getNVG(),NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
+
+		// Draw
+		NanoVG.nvgBeginPath(vg.getNVG());
+		NanoVG.nvgFontBlur(vg.getNVG(),0);
+		NanoVG.nvgFillColor(vg.getNVG(), color.getNVG());
+		NanoVG.nvgText(vg.getNVG(), (float)xx, (float)yy, text);
 	}
 }

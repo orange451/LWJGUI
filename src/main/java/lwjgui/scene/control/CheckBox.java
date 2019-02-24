@@ -2,30 +2,27 @@ package lwjgui.scene.control;
 
 import java.awt.Point;
 
+import lwjgui.LWJGUIUtil;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.EventHandler;
+import lwjgui.font.Font;
+import lwjgui.font.FontStyle;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
-import lwjgui.scene.Node;
 import lwjgui.theme.Theme;
 
 public class CheckBox extends ButtonBase {
-	public CheckBoxLabel internalLabel;
-	public CheckBoxLabel internalLabel2;
 	private boolean checked;
 	
 	private int size = 16;
 	
-	private String checkmark = "\u2713";
+	private String checkmark = "\u2714";
 
 	public CheckBox(String name) {
 		super(name);
 
 		this.setAlignment(Pos.CENTER_LEFT);
-		this.internalLabel = new CheckBoxLabel(checkmark);
-		this.internalLabel2 = new CheckBoxLabel(checkmark);
-		this.internalLabel2.setTextFill(Theme.current().getControl());
 		
 		this.textOffset = 24;
 
@@ -37,18 +34,6 @@ public class CheckBox extends ButtonBase {
 				checked = !checked;
 			}
 		});
-	}
-	
-	// Overwrite labels position to make it public internally
-	class CheckBoxLabel extends Label {
-		public CheckBoxLabel(String string) {
-			super(string);
-		}
-
-		@Override
-		public void position(Node node) {
-			super.position(parent);
-		}
 	}
 	
 	@Override
@@ -75,30 +60,8 @@ public class CheckBox extends ButtonBase {
 		super.render(context);
 
 		if ( checked ) {
-			
-			internalLabel.setAlignment(Pos.CENTER_LEFT);
-			internalLabel2.setAlignment(Pos.CENTER_LEFT);
-
-			// Update the size of the checkmark
-			internalLabel.setFontSize((float) (size*1.2));
-			internalLabel2.setFontSize((float) (size*1.2));
-			
-			// Position the checkmark inside the box
-			internalLabel.position(this);
-			internalLabel2.position(this);
-			
-			// Offset a little bit
-			double diffX = this.size - internalLabel.getWidth();
-			double diffY = this.size - internalLabel.getHeight();
-			int ox = (int) (diffX/2f);
-			int oy = (int) (diffY/2f);
-			internalLabel.offset(ox, oy);
-			internalLabel2.offset(ox, oy+1);
-			
-			// Render checkmark
-			internalLabel2.render(context);
-			internalLabel.render(context);
-			//internalLabel.setTextFill(this.graphicLabel.label.getTextFill());
+			LWJGUIUtil.drawText(checkmark, Font.DINGBAT, FontStyle.REGULAR, size*1.2f, Theme.current().getControl(), getX()+size/2f, getY()+size/2f, Pos.CENTER);
+			LWJGUIUtil.drawText(checkmark, Font.DINGBAT, FontStyle.REGULAR, size*1.2f, Theme.current().getText(), getX()+size/2f, getY()+size/2f+1, Pos.CENTER);
 		}
 	}
 

@@ -895,14 +895,14 @@ public abstract class TextInputControl extends Control {
 		float h = (int)this.getInnerBounds().getHeight();
 		float r = 2;
 
-		this.clip(context,4);
+		this.clip(context,40);
 		
 		// Selection graphic
 		if (isDescendentSelected() && isDecorated()) {
 			int feather = 4;
 			Color color = context.isFocused() ? selectionFill : selectionPassiveFill;
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
-				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w,h, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w+1,h+1, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 				NanoVG.nvgBeginPath(vg);
 				NanoVG.nvgRect(vg, -feather,-feather, w+feather*2,h+feather*2);
 				NanoVG.nvgFillPaint(vg, paint);
@@ -952,23 +952,25 @@ public abstract class TextInputControl extends Control {
 			NanoVG.nvgText(vg, xx, yy, prompt);
 		}
 		
-		// Draw text
-		super.render(context);
-		
 		//Orange, you were calling both these, so I commented this one out. Feel free to switch it around later.
 		//this.internalScrollPane.render(context);
 		
-		// internal selection graphic
+		// Draw text
+		super.render(context);
+		
 		if (isDescendentSelected() && isSelectionOutlineEnabled()) {
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
-			Color sel = context.isFocused() ? selectionFill : selectionPassiveFill;
-			Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);
-			NanoVG.nvgBeginPath(vg);
-				float inset = 1.33f;
-				NanoVG.nvgRoundedRect(vg, inset, inset, w-inset*2,h-inset*2, (float) r-inset);
-				NanoVG.nvgStrokeColor(vg, col.getNVG());
-				NanoVG.nvgStrokeWidth(vg, inset*1.25f);
-				NanoVG.nvgStroke(vg);
+				Color sel = context.isFocused() ? selectionFill : selectionPassiveFill;
+				Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);
+				NanoVG.nvgBeginPath(vg);
+					float inset = 1.33f;
+					w += 1;
+					h += 1;
+					NanoVG.nvgRoundedRect(vg, inset, inset, w-inset*2,h-inset*2, (float) r-inset);
+					NanoVG.nvgStrokeColor(vg, col.getNVG());
+					NanoVG.nvgStrokeWidth(vg, inset*1.25f);
+					NanoVG.nvgStroke(vg);
+				NanoVG.nvgClosePath(vg);
 			NanoVG.nvgTranslate(context.getNVG(), -x, -y);
 		}
 	}

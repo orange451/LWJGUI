@@ -48,6 +48,7 @@ public class TextAreaExample extends LWJGUIApplication {
 		
 		// Clear text button
 		Button b = new Button("Clear Text");
+		b.setPrefWidth(250);
 		b.setOnAction((event)->{
 			t.clear();
 		});

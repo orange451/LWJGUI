@@ -1,7 +1,6 @@
 package lwjgui.scene.layout.floating;
 
 import lwjgui.collections.ObservableList;
-import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Node;
 import lwjgui.scene.Region;
 

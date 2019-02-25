@@ -13,12 +13,6 @@ public class TextInputControlShortcuts {
 		
 		if (!tic.editing) return;
 		
-		//Debug key
-		if (event.key == GLFW.GLFW_KEY_F1) {
-			tic.getInternalScrollPane().scrollToCaret();
-			//tic.getInternalScrollPane().scrollToBottom();
-		}
-		
 		// Return if consumed
 		if (event.isConsumed()) return;
 		

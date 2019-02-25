@@ -63,18 +63,6 @@ public class TextInputScrollPane extends ScrollPane {
 			}
 		});
 	}
-
-	//TODO: Finish this
-	public void scrollToCaret() {
-		int caret = textInputControl.caretPosition;
-		//int numVisibleLines = textInputControl.getNumVisibleLines();
-		int numLines = textInputControl.getNumLines();
-		
-		//System.err.println(caret + " " + numVisibleLines + " " + numLines);
-		
-		double vValue = ((double) caret / (double) numLines);
-		//setVvalue(vValue);
-	}
 	
 	public void scrollToBottom() {
 		setVvalue(1.0);

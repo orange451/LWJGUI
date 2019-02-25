@@ -766,12 +766,9 @@ public abstract class TextInputControl extends Control {
 		
 		// Find first character clicked in row
 		int index = 0;
-		int tempx = 0;
 		ArrayList<GlyphData> glyphLine = glyphData.get(row);
-		GlyphData lastGlyph = null;
 		for (int i = 0; i < glyphLine.size(); i++) {
 			GlyphData dat = glyphLine.get(i);
-			lastGlyph = dat;
 			if ( dat.character().equals("\n"))
 				break;
 			if ( dat.x()+dat.width/2-3 > pixelX )

@@ -13,13 +13,22 @@ public class ColumnConstraint {
 	}
 	
 	public ColumnConstraint( double prefWidth ) {
-		this(0, prefWidth, Double.MAX_VALUE);
+		this(prefWidth, Priority.NEVER);
+	}
+	
+	public ColumnConstraint( double prefWidth, Priority hgrow ) {
+		this(0, prefWidth, Double.MAX_VALUE, hgrow);
 	}
 	
 	public ColumnConstraint( double minWidth, double prefWidth, double maxWidth ) {
+		this( minWidth, prefWidth, maxWidth, Priority.NEVER );
+	}
+	
+	public ColumnConstraint( double minWidth, double prefWidth, double maxWidth, Priority hgrow ) {
 		this.minWidth = minWidth;
 		this.prefWidth = prefWidth;
 		this.maxWidth = maxWidth;
+		this.setHgrow(hgrow);
 	}
 	
 	public void setHgrow(Priority p) {

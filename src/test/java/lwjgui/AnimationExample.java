@@ -8,7 +8,6 @@ import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.transition.SizeTransition;
-import lwjgui.transition.Transition;
 
 public class AnimationExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;

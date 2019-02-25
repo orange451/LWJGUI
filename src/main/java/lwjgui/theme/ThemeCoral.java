@@ -1,6 +1,6 @@
 package lwjgui.theme;
 
-import lwjgui.Color;
+import lwjgui.paint.Color;
 import lwjgui.theme.Theme;
 
 public class ThemeCoral extends Theme {

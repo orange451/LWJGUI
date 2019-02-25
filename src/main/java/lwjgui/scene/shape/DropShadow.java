@@ -4,7 +4,7 @@ import org.joml.Vector2f;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 

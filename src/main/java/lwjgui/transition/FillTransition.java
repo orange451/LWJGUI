@@ -1,6 +1,6 @@
 package lwjgui.transition;
 
-import lwjgui.Color;
+import lwjgui.paint.Color;
 import lwjgui.transition.Transition;
 
 public class FillTransition extends Transition {

@@ -4,12 +4,12 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.LWJGUIUtil;
 import lwjgui.event.Event;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.geometry.Insets;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.FillableRegion;

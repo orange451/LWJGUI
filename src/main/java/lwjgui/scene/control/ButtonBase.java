@@ -7,12 +7,12 @@ import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 

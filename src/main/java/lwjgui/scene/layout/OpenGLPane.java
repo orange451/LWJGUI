@@ -7,9 +7,9 @@ import org.lwjgl.nanovg.NanoVGGL2;
 import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
 
-import lwjgui.Color;
 import lwjgui.gl.OffscreenBuffer;
 import lwjgui.gl.Renderer;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 

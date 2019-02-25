@@ -1,6 +1,6 @@
 package lwjgui.scene.shape;
 
-import lwjgui.Color;
+import lwjgui.paint.Color;
 import lwjgui.scene.Node;
 import lwjgui.theme.Theme;
 

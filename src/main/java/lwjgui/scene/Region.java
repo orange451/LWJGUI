@@ -2,8 +2,8 @@ package lwjgui.scene;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.geometry.Insets;
+import lwjgui.paint.Color;
 import lwjgui.scene.layout.floating.FloatingPane;
 
 public abstract class Region extends Parent {

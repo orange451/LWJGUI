@@ -7,7 +7,6 @@ import org.lwjgl.nanovg.NVGGlyphPosition;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.StateStack;
@@ -19,6 +18,7 @@ import lwjgui.font.Font;
 import lwjgui.font.FontMetaData;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.control.Control;
 import lwjgui.scene.control.IndexRange;

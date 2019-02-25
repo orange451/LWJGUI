@@ -1,4 +1,4 @@
-package lwjgui;
+package lwjgui.paint;
 
 import org.joml.Vector4f;
 import org.lwjgl.nanovg.NVGColor;

@@ -3,11 +3,12 @@ package lwjgui.scene.control;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.EventHelper;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
+import lwjgui.paint.ColorNameLookup;
 import lwjgui.scene.Context;
 import lwjgui.scene.layout.GridPane;
 import lwjgui.scene.layout.StackPane;
@@ -25,7 +26,6 @@ public class ColorPicker extends ButtonBase {
 				return;
 
 			context.show(getScene(), getX(), getY()+getHeight());
-			System.out.println("A");
 		});
 		
 		this.setColor(color);
@@ -40,7 +40,7 @@ public class ColorPicker extends ButtonBase {
 	
 	public void setColor(Color color) {
 		this.color = color;
-		this.setText(color.toString());
+		this.setText(ColorNameLookup.matchName(color));
 		
 		StackPane g = new StackPane();
 		g.setPrefSize(16, 16);

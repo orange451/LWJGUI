@@ -2,13 +2,13 @@ package lwjgui.scene.control;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.event.ButtonEvent;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.font.Font;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.theme.Theme;

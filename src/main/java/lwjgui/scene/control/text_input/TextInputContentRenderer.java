@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.control.IndexRange;
 import lwjgui.scene.control.text_input.TextInputControl.TextHighlighter;

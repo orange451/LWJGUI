@@ -1,10 +1,10 @@
 package lwjgui.scene.control.text_input;
 
-import lwjgui.Color;
 import lwjgui.LWJGUIUtil;
 import lwjgui.font.Font;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.control.Label;

@@ -9,10 +9,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import lwjgui.Color;
 import lwjgui.gl.BlurShader;
 import lwjgui.gl.OffscreenBuffer;
 import lwjgui.gl.TexturedQuad;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 
 public class BlurPane extends StackPane {

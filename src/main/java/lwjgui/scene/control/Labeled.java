@@ -2,12 +2,12 @@ package lwjgui.scene.control;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.collections.ObservableList;
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.HPos;
 import lwjgui.geometry.VPos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.theme.Theme;
@@ -20,6 +20,8 @@ public abstract class Labeled extends Control {
 	private Font font = Font.SANS;
 	private FontStyle fontStyle = FontStyle.REGULAR;
 	private Color textColor;
+	
+	private static final int GRAPHIC_SPACING = 4;
 	
 	private static final String ELIPSES = "\u2026";
 
@@ -79,7 +81,7 @@ public abstract class Labeled extends Control {
 			useString = text;
 			
 			// Get max width of parent element
-			double graphicWid = graphic == null ? 0 : graphic.getWidth();
+			double graphicWid = graphic == null ? 0 : (graphic.getWidth()+GRAPHIC_SPACING);
 			
 			// Get some text bounds
 			float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize);
@@ -125,7 +127,7 @@ public abstract class Labeled extends Control {
 		int absY = (int)(getY() + this.padding.getTop());
 
 		// Get width of graphic
-		double gWid = graphic == null ? -1 : graphic.getWidth();
+		double gWid = graphic == null ? -1 : (graphic.getWidth()+GRAPHIC_SPACING);
 		
 		// Offset the label if there's a difference between its size and its text width
 		double widthDifference = getWidth()-(getTextWidth(useString)+getPadding().getWidth());
@@ -148,7 +150,7 @@ public abstract class Labeled extends Control {
 				yMult = 0.5f;
 			if ( this.getAlignment().getVpos() == VPos.BOTTOM )
 				yMult = 1.0f;
-			absY += (this.getHeight()-fontSize)*yMult;
+			absY += (graphic.getHeight()-fontSize)*yMult;
 		}
 
 		// Setup font
@@ -177,7 +179,7 @@ public abstract class Labeled extends Control {
 
 	private double getTextWidth(String string) {
 		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize);
-		float gWid = (float) (graphic == null ? 0 : graphic.getWidth());
+		float gWid = (float) (graphic == null ? 0 : (graphic.getWidth()+GRAPHIC_SPACING));
 		return bounds[2] - bounds[0] + gWid;
 	}
 

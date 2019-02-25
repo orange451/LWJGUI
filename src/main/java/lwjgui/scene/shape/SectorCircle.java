@@ -3,7 +3,7 @@ package lwjgui.scene.shape;
 import org.joml.Vector2f;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 
 /**

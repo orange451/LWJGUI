@@ -1,6 +1,6 @@
 package lwjgui.font;
 
-import lwjgui.Color;
+import lwjgui.paint.Color;
 
 public class FontMetaData {
 	private Color color;

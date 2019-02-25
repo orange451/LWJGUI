@@ -1,6 +1,6 @@
 package lwjgui.theme;
 
-import lwjgui.Color;
+import lwjgui.paint.Color;
 
 public class ThemeWhite extends Theme {
 

@@ -32,7 +32,6 @@ import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.stb.STBImage;
 
-import lwjgui.Color;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.EventHelper;
 import lwjgui.event.KeyEvent;
@@ -49,6 +48,7 @@ import lwjgui.event.listener.WindowCloseListener;
 import lwjgui.event.listener.WindowFocusListener;
 import lwjgui.event.listener.WindowSizeListener;
 import lwjgui.gl.Renderer;
+import lwjgui.paint.Color;
 import lwjgui.theme.Theme;
 
 public class Window {

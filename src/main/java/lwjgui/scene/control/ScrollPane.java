@@ -5,7 +5,6 @@ import org.joml.Vector2i;
 import org.joml.Vector4d;
 import org.lwjgl.glfw.GLFW;
 
-import lwjgui.Color;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
@@ -13,6 +12,7 @@ import lwjgui.event.EventHandler;
 import lwjgui.event.ScrollEvent;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.Window;

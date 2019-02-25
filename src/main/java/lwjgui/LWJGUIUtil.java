@@ -34,6 +34,7 @@ import lwjgui.font.FontStyle;
 import lwjgui.geometry.HPos;
 import lwjgui.geometry.Pos;
 import lwjgui.geometry.VPos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.util.OperatingSystem;
 

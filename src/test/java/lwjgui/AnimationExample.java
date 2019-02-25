@@ -38,15 +38,15 @@ public class AnimationExample extends LWJGUIApplication {
 			
 			if ( event.getClickCount() == 2 ) {
 				if ( test.isFillToParentWidth() ) {
-					SizeTransition transition = new SizeTransition(1000, 0, 0) {
+					SizeTransition transition = new SizeTransition(100, 0, 0) {
 						@Override
 						protected double getCurrentWidth() {
-							return test.getWidth();
+							return pane.getWidth();
 						}
 	
 						@Override
 						protected double getCurrentHeight() {
-							return test.getHeight();
+							return pane.getHeight();
 						}
 	
 						@Override
@@ -70,15 +70,15 @@ public class AnimationExample extends LWJGUIApplication {
 					test.setFillToParentWidth(false);
 					transition.play();
 				} else {
-					SizeTransition transition = new SizeTransition(1000, pane.getWidth(), pane.getHeight()) {
+					SizeTransition transition = new SizeTransition(100, pane.getWidth(), pane.getHeight()) {
 						@Override
 						protected double getCurrentWidth() {
-							return test.getWidth();
+							return 0;
 						}
 	
 						@Override
 						protected double getCurrentHeight() {
-							return test.getHeight();
+							return 0;
 						}
 	
 						@Override

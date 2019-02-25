@@ -301,25 +301,35 @@ public class ScrollPane extends Control {
 
 		if (visible) {
 			clip(context);
+
+			double svx = getX()+viewportSize.x;
+			double svy = getY()+1;
+			double svw = getWidth()-viewportSize.x-1;
+			double svh = getHeight()-2; //viewportSize.y-2
+
+			double shx = getX()+1;
+			double shy = getY()+viewportSize.y;
+			double shw = getWidth()-2;
+			double shh = getHeight()-viewportSize.y-1;
 			
 			// Vertical scrollbar track
 			if ( vBar.active ) {
-				LWJGUIUtil.fillRect(context, getX()+viewportSize.x-0.5, getY()+1, getWidth()-viewportSize.x-1, getHeight()-2, controlFill);
+				LWJGUIUtil.fillRect(context, svx, svy, svw, svh, controlFill);
 			} 
 			
 			// Horizontal scrollbar track
 			if ( hBar.active ) {
-				LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y, getWidth()-2, getHeight()-viewportSize.y-1, controlFill);
+				LWJGUIUtil.fillRect(context, shx, shy, shw, shh, controlFill);
 			}
 			
 			// Vertical scrollbar track outline
 			if ( vBar.active ) {
-				LWJGUIUtil.fillRect(context, getX()+viewportSize.x-1.5, getY()+1, 1, viewportSize.y-2, selectionPassiveFill);
+				LWJGUIUtil.fillRect(context, svx, svy, 1, svh-shh, selectionPassiveFill);
 			}
 			
 			// Horizontal scrollbar track outline
 			if ( hBar.active ) {
-				LWJGUIUtil.fillRect(context, getX()+1, getY()+viewportSize.y-1, viewportSize.x-1, 1, selectionPassiveFill);
+				LWJGUIUtil.fillRect(context, shx, shy, shw-svw, 1, selectionPassiveFill);
 			}
 			
 			// Draw bars
@@ -417,7 +427,7 @@ public class ScrollPane extends Control {
 						);
 			} else {
 				return new Vector4d( 
-						(int)(getX()+viewportSize.x+barPadding-0.5),
+						(int)(getX()+viewportSize.x+barPadding),
 						(int)(getY()+pixelSpaceToScrollSpace(pixel)),
 						(int)thickness,
 						(int)Math.max(length,1)

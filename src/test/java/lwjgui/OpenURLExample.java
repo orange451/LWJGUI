@@ -23,7 +23,7 @@ public class OpenURLExample extends LWJGUIApplication {
 		window.getScene().setRoot(pane);
 		
 		// Create the button for the box
-		Button button = new Button("Click Me!");
+		Button button = new Button("The Best LWJGL3 UI Solution (Click Me!)");
 		button.setOnAction( (event)-> {
 			try {
 				LWJGUIUtil.openURLInBrowser("https://github.com/orange451/LWJGUI");

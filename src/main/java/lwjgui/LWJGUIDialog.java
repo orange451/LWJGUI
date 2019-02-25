@@ -21,7 +21,7 @@ public class LWJGUIDialog {
 	}
 
 	public enum DialogIcon {
-		INFO("info"),
+		INFORMATION("info"),
 		WARNING("warning"),
 		ERROR("error"),
 		QUESTION("question");

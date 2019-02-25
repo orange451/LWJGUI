@@ -14,11 +14,11 @@ import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-import lwjgui.Color;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.gl.GenericShader;
 import lwjgui.gl.Renderer;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.CheckBox;

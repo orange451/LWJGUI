@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import lwjgui.font.FontMetaData;
 import lwjgui.font.FontStyle;
+import lwjgui.paint.Color;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.text_input.CodeArea;
 import lwjgui.scene.layout.BorderPane;

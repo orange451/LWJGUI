@@ -1,6 +1,7 @@
 package lwjgui;
 
 import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.ContextMenu;
 import lwjgui.scene.control.Label;

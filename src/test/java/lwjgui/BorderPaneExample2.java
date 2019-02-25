@@ -9,6 +9,7 @@ import org.lwjgl.glfw.GLFW;
  
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
+import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;

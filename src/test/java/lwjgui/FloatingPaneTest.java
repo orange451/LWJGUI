@@ -1,6 +1,6 @@
 package lwjgui;
 
-import lwjgui.Color;
+import lwjgui.paint.Color;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.floating.FloatingPane;

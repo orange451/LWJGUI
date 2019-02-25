@@ -92,7 +92,6 @@ public class PannableExample {
 			root.getChildren().add(ui);
 			
 			Button b = new Button("Center");
-			b.setBackground(Color.GREEN);
 			ui.getChildren().add(b);
 			
 			b.setOnAction((event)->{

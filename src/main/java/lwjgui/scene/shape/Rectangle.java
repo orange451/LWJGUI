@@ -22,7 +22,7 @@ public class Rectangle extends Shape {
 	}
 	
 	public Rectangle(int width, int height) {
-		this(width, height, 0, Theme.current().getControl());
+		this(width, height, 0, Theme.current().getText());
 	}
 	
 	public void setCornerRadius(float cornerRadius) {

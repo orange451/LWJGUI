@@ -31,7 +31,6 @@ public class AnimationExample extends LWJGUIApplication {
 		
 		// Animation logic
 		AtomicBoolean inAnimation = new AtomicBoolean(false);
-		
 		test.setOnMouseClicked((event)->{
 			if ( inAnimation.get() )
 				return;

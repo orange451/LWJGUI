@@ -1,4 +1,4 @@
-package lwjgui;
+package lwjgui.crashes;
 
 import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
 
@@ -13,12 +13,16 @@ import java.nio.ByteOrder;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.geometry.Pos;
+import lwjgui.LWJGUIApplication;
 import lwjgui.scene.Window;
-import lwjgui.scene.control.Button;
-import lwjgui.scene.layout.StackPane;
 
-public class IsolatedNVGCrashTest extends LWJGUIApplication {
+/**
+ * This code will trigger a FatalCrash in NanoVG. It seems that the font "entypo" is related. This code works fine if entypo is either loaded by itself or not used at all,
+ * but as soon as you start mixing fonts with entypo, the whole system is prone to crashing.
+ * @author Brayden
+ *
+ */
+public class NanoVGFallbackCrash extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
@@ -29,17 +33,17 @@ public class IsolatedNVGCrashTest extends LWJGUIApplication {
 	@Override
 	public void start(String[] args, Window window) {
 		try {
-			loadFont(window, "lwjgui/scene/layout/Arial-Unicode.ttf", "test1");
-			loadFont(window, "lwjgui/scene/layout/entypo.ttf", "test2");
+			loadFont(window, "lwjgui/scene/layout/entypo.ttf", "test");
+			loadFont(window, "lwjgui/scene/layout/Arial-Unicode.ttf", "test");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private static void loadFont(Window window, String file1, String name) throws IOException{
+	private static void loadFont(Window window, String file, String name) throws IOException{
 		try {
 			long vg = window.getContext().getNVG();
-			ByteBuffer buf = resourceToByteBuffer(file1);
+			ByteBuffer buf = resourceToByteBuffer(file);
 			int fontCallback = nvgCreateFontMem(vg, name, buf, 0);
 	        NanoVG.nvgAddFallbackFontId(vg, fontCallback, nvgCreateFontMem(vg, name, resourceToByteBuffer("lwjgui/scene/layout/entypo.ttf"), 0));
 		}catch(Exception e) {

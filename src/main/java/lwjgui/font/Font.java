@@ -30,14 +30,12 @@ public class Font {
 	private static ByteBuffer fallbackSansEmoji;
 	private static ByteBuffer fallbackRegularEmoji;
 	private static ByteBuffer fallbackArial;
-	private static ByteBuffer fallbackEntypo;
 	
 	static {
 		try {
 			fallbackSansEmoji		= resourceToByteBuffer("lwjgui/scene/layout/OpenSansEmoji.ttf");
 			fallbackRegularEmoji	= resourceToByteBuffer("lwjgui/scene/layout/NotoEmoji-Regular.ttf");
 			fallbackArial			= resourceToByteBuffer("lwjgui/scene/layout/Arial-Unicode.ttf");
-			fallbackEntypo			= resourceToByteBuffer("lwjgui/scene/layout/entypo.ttf");
 		}catch(Exception e) {
 			//
 		}
@@ -158,15 +156,13 @@ public class Font {
             addFallback(vg, fontCallback, "sansemoji", fallbackSansEmoji);
             addFallback(vg, fontCallback, "regularemoji", fallbackRegularEmoji);
             addFallback(vg, fontCallback, "arial", fallbackArial);
-            addFallback(vg, fontCallback, "entypo", fallbackEntypo);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void addFallback(long vg, int fontCallback, String name, ByteBuffer fontData) {
-        System.out.println("Loading fallback: " + name);
         NanoVG.nvgAddFallbackFontId(vg, fontCallback, nvgCreateFontMem(vg, name, fontData, 0));
         bufs.add(fontData);
     }

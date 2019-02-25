@@ -3,7 +3,6 @@ package lwjgui.scene.control;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.Color;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Insets;

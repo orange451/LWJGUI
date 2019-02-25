@@ -29,13 +29,13 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL;
-
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.HPos;
 import lwjgui.geometry.Pos;
 import lwjgui.geometry.VPos;
 import lwjgui.scene.Context;
+import lwjgui.util.OperatingSystem;
 
 public class LWJGUIUtil {
 	public static long createOpenGLCoreWindow(String name, int width, int height, boolean resizable, boolean ontop) {
@@ -295,5 +295,37 @@ public class LWJGUIUtil {
 		NanoVG.nvgFontBlur(vg.getNVG(),0);
 		NanoVG.nvgFillColor(vg.getNVG(), color.getNVG());
 		NanoVG.nvgText(vg.getNVG(), (float)xx, (float)yy, text);
+	}
+	
+	public static void openURLInBrowser(String url) throws IOException {
+		Runtime rt = Runtime.getRuntime();
+		
+		switch (OperatingSystem.detect()) {
+		case LINUX:
+			String[] browsers = { "epiphany", "firefox", "mozilla", "konqueror", "netscape", "opera", "links", "lynx" };
+
+			StringBuffer cmd = new StringBuffer();
+			for (int i = 0; i < browsers.length; i++) {
+				// If the first didn't work, try the next browser and so on
+				if (i != 0) {
+					cmd.append(" || ");
+				}
+				
+				cmd.append(String.format("%s \"%s\"", browsers[i], url));
+			}
+			
+			rt.exec(new String[] { "sh", "-c", cmd.toString() });
+			break;
+		case MAC:
+			rt.exec("open " + url);
+			break;
+		case WINDOWS:
+			rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
+			break;
+		case OTHER:
+		default:
+			System.err.println("This function will not work on this operating system.");
+			break;
+		}
 	}
 }

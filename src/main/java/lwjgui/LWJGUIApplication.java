@@ -80,6 +80,8 @@ public abstract class LWJGUIApplication {
 				
 		//Stop GLFW after the window closes.
 		glfwTerminate();
+		
+		System.exit(0);
 	}
 	
 	private void loop(Window window) {

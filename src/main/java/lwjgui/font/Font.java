@@ -155,20 +155,21 @@ public class Font {
 			bufs.add(buf);
 			
 			// Fallback emoji font
-			addFallback(vg, fontCallback, fallbackSansEmoji);
-			addFallback(vg, fontCallback, fallbackRegularEmoji);
-			addFallback(vg, fontCallback, fallbackArial);
-			addFallback(vg, fontCallback, fallbackEntypo);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+            //addFallback(vg, fontCallback, "sansemoji", fallbackSansEmoji);
+            //addFallback(vg, fontCallback, "regularemoji", fallbackRegularEmoji);
+            //addFallback(vg, fontCallback, "arial", fallbackArial);
+            addFallback(vg, fontCallback, "entypo", fallbackEntypo);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	private void addFallback(long vg, int fontCallback, ByteBuffer fontData) {
-		NanoVG.nvgAddFallbackFontId(vg, fontCallback, nvgCreateFontMem(vg, "emoji", fontData, 0));
-		bufs.add(fontData);
-	}
+    private void addFallback(long vg, int fontCallback, String name, ByteBuffer fontData) {
+        System.out.println("Loading fallback: " + name);
+        NanoVG.nvgAddFallbackFontId(vg, fontCallback, nvgCreateFontMem(vg, name, fontData, 0));
+        bufs.add(fontData);
+    }
 
 	public String getFont() {
 		for (int i = 0; i < bufs.size(); i++) {

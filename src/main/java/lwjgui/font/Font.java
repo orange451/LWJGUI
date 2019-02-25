@@ -82,6 +82,20 @@ public class Font {
 		this.fontNameRegular = regularFileName;
 	}
 
+	/**
+	 * Manually triggers the loading of this Font's ttf files (where normally they're loaded only when they're needed)
+	 * 
+	 * @param loadFallbacks - if true, default fallback fonts that come with LWJGUI will be set to the font.
+	 * @return this Font object
+	 */
+	public Font load(boolean loadFallbacks) {
+		loadFont(fontPath, fontNameRegular, fontDataRegular, loadFallbacks);
+		loadFont(fontPath, fontNameBold, fontDataBold, loadFallbacks);
+		loadFont(fontPath, fontNameLight, fontDataLight, loadFallbacks);
+		loadFont(fontPath, fontNameItalic, fontDataItalic, loadFallbacks);
+		return this;
+	}
+	
 	private static InputStream inputStream(String path) throws IOException {
 		InputStream stream;
 		File file = new File(path);
@@ -136,10 +150,11 @@ public class Font {
 	 * @param suffix
 	 * @param map
 	 */
-	private void loadFont(String fontPath, String loadName, HashMap<Long, String> map) {
-		if ( loadName == null ) {
+	private void loadFont(String fontPath, String loadName, HashMap<Long, String> map, boolean loadFallbacks) {
+		if (loadName == null) {
 			return;
 		}
+		
 		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
 		Context context = window.getContext();
 		long vg = context.getNVG();
@@ -154,11 +169,13 @@ public class Font {
 			map.put(vg, loadName);
 			bufs.add(buf);
 			
-			// Fallback emoji font
-            addFallback(vg, fontCallback, "sansemoji", fallbackSansEmoji);
-            addFallback(vg, fontCallback, "regularemoji", fallbackRegularEmoji);
-            addFallback(vg, fontCallback, "arial", fallbackArial);
-            addFallback(vg, fontCallback, "entypo", fallbackEntypo);
+			// Fallback emoji fonts
+			if (loadFallbacks) {
+				addFallback(vg, fontCallback, "sansemoji", fallbackSansEmoji);
+				addFallback(vg, fontCallback, "regularemoji", fallbackRegularEmoji);
+				addFallback(vg, fontCallback, "arial", fallbackArial);
+				addFallback(vg, fontCallback, "entypo", fallbackEntypo);
+			}
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -192,19 +209,22 @@ public class Font {
 		long vg = context.getNVG();
 
 		HashMap<Long,String> using = fontDataRegular;
-		if ( fontDataRegular.get(vg) == null ) {
-			loadFont(fontPath, fontNameRegular, fontDataRegular);
-			loadFont(fontPath, fontNameBold, fontDataBold);
-			loadFont(fontPath, fontNameLight, fontDataLight);
-			loadFont(fontPath, fontNameItalic, fontDataItalic);
+		
+		if (fontDataRegular.get(vg) == null) {
+			load(true);
 		}
 
-		if ( style == FontStyle.BOLD && fontDataBold.get(vg) != null )
+		if ( style == FontStyle.BOLD && fontDataBold.get(vg) != null ) {
 			using = fontDataBold;
-		if ( style == FontStyle.LIGHT && fontDataLight.get(vg) != null )
+		}
+		
+		if ( style == FontStyle.LIGHT && fontDataLight.get(vg) != null ) {
 			using = fontDataLight;
-		if ( style == FontStyle.ITALIC && fontDataItalic.get(vg) != null )
+		}
+		
+		if ( style == FontStyle.ITALIC && fontDataItalic.get(vg) != null ) {
 			using = fontDataItalic;
+		}
 		
 		return using.get(vg);
 	}

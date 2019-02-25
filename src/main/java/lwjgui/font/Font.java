@@ -155,9 +155,9 @@ public class Font {
 			bufs.add(buf);
 			
 			// Fallback emoji font
-            //addFallback(vg, fontCallback, "sansemoji", fallbackSansEmoji);
-            //addFallback(vg, fontCallback, "regularemoji", fallbackRegularEmoji);
-            //addFallback(vg, fontCallback, "arial", fallbackArial);
+            addFallback(vg, fontCallback, "sansemoji", fallbackSansEmoji);
+            addFallback(vg, fontCallback, "regularemoji", fallbackRegularEmoji);
+            addFallback(vg, fontCallback, "arial", fallbackArial);
             addFallback(vg, fontCallback, "entypo", fallbackEntypo);
             
         } catch (Exception e) {

@@ -43,12 +43,11 @@ public abstract class FillableRegion extends Region {
 		
 		if ( fillToParentWidth ) {
 			if ( parent != null ) {
-				LayoutBounds bounds = parent.getInnerBounds();
 				double ocupiedSize = 0;
 				if ( parent instanceof Region ) {
 					ocupiedSize = ((Region)parent).getMaximumPotentialWidth();
 				}
-				double wid = bounds.getWidth()-ocupiedSize;
+				double wid = parent.getInnerBounds().getWidth()-ocupiedSize;
 				
 				if ( wid > this.getMinWidth() )
 					this.size.x = wid;
@@ -70,12 +69,12 @@ public abstract class FillableRegion extends Region {
 	}
 
 	@Override
-	protected boolean canPackElementWidth() {
+	protected boolean packToElementWidth() {
 		return !this.isFillToParentWidth();
 	}
 	
 	@Override
-	protected boolean canPackElementHeight() {
+	protected boolean packToElementHeight() {
 		return !this.isFillToParentHeight();
 	}
 }

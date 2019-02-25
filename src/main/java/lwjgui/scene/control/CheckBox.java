@@ -24,7 +24,7 @@ public class CheckBox extends ButtonBase {
 
 		this.setAlignment(Pos.CENTER_LEFT);
 		
-		this.textOffset = 24;
+		this.textOffset = size+4;
 
 		this.setPadding(Insets.EMPTY);
 
@@ -40,6 +40,8 @@ public class CheckBox extends ButtonBase {
 	protected void resize() {
 		//this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
 		this.setMinHeight(size);
+		this.setMinWidth(getTextWidth() + textOffset);
+		
 		super.resize();
 	}
 	

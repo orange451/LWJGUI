@@ -1,5 +1,6 @@
 package lwjgui.scene.layout;
 
+import lwjgui.Color;
 import lwjgui.collections.ObservableList;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
@@ -52,7 +53,7 @@ public class BorderPane extends Pane {
 				v++;
 			}
 			
-			center.setMaxHeight((getHeight()-height)-(spacing*v));
+			//center.setMaxHeight((getHeight()-height)-(spacing*v));
 			
 			float width = 0;
 			int h = 0;
@@ -65,7 +66,7 @@ public class BorderPane extends Pane {
 				h++;
 			}
 			
-			center.setMaxWidth((getWidth()-width)-(spacing*h));
+			//center.setMaxWidth((getWidth()-width)-(spacing*h));
 		}
 	}
 	

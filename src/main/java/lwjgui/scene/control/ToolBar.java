@@ -3,6 +3,7 @@ package lwjgui.scene.control;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
+import lwjgui.Color;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Insets;
@@ -22,8 +23,6 @@ public class ToolBar extends Control {
 	
 	public ToolBar() {
 		this.setOrientation(Orientation.HORIZONTAL);
-		this.setMinHeight(24);
-		this.setMaxHeight(24);
 		
 		this.items.setAddCallback(new ElementCallback<Node>() {
 			@Override
@@ -52,9 +51,10 @@ public class ToolBar extends Control {
 			this.children.clear();
 			this.internalBox = new HBox();
 			this.internalBox.setBackground(null);
+			this.internalBox.setSpacing(3);
 			this.children.add(internalBox);
 			
-			this.setPadding(new Insets(0, 6, 0, 6));
+			this.setPadding(new Insets(3, 6, 3, 6));
 		} else {
 			this.setPrefWidth(0);
 			this.setPrefHeight(Integer.MAX_VALUE);
@@ -64,9 +64,10 @@ public class ToolBar extends Control {
 			this.children.clear();
 			this.internalBox = new VBox();
 			this.internalBox.setBackground(null);
+			this.internalBox.setSpacing(3);
 			this.children.add(internalBox);
 
-			this.setPadding(new Insets(6, 0, 6, 0));
+			this.setPadding(new Insets(6, 3, 6, 3));
 		}
 		
 		recalculate();
@@ -100,14 +101,16 @@ public class ToolBar extends Control {
 		long vg = context.getNVG();
 		
 		// Gradient
-		NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight(), Theme.current().getPane().getNVG(), Theme.current().getControlAlt().getNVG(), NVGPaint.calloc());
-		if ( orientation.equals(Orientation.VERTICAL) ) {
-			bg = NanoVG.nvgLinearGradient(vg, 0, 0, (float)getWidth(), 0, Theme.current().getPane().getNVG(), Theme.current().getControlAlt().getNVG(), NVGPaint.calloc());
-		}
-		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
-		NanoVG.nvgFillPaint(vg, bg);
-		NanoVG.nvgFill(vg);
+		NanoVG.nvgTranslate(vg, (int)getX(), (int)getY());
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight()*0.7f, Theme.current().getPane().getNVG(), Theme.current().getControlAlt().getNVG(), NVGPaint.calloc());
+			if ( orientation.equals(Orientation.VERTICAL) ) {
+				bg = NanoVG.nvgLinearGradient(vg, 0, 0, (float)getWidth(), 0, Theme.current().getPane().getNVG(), Theme.current().getControlAlt().getNVG(), NVGPaint.calloc());
+			}
+			NanoVG.nvgBeginPath(vg);
+			NanoVG.nvgRect(vg, 0, 0, (int)getWidth(), (int)getHeight());
+			NanoVG.nvgFillPaint(vg, bg);
+			NanoVG.nvgFill(vg);
+		NanoVG.nvgTranslate(vg, (int)-getX(), (int)-getY());
 		
 		// Divider line
 		NanoVG.nvgBeginPath(vg);

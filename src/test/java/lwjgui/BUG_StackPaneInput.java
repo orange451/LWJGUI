@@ -66,6 +66,7 @@ public class BUG_StackPaneInput {
 		 * Label 1
 		 */
 		Label label = new Label("Hello World!");
+		label.setBackground(Color.ORANGE);
 		
 		label.setOnMouseEntered(e -> {
 			System.out.println("Mouse entered Label 1.");
@@ -80,6 +81,7 @@ public class BUG_StackPaneInput {
 		 * Label 2
 		 */
 		Label label2 = new Label("Label 2");
+		label2.setBackground(Color.ORANGE);
 		
 		label2.setOnMouseEntered(e -> {
 			System.out.println("Mouse entered Label 2.");

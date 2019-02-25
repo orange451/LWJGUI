@@ -66,8 +66,9 @@ public class Tab {
 			this.label.setMouseTransparent(true);
 			this.label.setFontSize(16);
 			this.internal.getChildren().add(label);
-			
-			this.x = new Label("\u2715");
+
+			this.x = new Label("x");
+			this.x.setMinWidth(x.getTextWidth());
 			this.x.setFontSize(16);
 			this.internal.getChildren().add(x);
 			

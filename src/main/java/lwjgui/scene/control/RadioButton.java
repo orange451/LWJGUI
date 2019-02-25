@@ -9,14 +9,14 @@ import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 
 public class RadioButton extends ToggleButton {
-	private int size = 18;
+	private int size = 16;
 
 	public RadioButton( String name, ToggleGroup group ) {
 		super(name, group);
 		this.setPadding(Insets.EMPTY);
 		this.setAlignment(Pos.CENTER_LEFT);
 		
-		this.textOffset = 24;
+		this.textOffset = size+4;
 	}
 	
 	public RadioButton(String name) {
@@ -36,6 +36,7 @@ public class RadioButton extends ToggleButton {
 	protected void resize() {
 		//this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
 		this.setMinHeight(size);
+		this.setMinWidth(getTextWidth() + textOffset);
 		super.resize();
 	}
 	

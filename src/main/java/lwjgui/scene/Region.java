@@ -168,34 +168,23 @@ public abstract class Region extends Parent {
 		}
 	}
 	
-	protected boolean canPackElementWidth() {
+	protected boolean packToElementWidth() {
 		return true;
 	}
 	
-	protected boolean canPackElementHeight() {
+	protected boolean packToElementHeight() {
 		return true;
-	}
-
-	@Override
-	protected double getMaxElementWidth() {
-		return super.getMaxElementWidth()+getPadding().getWidth();
-	}
-	
-	@Override
-	protected double getMaxElementHeight() {
-		return super.getMaxElementHeight()+getPadding().getHeight();
 	}
 	
 	@Override
 	protected void resize() {
-		
 		// Fit this pane to the width of its elements.
-		float maxWidthInside = (float) (getMaxElementWidth());
+		float maxWidthInside = (float) (getMaxElementWidth()+getPadding().getWidth());
 		maxWidthInside = (float) Math.max(maxWidthInside, getPrefWidth());
 		size.x = maxWidthInside;
 		
 		// Fit this pane to the height of its elements.
-		float maxHeightInside = (float) (getMaxElementHeight());
+		float maxHeightInside = (float) (getMaxElementHeight()+getPadding().getHeight());
 		maxHeightInside = (float) Math.max(maxHeightInside, getPrefHeight());
 		size.y = maxHeightInside;
 	
@@ -213,7 +202,7 @@ public abstract class Region extends Parent {
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			double childWid = child.getWidth();
-			if ( child instanceof Region && !((Region)child).canPackElementWidth() ) {
+			if ( child instanceof Region && !((Region)child).packToElementWidth() ) {
 				childWid = 0;
 			}
 			if ( child instanceof FloatingPane ) {
@@ -236,7 +225,7 @@ public abstract class Region extends Parent {
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			double temp = child.getHeight();
-			if ( child instanceof Region && !((Region)child).canPackElementHeight() ) {
+			if ( child instanceof Region && !((Region)child).packToElementHeight() ) {
 				temp = 0;
 			}
 			if ( child instanceof FloatingPane ) {

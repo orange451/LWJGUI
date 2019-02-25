@@ -1,5 +1,6 @@
 package lwjgui;
 
+import lwjgui.geometry.Pos;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.ContextMenu;
 import lwjgui.scene.control.Label;
@@ -22,6 +23,7 @@ public class ContextMenuExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create background pane
 		BorderPane background = new BorderPane();
+		background.setAlignment(Pos.CENTER);
 		window.getScene().setRoot(background);
 		
 		
@@ -57,6 +59,7 @@ public class ContextMenuExample extends LWJGUIApplication {
 			
 			// Create context node
 			Label l = new Label("Don't right click me");
+			l.setBackground(Color.RED);
 			l.setContextMenu(menu);
 			background.setCenter(l);
 		}

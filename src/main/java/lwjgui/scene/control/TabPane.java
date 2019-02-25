@@ -1,5 +1,9 @@
 package lwjgui.scene.control;
 
+import org.lwjgl.nanovg.NVGPaint;
+import org.lwjgl.nanovg.NanoVG;
+
+import lwjgui.Color;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ChangeEvent;
@@ -179,6 +183,23 @@ public class TabPane extends Control {
 			this.setFillToParentHeight(true);
 			this.setFillToParentWidth(true);
 			this.setAlignment(Pos.TOP_LEFT);
+		}
+		
+		@Override
+		public void render(Context context) {
+			super.render(context);
+			
+			this.clip(context);
+			// Dropshadow
+			long vg = context.getNVG();
+			float x = (float) getX();
+			float y = (float) getY();
+			float w = (float) getWidth();
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-16, x, y+6, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+			NanoVG.nvgBeginPath(vg);
+			NanoVG.nvgRect(vg, x, y, w, 6);
+			NanoVG.nvgFillPaint(vg, bg);
+			NanoVG.nvgFill(vg);
 		}
 	}
 	

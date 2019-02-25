@@ -2,9 +2,7 @@ package lwjgui;
 
 import org.lwjgl.glfw.GLFW;
 
-import lwjgui.LWJGUI;
 import lwjgui.geometry.Pos;
-import lwjgui.scene.Parent;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
@@ -13,6 +11,7 @@ import lwjgui.scene.control.SegmentedButton;
 import lwjgui.scene.control.ToggleButton;
 import lwjgui.scene.control.ToggleGroup;
 import lwjgui.scene.layout.HBox;
+import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 
@@ -66,7 +65,7 @@ public class ControlExample extends LWJGUIApplication {
 		return pane;
 	}
 
-	private static void displaySegmentedButton(Parent parent) {
+	private static void displaySegmentedButton(Pane parent) {
 		HBox t = new HBox();
 		parent.getChildren().add(t);
 		
@@ -80,7 +79,7 @@ public class ControlExample extends LWJGUIApplication {
 		t.getChildren().add(b);
 	}
 
-	private static void displayRadioButtons(Parent parent) {
+	private static void displayRadioButtons(Pane parent) {
 		// Create a vertical box to hold radio buttons
 		VBox radio = exampleBox("Radio Buttons:");
 		parent.getChildren().add(radio);
@@ -95,7 +94,7 @@ public class ControlExample extends LWJGUIApplication {
 		g.selectToggle(g.getToggles().get(2));
 	}
 
-	private static void displayCheckboxes(Parent parent) {
+	private static void displayCheckboxes(Pane parent) {
 		// Create a vertical box to hold checkboxes
 		VBox pane = exampleBox("Check boxes:");
 		parent.getChildren().add(pane);

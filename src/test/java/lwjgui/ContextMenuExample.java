@@ -59,7 +59,6 @@ public class ContextMenuExample extends LWJGUIApplication {
 			
 			// Create context node
 			Label l = new Label("Don't right click me");
-			l.setBackground(Color.RED);
 			l.setContextMenu(menu);
 			background.setCenter(l);
 		}

@@ -7,6 +7,7 @@ import org.lwjgl.nanovg.NanoVG;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
+import lwjgui.theme.Theme;
 
 public class RadioButton extends ToggleButton {
 	private int size = 16;
@@ -60,10 +61,18 @@ public class RadioButton extends ToggleButton {
 			int xx = (int) (this.getX()+this.size/2f);
 			int yy = (int) (this.getY()+this.size/2f);
 			
+			float r = size * 0.25f;
+
 			NanoVG.nvgBeginPath(nvg);
 			NanoVG.nvgShapeAntiAlias(nvg, true);
-			NanoVG.nvgCircle(nvg, xx, yy, size*0.2f);
-			//NanoVG.nvgFillColor(nvg, this.graphicLabel.label.getTextFill().getNVG());
+			NanoVG.nvgFillColor(nvg, Theme.current().getControl().getNVG());
+			NanoVG.nvgCircle(nvg, xx, yy+1, r);
+			NanoVG.nvgFill(nvg);
+
+			NanoVG.nvgBeginPath(nvg);
+			NanoVG.nvgShapeAntiAlias(nvg, true);
+			NanoVG.nvgFillColor(nvg, Theme.current().getText().getNVG());
+			NanoVG.nvgCircle(nvg, xx, yy, r);
 			NanoVG.nvgFill(nvg);
 		}
 	}

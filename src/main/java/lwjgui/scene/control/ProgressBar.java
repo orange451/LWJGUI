@@ -9,7 +9,7 @@ public class ProgressBar extends Control {
 	protected double progress;
 	
 	public ProgressBar() {
-		this.setPrefSize(100, 16);
+		this.setPrefSize(100, 14);
 	}
 	
 	public void setProgress(double progress) {
@@ -38,6 +38,7 @@ public class ProgressBar extends Control {
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgRoundedRect(vg, x, y, w, h, r);
 		NanoVG.nvgStrokeColor(vg, Theme.current().getControlOutline().getNVG());
+		NanoVG.nvgStrokeWidth(vg, 0.6f);
 		NanoVG.nvgStroke(vg);
 		NanoVG.nvgClosePath(vg);
 		

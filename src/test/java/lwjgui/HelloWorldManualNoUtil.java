@@ -45,6 +45,7 @@ public class HelloWorldManualNoUtil {
 		
 		// Initialize LWJGUI for this window
 		Window lwjguiWindow = LWJGUI.initialize(window);
+		lwjguiWindow.setWindowAutoDraw(false); // Turn off automatic buffer swapping
 		
 		// Add some components
 		Scene scene = lwjguiWindow.getScene();
@@ -54,9 +55,17 @@ public class HelloWorldManualNoUtil {
 		
 		// Game Loop
 		while (!GLFW.glfwWindowShouldClose(window)) {
+			// Set context
 			GLFW.glfwMakeContextCurrent(window);
+			
+			// Poll inputs
 			glfwPollEvents();
+			
+			// Render UI
 			lwjguiWindow.render();
+			
+			// Swap buffers
+			glfwSwapBuffers(window);
 		}
 		
 		// Stop GLFW

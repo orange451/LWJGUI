@@ -3,7 +3,7 @@ package lwjgui.scene.control;
 import java.awt.Point;
 
 import lwjgui.LWJGUIUtil;
-import lwjgui.event.ButtonEvent;
+import lwjgui.event.ActionEvent;
 import lwjgui.event.EventHandler;
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
@@ -28,9 +28,9 @@ public class CheckBox extends ButtonBase {
 
 		this.setPadding(Insets.EMPTY);
 
-		this.setOnAction(new EventHandler<ButtonEvent>() {
+		this.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ButtonEvent event) {
+			public void handle(ActionEvent event) {
 				checked = !checked;
 			}
 		});

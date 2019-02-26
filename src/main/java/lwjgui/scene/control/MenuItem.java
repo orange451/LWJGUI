@@ -2,7 +2,7 @@ package lwjgui.scene.control;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.event.ButtonEvent;
+import lwjgui.event.ActionEvent;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.font.Font;
@@ -14,7 +14,7 @@ import lwjgui.scene.Node;
 import lwjgui.theme.Theme;
 
 public class MenuItem extends Node {
-	protected EventHandler<ButtonEvent> buttonEvent;
+	protected EventHandler<ActionEvent> buttonEvent;
 	private Label internalLabel = null;
 	private static final int padding = 4;
 	protected Color background;
@@ -43,7 +43,7 @@ public class MenuItem extends Node {
 		this.setOnMouseReleased( event -> {
 			if ( event.button == 0 ) {
 				if ( buttonEvent != null ) 
-					EventHelper.fireEvent(buttonEvent, new ButtonEvent());
+					EventHelper.fireEvent(buttonEvent, new ActionEvent());
 				
 				((ContextMenu)getParent().getParent()).close();
 			}
@@ -114,7 +114,7 @@ public class MenuItem extends Node {
 		return false;
 	}
 	
-	public void setOnAction(EventHandler<ButtonEvent> event) {
+	public void setOnAction(EventHandler<ActionEvent> event) {
 		this.buttonEvent = event;
 	}
 }

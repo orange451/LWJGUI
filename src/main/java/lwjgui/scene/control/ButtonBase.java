@@ -7,7 +7,7 @@ import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.event.ButtonEvent;
+import lwjgui.event.ActionEvent;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.event.MouseEvent;
@@ -17,7 +17,7 @@ import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 
 public abstract class ButtonBase extends Labeled {
-	protected EventHandler<ButtonEvent> buttonEvent;
+	protected EventHandler<ActionEvent> buttonEvent;
 
 	protected double cornerNW = 3.0;
 	protected double cornerNE = 3.0;
@@ -43,7 +43,7 @@ public abstract class ButtonBase extends Labeled {
 				
 				if ( event.button == 0 ) {
 					if ( buttonEvent != null ) {
-						EventHelper.fireEvent(buttonEvent, new ButtonEvent());
+						EventHelper.fireEvent(buttonEvent, new ActionEvent());
 					}
 				}
 			}
@@ -183,7 +183,7 @@ public abstract class ButtonBase extends Labeled {
 		return new Point((int)getWidth(), (int)getHeight());
 	}
 
-	public void setOnAction(EventHandler<ButtonEvent> event) {
+	public void setOnAction(EventHandler<ActionEvent> event) {
 		this.buttonEvent = event;
 	}
 

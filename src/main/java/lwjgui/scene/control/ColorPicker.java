@@ -3,7 +3,7 @@ package lwjgui.scene.control;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.event.ButtonEvent;
+import lwjgui.event.ActionEvent;
 import lwjgui.event.EventHelper;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
@@ -112,7 +112,7 @@ public class ColorPicker extends ButtonBase {
 						setColor(col.getBackground());
 						
 						if ( buttonEvent != null ) {
-							EventHelper.fireEvent(buttonEvent, new ButtonEvent());
+							EventHelper.fireEvent(buttonEvent, new ActionEvent());
 						}
 					});
 				}

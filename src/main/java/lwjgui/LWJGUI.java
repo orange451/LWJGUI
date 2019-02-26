@@ -17,7 +17,7 @@ import lwjgui.scene.Window;
 public class LWJGUI {
 	private static HashMap<Long, Window> windows = new HashMap<Long, Window>();
 	private static List<Runnable> runnables = Collections.synchronizedList(new ArrayList<Runnable>());
-	private static Context currentContext;
+	protected static Context currentContext;
 	
 	/**
 	 * Initializes a LWJGUI window. The window contains a Scene class.<br>
@@ -69,7 +69,6 @@ public class LWJGUI {
 				}
 				
 				// Render window
-				currentContext = window.getContext();
 				try {
 					window.render();
 				}catch(Exception ex) {
@@ -109,5 +108,9 @@ public class LWJGUI {
 
 	public static Context getCurrentContext() {
 		return currentContext;
+	}
+
+	public static void setCurrentContext(Context context) {
+		currentContext = context;
 	}
 }

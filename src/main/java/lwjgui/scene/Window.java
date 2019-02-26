@@ -32,6 +32,7 @@ import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.stb.STBImage;
 
+import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.EventHelper;
 import lwjgui.event.KeyEvent;
@@ -404,6 +405,7 @@ public class Window {
 			System.err.println("Error rendering window. Incorrect GLFW context");
 			return;
 		}
+		LWJGUI.setCurrentContext(getContext());
 		
 		// Clear screen
 		if ( isWindowAutoClear() ) {

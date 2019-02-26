@@ -34,6 +34,7 @@ public abstract class ButtonBase extends Labeled {
 		
 		this.setMinSize(32, 24);
 		this.setPadding(new Insets(4,6,4,6));
+		this.setFontSize(16);
 		
 		this.setOnMouseReleased( new EventHandler<MouseEvent>() {
 			@Override

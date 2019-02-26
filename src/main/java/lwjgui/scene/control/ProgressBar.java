@@ -27,7 +27,7 @@ public class ProgressBar extends Control {
 		float y = (float) (getY()+this.getInnerBounds().getY());
 		float w = (float) this.getInnerBounds().getWidth();
 		float h = (float) this.getInnerBounds().getHeight();
-		float r = 9;
+		float r = 4;
 
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgRoundedRect(vg, x, y, w, h, r);

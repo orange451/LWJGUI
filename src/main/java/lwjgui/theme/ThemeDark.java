@@ -6,6 +6,7 @@ public class ThemeDark extends Theme {
 
 	public static Color backgroundColor		= Color.BLACK;
 	public static Color paneColor			= new Color(35,35,35);
+	public static Color paneColorAlt		= new Color(35,35,35);
 	public static Color selectColor			= new Color(110, 135, 160);
 	public static Color selectColorPassive	= Color.DARK_GRAY;
 	public static Color selectColorAlt		= selectColor.brighter();
@@ -21,10 +22,20 @@ public class ThemeDark extends Theme {
 	public Color getBackground() {
 		return backgroundColor;
 	}
+
+	@Override
+	public Color getBackgroundAlt() {
+		return Color.DARK_GRAY;
+	}
 	
 	@Override
 	public Color getPane() {
 		return paneColor;
+	}
+	
+	@Override
+	public Color getPaneAlt() {
+		return paneColorAlt;
 	}
 
 	@Override

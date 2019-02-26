@@ -33,7 +33,7 @@ public class ProgressBar extends Control {
 
 		// Background
 		{
-			Color c1 = Theme.current().getControl();
+			Color c1 = Theme.current().getPaneAlt();
 			Color c2 = Theme.current().getBackground();
 			NVGPaint grad1 = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*0.5f, c1.getNVG(), c2.getNVG(), NVGPaint.calloc());
 			NVGPaint grad2 = NanoVG.nvgLinearGradient(vg, x, y+h*0.5f, x, y+h, c2.getNVG(), c1.getNVG(), NVGPaint.calloc());

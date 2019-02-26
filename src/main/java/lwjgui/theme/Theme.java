@@ -4,7 +4,9 @@ import lwjgui.paint.Color;
 
 public abstract class Theme {
 	public abstract Color getBackground();
+	public abstract Color getBackgroundAlt();
 	public abstract Color getPane();
+	public abstract Color getPaneAlt();
 	public abstract Color getSelection();
 	public abstract Color getSelectionAlt();
 	public abstract Color getSelectionPassive();

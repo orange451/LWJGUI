@@ -7,12 +7,22 @@ public class ThemeCoral extends Theme {
 
 	@Override
 	public Color getBackground() {
-		return Color.WHITE_SMOKE;
+		return Color.WHITE;
+	}
+
+	@Override
+	public Color getBackgroundAlt() {
+		return Color.LIGHT_GRAY;
 	}
 	
 	@Override
 	public Color getPane() {
-		return Color.WHITE;
+		return Color.WHITE_SMOKE;
+	}
+	
+	@Override
+	public Color getPaneAlt() {
+		return new Color(230, 230, 230);
 	}
 
 	@Override
@@ -47,21 +57,21 @@ public class ThemeCoral extends Theme {
 	
 	@Override
 	public Color getControl() {
-		return Color.CORAL.brighter(0.9);
+		return new Color(240, 240, 240);
 	}
 
 	@Override
 	public Color getControlAlt() {
-		return Color.CORAL.brighter(0.7);
+		return new Color(230, 230, 230);
 	}
 
 	@Override
 	public Color getControlOutline() {
-		return getSelection().darker();
+		return Color.DIM_GRAY;
 	}
 
 	@Override
 	public Color getControlHover() {
-		return getSelection().brighter(0.8);
+		return Color.blend(getSelection().brighter(0.8), Color.WHITE, new Color(Color.BLACK), 0.75);
 	}
 }

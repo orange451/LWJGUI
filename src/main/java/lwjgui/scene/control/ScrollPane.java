@@ -43,7 +43,7 @@ public class ScrollPane extends Control {
 	 */
 	
 	private Color selectionFill = Theme.current().getSelection();
-	private Color selectionPassiveFill = Theme.current().getSelectionPassive();
+	private Color selectionPassiveFill = Theme.current().getBackgroundAlt();
 	private Color controlFill = Theme.current().getControl();
 	
 	private Color controlOutlineFill = Theme.current().getControlOutline();

@@ -101,9 +101,9 @@ public class ToolBar extends Control {
 		
 		// Gradient
 		NanoVG.nvgTranslate(vg, (int)getX(), (int)getY());
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight()*0.7f, Theme.current().getPane().getNVG(), Theme.current().getControlAlt().getNVG(), NVGPaint.calloc());
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight()*0.7f, Theme.current().getPane().getNVG(), Theme.current().getPaneAlt().getNVG(), NVGPaint.calloc());
 			if ( orientation.equals(Orientation.VERTICAL) ) {
-				bg = NanoVG.nvgLinearGradient(vg, 0, 0, (float)getWidth(), 0, Theme.current().getPane().getNVG(), Theme.current().getControlAlt().getNVG(), NVGPaint.calloc());
+				bg = NanoVG.nvgLinearGradient(vg, 0, 0, (float)getWidth(), 0, Theme.current().getPane().getNVG(), Theme.current().getPaneAlt().getNVG(), NVGPaint.calloc());
 			}
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRect(vg, 0, 0, (int)getWidth(), (int)getHeight());

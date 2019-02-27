@@ -25,10 +25,10 @@ An LWJGL3-based JavaFX alternative for making user-interfaces in Java.
 - Font
 
 # Screenshots
+![Modena](http://magaimg.net/img/7dkg.png)
 ![PicControlExample](https://i.imgur.com/NfH3uUB.png)
 ![SyntaxHighlight](http://magaimg.net/img/7cr8.png)
 ![PicOpenGL](https://i.imgur.com/jOHtsxJ.png)
-![Modena](http://magaimg.net/img/7dkg.png)
 ![ScrollSplitPane](https://i.imgur.com/EKVvWdP.png)
 ![MenuBar](https://i.imgur.com/RdKJJJA.png)
 ![TextArea](https://i.imgur.com/0YNqcfz.png)

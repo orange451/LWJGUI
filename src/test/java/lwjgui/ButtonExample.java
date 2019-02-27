@@ -1,6 +1,7 @@
 package lwjgui;
 
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
@@ -17,9 +18,8 @@ public class ButtonExample extends LWJGUIApplication {
 	
 	@Override
 	public void start(String[] args, Window window) {
-		// Add background pane
+		// Create the root pane
 		StackPane pane = new StackPane();
-		window.getScene().setRoot(pane);
 		
 		// Create vertical box
 		VBox vbox = new VBox();
@@ -40,6 +40,10 @@ public class ButtonExample extends LWJGUIApplication {
 										// Is because that will affect the layout of the button.
 										// Stylistically, we don't want the button to move when 
 										// the text comes onto the screen.
+		
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -51,15 +55,5 @@ public class ButtonExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Button Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

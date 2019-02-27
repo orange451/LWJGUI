@@ -13,6 +13,7 @@ import org.lwjgl.glfw.GLFW;
 import lwjgui.scene.Context;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.layout.StackPane;
 
 public class LWJGUI {
 	private static HashMap<Long, Window> windows = new HashMap<Long, Window>();
@@ -32,7 +33,7 @@ public class LWJGUI {
 			return null;
 		}
 		Context context = new Context(window);
-		Scene scene = new Scene();
+		Scene scene = new Scene(new StackPane());
 		Window wind = new Window(context, scene);
 		windows.put(window, wind);
 		

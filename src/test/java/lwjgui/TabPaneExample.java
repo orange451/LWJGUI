@@ -2,6 +2,7 @@ package lwjgui;
 
 
 import lwjgui.paint.Color;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Tab;
 import lwjgui.scene.control.TabPane;
@@ -21,7 +22,6 @@ public class TabPaneExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create a simple root pane
 		StackPane pane = new StackPane();
-		window.getScene().setRoot(pane);
 		
 		// Tab Root Pane
 		TabPane tabs = new TabPane();
@@ -40,6 +40,10 @@ public class TabPaneExample extends LWJGUIApplication {
 			tab.setContent(new Rectangle(96, 96, 8, Color.RED));
 			tabs.getTabs().add(tab);
 		}
+		
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -50,15 +54,5 @@ public class TabPaneExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Tab Pane Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

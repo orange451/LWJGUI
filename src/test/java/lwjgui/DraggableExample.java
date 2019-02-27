@@ -1,14 +1,7 @@
 package lwjgui;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
 import java.io.IOException;
 
-import org.lwjgl.glfw.GLFW;
-
-import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
 import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
@@ -16,40 +9,18 @@ import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.floating.DraggablePane;
 import lwjgui.scene.layout.StackPane;
 
-public class DraggableExample {
+public class DraggableExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
 	public static void main(String[] args) throws IOException {
-		if ( !glfwInit() )
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		//Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("Draggable Example", WIDTH, HEIGHT, true, false);
-		
-		//Initialize lwjgui for this window
-		Window newWindow = LWJGUI.initialize(window);
-		Scene scene = newWindow.getScene();
-		
-		//Add some components
-		addComponents(scene);
-		
-		//Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUI
-			LWJGUI.render();
-		}
-		
-		//Stop GLFW
-		glfwTerminate();
+		launch(args);
 	}
 
-	private static void addComponents(Scene scene) {
+	@Override
+	public void start(String[] args, Window window) {
 		//Create a simple pane
 		StackPane root = new StackPane();
-		
-		//Set the pane as the scenes root
-		scene.setRoot(root);
 		
 		/*
 		 * Create a DraggablePane
@@ -94,5 +65,19 @@ public class DraggableExample {
 		
 		//Add it to root
 		root.getChildren().add(dragPane2);
+		
+		// Set the scene
+		window.setScene(new Scene(root, WIDTH, HEIGHT));
+		window.show();
+	}
+
+	@Override
+	public void run() {
+		//
+	}
+
+	@Override
+	public String getProgramName() {
+		return "Draggable Panes";
 	}
 }

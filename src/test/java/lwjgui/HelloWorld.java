@@ -1,5 +1,4 @@
-	package lwjgui;
-
+package lwjgui;
 
 import lwjgui.LWJGUIApplication;
 import lwjgui.scene.Scene;
@@ -16,18 +15,18 @@ public class HelloWorld extends LWJGUIApplication {
 	}
 	
 	@Override
-	public void start(String[] args, Window window) {
-		// Get the main scene of the window
-		Scene scene = window.getScene();
-		
+	public void start(String[] args, Window window) {		
 		// Create a simple pane
 		StackPane pane = new StackPane();
 		
-		// Set the pane as the scenes root
-		scene.setRoot(pane);
-		
 		// Put a label in the pane
 		pane.getChildren().add(new Label("Hello World!"));
+		
+		// Create a new scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		
+		// Make window visible
+		window.show();
 	}
 
 	@Override
@@ -38,15 +37,5 @@ public class HelloWorld extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Hello World Application";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

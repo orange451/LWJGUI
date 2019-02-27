@@ -26,7 +26,6 @@ public class PopupWindowExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Add background pane
 		StackPane pane = new StackPane();
-		window.getScene().setRoot(pane);
 		
 		// Create vertical box
 		VBox vbox = new VBox();
@@ -42,6 +41,10 @@ public class PopupWindowExample extends LWJGUIApplication {
 		
 		// Add the components
 		vbox.getChildren().add(button);
+		
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 	
 	protected static void popup(String popup) {
@@ -76,15 +79,5 @@ public class PopupWindowExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Popup Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

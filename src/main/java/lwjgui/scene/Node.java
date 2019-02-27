@@ -316,11 +316,13 @@ public abstract class Node implements Resizable {
 			Node child = children.get(i);
 			if ( child == null )
 				continue;
-			
-			if ( child instanceof FillableRegion && ((FillableRegion)child).isFillToParentWidth())
-				continue;
-			
+
 			double tempX = child.getWidth();
+			
+			if ( child instanceof FillableRegion && ((FillableRegion)child).isFillToParentWidth()) {
+				tempX = child.getMaxElementWidth();
+			}
+			
 			if ( tempX > runningX ) {
 				runningX = tempX;
 			}
@@ -340,10 +342,12 @@ public abstract class Node implements Resizable {
 			if ( child == null )
 				continue;
 			
-			if ( child instanceof FillableRegion && ((FillableRegion)child).isFillToParentHeight())
-				continue;
-			
 			double tempY = child.getHeight();
+			
+			if ( child instanceof FillableRegion && ((FillableRegion)child).isFillToParentHeight()) {
+				tempY = child.getMaxElementHeight();
+			}
+			
 			if ( tempY > runningY ) {
 				runningY = tempY;
 			}

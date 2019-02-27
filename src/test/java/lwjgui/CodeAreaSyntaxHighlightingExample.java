@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import lwjgui.font.FontMetaData;
 import lwjgui.font.FontStyle;
 import lwjgui.paint.Color;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.text_input.CodeArea;
 import lwjgui.scene.layout.BorderPane;
@@ -23,7 +24,6 @@ public class CodeAreaSyntaxHighlightingExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create background pane
 		BorderPane pane = new BorderPane();
-		window.getScene().setRoot(pane);
 		
 		// Create code area
 		CodeArea c = new CodeArea();
@@ -65,6 +65,10 @@ public class CodeAreaSyntaxHighlightingExample extends LWJGUIApplication {
 		
 		// Force syntax highlighting (triggers change event)
 		c.appendText("");
+		
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -75,15 +79,5 @@ public class CodeAreaSyntaxHighlightingExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Syntax Highlighting Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

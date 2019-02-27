@@ -10,7 +10,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
@@ -29,6 +28,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL;
+
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.HPos;
@@ -61,7 +61,6 @@ public class LWJGUIUtil {
 		// Finalize window
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(0);
-		glfwShowWindow(window);
 
 		// Get the resolution of the primary monitor
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());

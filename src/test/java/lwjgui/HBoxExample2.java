@@ -1,6 +1,7 @@
 package lwjgui;
 
 import lwjgui.paint.Color;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
@@ -17,7 +18,6 @@ public class HBoxExample2 extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create a hbox that fills the screen
 		HBox box = new HBox();
-		window.getScene().setRoot(box);
 		
 		// This is the left pane
 		StackPane p1 = new StackPane();
@@ -42,6 +42,10 @@ public class HBoxExample2 extends LWJGUIApplication {
 		p3.setMinWidth(64);
 		p3.setBackground(Color.CYAN);
 		box.getChildren().add(p3);
+		
+		// Set the scene
+		window.setScene(new Scene(box, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -52,15 +56,5 @@ public class HBoxExample2 extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "HBox Example 2";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

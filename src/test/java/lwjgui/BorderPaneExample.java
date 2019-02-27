@@ -1,5 +1,6 @@
 package lwjgui;
 
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.BorderPane;
@@ -14,12 +15,8 @@ public class BorderPaneExample extends LWJGUIApplication {
 
 	@Override
 	public void start(String[] args, Window window) {
-
 		// Create a simple pane
 		BorderPane pane = new BorderPane();
-		
-		// Set the pane as the scenes root
-		window.getScene().setRoot(pane);
 		
 		// Put labels in the pane
 		pane.setTop(new Label("top"));
@@ -27,6 +24,10 @@ public class BorderPaneExample extends LWJGUIApplication {
 		pane.setCenter(new Label("center"));
 		pane.setLeft(new Label("left"));
 		pane.setRight(new Label("right"));
+		
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -37,15 +38,5 @@ public class BorderPaneExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Border Pane Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

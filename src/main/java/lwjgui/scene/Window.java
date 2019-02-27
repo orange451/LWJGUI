@@ -7,6 +7,7 @@ import static lwjgui.event.listener.EventListener.EventListenerType.MOUSE_WHEEL_
 import static lwjgui.event.listener.EventListener.EventListenerType.WINDOW_CLOSE_LISTENER;
 import static lwjgui.event.listener.EventListener.EventListenerType.WINDOW_SIZE_LISTENER;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
@@ -359,8 +360,6 @@ public class Window {
 				}
 			}
 		});
-		
-		focus();
 	}
 	
 	public Context getContext() {
@@ -449,6 +448,40 @@ public class Window {
 		if ( autoDraw ) {
 			GLFW.glfwSwapBuffers(context.getWindowHandle());
 		}
+	}
+	
+	/**
+	 * Attempts to show this Window by setting visibility to true
+	 */
+	public void show() {
+		glfwShowWindow(context.getWindowHandle());
+		focus();
+	}
+	
+	public void setScene(Scene scene) {
+		try {
+			final int s = 1024*1024;
+			// Set scene size
+			scene.setMinSize(0, 0);
+			scene.setMaxSize(s, s);
+			scene.size.set(s, s);
+			
+			// Buffer it a few times
+			for (int i = 0; i < 8; i++) {
+				LWJGUI.setCurrentContext(getContext());
+				scene.size.set(s, s);
+				scene.position(null);
+			}
+			
+			// Set window to match scene's size
+			double sw = Math.max(scene.getMaxElementWidth(), scene.getPrefWidth());
+			double sh = Math.max(scene.getMaxElementHeight(), scene.getPrefHeight());
+			GLFW.glfwSetWindowSize(context.getWindowHandle(), (int)Math.ceil(sw)+1, (int)Math.ceil(sh)+1);
+			context.updateContext();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		this.scene = scene;
 	}
 
 	public Scene getScene() {

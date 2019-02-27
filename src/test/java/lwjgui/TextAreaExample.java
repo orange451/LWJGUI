@@ -3,6 +3,7 @@ package lwjgui;
 import java.io.IOException;
 
 import lwjgui.geometry.Insets;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.text_input.PasswordField;
@@ -24,7 +25,6 @@ public class TextAreaExample extends LWJGUIApplication {
 		// Create background pane
 		BorderPane pane = new BorderPane();
 		pane.setPadding(new Insets(8,8,8,8));
-		window.getScene().setRoot(pane);
 		
 		HBox hbox = new HBox();
 		hbox.setSpacing(8);
@@ -53,6 +53,10 @@ public class TextAreaExample extends LWJGUIApplication {
 			t.clear();
 		});
 		pane.setBottom(b);
+		
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -63,15 +67,5 @@ public class TextAreaExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Text Area Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

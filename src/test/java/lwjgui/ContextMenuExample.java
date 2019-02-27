@@ -2,6 +2,7 @@ package lwjgui;
 
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.ContextMenu;
 import lwjgui.scene.control.Label;
@@ -25,7 +26,6 @@ public class ContextMenuExample extends LWJGUIApplication {
 		// Create background pane
 		BorderPane background = new BorderPane();
 		background.setAlignment(Pos.CENTER);
-		window.getScene().setRoot(background);
 		
 		
 		// Top part of borderpane
@@ -63,6 +63,10 @@ public class ContextMenuExample extends LWJGUIApplication {
 			l.setContextMenu(menu);
 			background.setCenter(l);
 		}
+		
+		// Set the scene
+		window.setScene(new Scene(background, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -73,15 +77,5 @@ public class ContextMenuExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Context Menu Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

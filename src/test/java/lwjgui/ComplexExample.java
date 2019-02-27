@@ -2,6 +2,7 @@ package lwjgui;
 
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.CheckBox;
@@ -29,7 +30,6 @@ public class ComplexExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create background pane
 		VBox background = new VBox();
-		window.getScene().setRoot(background);
 		
 		// Menu Bar
 		MenuBar menuBar = new MenuBar();
@@ -134,6 +134,10 @@ public class ComplexExample extends LWJGUIApplication {
 			Tab tab = new Tab("Tab 3");
 			tabPane.getTabs().add(tab);
 		}
+		
+		// Set the scene
+		window.setScene(new Scene(background, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -144,15 +148,5 @@ public class ComplexExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Complex Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

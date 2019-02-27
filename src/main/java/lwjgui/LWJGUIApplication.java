@@ -67,7 +67,7 @@ public abstract class LWJGUIApplication {
 		if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
 		//Create a standard opengl 3.2 window.
-		long windowID = LWJGUIUtil.createOpenGLCoreWindow(program.getProgramName(), program.getDefaultWindowWidth(), program.getDefaultWindowHeight(), true, false);
+		long windowID = LWJGUIUtil.createOpenGLCoreWindow(program.getProgramName(), 100, 100, true, false);
 	
 		//Initialize LWJGUI for this window ID.
 		Window window = LWJGUI.initialize(windowID);
@@ -114,18 +114,4 @@ public abstract class LWJGUIApplication {
 	 * @return the name of this program.
 	 */
 	public abstract String getProgramName();
-	
-	/**
-	 * Gets the starting width for the LWJGUI window.
-	 * 
-	 * @return - the desired starting window width
-	 */
-	public abstract int getDefaultWindowWidth();
-	
-	/**
-	 * Gets the starting height for the LWJGUI window.
-	 * 
-	 * @return - the desired starting window height
-	 */
-	public abstract int getDefaultWindowHeight();
 }

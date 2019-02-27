@@ -1,5 +1,6 @@
 package lwjgui;
 
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.HBox;
@@ -17,7 +18,6 @@ public class HBoxExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create background pane
 		StackPane background = new StackPane();
-		window.getScene().setRoot(background);
 		
 		// Create horizontal layout
 		HBox box = new HBox();
@@ -28,6 +28,10 @@ public class HBoxExample extends LWJGUIApplication {
 		box.getChildren().add(new Label("Label 1"));
 		box.getChildren().add(new Label("Label 2"));
 		box.getChildren().add(new Label("Label 3"));
+		
+		// Set the scene
+		window.setScene(new Scene(background, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -38,15 +42,5 @@ public class HBoxExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "HBox Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

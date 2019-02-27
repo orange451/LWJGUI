@@ -3,6 +3,7 @@ package lwjgui;
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
@@ -27,7 +28,6 @@ public class ControlExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create background pane
 		StackPane background = new StackPane();
-		window.getScene().setRoot(background);
 		
 		// Create a vbox to store examples vertically
 		VBox vbox = new VBox();
@@ -52,6 +52,10 @@ public class ControlExample extends LWJGUIApplication {
 			// Redio Buttons
 			displayRadioButtons(hbox);
 		}
+		
+		// Set the scene
+		window.setScene(new Scene(background, WIDTH, HEIGHT));
+		window.show();
 	}
 	
 	private static VBox exampleBox(String title) {
@@ -120,15 +124,5 @@ public class ControlExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Control Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

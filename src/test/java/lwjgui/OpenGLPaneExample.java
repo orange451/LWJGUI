@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL11;
 import lwjgui.gl.GenericShader;
 import lwjgui.gl.Renderer;
 import lwjgui.scene.Context;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.OpenGLPane;
@@ -35,7 +36,6 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create a simple pane
 		StackPane root = new StackPane();
-		window.getScene().setRoot(root);
 		
 		VBox vbox = new VBox();
 		root.getChildren().add(vbox);
@@ -50,6 +50,10 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 		// Create label, set icon to opengl pane
 		Label testLabel = new Label( "This label's icon is rendered with OpenGL!", ogl );
 		vbox.getChildren().add(testLabel);
+		
+		// Set the scene
+		window.setScene(new Scene(root, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -60,16 +64,6 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "OpenGL Pane Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 	
 	static class RenderingCallbackTest implements Renderer {

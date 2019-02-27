@@ -2,6 +2,7 @@ package lwjgui;
 
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class HelloWorldManual {
 		
 		// Initialize lwjgui for this window
 		Window lwjguiWindow = LWJGUI.initialize(window);
+		lwjguiWindow.show();
 		
 		// Add some components
 		addComponents(lwjguiWindow.getScene());

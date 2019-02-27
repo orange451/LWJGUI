@@ -15,6 +15,15 @@ public class Scene extends Node {
 	
 	private ObservableList<PopupWindow> popups = new ObservableList<PopupWindow>();
 
+	public Scene(Node root) {
+		this(root, 1, 1);
+	}
+	
+	public Scene(Node root, double prefWidth, double prefHeight) {
+		setRoot(root);
+		this.setPrefSize(prefWidth, prefHeight);
+	}
+
 	@Override
 	public double getX() {
 		return 0;
@@ -23,16 +32,6 @@ public class Scene extends Node {
 	@Override
 	public double getY() {
 		return 0;
-	}
-	
-	@Override
-	public double getWidth() {
-		return this.getPrefWidth();
-	}
-	
-	@Override
-	public double getHeight() {
-		return this.getPrefHeight();
 	}
 	
 	/**
@@ -81,7 +80,7 @@ public class Scene extends Node {
 		// Position elements
 		for (int i = 0; i < (first?20:2); i++) {
 			position(null);
-			root.position(this);
+			//root.position(this);
 		}
 		
 		// Render normal

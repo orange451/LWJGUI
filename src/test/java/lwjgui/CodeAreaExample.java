@@ -1,5 +1,6 @@
 package lwjgui;
 
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.text_input.CodeArea;
 import lwjgui.scene.layout.BorderPane;
@@ -16,7 +17,6 @@ public class CodeAreaExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create background pane
 		BorderPane pane = new BorderPane();
-		window.getScene().setRoot(pane);
 		
 		// Create code area
 		CodeArea c = new CodeArea();
@@ -25,6 +25,10 @@ public class CodeAreaExample extends LWJGUIApplication {
 		
 		// Add some text
 		c.setText("printf(\"Hello World\");");
+		
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -35,15 +39,5 @@ public class CodeAreaExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Text Area Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

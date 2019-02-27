@@ -1,6 +1,7 @@
 package lwjgui;
 
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
@@ -21,7 +22,6 @@ public class GridPaneExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create a simple pane as root
 		StackPane root = new StackPane();
-		window.getScene().setRoot(root);
 		
 		GridPane grid = new GridPane();
 		grid.setHgap(6);
@@ -34,6 +34,10 @@ public class GridPaneExample extends LWJGUIApplication {
 		b.setAlignment(Pos.CENTER_RIGHT);
 		grid.add(b, 1, 3);
 		root.getChildren().add(grid);
+		
+		// Set the scene
+		window.setScene(new Scene(root, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -44,15 +48,5 @@ public class GridPaneExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Grid Pane Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

@@ -2,6 +2,7 @@ package lwjgui;
 
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
@@ -21,7 +22,6 @@ public class SplitPaneExample extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create background pane
 		StackPane pane = new StackPane();
-		window.getScene().setRoot(pane);
 		
 		// Create vertical layout
 		VBox box = new VBox();
@@ -56,6 +56,10 @@ public class SplitPaneExample extends LWJGUIApplication {
 			SplitPane.setResizableWithParent(split.getItems().get(0), false);
 			SplitPane.setResizableWithParent(split.getItems().get(2), false);
 		});
+		
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -66,15 +70,5 @@ public class SplitPaneExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Split Pane Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

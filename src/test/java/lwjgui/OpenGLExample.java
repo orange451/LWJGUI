@@ -20,6 +20,7 @@ import lwjgui.gl.GenericShader;
 import lwjgui.gl.Renderer;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
@@ -42,9 +43,6 @@ public class OpenGLExample extends LWJGUIApplication {
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(24));
 		root.setBackground(null); // See through, so we don't block the opengl drawn underneath
-
-		// Set the pane as the scenes root
-		window.getScene().setRoot(root);
 
 		// Put labels in pane
 		{
@@ -72,6 +70,10 @@ public class OpenGLExample extends LWJGUIApplication {
 		
 		// Render OpenGL Scene
 		window.setRenderingCallback(new RenderingCallbackTest());
+		
+		// Set the scene
+		window.setScene(new Scene(root, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -82,16 +84,6 @@ public class OpenGLExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "OpenGL Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 	
 	private static class RenderingCallbackTest implements Renderer {

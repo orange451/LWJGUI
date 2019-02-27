@@ -4,6 +4,7 @@ import lwjgui.LWJGUI;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
@@ -23,7 +24,6 @@ public class PanesInPanes extends LWJGUIApplication {
 		background.setFillToParentHeight(true);
 		background.setFillToParentWidth(true);
 		background.setPadding(new Insets(4,4,4,4));
-		window.getScene().setRoot(background);
 		
 		StackPane pane = new StackPane();
 		pane.setFillToParentHeight(true);
@@ -45,10 +45,9 @@ public class PanesInPanes extends LWJGUIApplication {
 		label.setTextFill(Color.WHITE_SMOKE);
 		pane2.getChildren().add(label);
 		
-		
-		LWJGUI.runLater(() -> {
-			System.out.println(pane2.getWidth());
-		});
+		// Set the scene
+		window.setScene(new Scene(background, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -59,15 +58,5 @@ public class PanesInPanes extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Panes In Panes";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

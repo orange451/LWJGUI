@@ -3,6 +3,7 @@ package lwjgui;
 import java.io.IOException;
 
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.layout.StackPane;
@@ -20,7 +21,6 @@ public class OpenURLExample extends LWJGUIApplication {
 		// Add background pane
 		StackPane pane = new StackPane();
 		pane.setAlignment(Pos.CENTER);
-		window.getScene().setRoot(pane);
 		
 		// Create the button for the box
 		Button button = new Button("The Best LWJGL3 UI Solution (Click Me!)");
@@ -33,6 +33,10 @@ public class OpenURLExample extends LWJGUIApplication {
 		});
 		
 		pane.getChildren().add(button);
+		
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -41,15 +45,5 @@ public class OpenURLExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Open URL Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

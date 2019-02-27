@@ -40,16 +40,11 @@ public class BlurPaneExample extends LWJGUIApplication {
 
 	@Override
 	public void start(String[] args, Window window) {
-		// Get the windows scene
-		Scene scene = window.getScene();
 		
 		// Create a simple pane
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(16,16,16,16));
 		root.setBackground(null);
-
-		// Set the pane as the scenes root
-		scene.setRoot(root);
 
 		// Put a label in the pane
 		BlurPane pane = new BlurPane();
@@ -58,6 +53,10 @@ public class BlurPaneExample extends LWJGUIApplication {
 		
 		// Window will call this callback when it draws
 		window.setRenderingCallback(new RenderingCallbackTest());
+		
+		// Set the scene
+		window.setScene(new Scene(root, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -68,16 +67,6 @@ public class BlurPaneExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "OpenGL Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 	
 	private static class RenderingCallbackTest implements Renderer {

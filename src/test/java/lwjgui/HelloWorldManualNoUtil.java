@@ -40,7 +40,6 @@ public class HelloWorldManualNoUtil {
 		
 		// Finalize window
 		glfwMakeContextCurrent(window);
-		glfwShowWindow(window);
 		GL.createCapabilities();
 		
 		// Initialize LWJGUI for this window
@@ -48,10 +47,12 @@ public class HelloWorldManualNoUtil {
 		lwjguiWindow.setWindowAutoDraw(false); // Turn off automatic buffer swapping
 		
 		// Add some components
-		Scene scene = lwjguiWindow.getScene();
 		StackPane pane = new StackPane();
-		scene.setRoot(pane);
 		pane.getChildren().add(new Label("Hello World!"));
+		lwjguiWindow.setScene(new Scene(pane, WIDTH, HEIGHT));
+		
+		// Show Window
+		lwjguiWindow.show();
 		
 		// Game Loop
 		while (!GLFW.glfwWindowShouldClose(window)) {

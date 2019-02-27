@@ -4,6 +4,7 @@
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import lwjgui.paint.Color;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
@@ -19,9 +20,8 @@ public class AnimationExample extends LWJGUIApplication {
 	
 	@Override
 	public void start(String[] args, Window window) {
-		// Create Root
+		// Create Root pane
 		StackPane pane = new StackPane();
-		window.getScene().setRoot(pane);
 		
 		// Create animation pane
 		StackPane test = new StackPane();
@@ -107,6 +107,10 @@ public class AnimationExample extends LWJGUIApplication {
 		Label label = new Label("Double-click me!");
 		label.setMouseTransparent(true);
 		test.getChildren().add(label);
+		
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -117,15 +121,5 @@ public class AnimationExample extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Hello World Application";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

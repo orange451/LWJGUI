@@ -1,6 +1,7 @@
 package lwjgui;
 
 import lwjgui.geometry.Pos;
+import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
@@ -20,7 +21,6 @@ public class ButtonExample2 extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create background pane
 		StackPane pane = new StackPane();
-		window.getScene().setRoot(pane);
 		
 		// Create a horizontal layout
 		HBox hbox = new HBox();
@@ -45,7 +45,10 @@ public class ButtonExample2 extends LWJGUIApplication {
 			vbox.getChildren().add(button);
 			vbox.getChildren().add(label); // Needs to be added after button so its underneath
 		}
-		
+
+		// Set the scene
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
 	}
 
 	@Override
@@ -56,15 +59,5 @@ public class ButtonExample2 extends LWJGUIApplication {
 	@Override
 	public String getProgramName() {
 		return "Button Example";
-	}
-
-	@Override
-	public int getDefaultWindowWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	public int getDefaultWindowHeight() {
-		return HEIGHT;
 	}
 }

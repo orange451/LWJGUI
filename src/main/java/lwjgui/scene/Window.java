@@ -240,6 +240,7 @@ public class Window {
 						hovered.onMousePressed(context.getMouseX(), context.getMouseY(), button);
 					}
 					lastPressed = hovered;
+					context.setLastPressed(hovered);
 				} else { // Release
 					
 					Node hovered = context.getHovered();

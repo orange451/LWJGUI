@@ -162,7 +162,7 @@ public class Tab {
 			this.x.setTextFill(c);
 			
 			// internal selection graphic
-			if ( pressed ) {
+			if ( context.getLastPressed() != null && context.getLastPressed().isDescendentOf(this) && pressed ) {
 				Color sel = Theme.current().getSelection();
 				Color col = sel.alpha(0.25f);
 				

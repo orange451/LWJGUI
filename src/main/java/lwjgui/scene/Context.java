@@ -29,6 +29,7 @@ public class Context {
 
 	private Node selected = null;
 	private Node hovered = null;
+	private Node lastPressed = null;
 
 	private double mouseX;
 	private double mouseY;
@@ -338,5 +339,17 @@ public class Context {
 	 */
 	public boolean isMouseInside(Node node) {
 		return node.getNodeBounds().isInside(mouseX, mouseY);
+	}
+
+	/**
+	 * Returns the last node clicked in this context.
+	 * @return
+	 */
+	public Node getLastPressed() {
+		return lastPressed;
+	}
+
+	protected void setLastPressed(Node node) {
+		this.lastPressed = node;
 	}
 }

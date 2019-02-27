@@ -2,15 +2,12 @@ package lwjgui;
 
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
 import java.io.IOException;
 
 import org.lwjgl.glfw.GLFW;
 
-import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;

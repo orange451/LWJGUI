@@ -94,7 +94,7 @@ public class ColorPicker extends ButtonBase {
 			grid.setHgap(1);
 			grid.setVgap(1);
 			for (int i = 0; i < 8; i++) {
-				for (int j = 0; j < 8; j++) {
+				for (int j = 0; j < 4; j++) {
 					StackPane col = new StackPane();
 					col.setPadding(new Insets(1));
 					col.setMinSize(16, 16);

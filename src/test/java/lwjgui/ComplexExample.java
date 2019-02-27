@@ -4,10 +4,12 @@ import java.io.IOException;
 
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.CheckBox;
+import lwjgui.scene.control.ColorPicker;
 import lwjgui.scene.control.Menu;
 import lwjgui.scene.control.MenuBar;
 import lwjgui.scene.control.MenuItem;
@@ -20,7 +22,10 @@ import lwjgui.scene.control.ToggleGroup;
 import lwjgui.scene.control.ToolBar;
 import lwjgui.scene.control.text_input.TextArea;
 import lwjgui.scene.layout.HBox;
+import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
+import lwjgui.scene.shape.Rectangle;
+import lwjgui.theme.Theme;
 
 public class ComplexExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
@@ -167,6 +172,41 @@ public class ComplexExample extends LWJGUIApplication {
 		{
 			Tab tab = new Tab("Tab 2");
 			tabPane.getTabs().add(tab);
+			
+			// Holds button and shape
+			HBox hbox = new HBox();
+			hbox.setFillToParentHeight(true);
+			hbox.setFillToParentWidth(true);
+			hbox.setPadding(new Insets(8));
+			tab.setContent(hbox);
+			
+			// Holds Color picker
+			StackPane t = new StackPane();
+			t.setAlignment(Pos.TOP_LEFT);
+			t.setFillToParentWidth(true);
+			hbox.getChildren().add(t);
+			
+			// Color picker to change shape color
+			ColorPicker color = new ColorPicker(Color.RED);
+			t.getChildren().add(color);
+			
+			// Holds shape
+			StackPane p = new StackPane();
+			p.setBackground(Theme.current().getBackground());
+			p.setFillToParentHeight(true);
+			p.setPrefWidth(180);
+			p.setPaddingColor(Theme.current().getControlOutline());
+			p.setPadding(new Insets(1));
+			hbox.getChildren().add(p);
+			
+			// Rounded rectangle
+			Rectangle shape = new Rectangle(64, 64, 5, color.getColor());
+			p.getChildren().add(shape);
+			
+			// Set rectangle color
+			color.setOnAction((event)->{
+				shape.setFill(color.getColor());
+			});
 		}
 		
 		// Tab 3

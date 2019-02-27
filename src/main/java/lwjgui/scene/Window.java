@@ -319,8 +319,11 @@ public class Window {
 				windowResizing = true;
 				lastWidth = width;
 				lastHeight = height;
-				render();
-				render();
+				
+				// Double buffer the rendering
+				for (int i = 1; i < 2; i++) 
+					render();
+				
 				windowResizing = false;
 			}
 		});

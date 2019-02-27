@@ -272,8 +272,6 @@ public class ScrollPane extends Control {
 	@Override
 	public void render(Context context) {
 		super.render(context);
-
-		this.internalScrollCanvas.render(context);
 		
 		hoveredBar = getBarUnderMouse();
 

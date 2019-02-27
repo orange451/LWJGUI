@@ -31,7 +31,6 @@ class TextInputContentRenderer extends Pane {
 	private long lastTime;
 	@Override
 	public void render(Context context) {
-		super.render(context);
 		
 		if (textInputControl.glyphData.size() == 0) {
 			textInputControl.setText(textInputControl.getText());

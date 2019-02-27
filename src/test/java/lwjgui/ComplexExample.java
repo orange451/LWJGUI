@@ -42,6 +42,9 @@ public class ComplexExample extends LWJGUIApplication {
 			{
 				Menu file = new Menu("File");
 				file.getItems().add(new MenuItem("New"));
+				file.getItems().add(new MenuItem("Open"));
+				file.getItems().add(new MenuItem("Save"));
+				file.getItems().add(new SeparatorMenuItem());
 				file.getItems().add(new MenuItem("Exit"));
 				menuBar.getItems().add(file);
 			}

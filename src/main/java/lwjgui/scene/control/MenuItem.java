@@ -15,8 +15,7 @@ import lwjgui.theme.Theme;
 
 public class MenuItem extends Node {
 	protected EventHandler<ActionEvent> buttonEvent;
-	private Label internalLabel = null;
-	private static final int padding = 4;
+	protected Label internalLabel = null;
 	protected Color background;
 	
 	public MenuItem(String string) {
@@ -50,15 +49,15 @@ public class MenuItem extends Node {
 		});
 	}
 	
-	public void setContent(String string, Font font, Node graphic) {
+	protected void setContent(String string, Font font, Node graphic) {
 		if (internalLabel == null) {
 			internalLabel = new Label();
+			internalLabel.setFontSize(16);
 		}
 		
 		internalLabel.setText(string);
 		internalLabel.setGraphic(graphic);
-		internalLabel.setPadding(new Insets(0, padding, 0, padding));
-		internalLabel.setFontSize(16);
+		internalLabel.setPadding(new Insets(0, 12, 0, 12));
 
 		if (font != null) {
 			internalLabel.setFont(font);

@@ -1,5 +1,7 @@
 package lwjgui;
 
+import java.io.IOException;
+
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
@@ -8,8 +10,10 @@ import lwjgui.scene.control.Button;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Menu;
 import lwjgui.scene.control.MenuBar;
+import lwjgui.scene.control.MenuItem;
 import lwjgui.scene.control.ProgressBar;
 import lwjgui.scene.control.RadioButton;
+import lwjgui.scene.control.SeparatorMenuItem;
 import lwjgui.scene.control.Tab;
 import lwjgui.scene.control.TabPane;
 import lwjgui.scene.control.ToggleGroup;
@@ -33,9 +37,42 @@ public class ComplexExample extends LWJGUIApplication {
 		
 		// Menu Bar
 		MenuBar menuBar = new MenuBar();
-		menuBar.getItems().add(new Menu("File"));
-		menuBar.getItems().add(new Menu("Edit"));
-		menuBar.getItems().add(new Menu("Help"));
+		{
+			// File Menu
+			{
+				Menu file = new Menu("File");
+				file.getItems().add(new MenuItem("New"));
+				file.getItems().add(new MenuItem("Exit"));
+				menuBar.getItems().add(file);
+			}
+			
+			// Edit Menu
+			{
+				Menu edit = new Menu("Edit");
+				edit.getItems().add(new MenuItem("Undo"));
+				edit.getItems().add(new MenuItem("Redo"));
+				edit.getItems().add(new SeparatorMenuItem());
+				edit.getItems().add(new MenuItem("Copy"));
+				edit.getItems().add(new MenuItem("Paste"));
+				menuBar.getItems().add(edit);
+			}
+			
+			// Help Menu
+			{
+				Menu help = new Menu("Help");
+				MenuItem click = new MenuItem("Click me!");
+				help.getItems().add(click);
+				menuBar.getItems().add(help);
+				
+				click.setOnAction((event)->{
+					try {
+						LWJGUIUtil.openURLInBrowser("https://github.com/orange451/LWJGUI");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
+			}
+		}
 		background.getChildren().add(menuBar);
 		
 		// Tool Bar

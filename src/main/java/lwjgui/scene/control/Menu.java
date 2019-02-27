@@ -2,7 +2,10 @@ package lwjgui.scene.control;
 
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
+import lwjgui.font.Font;
+import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
+import lwjgui.scene.Node;
 
 public class Menu extends MenuItem {
 	
@@ -37,6 +40,13 @@ public class Menu extends MenuItem {
 		});
 		
 		this.mouseReleasedEvent = null;
+	}
+	
+	@Override
+	protected void setContent(String string, Font font, Node graphic) {
+		super.setContent(string, font, graphic);
+		
+		this.internalLabel.setPadding(new Insets(0,6,0,6));
 	}
 	
 	public boolean isOpen() {

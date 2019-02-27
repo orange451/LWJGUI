@@ -78,7 +78,7 @@ public class Scene extends Node {
 		}
 		
 		// Position elements
-		for (int i = 0; i < (first?20:2); i++) {
+		for (int i = 0; i < (first?20:3); i++) {
 			position(null);
 			//root.position(this);
 		}

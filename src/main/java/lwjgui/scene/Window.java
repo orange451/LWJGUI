@@ -105,7 +105,7 @@ public class Window {
 
 			@Override
 			public void invoke(long window, int codepoint) {
-				notifyTextInput(scene, new TypeEvent(codepoint));
+				notifyTextInput(Window.this.scene, new TypeEvent(codepoint));
 			}
 			
 			private void notifyTextInput(Node root, TypeEvent event) {
@@ -152,8 +152,7 @@ public class Window {
 				 * Call scene node listeners
 				 */
 
-				notifyKeyInput(scene, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
-				
+				notifyKeyInput(Window.this.scene, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
 			}
 			
 			private void notifyKeyInput(Node root, int key, int scancode, int action, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
@@ -342,7 +341,7 @@ public class Window {
 				 * Call scene node listeners
 				 */
 				
-				notifyScroll(scene, dx, dy);
+				notifyScroll(Window.this.scene, dx, dy);
 			}
 
 			private void notifyScroll(Node t, double x, double y) {
@@ -460,6 +459,8 @@ public class Window {
 	}
 	
 	public void setScene(Scene scene) {
+		this.scene = scene;
+		
 		try {
 			final int s = 1024*1024;
 			// Set scene size
@@ -493,7 +494,6 @@ public class Window {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		this.scene = scene;
 	}
 
 	public Scene getScene() {

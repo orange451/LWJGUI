@@ -123,24 +123,25 @@ public abstract class ButtonBase extends Labeled {
 				paint.free();
 				NanoVG.nvgClosePath(vg);
 			}
-			
+
+			// Draw button outline
 			NanoVG.nvgBeginPath(vg);
 			{
 				Color outlineColor = (context.isSelected(this)&&context.isFocused()&&!isDisabled())?Theme.current().getSelection():Theme.current().getControlOutline();
 
-				// Draw button outline
 				buttonMask(vg, x+0.2f,y+0.2f,w-0.4f,h-0.4f,+0.5f);
 				NanoVG.nvgFillColor(vg, outlineColor.getNVG());
 				NanoVG.nvgFill(vg);
+				NanoVG.nvgShapeAntiAlias(vg, true);
 				NanoVG.nvgStrokeWidth(vg, 1.0f);
 				NanoVG.nvgStrokeColor(vg, outlineColor.getNVG());
 				NanoVG.nvgStroke(vg);
 			}
 			NanoVG.nvgClosePath(vg);
-				
+
+			// Draw main background	
 			NanoVG.nvgBeginPath(vg);
 			{
-				// Draw main background
 				Color buttonColor = isPressed()?Theme.current().getControlOutline():((context.isHovered(this)&&!isDisabled())?Theme.current().getControlHover():Theme.current().getControl());
 				NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*3, buttonColor.getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.calloc());
 				buttonMask(vg, x+1,y+1,w-2,h-2, 0);

@@ -19,10 +19,10 @@ import lwjgui.theme.Theme;
 public abstract class ButtonBase extends Labeled {
 	protected EventHandler<ActionEvent> buttonEvent;
 
-	protected double cornerNW = 3.0;
-	protected double cornerNE = 3.0;
-	protected double cornerSW = 3.0;
-	protected double cornerSE = 3.0;
+	protected double cornerNW;
+	protected double cornerNE;
+	protected double cornerSW;
+	protected double cornerSE;
 	
 	protected double textOffset;
 	
@@ -35,6 +35,8 @@ public abstract class ButtonBase extends Labeled {
 		this.setMinSize(32, 24);
 		this.setPadding(new Insets(4,6,4,6));
 		this.setFontSize(16);
+		
+		this.setCornerRadius(2.5);
 		
 		this.setOnMouseReleased( new EventHandler<MouseEvent>() {
 			@Override

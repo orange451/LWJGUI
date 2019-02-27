@@ -1,6 +1,7 @@
 package lwjgui.scene.control;
 
 import lwjgui.scene.Context;
+import lwjgui.scene.Node;
 import lwjgui.scene.Scene;
 import lwjgui.scene.layout.floating.FloatingPane;
 
@@ -22,6 +23,17 @@ public abstract class PopupWindow extends FloatingPane {
 		scene.showPopup(this);
 		mouseEntered = false;
 		this.open = true;
+	}
+	
+	@Override
+	protected void position(Node parent) {
+		super.position(parent);
+		
+		// Reposition if outside of screen
+		if ( this.getY() + this.getHeight() > this.getScene().getHeight() )
+			this.setAbsolutePosition(getX(), getScene().getHeight()-this.getHeight());
+		if ( this.getY() < 0 )
+			this.setAbsolutePosition(getX(), 0);
 	}
 	
 	public boolean isOpen() {

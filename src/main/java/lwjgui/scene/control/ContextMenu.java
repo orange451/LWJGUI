@@ -68,12 +68,6 @@ public class ContextMenu extends PopupWindow {
 		// Position the menu
 		this.position(getParent());
 		
-		// Reposition if outside of screen
-		if ( this.getY() + this.getHeight() > this.getScene().getHeight() )
-			this.setAbsolutePosition(getX(), getScene().getHeight()-this.getHeight());
-		if ( this.getY() < 0 )
-			this.setAbsolutePosition(getX(), 0);
-		
 		// Position internal box inside menu
 		this.setAlignment(Pos.TOP_LEFT);
 		//internalBox.position(this);

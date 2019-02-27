@@ -342,14 +342,14 @@ public abstract class Node implements Resizable {
 			if ( child == null )
 				continue;
 			
-			double tempY = child.getHeight();
+			double tempSize = child.getHeight();
 			
 			if ( child instanceof FillableRegion && ((FillableRegion)child).isFillToParentHeight()) {
-				tempY = child.getMaxElementHeight();
+				tempSize = Math.max(child.getPrefHeight(), child.getMaxElementHeight());
 			}
 			
-			if ( tempY > runningY ) {
-				runningY = tempY;
+			if ( tempSize > runningY ) {
+				runningY = tempSize;
 			}
 		}
 		

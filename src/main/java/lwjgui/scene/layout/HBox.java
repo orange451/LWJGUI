@@ -37,18 +37,18 @@ public class HBox extends DirectionalBox {
 	
 	@Override
 	protected double getMaxElementWidth() {
-		return this.getMaximumPotentialWidth();
+		return this.getMinimumPotentialWidth();
 	}
 	
 	@Override
-	protected double getMaximumPotentialWidth() {
+	protected double getMinimumPotentialWidth() {
 		//return this.getMaxElementHeight();
 		//return getHeight()-this.getInnerBounds().getHeight();
-		return super.getMaximumPotentialWidth() + (Math.max(0, children.size()-1)*spacing);
+		return super.getMinimumPotentialWidth() + (Math.max(0, children.size()-1)*spacing);
 	}
 	
 	@Override
-	protected double getMaximumPotentialHeight() {
+	protected double getMinimumPotentialHeight() {
 		//return this.getMaxElementHeight();
 		return 0;//getHeight()-this.getInnerBounds().getHeight();
 	}

@@ -197,7 +197,7 @@ public abstract class Region extends Parent {
 	 * Treats fillable regions that stretch as size 0.
 	 * @return
 	 */
-	protected double getMaximumPotentialWidth() {
+	protected double getMinimumPotentialWidth() {
 		float totalWidth = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
@@ -220,7 +220,7 @@ public abstract class Region extends Parent {
 	 * Treats fillable regions that stretch as size 0.
 	 * @return
 	 */
-	protected double getMaximumPotentialHeight() {
+	protected double getMinimumPotentialHeight() {
 		float totalHeight = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);

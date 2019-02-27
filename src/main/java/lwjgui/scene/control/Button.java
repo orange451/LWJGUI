@@ -10,7 +10,7 @@ public class Button extends ButtonBase {
 		super(name);
 		
 		this.setMinSize(32, 16);
-		this.setPadding(new Insets(3,7,3,7));
+		this.setPadding(new Insets(4,6,4,6));
 		this.setText(name);
 	}
 	

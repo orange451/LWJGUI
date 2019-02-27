@@ -93,6 +93,7 @@ public class ComplexExample extends LWJGUIApplication {
 		
 		// Tab Pane
 		TabPane tabPane = new TabPane();
+		tabPane.setPrefHeight(100);
 		tabPane.setFillToParentHeight(true);
 		tabPane.setFillToParentWidth(true);
 		background.getChildren().add(tabPane);

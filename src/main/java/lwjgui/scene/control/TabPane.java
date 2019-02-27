@@ -42,6 +42,7 @@ public class TabPane extends Control {
 		this.flag_clip = true;
 		this.setAlignment(Pos.TOP_LEFT);
 		this.setPrefSize(100, 100);
+		this.setMinHeight(28);
 		
 		this.internal = new TabPaneInternal();
 		this.children.add(internal);
@@ -210,6 +211,7 @@ public class TabPane extends Control {
 			this.setSpacing(2);
 			this.setPadding(new Insets(6,4,0,4));
 			this.setPrefHeight(28);
+			this.setMinHeight(this.getPrefHeight());
 		}
 		
 		@Override

@@ -135,13 +135,13 @@ public class Tab {
 			// Background
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x,y,w,h,1);
-			NanoVG.nvgFillColor(vg, Theme.current().getControlOutline().getNVG());
+			NanoVG.nvgFillColor(vg, (pressed?Theme.current().getSelection():Theme.current().getControlOutline()).getNVG());
 			NanoVG.nvgFill(vg);
 			
 			// Draw main background
 			Color c1 = isPressed()?Theme.current().getControlOutline():(pressed?Theme.current().getControl():(isHovered()?Theme.current().getControlHover():Theme.current().getControl()));
-			Color c2 = pressed?Theme.current().getPane():Theme.current().getControlOutline();
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*3, c1.getNVG(), c2.getNVG(), NVGPaint.calloc());
+			Color c2 = pressed?Theme.current().getPane():Theme.current().getControlAlt();
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1.getNVG(), c2.getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x+1,y+1,w-2,h-1,0);
 			NanoVG.nvgFillPaint(vg, bg);
@@ -160,6 +160,20 @@ public class Tab {
 			if ( this.isPressed() || xpressed )
 				c = Theme.current().getControlOutline();
 			this.x.setTextFill(c);
+			
+			// internal selection graphic
+			if ( pressed ) {
+				Color sel = Theme.current().getSelection();
+				Color col = sel.alpha(0.25f);
+				
+				NanoVG.nvgBeginPath(vg);
+				float inset = 1.25f;
+				buttonMask(vg, x+inset,y+inset,w-inset*2,h, 0);
+				NanoVG.nvgStrokeColor(vg, col.getNVG());
+				NanoVG.nvgStrokeWidth(vg, inset*1.25f);
+				NanoVG.nvgStroke(vg);
+				NanoVG.nnvgClosePath(vg);
+			}
 			
 			for (int i = 0; i < children.size(); i++) {
 				children.get(i).render(context);

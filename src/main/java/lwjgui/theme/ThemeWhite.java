@@ -3,23 +3,16 @@ package lwjgui.theme;
 import lwjgui.paint.Color;
 
 public class ThemeWhite extends Theme {
-	public static Color backgroundColor		= Color.WHITE;
-	public static Color paneColor			= Color.WHITE_SMOKE;
-	public static Color paneAltColor		= new Color(240, 240, 240);
 	public static Color selectColor			= Color.AQUA;
 	public static Color selectColorAlt		= selectColor.brighter(0.9);
 	public static Color selectColorPassive	= Color.LIGHT_GRAY;
 	public static Color shadow				= new Color(32, 32, 32, 100);
 	public static Color textColor			= Color.DARK_GRAY;
 	public static Color textColorAlt		= Color.WHITE_SMOKE;
-	public static Color controlColor		= new Color(240, 240, 240);
-	public static Color controlColorAlt		= new Color(230, 230, 230);
-	public static Color controlHoverColor	= Color.WHITE;
-	public static Color controlOutlineColor	= Color.DIM_GRAY;
 
 	@Override
 	public Color getBackground() {
-		return backgroundColor;
+		return Color.WHITE;
 	}
 
 	@Override
@@ -69,12 +62,12 @@ public class ThemeWhite extends Theme {
 
 	@Override
 	public Color getControl() {
-		return new Color(240, 240, 240);
+		return new Color(238, 238, 238);
 	}
 
 	@Override
 	public Color getControlAlt() {
-		return new Color(230, 230, 230);
+		return new Color(227, 227, 227);
 	}
 
 	@Override

@@ -1,15 +1,9 @@
 package lwjgui;
 
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
 import java.io.IOException;
 
-import org.lwjgl.glfw.GLFW;
-
 import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
@@ -23,38 +17,19 @@ import lwjgui.scene.layout.floating.DraggablePane;
 import lwjgui.scene.layout.floating.PannablePane;
 import lwjgui.scene.shape.Rectangle;
 
-public class PannableExample {
+public class PannableExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
 	public static void main(String[] args) throws IOException {
-		if ( !glfwInit() )
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("Hello World", WIDTH, HEIGHT, true, false);
-		
-		// Initialize lwjgui for this window
-		Window lwjguiWindow = LWJGUI.initialize(window);
-		
-		// Add some components
-		addComponents(lwjguiWindow.getScene());
-		
-		// Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUI
-			LWJGUI.render();
-		}
-		
-		// Stop GLFW
-		glfwTerminate();
+		launch(args);
 	}
-
-	private static void addComponents(Scene scene) {
+	
+	@Override
+	public void start(String[] args, Window window) {
 		// Root pane
 		StackPane root = new StackPane();
 		root.setAlignment(Pos.TOP_CENTER);
-		scene.setRoot(root);
 		
 		// Create a pannable pane in the root
 		PannablePane pane = new PannablePane();
@@ -103,5 +78,19 @@ public class PannableExample {
 		pane.getChildren().add(new Rectangle(2, 2));
 		pane.getChildren().add(new Rectangle(1, 10));
 		pane.getChildren().add(new Rectangle(10, 1));
+		
+		// Set the scene
+		window.setScene(new Scene(root, WIDTH, HEIGHT));
+		window.show();
+	}
+
+	@Override
+	public void run() {
+		//
+	}
+
+	@Override
+	public String getProgramName() {
+		return "Pannable Panes Example";
 	}
 }

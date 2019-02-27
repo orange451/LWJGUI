@@ -473,9 +473,20 @@ public class Window {
 				scene.position(null);
 			}
 			
+			double maxWid = scene.getMaxElementWidth();
+			double maxHei = scene.getMaxElementHeight();
+			
+			// Uh oh, we're too big! AHHHHH
+			if ( maxWid >= s || maxHei >= s ) {
+				maxWid = Math.max(100, scene.getPrefWidth());
+				maxHei = Math.max(100, scene.getPrefHeight());
+			}
+			
 			// Set window to match scene's size
-			double sw = Math.max(scene.getMaxElementWidth(), scene.getPrefWidth());
-			double sh = Math.max(scene.getMaxElementHeight(), scene.getPrefHeight());
+			double sw = Math.max(maxWid, scene.getPrefWidth());
+			double sh = Math.max(maxHei, scene.getPrefHeight());
+			
+			// Size window
 			GLFW.glfwSetWindowSize(context.getWindowHandle(), (int)Math.ceil(sw)+1, (int)Math.ceil(sh)+1);
 			context.updateContext();
 		}catch(Exception e) {

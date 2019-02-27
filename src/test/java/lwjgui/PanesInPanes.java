@@ -1,6 +1,5 @@
 package lwjgui;
 
-import lwjgui.LWJGUI;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;

@@ -10,7 +10,6 @@ import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.EventHandler;
 import lwjgui.event.ScrollEvent;
-import lwjgui.geometry.Insets;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;

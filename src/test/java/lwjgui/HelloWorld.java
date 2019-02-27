@@ -1,10 +1,9 @@
 package lwjgui;
 
 import lwjgui.LWJGUIApplication;
-import lwjgui.scene.Scene;
-import lwjgui.scene.Window;
-import lwjgui.scene.control.Label;
-import lwjgui.scene.layout.StackPane;
+import lwjgui.scene.*;
+import lwjgui.scene.layout.*;
+import lwjgui.scene.control.*;
 
 public class HelloWorld extends LWJGUIApplication {
 	public static final int WIDTH   = 320;

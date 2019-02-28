@@ -50,10 +50,10 @@ public class ToolBar extends Control {
 			this.children.clear();
 			this.internalBox = new HBox();
 			this.internalBox.setBackground(null);
-			this.internalBox.setSpacing(3);
+			this.internalBox.setSpacing(4);
 			this.children.add(internalBox);
 			
-			this.setPadding(new Insets(3, 6, 3, 6));
+			this.setPadding(new Insets(3, 6, 4, 6));
 		} else {
 			this.setPrefWidth(0);
 			this.setPrefHeight(Integer.MAX_VALUE);

@@ -58,15 +58,12 @@ public class CheckBox extends ButtonBase {
 
 	@Override
 	public void render(Context context) {
-		//this.graphicLabel.offset.x = size+spacing;
-		//this.graphicLabel.alignment = Pos.CENTER_LEFT;
-
 		super.render(context);
 
 		if ( checked ) {
 			float drawSize = size*1.2f;
-			LWJGUIUtil.drawText(checkmark, Font.DINGBAT, FontStyle.REGULAR, drawSize, Theme.current().getControl(), getX()+size/2f, getY()+drawSize/2f+1, Pos.CENTER);
-			LWJGUIUtil.drawText(checkmark, Font.DINGBAT, FontStyle.REGULAR, drawSize, this.isDisabled()?Theme.current().getShadow():Theme.current().getText(), getX()+size/2f, getY()+drawSize/2f, Pos.CENTER);
+			LWJGUIUtil.drawText(checkmark, Font.DINGBAT, FontStyle.REGULAR, drawSize, Theme.current().getControl(), (int)getX()+(int)size/2f, (int)getY()+(int)(drawSize)/2f+1, Pos.CENTER);
+			LWJGUIUtil.drawText(checkmark, Font.DINGBAT, FontStyle.REGULAR, drawSize, this.isDisabled()?Theme.current().getShadow():Theme.current().getText(), (int)getX()+(int)size/2f, (int)getY()+(int)(drawSize)/2f, Pos.CENTER);
 		}
 	}
 

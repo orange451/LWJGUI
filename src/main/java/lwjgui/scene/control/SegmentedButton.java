@@ -13,7 +13,7 @@ public class SegmentedButton extends Control {
 		this.flag_clip = false;
 		
 		this.internal = new HBox();
-		this.internal.setSpacing(-1);
+		this.internal.setSpacing(1);
 		this.children.add(internal);
 		
 		this.buttons = new ObservableList<ToggleButton>();

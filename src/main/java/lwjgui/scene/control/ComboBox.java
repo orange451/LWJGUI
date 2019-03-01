@@ -8,20 +8,20 @@ import lwjgui.font.Font;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 
-public class ComboBox extends CombinedButton {
-	private String value;
-	private ObservableList<String> items;
+public class ComboBox<T> extends CombinedButton {
+	private T value;
+	private ObservableList<T> items;
 
 	private Button main;
 	private Button arrow;
 	private ContextMenu context;
 	
 	public ComboBox() {
-		this("");
+		this(null);
 	}
 	
-	public ComboBox(String defaultValue) {
-		items = new ObservableList<String>();
+	public ComboBox(T defaultValue) {
+		items = new ObservableList<T>();
 		
 		main = new Button("");
 		main.setAlignment(Pos.CENTER_LEFT);
@@ -37,14 +37,14 @@ public class ComboBox extends CombinedButton {
 		
 		context = new ContextMenu();
 		context.setAutoHide(false);
-		items.setAddCallback(new ElementCallback<String>() {
+		items.setAddCallback(new ElementCallback<T>() {
 			@Override
-			public void onEvent(String object) {
+			public void onEvent(T object) {
 				context.getItems().clear();
 				
 				for (int i = 0; i < items.size(); i++) {
-					String val = items.get(i);
-					MenuItem item = new MenuItem(val);
+					T val = items.get(i);
+					MenuItem item = new MenuItem(val.toString());
 					context.getItems().add(item);
 					
 					item.setOnAction((event)->{
@@ -76,16 +76,17 @@ public class ComboBox extends CombinedButton {
 		super.resize();
 	}
 	
-	public void setValue(String string) {
+	public void setValue(T string) {
 		this.value = string;
-		this.main.setText(string);
+		if ( string != null )
+			this.main.setText(string.toString());
 	}
 	
-	public String getValue() {
+	public T getValue() {
 		return this.value;
 	}
 	
-	public ObservableList<String> getItems() {
+	public ObservableList<T> getItems() {
 		return this.items;
 	}
 }

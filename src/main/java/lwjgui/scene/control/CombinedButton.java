@@ -82,8 +82,6 @@ public class CombinedButton extends Control {
 	@Override
 	public void render(Context context) {
 		internal.render(context);
-		
-		LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA.alpha(0.5f));
 	}
 
 }

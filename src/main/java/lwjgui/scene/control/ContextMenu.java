@@ -44,6 +44,10 @@ public class ContextMenu extends PopupWindow {
 			internalBox.getChildren().add(items.get(i));
 		}
 	}
+	
+	public ObservableList<MenuItem> getItems() {
+		return this.items;
+	}
 
 	public ContextMenu getChild() {
 		return this.childMenu;
@@ -109,9 +113,5 @@ public class ContextMenu extends PopupWindow {
 		// Render insides
 		//this.internalBox.render(context);
 		super.render(context);
-	}
-
-	public ObservableList<MenuItem> getItems() {
-		return this.items;
 	}
 }

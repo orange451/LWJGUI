@@ -120,11 +120,13 @@ public abstract class Labeled extends Control {
 		//clip(context);
 		
 		super.render(context);
+		
+		int textHeight = (int) Math.max(getTextHeight(useString), graphic==null?0:graphic.getHeight());
 
 		// get Absolute position
 		long vg = context.getNVG();
 		int absX = (int)(getX() + this.padding.getLeft());
-		int absY = (int)(getY() + this.padding.getTop());
+		int absY = (int)(getY() + this.getPadding().getTop() + (this.getInnerBounds().getHeight()/2f-textHeight/2f));
 
 		// Get width of graphic
 		double gWid = graphic == null ? -1 : (graphic.getWidth()+GRAPHIC_SPACING);
@@ -181,6 +183,11 @@ public abstract class Labeled extends Control {
 		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize);
 		float gWid = (float) (graphic == null ? 0 : (graphic.getWidth()+GRAPHIC_SPACING));
 		return bounds[2] - bounds[0] + gWid;
+	}
+
+	private double getTextHeight(String string) {
+		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize);
+		return bounds[3] - bounds[1];
 	}
 
 	public String getText() {

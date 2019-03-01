@@ -32,7 +32,7 @@ public abstract class ButtonBase extends Labeled {
 		super();
 		this.setText(name);
 		
-		this.setMinSize(32, 24);
+		this.setMinSize(12, 24);
 		this.setPadding(new Insets(4,6,4,6));
 		this.setFontSize(16);
 		

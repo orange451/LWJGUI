@@ -1,6 +1,6 @@
 package lwjgui.scene.control;
 
-public class ToggleButton extends ButtonBase implements Toggle {
+public class ToggleButton extends Button implements Toggle {
 	protected boolean selected;
 	protected ToggleGroup toggleGroup;
 	

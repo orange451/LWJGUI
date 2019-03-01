@@ -1,25 +1,30 @@
 package lwjgui.scene.control;
 
 import lwjgui.collections.ObservableList;
-import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.scene.layout.HBox;
 
-public class SegmentedButton extends Control {
-	private HBox internal;
-	private ObservableList<ToggleButton> buttons;
-
-	public SegmentedButton(ToggleButton...buttons) {
-		this.flag_clip = false;
+public class SegmentedButton extends CombinedButton {
+	
+	public SegmentedButton() {
+		super();
+	}
+	
+	public SegmentedButton(Button...buttons) {
+		super(buttons);
+	}
+	
+	public ObservableList<Button> getButtons() {
+		return buttons;
+	}
+	
+	@Override
+	protected void resize() {
+		super.resize();
 		
-		this.internal = new HBox();
-		this.internal.setSpacing(1);
-		this.children.add(internal);
-		
-		this.buttons = new ObservableList<ToggleButton>();
-		for (int i = 0; i < buttons.length; i++) {
-			internal.getChildren().add(buttons[i]);
-			this.buttons.add(buttons[i]);
+		// Force height of all buttons to match the largest one
+		int h = (int) this.getMaxElementHeight();
+		for (int i = 0; i < buttons.size(); i++) {
+			buttons.get(i).setMinHeight(h);
 		}
 	}
 	
@@ -28,7 +33,7 @@ public class SegmentedButton extends Control {
 		super.position(parent);
 		
 		for (int i = 0; i < buttons.size(); i++) {
-			ToggleButton b = buttons.get(i);
+			ToggleButton b = (ToggleButton) buttons.get(i);
 			
 			boolean first = false;
 			boolean last = false;
@@ -48,10 +53,4 @@ public class SegmentedButton extends Control {
 			}
 		}
 	}
-
-	@Override
-	public void render(Context context) {
-		internal.render(context);
-	}
-
 }

@@ -1,9 +1,7 @@
 package lwjgui.scene.control;
 
-import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
-import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.HBox;

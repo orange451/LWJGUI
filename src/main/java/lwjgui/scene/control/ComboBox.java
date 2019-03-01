@@ -23,7 +23,16 @@ public class ComboBox<T> extends CombinedButton {
 	public ComboBox(T defaultValue) {
 		items = new ObservableList<T>();
 		
-		main = new Button("");
+		main = new Button("") {
+			@Override
+			protected void resize() {
+				super.resize();
+				
+				double minWidth = Math.max(this.size.x, ComboBox.this.getPrefWidth()-(internal.getSpacing()+arrow.getWidth()));
+				this.size.x = minWidth;
+
+			}
+		};
 		main.setAlignment(Pos.CENTER_LEFT);
 		this.buttons.add(main);
 		
@@ -61,19 +70,12 @@ public class ComboBox<T> extends CombinedButton {
 					return;
 				
 				context.setMinWidth(getWidth());
-				context.show(getScene(), getX(), getY()+getHeight());
+				context.show(getScene(), getX(), getY()+getHeight()+1);
 			}	
 		};
 		
 		arrow.setOnAction(onClick);
 		main.setOnAction(onClick);
-	}
-	
-	protected void resize() {
-		double t = main.getWidth()+arrow.getWidth()+internal.getSpacing();
-		size.x = Math.max(t, getPrefWidth());
-		
-		super.resize();
 	}
 	
 	public void setValue(T string) {

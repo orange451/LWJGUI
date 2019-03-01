@@ -14,6 +14,7 @@ public class ComboBox extends CombinedButton {
 
 	private Button main;
 	private Button arrow;
+	private ContextMenu context;
 	
 	public ComboBox() {
 		this("");
@@ -34,7 +35,7 @@ public class ComboBox extends CombinedButton {
 		
 		setValue(defaultValue);
 		
-		ContextMenu context = new ContextMenu();
+		context = new ContextMenu();
 		context.setAutoHide(false);
 		items.setAddCallback(new ElementCallback<String>() {
 			@Override
@@ -69,10 +70,10 @@ public class ComboBox extends CombinedButton {
 	}
 	
 	protected void resize() {
-		super.resize();
+		double t = main.getWidth()+arrow.getWidth()+internal.getSpacing();
+		size.x = Math.max(t, getPrefWidth());
 		
-		double desiredWidth = (int)Math.max(getPrefWidth(), getWidth());
-		main.setPrefWidth(desiredWidth-(arrow.getWidth()+internal.getSpacing()));
+		super.resize();
 	}
 	
 	public void setValue(String string) {

@@ -1,7 +1,9 @@
 package lwjgui.scene.control;
 
+import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.HBox;
@@ -45,11 +47,12 @@ public class CombinedButton extends Control {
 		}
 	}
 	
+	/*
 	@Override
 	protected double getMinimumPotentialWidth() {
 		return internal.getWidth();
 	}
-	
+	*/
 	@Override
 	protected void position(Node parent) {
 		super.position(parent);
@@ -79,6 +82,8 @@ public class CombinedButton extends Control {
 	@Override
 	public void render(Context context) {
 		internal.render(context);
+		
+		LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA.alpha(0.5f));
 	}
 
 }

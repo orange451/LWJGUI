@@ -10,10 +10,10 @@ public class Circle extends Shape {
 	private float radius;
 	
 	public Circle( float radius ) {
-		this(Theme.current().getText(), radius);
+		this(radius, Theme.current().getText());
 	}
 
-	public Circle(Color fill, float radius) {
+	public Circle(float radius, Color fill) {
 		super(fill);
 		this.setRadius(radius);
 	}

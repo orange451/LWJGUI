@@ -55,7 +55,7 @@ public class ContextMenuExample extends LWJGUIApplication {
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().add(new MenuItem("Option 1", new Rectangle(16, 16, 4, Color.RED)));
 			menu.getItems().add(new MenuItem("Option 2", new Rectangle(16, 16, 4, Color.BLUE)));
-			menu.getItems().add(new MenuItem("Option 3", new Circle(Color.RED, 8)));
+			menu.getItems().add(new MenuItem("Option 3", new Circle(8, Color.RED)));
 			menu.setAutoHide(false);
 			
 			// Create context node

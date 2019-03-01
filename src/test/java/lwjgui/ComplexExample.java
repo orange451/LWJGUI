@@ -10,6 +10,7 @@ import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.ColorPicker;
+import lwjgui.scene.control.ComboBox;
 import lwjgui.scene.control.Menu;
 import lwjgui.scene.control.MenuBar;
 import lwjgui.scene.control.MenuItem;
@@ -24,7 +25,9 @@ import lwjgui.scene.control.text_input.TextArea;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
+import lwjgui.scene.shape.Circle;
 import lwjgui.scene.shape.Rectangle;
+import lwjgui.scene.shape.Shape;
 import lwjgui.theme.Theme;
 
 public class ComplexExample extends LWJGUIApplication {
@@ -182,14 +185,23 @@ public class ComplexExample extends LWJGUIApplication {
 			tab.setContent(hbox);
 			
 			// Holds Color picker
-			StackPane t = new StackPane();
+			VBox t = new VBox();
+			t.setSpacing(4);
 			t.setAlignment(Pos.TOP_LEFT);
 			t.setFillToParentWidth(true);
 			hbox.getChildren().add(t);
 			
 			// Color picker to change shape color
 			ColorPicker color = new ColorPicker(Color.RED);
+			color.setPrefWidth(100);
 			t.getChildren().add(color);
+			
+			// Shape picker
+			ComboBox<String> combo = new ComboBox<String>("Rectangle");
+			combo.setPrefWidth(100);
+			combo.getItems().add("Rectangle");
+			combo.getItems().add("Circle");
+			t.getChildren().add(combo);
 			
 			// Holds shape
 			StackPane p = new StackPane();
@@ -200,13 +212,23 @@ public class ComplexExample extends LWJGUIApplication {
 			p.setPadding(new Insets(1));
 			hbox.getChildren().add(p);
 			
-			// Rounded rectangle
-			Rectangle shape = new Rectangle(64, 64, 5, color.getColor());
-			p.getChildren().add(shape);
+			// Change shape
+			combo.setOnAction((event)->{
+				p.getChildren().clear();
+
+				if ( combo.getValue().equals("Rectangle") ) {
+					Shape s = new Rectangle(64, 64, 5, color.getColor());
+					p.getChildren().add(s);
+				}
+				if ( combo.getValue().equals("Circle") ) {
+					Shape s = new Circle(38, color.getColor());
+					p.getChildren().add(s);
+				}
+			});
 			
 			// Set rectangle color
 			color.setOnAction((event)->{
-				shape.setFill(color.getColor());
+				combo.setValue(combo.getValue());
 			});
 		}
 		

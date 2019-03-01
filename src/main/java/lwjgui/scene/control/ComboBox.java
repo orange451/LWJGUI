@@ -4,6 +4,7 @@ import lwjgui.collections.ObservableList;
 import lwjgui.event.ActionEvent;
 import lwjgui.event.ElementCallback;
 import lwjgui.event.EventHandler;
+import lwjgui.event.EventHelper;
 import lwjgui.font.Font;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
@@ -15,6 +16,8 @@ public class ComboBox<T> extends CombinedButton {
 	private Button main;
 	private Button arrow;
 	private ContextMenu context;
+	
+	private EventHandler<ActionEvent> actionEvent;
 	
 	public ComboBox() {
 		this(null);
@@ -28,7 +31,8 @@ public class ComboBox<T> extends CombinedButton {
 			protected void resize() {
 				super.resize();
 				
-				double minWidth = Math.max(this.size.x, ComboBox.this.getPrefWidth()-(internal.getSpacing()+arrow.getWidth()));
+				double useWid = ComboBox.this.isFillToParentWidth()?ComboBox.this.getWidth():ComboBox.this.getPrefWidth();
+				double minWidth = Math.max(this.size.x, useWid-(internal.getSpacing()+arrow.getWidth()));
 				this.size.x = minWidth;
 
 			}
@@ -82,6 +86,10 @@ public class ComboBox<T> extends CombinedButton {
 		this.value = string;
 		if ( string != null )
 			this.main.setText(string.toString());
+		
+		if ( actionEvent != null ) {
+			EventHelper.fireEvent(actionEvent, new ActionEvent());
+		}
 	}
 	
 	public T getValue() {
@@ -90,5 +98,9 @@ public class ComboBox<T> extends CombinedButton {
 	
 	public ObservableList<T> getItems() {
 		return this.items;
+	}
+
+	public void setOnAction(EventHandler<ActionEvent> event) {
+		this.actionEvent = event;
 	}
 }

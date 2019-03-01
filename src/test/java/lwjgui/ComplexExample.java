@@ -197,7 +197,7 @@ public class ComplexExample extends LWJGUIApplication {
 			t.getChildren().add(color);
 			
 			// Shape picker
-			ComboBox<String> combo = new ComboBox<String>("Rectangle");
+			ComboBox<String> combo = new ComboBox<String>();
 			combo.setPrefWidth(100);
 			combo.getItems().add("Rectangle");
 			combo.getItems().add("Circle");
@@ -225,6 +225,9 @@ public class ComplexExample extends LWJGUIApplication {
 					p.getChildren().add(s);
 				}
 			});
+			
+			// Set default value
+			combo.setValue(combo.getItems().get(0));
 			
 			// Set rectangle color
 			color.setOnAction((event)->{

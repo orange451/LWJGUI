@@ -43,7 +43,7 @@ public class ComboBox<T> extends CombinedButton {
 		arrow = new Button("\u25bc");
 		arrow.setFont(Font.DINGBAT);
 		arrow.setFontSize(14);
-		arrow.setPadding(new Insets(5,5,2,5));
+		arrow.setPadding(new Insets(5.5,5,2,6));
 		this.buttons.add(arrow);
 		
 		setValue(defaultValue);

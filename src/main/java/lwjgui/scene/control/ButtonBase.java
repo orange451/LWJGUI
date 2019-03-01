@@ -108,7 +108,7 @@ public abstract class ButtonBase extends Labeled {
 		
 		// Selection graphic
 		if ( context.isSelected(this) && context.isFocused() ) {
-			int feather = 4;
+			int feather = 6;
 			float c = (float) Math.max(cornerNW,Math.max(cornerNE,Math.max(cornerSE,cornerSW)));
 			NVGColor sel = Theme.current().getSelection().getNVG();
 			if ( isDisabled() )

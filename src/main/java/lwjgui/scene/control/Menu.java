@@ -42,6 +42,10 @@ public class Menu extends MenuItem {
 		this.mouseReleasedEvent = null;
 	}
 	
+	public void setAutoHide(boolean autoHide) {
+		this.context.setAutoHide(autoHide);
+	}
+	
 	@Override
 	protected void setContent(String string, Font font, Node graphic) {
 		super.setContent(string, font, graphic);

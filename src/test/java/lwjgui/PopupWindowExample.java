@@ -52,6 +52,7 @@ public class PopupWindowExample extends LWJGUIApplication {
 		long pWin = LWJGUIUtil.createOpenGLCoreWindow(popup, 250, 150, false, true);
 		Window newWindow = LWJGUI.initialize(pWin);
 		newWindow.setCanUserClose(false); // Prevent user from xing out of window
+		newWindow.show();
 		Scene scene = newWindow.getScene();
 		
 		// Create root pane

@@ -34,6 +34,10 @@ public abstract class PopupWindow extends FloatingPane {
 			this.setAbsolutePosition(getX(), getScene().getHeight()-this.getHeight());
 		if ( this.getY() < 0 )
 			this.setAbsolutePosition(getX(), 0);
+		if ( this.getX() + this.getWidth() > this.getScene().getWidth() )
+			this.setAbsolutePosition(getScene().getWidth()-this.getWidth(), getY());
+		if ( this.getX() < 0 )
+			this.setAbsolutePosition(0, getY());
 	}
 	
 	public boolean isOpen() {

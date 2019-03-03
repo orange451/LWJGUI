@@ -8,6 +8,7 @@ import lwjgui.LWJGUIUtil;
 import lwjgui.event.Event;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
+import lwjgui.font.Font;
 import lwjgui.geometry.Insets;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
@@ -67,7 +68,8 @@ public class Tab {
 			this.label.setFontSize(16);
 			this.internal.getChildren().add(label);
 
-			this.x = new Label("x");
+			this.x = new Label("\u2715");
+			this.x.setFont(Font.DINGBAT);
 			this.x.setMinWidth(x.getTextWidth());
 			this.x.setFontSize(16);
 			this.internal.getChildren().add(x);
@@ -116,7 +118,7 @@ public class Tab {
 		}
 		
 		private void buttonMask(long vg, float x, float y, float w, float h, float rOffset) {
-			int corner = 3;
+			int corner = 2;
 			NanoVG.nvgRoundedRectVarying(vg, x, y, w, h, (float)corner+rOffset, (float)corner+rOffset, 0, 0);
 		}
 		
@@ -132,10 +134,12 @@ public class Tab {
 			internal.setOnMouseReleased(this.mouseReleasedEvent);
 			internal.setOnMouseDragged(this.mouseDraggedEvent);
 			
+			boolean pp = context.getLastPressed() != null && pressed&&context.getLastPressed().isDescendentOf(this);
+			
 			// Background
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x,y,w,h,1);
-			NanoVG.nvgFillColor(vg, (pressed?Theme.current().getSelection():Theme.current().getControlOutline()).getNVG());
+			NanoVG.nvgFillColor(vg, (pp?Theme.current().getSelection():Theme.current().getControlOutline()).getNVG());
 			NanoVG.nvgFill(vg);
 			
 			// Draw main background

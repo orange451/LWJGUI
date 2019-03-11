@@ -1,6 +1,8 @@
 # LWJGUI
 An LWJGL3-based JavaFX alternative for making user-interfaces in Java. It can be incorperated into your already existing opengl project, or you can make your projects rendering become managed by LWJGUI.
 
+# Why LWJGUI?
+JavaFX simply does not have the capability to be incoroperated into custom OpenGL projects. LWJGUI is different in that it does not takeover all of the rendering code for your project. This allows it to be easily used to handle your user-interfaces but still leave rendering up to you!
 
 # Current Features
 - Button

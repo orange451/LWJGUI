@@ -6,6 +6,7 @@ import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.CheckBox;
+import lwjgui.scene.control.ComboBox;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.RadioButton;
 import lwjgui.scene.control.SegmentedButton;
@@ -32,12 +33,22 @@ public class ControlExample extends LWJGUIApplication {
 		// Create a vbox to store examples vertically
 		VBox vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
-		vbox.setSpacing(32);
+		vbox.setSpacing(24);
 		background.getChildren().add(vbox);
-		
+
+		// Segmented Button
 		{
-			// Segmented Button
 			displaySegmentedButton(vbox);
+		}
+		
+		// Add slider
+		{
+			ComboBox<String> combo = new ComboBox<String>("");
+			combo.setPrefWidth(120);
+			combo.getItems().add("Visual Basic");
+			combo.getItems().add("Java");
+			combo.getItems().add("C++");
+			vbox.getChildren().add(combo);
 		}
 		
 		// Create hbox used to store two control types

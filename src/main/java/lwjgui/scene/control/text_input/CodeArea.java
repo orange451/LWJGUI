@@ -17,7 +17,7 @@ public class CodeArea extends TextArea {
 	public CodeArea(TextInputScrollPane internalScrollPane, String text) {
 		super(internalScrollPane, text);
 		
-		this.setFont(Font.CONSOLAS);
+		this.setFont(Font.COURIER);
 		this.setFontSize(14);
 		
 		// Replace content window with our custom one

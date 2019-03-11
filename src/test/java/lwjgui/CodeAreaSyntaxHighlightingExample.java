@@ -42,14 +42,16 @@ public class CodeAreaSyntaxHighlightingExample extends LWJGUIApplication {
 				+ "|(?<STRING>" + STRING_PATTERN + ")"
 		);
 		
-		// Do syntax highlighting
+		// Do syntax highlighting on text change
 		c.setOnTextChange((event)->{
+			// Clear current highlighting
 			c.resetHighlighting();
 
+			// Match patterns to the text of the code area
 			String text = c.getText();
 			Matcher matcher = PATTERN.matcher(text);
 			
-			// Iterate through pattern recognition, apply highlighting.
+			// Iterate through matched patterns, apply highlighting.
 			while ( matcher.find() ) {
 				int start = matcher.start();
 				int end = matcher.end()-1;

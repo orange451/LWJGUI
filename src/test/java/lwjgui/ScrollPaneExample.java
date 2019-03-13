@@ -18,39 +18,19 @@ import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.layout.BorderPane;
 import lwjgui.scene.layout.VBox;
 
-public class ScrollPaneExample {
+public class ScrollPaneExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
 	public static void main(String[] args) throws IOException {
-		if ( !glfwInit() )
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		// Create a standard opengl 3.2 window. You can do this yourself.
-		long window = LWJGUIUtil.createOpenGLCoreWindow("Scroll Pane Example", WIDTH, HEIGHT, true, false);
-		
-		// Initialize lwjgui for this window
-		Window newWindow = LWJGUI.initialize(window);
-		Scene scene = newWindow.getScene();
-		
-		// Add some components
-		addComponents(scene);
-		
-		// Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
-			// Render GUI
-			LWJGUI.render();
-		}
-		
-		// Stop GLFW
-		glfwTerminate();
+		launch(args);
 	}
 
-	private static void addComponents(Scene scene) {
+	@Override
+	public void start(String[] args, Window window) {
 		// Create background pane
 		BorderPane pane = new BorderPane();
 		pane.setPadding(new Insets(8,8,8,8));
-		scene.setRoot(pane);
 		
 		// Create a scrollpane
 		ScrollPane p = new ScrollPane();
@@ -72,5 +52,18 @@ public class ScrollPaneExample {
 		});
 		pane.setBottom(button);
 		
+
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.show();
+	}
+
+	@Override
+	public void run() {
+		//
+	}
+
+	@Override
+	public String getProgramName() {
+		return "Scroll Pane Example";
 	}
 }

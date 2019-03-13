@@ -30,7 +30,7 @@ public class ScrollPane extends Control {
 	
 	private double thickness = 7;
 	private double barPadding = 2;
-	private double scrollGestureSpeedMultiplier = 5;
+	private double scrollGestureSpeedMultiplier = 8;
 	
 	private ScrollBar holdingBar;
 	private ScrollBar hoveredBar;
@@ -67,8 +67,16 @@ public class ScrollPane extends Control {
 			@Override
 			public void handle(ScrollEvent event) {
 				if (isDescendentHovered()) {
-					vBar.pixel -= event.y*scrollGestureSpeedMultiplier;
-					hBar.pixel -= event.x*scrollGestureSpeedMultiplier;
+					double newvPixel = vBar.pixel-event.y*scrollGestureSpeedMultiplier;
+					double newhPixel = hBar.pixel-event.x*scrollGestureSpeedMultiplier;
+
+					newvPixel = Math.max(0, Math.min(vBar.maxPixel, newvPixel));
+					newhPixel = Math.max(0, Math.min(hBar.maxPixel, newhPixel));
+					
+					vBar.pixel = newvPixel;
+					hBar.pixel = newhPixel;
+					
+					update();
 				}
 			}
 		};
@@ -79,10 +87,7 @@ public class ScrollPane extends Control {
 		return false;
 	}
 	
-	@Override
-	protected void position(Node parent) {
-		super.position(parent);
-		
+	private void update() {
 		viewportSize.set((int)getWidth(),(int)getHeight());
 		if ( vBar.active )
 			viewportSize.x -= (thickness+barPadding*2);
@@ -123,6 +128,13 @@ public class ScrollPane extends Control {
 		}
 		
 		updateBars();
+	}
+	
+	@Override
+	protected void position(Node parent) {
+		super.position(parent);
+		
+		update();
 	}
 
 	public void setVvalue(double value) {
@@ -352,6 +364,7 @@ public class ScrollPane extends Control {
 		public boolean active;
 		public double pixel;
 		public double length;
+		public double maxPixel;
 		public ScrollBarPolicy policy = ScrollBarPolicy.AS_NEEDED;
 		
 		private double minScrollLen;
@@ -377,10 +390,11 @@ public class ScrollPane extends Control {
 			active = a;
 			
 			// limit view of internal canvas
+			maxPixel = contentLen-scrollSpaceToPixelSpace(length);
 			if ( pixel < 0 )
 				pixel = 0;
-			if ( pixel + scrollSpaceToPixelSpace(length) > contentLen )
-				pixel = contentLen - scrollSpaceToPixelSpace(length);
+			if ( pixel > maxPixel)
+				pixel = maxPixel;
 			
 			// Calculate length of scrollbar
 			length = pixelSpaceToScrollSpace(minScrollLen);

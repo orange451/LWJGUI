@@ -636,6 +636,10 @@ public abstract class TextInputControl extends Control {
 		this.editable = editable;
 	}
 	
+	public boolean isEditing() {
+		return this.editing;
+	}
+	
 	@Override
 	protected void resize() {
 		this.setAlignment(Pos.TOP_LEFT);

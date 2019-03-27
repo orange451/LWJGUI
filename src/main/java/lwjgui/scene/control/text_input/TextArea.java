@@ -33,7 +33,10 @@ class TextAreaShortcuts extends TextInputControlShortcuts {
 	@Override
 	public void process(TextInputControl tic, KeyEvent event) {
 		super.process(tic, event);
-
+		
+		if ( !tic.isEditing() )
+			return;
+		
 		// Enter
 		if (event.key == GLFW.GLFW_KEY_ENTER ) {
 			tic.deleteSelection();

@@ -19,6 +19,8 @@ public class Slider extends Control {
 	private double value;
 	
 	private Thumb thumb;
+
+	protected boolean disabled;
 	
 	private EventHandler<ActionEvent> onValueChangeEvent;
 	
@@ -39,6 +41,14 @@ public class Slider extends Control {
 	
 	public void setOnValueChangedEvent(EventHandler<ActionEvent> event) {
 		this.onValueChangeEvent = event;
+	}
+	
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+	
+	public boolean isDisabled() {
+		return this.disabled;
 	}
 	
 	public double getMin() {
@@ -106,6 +116,7 @@ public class Slider extends Control {
 			NanoVG.nvgClosePath(vg);
 		}
 		
+		thumb.setDisabled(this.isDisabled());
 		thumb.render(context);
 	}
 	
@@ -128,6 +139,8 @@ public class Slider extends Control {
 			this.setCornerRadius(size/2);
 			
 			this.setOnMousePressed((event)->{
+				if ( isDisabled() )
+					return;
 				bOff = event.getMouseX()-(this.getX()+this.getWidth()/2);
 				dragged = true;
 			});

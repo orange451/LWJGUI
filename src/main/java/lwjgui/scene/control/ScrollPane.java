@@ -132,9 +132,9 @@ public class ScrollPane extends Control {
 	
 	@Override
 	protected void position(Node parent) {
-		super.position(parent);
-		
 		update();
+		
+		super.position(parent);
 	}
 
 	public void setVvalue(double value) {
@@ -192,9 +192,11 @@ public class ScrollPane extends Control {
 	private boolean released = true;
 	private Vector2d mouseGrabLocation = new Vector2d();
 	private void updateBars() {
-
+		
 		// Get mouse coordinates
 		Context context = cached_context;
+		if ( context == null )
+			return;
 		double mx = context.getMouseX();
 		double my = context.getMouseY();
 		

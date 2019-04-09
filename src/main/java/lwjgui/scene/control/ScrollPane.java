@@ -102,7 +102,6 @@ public class ScrollPane extends Control {
 			int px = (int) (viewportSize.x-getPadding().getWidth()-1);
 			int py = (int) (viewportSize.y-getPadding().getHeight()-1);
 			
-			//System.out.println(px + " / " + py);
 			sizeInternal(Integer.MAX_VALUE, Integer.MAX_VALUE);
 			content.setPrefSize(px, py);
 			
@@ -113,7 +112,7 @@ public class ScrollPane extends Control {
 			internalScrollCanvas.setAbsolutePosition(this.getX()+1, this.getY()+1);
 			content.setAbsolutePosition(internalScrollCanvas.getX()+this.padding.getLeft()-hBar.pixel, internalScrollCanvas.getY()+this.padding.getTop()-vBar.pixel);
 			
-			sizeInternal(viewportSize.x-1, viewportSize.y-1);
+			sizeInternal(viewportSize.x-this.getPadding().getWidth(), viewportSize.y-this.getPadding().getHeight());
 			this.internalScrollCanvas.setParent(this);
 			
 			// Update scrollbars
@@ -346,7 +345,7 @@ public class ScrollPane extends Control {
 	
 	static class ScrollCanvas extends Pane {
 		ScrollCanvas() {
-			this.flag_clip = true;
+			this.flag_clip = false;
 			this.setBackground(null);
 			this.setAlignment(Pos.TOP_LEFT);
 		}

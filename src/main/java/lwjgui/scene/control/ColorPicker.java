@@ -83,7 +83,7 @@ public class ColorPicker extends ButtonBase {
 				Color base = baseColors[i];
 				for (int j = 0; j < stride; j++) {
 					int index = i*stride+j;
-					double ratio = 1.0-((j)/(double)stride);
+					double ratio = 1.0-(j/(double)(stride-1));
 
 					double rr = (base.getRed()/255d) * ratio;
 					double gg = (base.getGreen()/255d) * ratio;

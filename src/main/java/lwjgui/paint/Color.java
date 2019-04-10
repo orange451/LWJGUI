@@ -10,6 +10,7 @@ public class Color {
 	public static final Color GRAY = new Color(128, 128, 128).immutable(true);
 	public static final Color DIM_GRAY = new Color(169, 169, 169).immutable(true);
 	public static final Color DARK_GRAY = new Color(64, 64, 64).immutable(true);
+	public static final Color MIDNIGHT = new Color(24, 24, 24).immutable(true);
 	public static final Color LIGHT_BLACK = new Color(10, 10, 10).immutable(true);
 	public static final Color WHITE_SMOKE = new Color(245, 245, 245).immutable(true);
 	public static final Color BLACK = new Color(0, 0, 0).immutable(true);

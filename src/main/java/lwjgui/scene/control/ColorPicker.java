@@ -65,42 +65,48 @@ public class ColorPicker extends ButtonBase {
 			t.setPadding(new Insets(8));
 			this.getChildren().add(t);
 			
-			Color[] pallette = new Color[] {
+			Color[] baseColors = new Color[] {
 					Color.WHITE,
-					Color.WHITE_SMOKE,
-					Color.LIGHT_GRAY,
-					Color.SILVER,
-					Color.DIM_GRAY,
-					Color.GRAY,
-					Color.DARK_GRAY,
-					Color.BLACK,
-					
+					Color.RED,
+					Color.ORANGE,
+					Color.YELLOW,
+					Color.GREEN,
+					Color.CYAN,
 					Color.AQUA,
 					Color.BLUE,
-					Color.CORAL,
-					Color.CYAN,
-					Color.GREEN,
-					Color.LIGHT_BLUE,
-					Color.LIGHT_YELLOW,
-					Color.MAGENTA,
-					Color.ORANGE,
-					Color.PINK,
-					Color.RED,
-					Color.VIOLET,
-					Color.YELLOW
+					Color.VIOLET
 			};
+			
+			int stride = 10;
+			Color[] pallette = new Color[baseColors.length*stride];
+			for (int i = 0; i < baseColors.length; i++) {
+				Color base = baseColors[i];
+				for (int j = 0; j < stride; j++) {
+					int index = i*stride+j;
+					double ratio = 1.0-((j)/(double)stride);
+
+					double rr = (base.getRed()/255d) * ratio;
+					double gg = (base.getGreen()/255d) * ratio;
+					double bb = (base.getBlue()/255d) * ratio;
+					
+					System.out.println(ratio);
+					
+					Color c = new Color((float)rr, (float)gg, (float)bb);
+					pallette[index] = c;
+				}
+			}
 			
 			GridPane grid = new GridPane();
 			grid.setHgap(1);
 			grid.setVgap(1);
-			for (int i = 0; i < 8; i++) {
-				for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < stride; i++) {
+				for (int j = 0; j < baseColors.length; j++) {
 					StackPane col = new StackPane();
 					col.setPadding(new Insets(1));
 					col.setMinSize(16, 16);
 					grid.add(col, i, j);
 					
-					int palletteIndex = j*8+i;
+					int palletteIndex = j*stride+i;
 					if ( palletteIndex >= pallette.length )
 						palletteIndex = 0;
 					

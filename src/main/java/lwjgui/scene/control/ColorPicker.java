@@ -89,8 +89,6 @@ public class ColorPicker extends ButtonBase {
 					double gg = (base.getGreen()/255d) * ratio;
 					double bb = (base.getBlue()/255d) * ratio;
 					
-					System.out.println(ratio);
-					
 					Color c = new Color((float)rr, (float)gg, (float)bb);
 					pallette[index] = c;
 				}

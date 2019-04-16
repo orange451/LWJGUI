@@ -185,7 +185,7 @@ public class TextInputControlShortcuts {
 			}
 			
 			// Normal Redo
-			if ( event.key == GLFW.GLFW_KEY_Y ) {
+			if ( event.key == GLFW.GLFW_KEY_Y && event.isCtrlDown ) {
 				tic.redo();
 				event.consume();
 			}

@@ -14,11 +14,11 @@ import lwjgui.theme.Theme;
 public class CodeArea extends TextArea {
 	private LineCounterNode lineCounter;
 	
-	public CodeArea(TextInputScrollPane internalScrollPane, String text) {
-		super(internalScrollPane, text);
+	public CodeArea(String text) {
+		super(text);
 		
 		this.setFont(Font.COURIER);
-		this.setFontSize(14);
+		this.setFontSize(16);
 		
 		// Replace content window with our custom one
 		this.fakeBox = new CodeAreaContent(this);
@@ -27,10 +27,6 @@ public class CodeArea extends TextArea {
 		// Add line counter to scrollpane
 		this.lineCounter = new LineCounterNode();
 		this.fakeBox.getChildren().add(lineCounter);
-	}
-	
-	public CodeArea(String text) {
-		this(new TextInputScrollPane(), text);
 	}
 	
 	public CodeArea() {

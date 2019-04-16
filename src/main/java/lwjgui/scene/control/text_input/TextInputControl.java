@@ -17,11 +17,15 @@ import lwjgui.event.TypeEvent;
 import lwjgui.font.Font;
 import lwjgui.font.FontMetaData;
 import lwjgui.font.FontStyle;
+import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.scene.Cursor;
 import lwjgui.scene.control.Control;
 import lwjgui.scene.control.IndexRange;
+import lwjgui.scene.control.ScrollPane;
+import lwjgui.scene.layout.Pane;
 import lwjgui.theme.Theme;
 
 /**
@@ -75,19 +79,9 @@ public abstract class TextInputControl extends Control {
 	Color selectionAltFill = Theme.current().getSelectionAlt();
 	private Color controlOutlineFill = Theme.current().getControlOutline();
 	
+	protected TextInputControlShortcuts shortcuts;
+	
 	public TextInputControl() {
-		this(new TextInputScrollPane(), new TextInputControlShortcuts());
-	}
-	
-	public TextInputControl(TextInputScrollPane textAreaScrollPane) {
-		this(textAreaScrollPane, new TextInputControlShortcuts());
-	}
-	
-	public TextInputControl(TextInputControlShortcuts specialKeyInputs) {
-		this(new TextInputScrollPane(), specialKeyInputs);
-	}
-	
-	public TextInputControl(TextInputScrollPane textAreaScrollPane, TextInputControlShortcuts specialKeyInputs) {
 
 		/*
 		 * Visual setup
@@ -118,16 +112,17 @@ public abstract class TextInputControl extends Control {
 				setCaretPosition(caretPosition+1);
 				deselect();
 				
-				// If you press space or if it hasen't saved in 10 chars --> Save history
-				if (event.character == ' ' || charCount > 6) {
+				// If you press space then Save history
+				if (event.character == ' ') {
 					charCount = 0;
 					saveState();
 				}
 			}
 		});
 		
+		shortcuts = new TextInputControlShortcuts();
 		setOnKeyPressedAndRepeatInternal( event -> {
-			specialKeyInputs.process(this, event);
+			shortcuts.process(this, event);
 		});
 		
 		
@@ -135,9 +130,8 @@ public abstract class TextInputControl extends Control {
 		 * Scroll Pane setup
 		 */
 		
-		internalScrollPane = textAreaScrollPane;
+		internalScrollPane = new TextInputControl.TextInputScrollPane();
 		internalScrollPane.setContent(fakeBox);
-		internalScrollPane.textInputControl = this;
 		children.add(internalScrollPane);
 	}
 	
@@ -154,8 +148,8 @@ public abstract class TextInputControl extends Control {
 	}
 
 	public void clear() {
-		setText("");
 		saveState();
+		setText("");
 	}
 	
 	public void deselect() {
@@ -282,8 +276,8 @@ public abstract class TextInputControl extends Control {
 	}
 	
 	public void appendText(String text) {
-		insertText(getLength(), text);
 		saveState();
+		insertText(getLength(), text);
 		
 		internalScrollPane.scrollToBottom();
 	}
@@ -311,9 +305,9 @@ public abstract class TextInputControl extends Control {
 		
 		String before = getText(0, range.getStart());
 		String after = getText(range.getEnd(), getLength());
-		
-		this.setText(before+after);
+
 		saveState();
+		this.setText(before+after);
 	}
 	
 	public void deleteText(int start, int end) {
@@ -399,7 +393,7 @@ public abstract class TextInputControl extends Control {
 	public void undo() {
 		if ( this.undoStack.isCurrent() ) {
 			this.saveState();
-			this.undoStack.Rewind(); // Go back one more, since setting text will overwrite
+			this.undoStack.Rewind(); // Extra undo, since we just secretly saved. SHHHH
 		}
 		TextState state = this.undoStack.Rewind();
 		if ( state == null )
@@ -972,4 +966,66 @@ public abstract class TextInputControl extends Control {
 	}
 	
 	float renderCaret = 0;
+	
+	class TextInputScrollPane extends ScrollPane {
+		
+		public TextInputScrollPane() {
+			setFillToParentHeight(true);
+			setFillToParentWidth(true);
+			setVbarPolicy(ScrollBarPolicy.NEVER);
+			setHbarPolicy(ScrollBarPolicy.NEVER);
+			setPadding(new Insets(4,4,4,4));
+			setBackground(null);
+			
+			// Enter
+			getViewport().setOnMouseEntered(event -> {
+				getScene().setCursor(Cursor.IBEAM);
+			});
+
+			// Leave
+			getViewport().setOnMouseExited(event -> {
+				getScene().setCursor(Cursor.NORMAL);
+			});
+			
+			// Clicked
+			getViewport().setOnMousePressed(event -> {
+				if (cached_context == null) {
+					return;
+				}
+				
+				if ( event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
+					LWJGUI.runLater(()-> {
+						cached_context.setSelected(getViewport());
+					});
+					
+					//Sets caret position at mouse
+					setCaretPosition(getCaretAtMouse());
+					selectionEndPosition = caretPosition;
+					
+					int state = GLFW.glfwGetKey(cached_context.getWindowHandle(), GLFW.GLFW_KEY_LEFT_SHIFT);
+					if ( state != GLFW.GLFW_PRESS ) {
+						selectionStartPosition = caretPosition;
+					}
+				} else if ( event.getButton() == GLFW.GLFW_MOUSE_BUTTON_RIGHT ) {
+					if ( TextInputControl.this.getContextMenu() != null ) {
+						TextInputControl.this.getContextMenu().show(this.getScene(), event.getMouseX(), event.getMouseY());
+					}
+				}
+			});
+			
+			// Drag mouse
+			getViewport().setOnMouseDragged(event -> {
+				caretPosition = getCaretAtMouse();
+				selectionEndPosition = caretPosition;
+			});
+		}
+		
+		public void scrollToBottom() {
+			setVvalue(1.0);
+		}
+
+		protected Pane getViewport() {
+			return internalScrollCanvas;
+		}
+	}
 }

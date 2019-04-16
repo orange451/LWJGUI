@@ -152,6 +152,7 @@ public class TextInputControlShortcuts {
 			// Backspace
 			if (event.key == GLFW.GLFW_KEY_BACKSPACE) {
 				tic.deletePreviousCharacter();
+				event.consume();
 			}
 			
 			// Delete
@@ -180,6 +181,12 @@ public class TextInputControlShortcuts {
 					tic.undo();
 				}
 				
+				event.consume();
+			}
+			
+			// Normal Redo
+			if ( event.key == GLFW.GLFW_KEY_Y ) {
+				tic.redo();
 				event.consume();
 			}
 		}

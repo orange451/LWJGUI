@@ -51,13 +51,13 @@ public class StateStack<E> {
 	 */
 	public E Rewind() {
 		current--;
-		if ( current < 1 ) {
-			current = 1;
+		if ( current < 0 ) {
+			current = 0;
 		}
 		if ( states.size() == 0 )
 			return null;
 		
-		return states.get(current-1);
+		return states.get(current);
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class StateStack<E> {
 		current++;
 		if ( current >= states.size() ) {
 			current = states.size()-1;
-			return null;
+			//return states.get(current);
 		}
 		return states.get(current);
 	}

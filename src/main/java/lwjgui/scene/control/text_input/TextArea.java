@@ -7,8 +7,8 @@ import lwjgui.scene.control.ScrollPane.ScrollBarPolicy;
 
 public class TextArea extends TextInputControl {
 	
-	public TextArea(TextInputScrollPane internalScrollPane, String text) {
-		super(internalScrollPane, new TextAreaShortcuts());
+	public TextArea(String text) {
+		super();
 		
 		setText(text);
 		
@@ -18,10 +18,9 @@ public class TextArea extends TextInputControl {
 		// Allow for scroll bars
 		this.internalScrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
 		this.internalScrollPane.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
-	}
-	
-	public TextArea(String text) {
-		this(new TextInputScrollPane(), text);
+		
+		// Overwrite the default shortcuts (add enter/tab)
+		this.shortcuts = new TextAreaShortcuts();
 	}
 	
 	public TextArea() {
@@ -34,11 +33,15 @@ class TextAreaShortcuts extends TextInputControlShortcuts {
 	public void process(TextInputControl tic, KeyEvent event) {
 		super.process(tic, event);
 		
+		if ( event.isConsumed() )
+			return;
+		
 		if ( !tic.isEditing() )
 			return;
 		
 		// Enter
 		if (event.key == GLFW.GLFW_KEY_ENTER ) {
+			tic.saveState();
 			tic.deleteSelection();
 			tic.insertText(tic.getCaretPosition(), "\n");
 			tic.setCaretPosition(tic.getCaretPosition()+1);

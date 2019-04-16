@@ -11,54 +11,18 @@ public class TextInputControlShortcuts {
 
 	public void process(TextInputControl tic, KeyEvent event) {
 		
-		if (!tic.editing) return;
-		
 		// Return if consumed
 		if (event.isConsumed()) return;
 		
-		// Backspace
-		if (event.key == GLFW.GLFW_KEY_BACKSPACE) {
-			tic.deletePreviousCharacter();
-		}
-		
-		// Delete
-		if (event.key == GLFW.GLFW_KEY_DELETE ) {
-			tic.deleteNextCharacter();
-			event.consume();
-		}
-		
 		// Select All
-		if (event.key == GLFW.GLFW_KEY_A && event.isCtrlDown) {
+		if (event.key == GLFW.GLFW_KEY_A && event.isCtrlDown && tic.isDescendentSelected()) {
 			tic.selectAll();
 			event.consume();
 		}
 		
-		// Paste
-		if (event.key == GLFW.GLFW_KEY_V && event.isCtrlDown ) {
-			tic.paste();
-			event.consume();
-		}
-		
 		// Copy
-		if (event.key == GLFW.GLFW_KEY_C && event.isCtrlDown ) {
+		if (event.key == GLFW.GLFW_KEY_C && event.isCtrlDown && tic.isDescendentSelected() ) {
 			tic.copy();
-			event.consume();
-		}
-		
-		// Cut
-		if (event.key == GLFW.GLFW_KEY_X && event.isCtrlDown ) {
-			tic.cut();
-			event.consume();
-		}
-		
-		// Undo/Redo
-		if (event.key == GLFW.GLFW_KEY_Z && event.isCtrlDown ) {
-			if (event.isShiftDown) {
-				tic.redo();
-			} else {
-				tic.undo();
-			}
-			
 			event.consume();
 		}
 		
@@ -178,6 +142,46 @@ public class TextInputControlShortcuts {
 			}
 			
 			event.consume();
+		}
+		
+		
+		
+		// These require us to be editing...
+		if (tic.editing) {
+		
+			// Backspace
+			if (event.key == GLFW.GLFW_KEY_BACKSPACE) {
+				tic.deletePreviousCharacter();
+			}
+			
+			// Delete
+			if (event.key == GLFW.GLFW_KEY_DELETE ) {
+				tic.deleteNextCharacter();
+				event.consume();
+			}
+			
+			// Paste
+			if (event.key == GLFW.GLFW_KEY_V && event.isCtrlDown ) {
+				tic.paste();
+				event.consume();
+			}
+			
+			// Cut
+			if (event.key == GLFW.GLFW_KEY_X && event.isCtrlDown ) {
+				tic.cut();
+				event.consume();
+			}
+			
+			// Undo/Redo
+			if (event.key == GLFW.GLFW_KEY_Z && event.isCtrlDown ) {
+				if (event.isShiftDown) {
+					tic.redo();
+				} else {
+					tic.undo();
+				}
+				
+				event.consume();
+			}
 		}
 	}
 }

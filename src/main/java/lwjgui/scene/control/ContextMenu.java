@@ -3,17 +3,21 @@ package lwjgui.scene.control;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
+import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.scene.Node;
+import lwjgui.scene.Scene;
 import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
 
 public class ContextMenu extends PopupWindow {
 	private VBox internalBox;
 	private ContextMenu childMenu;
+	private Node returnNode;
 	
 	private ObservableList<MenuItem> items = new ObservableList<MenuItem>();
 	
@@ -35,6 +39,12 @@ public class ContextMenu extends PopupWindow {
 				recalculate();
 			}
 		});
+	}
+
+	@Override
+	public void show(Scene scene, double absoluteX, double absoluteY) {
+		this.returnNode = LWJGUI.getCurrentContext().getSelected();
+		super.show(scene, absoluteX, absoluteY);
 	}
 	
 	private void recalculate() {
@@ -60,6 +70,14 @@ public class ContextMenu extends PopupWindow {
 		}
 		
 		super.close();
+		
+		LWJGUI.runLater(()->{
+			System.out.println(this.returnNode);
+			if ( this.returnNode != null ) {
+				LWJGUI.getCurrentContext().setSelected(returnNode);
+				this.returnNode = null;
+			}
+		});
 	}
 
 	@Override

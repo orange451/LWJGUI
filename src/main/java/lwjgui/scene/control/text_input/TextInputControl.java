@@ -49,6 +49,7 @@ public abstract class TextInputControl extends Control {
 	protected TextInputContentRenderer fakeBox;
 	
 	private StateStack<TextState> undoStack;
+	private boolean forceSaveState;
 
 	private EventHandler<Event> onSelectEvent;
 	private EventHandler<Event> onDeselectEvent;
@@ -100,13 +101,14 @@ public abstract class TextInputControl extends Control {
 		this.flag_clip = true;
 		
 		setOnTextInputInternal( new EventHandler<TypeEvent>() {
-			int charCount = Integer.MAX_VALUE/2;
-
 			@Override
 			public void handle(TypeEvent event) {
 				if (!editing) return;
 				
-				charCount++;
+				if ( forceSaveState ) {
+					saveState();
+					forceSaveState = false;
+				}
 				deleteSelection();
 				insertText(caretPosition, event.getCharacterString());
 				setCaretPosition(caretPosition+1);
@@ -114,7 +116,6 @@ public abstract class TextInputControl extends Control {
 				
 				// If you press space then Save history
 				if (event.character == ' ') {
-					charCount = 0;
 					saveState();
 				}
 			}
@@ -400,6 +401,7 @@ public abstract class TextInputControl extends Control {
 			return;
 		setText(state.text);
 		this.setCaretPosition(state.caretPosition);
+		forceSaveState = true;
 	}
 	
 	public void redo() {

@@ -72,7 +72,6 @@ public class ContextMenu extends PopupWindow {
 		super.close();
 		
 		LWJGUI.runLater(()->{
-			System.out.println(this.returnNode);
 			if ( this.returnNode != null ) {
 				LWJGUI.getCurrentContext().setSelected(returnNode);
 				this.returnNode = null;

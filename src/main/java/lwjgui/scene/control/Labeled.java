@@ -84,7 +84,7 @@ public abstract class Labeled extends Control {
 			double graphicWid = graphic == null ? 0 : (graphic.getWidth()+GRAPHIC_SPACING);
 			
 			// Get some text bounds
-			float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize);
+			float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize, garbage);
 			double curWid = getTextWidth() + this.getPadding().getWidth();
 			
 			// Set initial size
@@ -102,14 +102,14 @@ public abstract class Labeled extends Control {
 				while ( (curWid > this.getAvailableSize().x) && (remove < text.length()) ) {
 					remove++;
 					useString = useString.substring(0, text.length()-remove)+ELIPSES;
-					float[] bounds = font.getTextBounds( cached_context, useString, fontStyle, fontSize);
+					float[] bounds = font.getTextBounds( cached_context, useString, fontStyle, fontSize, garbage);
 					curWid = (bounds[2]-bounds[0])+graphicWid;
 				}
 				this.size.x = curWid;
 			}
 			
 			// Compute preferred height
-			float[] bounds = font.getTextBounds(cached_context, useString, fontStyle, fontSize);
+			float[] bounds = font.getTextBounds(cached_context, useString, fontStyle, fontSize, garbage);
 			double hei = (bounds[3] - bounds[1]) + this.padding.getHeight();
 			this.size.y = hei;
 		}
@@ -179,14 +179,15 @@ public abstract class Labeled extends Control {
 		return getTextWidth(text);
 	}
 
+	private float[] garbage = new float[4];
 	private double getTextWidth(String string) {
-		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize);
+		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize, garbage);
 		float gWid = (float) (graphic == null ? 0 : (graphic.getWidth()+GRAPHIC_SPACING));
 		return bounds[2] - bounds[0] + gWid;
 	}
 
 	private double getTextHeight(String string) {
-		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize);
+		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize, garbage);
 		return bounds[3] - bounds[1];
 	}
 

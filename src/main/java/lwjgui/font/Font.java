@@ -229,9 +229,7 @@ public class Font {
 		return using.get(vg);
 	}
 	
-	public float[] getTextBounds(Context context, String string, FontStyle style, double size) {
-		float[] bounds = new float[4];
-		
+	public float[] getTextBounds(Context context, String string, FontStyle style, double size, float[] bounds) {		
 		if (context == null) {
 			return bounds;
 		}

@@ -264,10 +264,11 @@ public class LWJGUIUtil {
 		return true;
 	}
 
+	private static float[] garbage = new float[4];
 	public static void drawText(String text, Font font, FontStyle style, double size, Color color, double x, double y, Pos alignment) {
 		Context vg = LWJGUI.getCurrentContext();
 		
-		float[] bounds = font.getTextBounds(vg, text, style, size);
+		float[] bounds = font.getTextBounds(vg, text, style, size, garbage);
 		float width = bounds[2]-bounds[0];
 		float height = bounds[3]-bounds[1];
 		

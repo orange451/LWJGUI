@@ -117,12 +117,10 @@ public abstract class Labeled extends Control {
 	
 	@Override
 	public void render(Context context) {
-		//clip(context);
-		
 		super.render(context);
 		
 		int textHeight = (int) Math.max(getTextHeight(useString), graphic==null?0:graphic.getHeight());
-
+		
 		// get Absolute position
 		long vg = context.getNVG();
 		int absX = (int)(getX() + this.padding.getLeft());

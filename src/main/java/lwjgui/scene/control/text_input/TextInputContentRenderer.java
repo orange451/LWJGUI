@@ -95,12 +95,11 @@ class TextInputContentRenderer extends Pane {
 					for (int j = 0; j < text.length(); j++) {
 						boolean draw = true;
 						String c = text.substring(j, j+1);
-						char[] cs = c.toCharArray();
 						
 						// Manual fix for drawing boxes of special characters of certain fonts
-						// NanoVG author ALSO refuses to fix this. Thanks again.
-						if ( cs.length == 1 ) {
-							if ( cs[0] < 32 )
+						// NanoVG author ALSO refuses to fix this. Cheers.
+						if ( c.length() == 1 ) {
+							if ( c.charAt(0) < 32 )
 								draw = false;
 						}
 						GlyphData g = dat.get(j);

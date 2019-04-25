@@ -18,6 +18,8 @@ public class MenuItem extends Node {
 	protected Label internalLabel = null;
 	protected Color background;
 	
+	//long
+	
 	public MenuItem(String string) {
 		this(string, null, null);
 	}

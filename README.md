@@ -36,7 +36,7 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 ![MenuBar](https://i.imgur.com/RdKJJJA.png)
 ![TextArea](https://i.imgur.com/0YNqcfz.png)
 ![TreeView](https://i.imgur.com/WZQxpvU.png)
-![IDE](http://magaimg.net/img/5reo.png)
+![IDE](http://magaimg.net/img/7upi.png)
 
 # Required Libraries
 - [LWJGL3](https://www.lwjgl.org/)

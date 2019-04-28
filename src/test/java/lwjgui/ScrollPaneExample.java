@@ -1,14 +1,5 @@
 package lwjgui;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
-import java.io.IOException;
-
-import org.lwjgl.glfw.GLFW;
-
-import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
@@ -22,7 +13,7 @@ public class ScrollPaneExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		launch(args);
 	}
 

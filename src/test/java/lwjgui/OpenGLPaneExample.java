@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 import java.nio.FloatBuffer;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 import lwjgui.gl.GenericShader;
@@ -65,6 +66,7 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 		private GenericShader shader;
 		private int vao;
 		private int vbo;
+		private float rot;
 
 		public RenderingCallbackTest() {
 			// Setup geometry
@@ -124,9 +126,12 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 
 		@Override
 		public void render(Context context) {
+			rot += 1.0e-3f;
+			
 			// Bind shader for drawing
 			shader.bind();
 			shader.projectOrtho( -0.5f, -0.5f, 1.0f, 1.0f );
+			shader.setWorldMatrix(new Matrix4f().rotateY(rot));
 
 			// Disable culling (just in case)
 			GL11.glDisable(GL11.GL_CULL_FACE);

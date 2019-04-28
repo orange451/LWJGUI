@@ -85,13 +85,13 @@ public class Slider extends Control {
 	@Override
 	public void render(Context context) {
 		long vg = context.getNVG();
-		float w = (float) (this.getInnerBounds().getWidth()-thumb.getWidth());
+		float w = (float) this.getInnerBounds().getWidth();//-thumb.getWidth());
 		float h = (float) this.getInnerBounds().getHeight()/3;
-		float x = (float) ((getX()+this.getInnerBounds().getX()) + (thumb.getWidth()/2));
+		float x = (float) (getX()+this.getInnerBounds().getX());// + (thumb.getWidth()/2));
 		float y = (float) (getY()+this.getInnerBounds().getY()) + (this.getInnerBounds().getHeight()/2)-(h/2);
 		float r = h/2;
 		
-		trackLength = w;
+		trackLength = (float) (w-thumb.getWidth());
 
 		// Background
 		{

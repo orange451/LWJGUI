@@ -194,13 +194,12 @@ public class GridPane extends Pane {
 			for (int j = 0; j < maxX; j++) {
 				if ( j == i )
 					continue;
-				totalWidthWithoutMe += elementsInternal[j][0].nodeReal.getWidth();
-				totalWidthWithoutMe += elementsInternal[j][0].nodeFiller.getWidth();
+				totalWidthWithoutMe += elementsInternal[j][0].getWidth();
 			}
 			
 			// If this column is marked to grow, use the above value to calculate width
 			if ( constraints[i].getHgrow().equals(Priority.ALWAYS) ) {
-				desiredColumnWidth = this.getWidth()-totalWidthWithoutMe;
+				desiredColumnWidth = GridPane.this.getWidth()-totalWidthWithoutMe;
 			}
 			
 			if ( columnWidth < desiredColumnWidth )
@@ -219,8 +218,6 @@ public class GridPane extends Pane {
 						e.nodeFiller.setPrefWidth(0);
 					} else {
 						int mWid = (int) e.nodeReal.getWidth();
-						if ( e.nodeReal instanceof Region )
-							mWid += ((Region)e.nodeReal).getPadding().getWidth();
 						e.nodeFiller.setPrefWidth(Math.max(0, columnWidth-mWid));
 					}
 				}
@@ -234,7 +231,7 @@ public class GridPane extends Pane {
 				NodePair e = elementsInternal[j][i];
 				
 				if ( e != null ) {
-					int mHei = (int) e.nodeReal.getHeight();
+					int mHei = 0;//(int) e.nodeReal.getHeight();
 					if ( e.nodeReal instanceof Region )
 						mHei += ((Region)e.nodeReal).getPadding().getHeight();
 					
@@ -336,9 +333,13 @@ public class GridPane extends Pane {
 			nodeReal = a;
 			nodeFiller = b;
 		}
+
+		public double getWidth() {
+			return nodeReal.getWidth() + nodeFiller.getWidth();
+		}
 	}
 	
-	class NodeFiller extends Node {
+	class NodeFiller extends StackPane {
 		NodeFiller() {
 			setMouseTransparent(true);
 			setPrefSize(0,0);
@@ -352,7 +353,7 @@ public class GridPane extends Pane {
 		@Override
 		public void render(Context context) {
 			this.clip(context);
-			//LWJGUIUtil.fillRect(context, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), Color.RED);
+			//LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA);
 		}
 	}
 }

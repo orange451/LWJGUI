@@ -34,7 +34,7 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 ![PicOpenGL](https://i.imgur.com/jOHtsxJ.png)
 ![ScrollSplitPane](https://i.imgur.com/EKVvWdP.png)
 ![MenuBar](https://i.imgur.com/RdKJJJA.png)
-![TextArea](https://i.imgur.com/0YNqcfz.png)
+![TextArea](http://magaimg.net/img/7upk.png)
 ![TreeView](https://i.imgur.com/WZQxpvU.png)
 ![IDE](http://magaimg.net/img/7upi.png)
 

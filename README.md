@@ -44,6 +44,7 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 - [NanoVG](https://github.com/memononen/nanovg) (Can download with [LWJGL](https://www.lwjgl.org/customize))
 
 # Projects That Use LWJGUI
+- [Anarchy Engine - 3D Java/lua game engine](https://github.com/orange451/AnarchyEngine)
 - [JDialogue - branching dialogue editor for video games](https://github.com/SkyAphid/JDialogue)
 
 # Similar projects

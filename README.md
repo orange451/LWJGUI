@@ -46,3 +46,9 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 # Projects That Use LWJGUI
 - [JDialogue - branching dialogue editor for video games](https://github.com/SkyAphid/JDialogue)
 
+# Similar projects
+- [Clear](https://github.com/SkyAphid/Clear/)
+- [Aerial](https://github.com/LacombeJ/Aerial)
+- [Legui](https://github.com/LiquidEngine/legui)
+- [imgui](https://github.com/kotlin-graphics/imgui)
+- [LWJGLX](https://github.com/LWJGLX/lwjgl3-swt)

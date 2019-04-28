@@ -38,6 +38,9 @@ public abstract class ButtonBase extends Labeled {
 		
 		this.setCornerRadius(2.5);
 		
+		this.setText(name);
+		
+		// Fire the click event when we're clicked
 		this.setOnMouseReleased( new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -51,7 +54,17 @@ public abstract class ButtonBase extends Labeled {
 				}
 			}
 		});
-		this.setText(name);
+		
+		// If the button is selected, and enter is pressed. Fire the click event
+		this.setOnKeyPressedInternal( (event) -> {
+			if ( event.getKey() == GLFW.GLFW_KEY_ENTER ) {
+				if ( this.cached_context.isSelected(this) ) {
+					if ( buttonEvent != null ) {
+						EventHelper.fireEvent(buttonEvent, new ActionEvent());
+					}
+				}
+			}
+		});
 	}
 	
 	protected void setCornerRadius(double radius) {

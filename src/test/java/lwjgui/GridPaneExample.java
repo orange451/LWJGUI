@@ -1,5 +1,7 @@
 package lwjgui;
 
+import lwjgui.LWJGUIDialog.DialogIcon;
+import lwjgui.LWJGUIDialog.DialogType;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
@@ -38,6 +40,15 @@ public class GridPaneExample extends LWJGUIApplication {
 		// Set the scene
 		window.setScene(new Scene(root, WIDTH, HEIGHT));
 		window.show();
+		
+		// Make dialog box when login button is pressed
+		b.setOnAction((event)->{
+			LWJGUIDialog.showConfirmDialog("Login", 
+					"You have logged in:"
+					+ "\nUsername: "+((TextField)grid.get(1,0)).getText()
+					+ "\nPassword: "+((PasswordField)grid.get(1,1)).getText(),
+					DialogType.OK, DialogIcon.INFORMATION, true);
+		});
 	}
 
 	@Override

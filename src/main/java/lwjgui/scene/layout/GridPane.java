@@ -356,4 +356,8 @@ public class GridPane extends Pane {
 			//LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA);
 		}
 	}
+
+	public Node get(int x, int y) {
+		return elements[x][y];
+	}
 }

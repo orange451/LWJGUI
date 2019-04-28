@@ -32,12 +32,7 @@ public class CodeAreaExample extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "Text Area Example";
 	}
 }

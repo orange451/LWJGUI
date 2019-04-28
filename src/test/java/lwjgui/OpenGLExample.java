@@ -77,13 +77,8 @@ public class OpenGLExample extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "OpenGL Example";
 	}
 	
 	private static class RenderingCallbackTest implements Renderer {

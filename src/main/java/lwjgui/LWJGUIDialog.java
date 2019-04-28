@@ -99,8 +99,6 @@ public class LWJGUIDialog {
         	defaultString += File.separator;
         }
         
-        //System.out.println(defaultString + " : exists: " + new File(defaultString).exists());
-        
         String result = TinyFileDialogs.tinyfd_openFileDialog(title, defaultString, filters, filterDescription, false);
 		
 		return result != null ? new File(result) : null; 

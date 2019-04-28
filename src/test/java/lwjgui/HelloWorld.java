@@ -15,7 +15,7 @@ public class HelloWorld extends LWJGUIApplication {
 	
 	@Override
 	public void start(String[] args, Window window) {		
-		// Create a simple pane
+		// Create a simple root pane
 		StackPane pane = new StackPane();
 		
 		// Put a label in the pane
@@ -26,15 +26,5 @@ public class HelloWorld extends LWJGUIApplication {
 		
 		// Make window visible
 		window.show();
-	}
-
-	@Override
-	public void run() {
-		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "Hello World Application";
 	}
 }

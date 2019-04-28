@@ -52,12 +52,7 @@ public class ButtonExample2 extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "Button Example";
 	}
 }

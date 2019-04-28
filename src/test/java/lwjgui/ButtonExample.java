@@ -47,13 +47,8 @@ public class ButtonExample extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public String getProgramName() {
-		return "Button Example";
 	}
 }

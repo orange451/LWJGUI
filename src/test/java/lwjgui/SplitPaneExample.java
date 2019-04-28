@@ -63,12 +63,7 @@ public class SplitPaneExample extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "Split Pane Example";
 	}
 }

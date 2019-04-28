@@ -67,7 +67,7 @@ public abstract class LWJGUIApplication {
 		if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
 		//Create a standard opengl 3.2 window.
-		long windowID = LWJGUIUtil.createOpenGLCoreWindow(program.getProgramName(), 100, 100, true, false);
+		long windowID = LWJGUIUtil.createOpenGLCoreWindow("Window", 100, 100, true, false);
 	
 		//Initialize LWJGUI for this window ID.
 		Window window = LWJGUI.initialize(windowID);
@@ -106,12 +106,7 @@ public abstract class LWJGUIApplication {
 	/**
 	 * Called from the program loop before rendering.
 	 */
-	public abstract void run();
-	
-	/**
-	 * Gets the title for the LWJGUI window.
-	 * 
-	 * @return the name of this program.
-	 */
-	public abstract String getProgramName();
+	protected void run() {
+		//
+	}
 }

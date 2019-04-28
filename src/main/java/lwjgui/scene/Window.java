@@ -365,10 +365,18 @@ public class Window {
 		});
 	}
 	
+	/**
+	 * Return the current context object for this window. The context object stores more complex information
+	 * about the window and how its drawn.
+	 * @return
+	 */
 	public Context getContext() {
 		return context;
 	}
 	
+	/**
+	 * Signal to the OS that the window should be focused.
+	 */
 	public void focus() {
 		GLFW.glfwFocusWindow(context.getWindowHandle());
 	}
@@ -499,14 +507,35 @@ public class Window {
 		}
 	}
 
+	/**
+	 * Returns the current scene object used by this window.
+	 * @return
+	 */
 	public Scene getScene() {
 		return this.scene;
 	}
+	
+	/**
+	 * Sets the title of the window.
+	 * @param title
+	 */
+	public void setTitle(String title) {
+		GLFW.glfwSetWindowTitle(context.getWindowHandle(), title);
+	}
 
+	/**
+	 * Sets an internal flag which controls whether or not a window can be closed by the user.
+	 * @param close
+	 */
 	public void setCanUserClose(boolean close) {
 		this.canUserClose = close;
 	}
 
+	/**
+	 * Sets the rendering callback for this window. By default there is no rendering callback.<br>
+	 * A rendering callback runs directly before the window renders its UI.
+	 * @param callback
+	 */
 	public void setRenderingCallback(Renderer callback) {
 		this.renderCallback = callback;
 	}

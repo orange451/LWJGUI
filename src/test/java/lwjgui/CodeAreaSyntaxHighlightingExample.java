@@ -74,12 +74,7 @@ public class CodeAreaSyntaxHighlightingExample extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "Syntax Highlighting Example";
 	}
 }

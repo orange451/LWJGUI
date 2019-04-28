@@ -35,12 +35,7 @@ public class HBoxExample extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "HBox Example";
 	}
 }

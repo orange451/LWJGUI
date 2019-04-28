@@ -57,13 +57,8 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "OpenGL Pane Example";
 	}
 	
 	static class RenderingCallbackTest implements Renderer {

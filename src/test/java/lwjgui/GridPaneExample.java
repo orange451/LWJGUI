@@ -41,12 +41,7 @@ public class GridPaneExample extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "Grid Pane Example";
 	}
 }

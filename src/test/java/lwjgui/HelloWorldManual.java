@@ -4,8 +4,6 @@ package lwjgui;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
-import java.io.IOException;
-
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.scene.Scene;
@@ -17,7 +15,7 @@ public class HelloWorldManual {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		if ( !glfwInit() )
 			throw new IllegalStateException("Unable to initialize GLFW");
 

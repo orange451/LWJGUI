@@ -70,12 +70,7 @@ public class ContextMenuExample extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "Context Menu Example";
 	}
 }

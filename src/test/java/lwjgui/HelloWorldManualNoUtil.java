@@ -34,39 +34,39 @@ public class HelloWorldManualNoUtil {
 		glfwWindowHint(GLFW_FLOATING, GL_FALSE);
 		
 		// Create the window
-		long window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World", NULL, NULL);
-		if ( window == NULL )
+		long handle = glfwCreateWindow(WIDTH, HEIGHT, "Hello World", NULL, NULL);
+		if ( handle == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 		
 		// Finalize window
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(handle);
 		GL.createCapabilities();
 		
 		// Initialize LWJGUI for this window
-		Window lwjguiWindow = LWJGUI.initialize(window);
-		lwjguiWindow.setWindowAutoDraw(false); // Turn off automatic buffer swapping
+		Window window = LWJGUI.initialize(handle);
+		window.setWindowAutoDraw(false); // Turn off automatic buffer swapping, we want to do it ourself!
 		
 		// Add some components
 		StackPane pane = new StackPane();
 		pane.getChildren().add(new Label("Hello World!"));
-		lwjguiWindow.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
 		
 		// Show Window
-		lwjguiWindow.show();
+		window.show();
 		
 		// Game Loop
-		while (!GLFW.glfwWindowShouldClose(window)) {
+		while (!GLFW.glfwWindowShouldClose(handle)) {
 			// Set context
-			GLFW.glfwMakeContextCurrent(window);
+			GLFW.glfwMakeContextCurrent(handle);
 			
 			// Poll inputs
 			glfwPollEvents();
 			
 			// Render UI
-			lwjguiWindow.render();
+			window.render();
 			
 			// Swap buffers
-			glfwSwapBuffers(window);
+			glfwSwapBuffers(handle);
 		}
 		
 		// Stop GLFW

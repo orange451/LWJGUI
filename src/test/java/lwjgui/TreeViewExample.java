@@ -58,12 +58,7 @@ public class TreeViewExample extends LWJGUIApplication {
 	}
 
 	@Override
-	public void run() {
+	protected void run() {
 		//
-	}
-
-	@Override
-	public String getProgramName() {
-		return "Tree View Example";
 	}
 }

@@ -57,6 +57,14 @@ public class SearchField extends TextField {
 			SearchField.this.setText("");
 		});
 		
+		// Clear Node color changing
+		clearNode.setOnMouseEntered((event)->{
+			clearNode.setTextFill(Theme.current().getText());
+		});
+		clearNode.setOnMouseExited((event)->{
+			clearNode.setTextFill(Theme.current().getShadow());
+		});
+		
 		// Fire search event when you click search node
 		searchNode.setOnMouseReleased((event)->{
 			if ( this.searchEvent != null ) {
@@ -66,6 +74,14 @@ public class SearchField extends TextField {
 			LWJGUI.runLater(()->{
 				SearchField.this.cached_context.setSelected(null);
 			});
+		});
+		
+		// Search Node color changing
+		searchNode.setOnMouseEntered((event)->{
+			searchNode.setTextFill(Theme.current().getText());
+		});
+		searchNode.setOnMouseExited((event)->{
+			searchNode.setTextFill(Theme.current().getShadow());
 		});
 		
 		// Fire search event when you press enter

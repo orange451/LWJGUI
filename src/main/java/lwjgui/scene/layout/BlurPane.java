@@ -6,10 +6,13 @@ import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL2;
 import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import lwjgui.LWJGUI;
 import lwjgui.gl.BlurShader;
+import lwjgui.gl.BlurShaderOld;
 import lwjgui.gl.OffscreenBuffer;
 import lwjgui.gl.TexturedQuad;
 import lwjgui.paint.Color;
@@ -106,8 +109,8 @@ public class BlurPane extends StackPane {
 		this.buffer.bind();
 		
 		// Clear
-		GL11.glClearColor(1, 1, 1, 0);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glClearColor(1, 1, 1, 1);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 		
 		// Render the blur buffer (uses the buffer temp as texture)
 		this.buffer.render(context);
@@ -158,7 +161,11 @@ public class BlurPane extends StackPane {
 			}
 			
 			this.source = source;
-			this.quadShader = new BlurShader();
+			if ( LWJGUI.getCurrentContext().isCoreOpenGL() ) {
+				this.quadShader = new BlurShader();
+			} else {
+				this.quadShader = new BlurShaderOld();
+			}
 		}
 		
 		@Override
@@ -175,11 +182,42 @@ public class BlurPane extends StackPane {
 			quadShader.bind();
 			quadShader.projectOrtho(0, h, w, -h);
 			
+			// bind stuff
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, source.getTexId());
+			
 			GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uColor"), internalBackground.getRed()/255f-0.5f, internalBackground.getGreen()/255f-0.5f, internalBackground.getBlue()/255f-0.5f, internalBackground.getAlpha()/255f);
 			GL20.glUniform1f(GL20.glGetUniformLocation(quadShader.getProgram(), "uBlurSize"), blurRadius);
+			GL20.glUniform2f(GL20.glGetUniformLocation(quadShader.getProgram(), "uTexelSize"), 1.0f/(float)w, 1.0f/(float)h);
 			
-			if ( quad != null ) {
-				quad.render();
+			
+			// Draw quad
+			if ( context.isCoreOpenGL() ) {
+				if ( quad != null ) {
+					quad.render();
+				}
+			} else {
+
+				GL13.glActiveTexture(GL13.GL_TEXTURE0);
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, source.getTexId());
+				
+				GL11.glBegin(GL11.GL_QUADS);
+					GL11.glColor3f(1.0f, 1.0f, 1.0f);
+					GL11.glTexCoord2f(0, 0);
+					GL11.glVertex2f(0, 0);
+	
+					GL11.glColor3f(1.0f, 1.0f, 1.0f);
+					GL11.glTexCoord2f(1, 0);
+					GL11.glVertex2f(w, 0);
+	
+					GL11.glColor3f(1.0f, 1.0f, 1.0f);
+					GL11.glTexCoord2f(1, 1);
+					GL11.glVertex2f(w, h);
+	
+					GL11.glColor3f(1.0f, 1.0f, 1.0f);
+					GL11.glTexCoord2f(0, 1);
+					GL11.glVertex2f(0, h);
+				GL11.glEnd();
 			}
 		}
 	}

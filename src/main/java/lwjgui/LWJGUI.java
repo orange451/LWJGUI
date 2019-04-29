@@ -37,6 +37,8 @@ public class LWJGUI {
 		Window wind = new Window(context, scene);
 		windows.put(window, wind);
 		
+		currentContext = context;
+		
 		return wind;
 	}
 

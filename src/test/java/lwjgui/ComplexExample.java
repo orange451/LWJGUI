@@ -11,7 +11,6 @@ import lwjgui.scene.control.Button;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.ColorPicker;
 import lwjgui.scene.control.ComboBox;
-import lwjgui.scene.control.Label;
 import lwjgui.scene.control.Menu;
 import lwjgui.scene.control.MenuBar;
 import lwjgui.scene.control.MenuItem;

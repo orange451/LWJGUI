@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import lwjgui.LWJGUI;
+import lwjgui.LWJGUIApplication;
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.control.PopupWindow;
 import lwjgui.util.Bounds;
@@ -26,6 +27,7 @@ public class Context {
 	private int screenPixelRatio = 1;
 	
 	private boolean modernOpenGL;
+	private boolean isCore;
 
 	private Node selected = null;
 	private Node hovered = null;
@@ -47,6 +49,8 @@ public class Context {
 			int flags = NanoVGGL2.NVG_STENCIL_STROKES | NanoVGGL2.NVG_ANTIALIAS;
 			nvgContext = NanoVGGL2.nvgCreate(flags);
 		}
+		
+		isCore = LWJGUIApplication.ModernOpenGL;
 	}
 
 	/**
@@ -322,6 +326,14 @@ public class Context {
 	 */
 	public boolean isModernOpenGL() {
 		return this.modernOpenGL;
+	}
+	
+	/**
+	 * Returns whether the window was created with a core OpenGL profile or not.
+	 * @return
+	 */
+	public boolean isCoreOpenGL() {
+		return this.isCore;
 	}
 
 	/**

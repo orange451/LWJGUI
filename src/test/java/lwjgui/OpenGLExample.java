@@ -24,7 +24,9 @@ import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
+import lwjgui.scene.control.Slider;
 import lwjgui.scene.layout.BorderPane;
+import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.VBox;
 
 public class OpenGLExample extends LWJGUIApplication {
@@ -32,6 +34,8 @@ public class OpenGLExample extends LWJGUIApplication {
 	public static final int HEIGHT  = 240;
 	
 	private static CheckBox spinBox;
+	private static Slider slider;
+	private static double rotation;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -48,7 +52,7 @@ public class OpenGLExample extends LWJGUIApplication {
 		{
 			VBox vbox = new VBox();
 			vbox.setAlignment(Pos.CENTER);
-			vbox.setBackground(Color.BLUE.alpha(0.2f));
+			vbox.setBackground(Color.BLUE.alpha(0.4f));
 			root.setCenter(vbox);
 
 			Label label1 = new Label("Hello World!");
@@ -56,7 +60,7 @@ public class OpenGLExample extends LWJGUIApplication {
 			vbox.getChildren().add(label1);
 			
 			Label label2 = new Label("OpenGL drawn straight to window.");
-			label2.setTextFill(Color.BLACK);
+			label2.setTextFill(Color.WHITE);
 			vbox.getChildren().add(label2);
 			
 			Label label3 = new Label("LWJGUI ontop!");
@@ -64,9 +68,26 @@ public class OpenGLExample extends LWJGUIApplication {
 			vbox.getChildren().add(label3);
 		}
 		
-		// Add a checkbox
-		spinBox = new CheckBox("Click To Spin");
-		root.setBottom(spinBox);
+		// Bottom hbox
+		{
+			HBox hbox = new HBox();
+			hbox.setSpacing(8);
+			hbox.setBackground(null);
+			root.setBottom(hbox);
+
+			// Add a checkbox
+			spinBox = new CheckBox("Spin");
+			hbox.getChildren().add(spinBox);
+			
+			slider = new Slider(-180, 180, 0);
+			slider.setPrefWidth(200);
+			hbox.getChildren().add(slider);
+			
+			// slider can change rotation
+			slider.setOnValueChangedEvent((event)->{
+				rotation = Math.toRadians(slider.getValue());
+			});
+		}
 		
 		// Render OpenGL Scene
 		window.setRenderingCallback(new RenderingCallbackTest());
@@ -85,7 +106,6 @@ public class OpenGLExample extends LWJGUIApplication {
 		private GenericShader shader;
 		private int vao;
 		private int vbo;
-		private float rot;
 
 		public RenderingCallbackTest() {
 			// Test shader
@@ -145,14 +165,22 @@ public class OpenGLExample extends LWJGUIApplication {
 
 		@Override
 		public void render(Context context) {
+			// Clear to black
+			glClearColor(0,0,0,1);
+			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+			
 			if ( spinBox.isChecked() ) {
-				rot += 1.0e-3f;
+				rotation += 1.0e-3d;
+				if ( rotation > Math.PI )
+					rotation = -Math.PI;
+				
+				slider.setValue(Math.toDegrees(rotation));
 			}
 			
 			// Bind shader for drawing
 			shader.bind();
 			shader.projectOrtho( -0.6f, -0.6f, 1.2f, 1.2f );
-			shader.setWorldMatrix(new Matrix4f().rotateY(rot));
+			shader.setWorldMatrix(new Matrix4f().rotateY((float) rotation));
 
 			// Disable culling (just in case)
 			GL11.glDisable(GL11.GL_CULL_FACE);

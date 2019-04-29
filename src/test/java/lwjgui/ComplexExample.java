@@ -249,11 +249,17 @@ public class ComplexExample extends LWJGUIApplication {
 			Tab tab = new Tab("Tab 3");
 			tabPane.getTabs().add(tab);
 			
+			StackPane tabMain = new StackPane();
+			tabMain.setFillToParentHeight(true);
+			tabMain.setFillToParentWidth(true);
+			tabMain.setPadding(new Insets(4));
+			tab.setContent(tabMain);
+			
 			OpenGLPane gears = new OpenGLPane();
 			gears.setFillToParentHeight(true);
 			gears.setFillToParentWidth(true);
 			gears.setRendererCallback(new GearsDemo.GearsApplication(gears));
-			tab.setContent(gears);
+			tabMain.getChildren().add(gears);
 			
 			gears.getChildren().add(new SearchField());
 		}

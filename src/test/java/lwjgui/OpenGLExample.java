@@ -102,7 +102,7 @@ public class OpenGLExample extends LWJGUIApplication {
 		//
 	}
 	
-	private static class RenderingCallbackTest implements Renderer {
+	static class RenderingCallbackTest implements Renderer {
 		private GenericShader shader;
 		private int vao;
 		private int vbo;
@@ -169,7 +169,7 @@ public class OpenGLExample extends LWJGUIApplication {
 			glClearColor(0,0,0,1);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 			
-			if ( spinBox.isChecked() ) {
+			if ( spinBox != null && spinBox.isChecked() ) {
 				rotation += 1.0e-3d;
 				if ( rotation > Math.PI )
 					rotation = -Math.PI;

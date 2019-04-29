@@ -39,17 +39,27 @@ import lwjgui.scene.Context;
 import lwjgui.util.OperatingSystem;
 
 public class LWJGUIUtil {
-	public static long createOpenGLCoreWindow(String name, int width, int height, boolean resizable, boolean ontop) {
+	private static void hints(boolean modernOpenGL) {
+		if ( modernOpenGL ) {
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		} else {
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_ANY_PROFILE);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+		}
+	}
+	
+	private static long createOpenGLWindow(String name, int width, int height, boolean resizable, boolean ontop, boolean modernOpenGL) {
 		// Configure GLFW
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
-		// Core OpenGL version 3.2
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		// Hints
+		hints(modernOpenGL);
 		glfwWindowHint(GLFW.GLFW_FLOATING, ontop?GL_TRUE:GL_FALSE);
 		glfwWindowHint(GLFW.GLFW_RESIZABLE, resizable?GL_TRUE:GL_FALSE);
 
@@ -74,8 +84,22 @@ public class LWJGUIUtil {
 
 		// Create context
 		GL.createCapabilities();
+		
+		int[] major = new int[1];
+		int[] minor = new int[1];
+		int[] rev = new int[1];
+		GLFW.glfwGetVersion(major, minor, rev);
+		System.out.println("Creating opengl window: " + major[0] + "." + minor[0] + "." + rev[0]);
 
 		return window;
+	}
+	
+	public static long createOpenGLCoreWindow(String name, int width, int height, boolean resizable, boolean ontop) {
+		return createOpenGLWindow( name, width, height, resizable, ontop, true );
+	}
+	
+	public static long createOpenGLDepricatedWindow(String name, int width, int height, boolean resizable, boolean ontop) {
+		return createOpenGLWindow( name, width, height, resizable, ontop, false );
 	}
 
 	public static void fillRect(Context context, double x, double y, double width, double height, Color color) {

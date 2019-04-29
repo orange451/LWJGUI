@@ -12,6 +12,11 @@ import lwjgui.scene.Window;
  */
 public abstract class LWJGUIApplication {
 	/**
+	 * Flag for whether or not the application will try to start using OpenGL 3.2
+	 */
+	public static boolean ModernOpenGL = true;
+
+	/**
 	 * Starts the given LWJGUI-based program.
 	 * The entry point of the program is the same class that calls this method.
 	 * 
@@ -67,8 +72,12 @@ public abstract class LWJGUIApplication {
 		if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
 		//Create a standard opengl 3.2 window.
-		long windowID = LWJGUIUtil.createOpenGLCoreWindow("Window", 100, 100, true, false);
-	
+		long windowID;
+		if ( ModernOpenGL )
+			windowID = LWJGUIUtil.createOpenGLCoreWindow("Window", 100, 100, true, false);
+		else
+			windowID = LWJGUIUtil.createOpenGLDepricatedWindow("Window", 100, 100, true, false);
+		
 		//Initialize LWJGUI for this window ID.
 		Window window = LWJGUI.initialize(windowID);
 		

@@ -46,7 +46,7 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 - [Aerial](https://github.com/LacombeJ/Aerial)
 - [Legui](https://github.com/LiquidEngine/legui)
 - [imgui](https://github.com/kotlin-graphics/imgui)
-- [LWJGLX](https://github.com/LWJGLX/lwjgl3-swt)
+- [lwjgl3-swt](https://github.com/LWJGLX/lwjgl3-swt)
 
 If you need to contact me. My discord is: NovaStrat#2111
 Feel free to send me any suggestions/things you need!

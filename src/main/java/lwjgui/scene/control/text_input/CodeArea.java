@@ -43,10 +43,10 @@ public class CodeArea extends TextArea {
 		lineCounter.update(this.getNumLines());
 		
 		// Position line counter
-		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));	
-		lineCounter.setAbsolutePosition(
-				getX()+internalScrollPane.getInnerBounds().getX()-internalScrollPane.getPadding().getLeft(),
-				internalScrollPane.getContent().getY());
+		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
+		lineCounter.setLocalPosition(this.internalScrollPane, 
+				-internalScrollPane.getPadding().getLeft(), 
+				(internalScrollPane.getContent().getY()-internalScrollPane.getPadding().getTop())-internalScrollPane.getY());
 	}
 	
 	@Override

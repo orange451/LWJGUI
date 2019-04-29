@@ -26,8 +26,8 @@ public class ScrollPane extends FillableRegion {
 	protected ScrollCanvas internalScrollCanvas;
 	private Vector2i viewportSize;
 	
-	private ScrollBar vBar;
-	private ScrollBar hBar;
+	protected ScrollBar vBar;
+	protected ScrollBar hBar;
 	
 	private double thickness = 7;
 	private double barPadding = 2;

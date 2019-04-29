@@ -5,26 +5,20 @@ An LWJGL3-based JavaFX alternative for making user-interfaces in Java. It can be
 JavaFX simply does not have the capability to be incoroperated into custom OpenGL projects. LWJGUI is different in that it does not takeover all of the rendering code for your project. This allows it to be easily used to handle your user-interfaces but still leave rendering up to you!
 
 # Current Features
-- Button
+- Button / ToggleButton
 - ComboBox
-- CheckBox
-- RadioButton
+- CheckBox / RadioButton
 - SegmentedButton
-- ContextMenu
-- MenuBar
-- ToolBar
+- Popup / ContextMenu
+- MenuBar / ToolBar
 - Label
 - SplitPane
-- Pane/StackPane
-- BorderPane
-- ScrollPane
+- Pane / StackPane / BorderPane / ScrollPane / TabPane
 - OpenGLPane
-- TabPane
 - BlurPane
-- TextArea
-- CodeArea
-- HBox
-- VBox
+- TextArea / CodeArea
+- TextField / PasswordField / SearchField
+- HBox / VBox
 - Font
 
 # Screenshots
@@ -53,3 +47,6 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 - [Legui](https://github.com/LiquidEngine/legui)
 - [imgui](https://github.com/kotlin-graphics/imgui)
 - [LWJGLX](https://github.com/LWJGLX/lwjgl3-swt)
+
+If you need to contact me. My discord is: NovaStrat#2111
+Feel free to send me any suggestions/things you need!

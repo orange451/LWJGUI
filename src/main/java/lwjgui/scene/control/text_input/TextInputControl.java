@@ -635,7 +635,7 @@ public abstract class TextInputControl extends Control {
 	protected void resize() {
 		this.setAlignment(Pos.TOP_LEFT);
 		
-		internalScrollPane.setPrefSize(getWidth(), getHeight());
+		internalScrollPane.setPrefSize(getWidth()-1, getHeight()-1);
 
 		int width = getMaxTextWidth();
 		this.internalRenderingPane.setMinSize(width, lines.size()*fontSize);

@@ -11,6 +11,7 @@ import lwjgui.scene.control.text_input.TextArea;
 import lwjgui.scene.control.text_input.TextField;
 import lwjgui.scene.layout.BorderPane;
 import lwjgui.scene.layout.HBox;
+import lwjgui.scene.layout.VBox;
 
 public class TextAreaExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
@@ -26,9 +27,13 @@ public class TextAreaExample extends LWJGUIApplication {
 		BorderPane pane = new BorderPane();
 		pane.setPadding(new Insets(8,8,8,8));
 		
+		VBox vBox = new VBox();
+		vBox.setSpacing(8);
+		pane.setCenter(vBox);
+		
 		HBox hbox = new HBox();
 		hbox.setSpacing(8);
-		pane.setTop(hbox);
+		vBox.getChildren().add(hbox);
 		
 		// Create an Input Field
 		TextField f = new TextField();
@@ -42,17 +47,16 @@ public class TextAreaExample extends LWJGUIApplication {
 		
 		// Create a Text Area
 		TextArea t = new TextArea();
-		t.setPrefWidth(250);
-		t.setWordWrap(true);
-		pane.setCenter(t);
+		t.setFillToParentWidth(true);
+		vBox.getChildren().add(t);
 		
 		// Clear text button
 		Button b = new Button("Clear Text");
-		b.setPrefWidth(250);
+		b.setFillToParentWidth(true);
 		b.setOnAction((event)->{
 			t.clear();
 		});
-		pane.setBottom(b);
+		vBox.getChildren().add(b);
 		
 		// Set the scene
 		window.setScene(new Scene(pane, WIDTH, HEIGHT));

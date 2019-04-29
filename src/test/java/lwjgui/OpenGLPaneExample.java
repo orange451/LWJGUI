@@ -17,7 +17,12 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 	public static final int HEIGHT  = 240;
 
 	public static void main(String[] args) {
+		
 		ModernOpenGL = false;
+		/* Flag to make the internal window to use deprecated openGL */
+		/* We're using deprecated openGL in this example to keep it short. */
+		/* This is needed for Mac users. Not needed for windows/Linux users. */
+		/* Mac doesn't let you mix old/new openGL code together */
 
 		launch(args);
 	}
@@ -46,15 +51,7 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 		window.show();
 	}
 
-	@Override
-	protected void run() {
-		//
-	}
-
 	static class RenderingCallbackTest implements Renderer {
-
-		public RenderingCallbackTest() {
-		}
 
 		@Override
 		public void render(Context context) {

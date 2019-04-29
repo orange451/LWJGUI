@@ -23,7 +23,8 @@ public class GearsDemo extends LWJGUIApplication {
 		ModernOpenGL = false;
 		/* Flag to make the internal window to use deprecated openGL */
 		/* We're using deprecated openGL in this example to keep it short. */
-		/* This is needed for Mac/Linux users. Not needed for windows users. */
+		/* This is needed for Mac users. Not needed for windows/Linux users. */
+		/* Mac doesn't let you mix old/new openGL code together */
 
 		launch(args);
 	}
@@ -229,10 +230,6 @@ public class GearsDemo extends LWJGUIApplication {
 				h = (int) calledFrom.getHeight();
 			}
 			float aspect = (float)h/(float)w;
-			
-			// Clear to black
-			glClearColor(0,0,0,1);
-			glClear(GL_COLOR_BUFFER_BIT);
 
 			// Reset opengl flags
 			glCullFace(GL_BACK);

@@ -22,6 +22,7 @@ import lwjgui.scene.control.Tab;
 import lwjgui.scene.control.TabPane;
 import lwjgui.scene.control.ToggleGroup;
 import lwjgui.scene.control.ToolBar;
+import lwjgui.scene.control.text_input.SearchField;
 import lwjgui.scene.control.text_input.TextArea;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.OpenGLPane;
@@ -37,7 +38,12 @@ public class ComplexExample extends LWJGUIApplication {
 	public static final int HEIGHT  = 240;
 
 	public static void main(String[] args) {
-		ModernOpenGL = false; // We're using Deprecated openGL in this example.
+		ModernOpenGL = false;
+		/* Flag to make the internal window to use deprecated openGL.
+		 * We're using deprecated openGL in this example.
+		 * This is needed for Mac/Linux users.
+		 * Not needed for windows users.
+		 */
 		
 		launch(args);
 	}
@@ -250,9 +256,7 @@ public class ComplexExample extends LWJGUIApplication {
 			gears.setRendererCallback(new GearsDemo.GearsApplication(gears));
 			tab.setContent(gears);
 			
-			Label label = new Label("This is an OpenGL pane!");
-			label.setTextFill(Color.WHITE);
-			gears.getChildren().add(label);
+			gears.getChildren().add(new SearchField());
 		}
 		
 		// Set the scene

@@ -10,6 +10,7 @@ public class TextField extends TextInputControl {
 		
 		this.setText(text);
 		this.setPrefWidth(120);
+		this.cornerRadius = 1;
 	}
 	
 	@Override

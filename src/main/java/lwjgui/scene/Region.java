@@ -1,7 +1,6 @@
 package lwjgui.scene;
 
 import lwjgui.geometry.Insets;
-import lwjgui.paint.Color;
 import lwjgui.scene.layout.floating.FloatingPane;
 
 public abstract class Region extends Parent {

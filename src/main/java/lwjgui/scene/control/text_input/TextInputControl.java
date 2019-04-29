@@ -969,7 +969,7 @@ public abstract class TextInputControl extends Control {
 			setFillToParentWidth(true);
 			setVbarPolicy(ScrollBarPolicy.NEVER);
 			setHbarPolicy(ScrollBarPolicy.NEVER);
-			setPadding(new Insets(4,4,4,4));
+			setPadding(new Insets(3,4,4,3));
 			
 			// Enter
 			getViewport().setOnMouseEntered(event -> {

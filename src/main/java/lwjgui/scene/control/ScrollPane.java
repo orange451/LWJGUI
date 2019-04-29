@@ -65,23 +65,20 @@ public class ScrollPane extends FillableRegion {
 		
 		this.internalScrollCanvas = new ScrollCanvas();
 		
-		this.mouseScrollEventInternal = new EventHandler<ScrollEvent>() {
-			@Override
-			public void handle(ScrollEvent event) {
-				if (isDescendentHovered()) {
-					double newvPixel = vBar.pixel-event.y*scrollGestureSpeedMultiplier;
-					double newhPixel = hBar.pixel-event.x*scrollGestureSpeedMultiplier;
+		this.setOnMouseScrollInternal( (event) -> {
+			if (isDescendentHovered()) {
+				double newvPixel = vBar.pixel-event.y*scrollGestureSpeedMultiplier;
+				double newhPixel = hBar.pixel-event.x*scrollGestureSpeedMultiplier;
 
-					newvPixel = Math.max(0, Math.min(vBar.maxPixel, newvPixel));
-					newhPixel = Math.max(0, Math.min(hBar.maxPixel, newhPixel));
-					
-					vBar.pixel = newvPixel;
-					hBar.pixel = newhPixel;
-					
-					update();
-				}
+				newvPixel = Math.max(0, Math.min(vBar.maxPixel, newvPixel));
+				newhPixel = Math.max(0, Math.min(hBar.maxPixel, newhPixel));
+				
+				vBar.pixel = newvPixel;
+				hBar.pixel = newhPixel;
+				
+				update();
 			}
-		};
+		});
 	}
 
 	@Override

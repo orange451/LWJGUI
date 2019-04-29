@@ -6,13 +6,13 @@ import lwjgui.font.FontStyle;
 public class PasswordField extends TextField {
 	public PasswordField() {
 		this("");
-		this.setFontStyle(FontStyle.BOLD);
 	}
 	
 	public PasswordField(String text) {
 		super();
 		
-		this.setFont(Font.COURIER);
+		this.setFont(Font.CONSOLAS);
+		this.setFontStyle(FontStyle.BOLD);
 		
 		this.setTextParser( new TextParser() {
 			@Override

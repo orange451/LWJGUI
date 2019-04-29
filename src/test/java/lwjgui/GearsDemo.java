@@ -13,7 +13,6 @@ import lwjgui.scene.control.Menu;
 import lwjgui.scene.control.MenuBar;
 import lwjgui.scene.control.MenuItem;
 import lwjgui.scene.layout.BorderPane;
-import lwjgui.scene.layout.OpenGLPane;
 
 public class GearsDemo extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
@@ -233,7 +232,7 @@ public class GearsDemo extends LWJGUIApplication {
 			
 			// Clear to black
 			glClearColor(0,0,0,1);
-			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT);
 
 			// Reset opengl flags
 			glCullFace(GL_BACK);

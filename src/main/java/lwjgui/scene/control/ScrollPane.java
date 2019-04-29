@@ -8,8 +8,6 @@ import org.lwjgl.glfw.GLFW;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
-import lwjgui.event.EventHandler;
-import lwjgui.event.ScrollEvent;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;

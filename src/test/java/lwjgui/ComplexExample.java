@@ -11,6 +11,7 @@ import lwjgui.scene.control.Button;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.ColorPicker;
 import lwjgui.scene.control.ComboBox;
+import lwjgui.scene.control.Label;
 import lwjgui.scene.control.Menu;
 import lwjgui.scene.control.MenuBar;
 import lwjgui.scene.control.MenuItem;
@@ -21,9 +22,9 @@ import lwjgui.scene.control.Tab;
 import lwjgui.scene.control.TabPane;
 import lwjgui.scene.control.ToggleGroup;
 import lwjgui.scene.control.ToolBar;
-import lwjgui.scene.control.text_input.SearchField;
 import lwjgui.scene.control.text_input.TextArea;
 import lwjgui.scene.layout.HBox;
+import lwjgui.scene.layout.OpenGLPane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 import lwjgui.scene.shape.Circle;
@@ -36,6 +37,8 @@ public class ComplexExample extends LWJGUIApplication {
 	public static final int HEIGHT  = 240;
 
 	public static void main(String[] args) {
+		ModernOpenGL = false; // We're using Deprecated openGL in this example.
+		
 		launch(args);
 	}
 	
@@ -241,12 +244,15 @@ public class ComplexExample extends LWJGUIApplication {
 			Tab tab = new Tab("Tab 3");
 			tabPane.getTabs().add(tab);
 			
-			StackPane t = new StackPane();
-			t.setPadding(new Insets(8));
-			tab.setContent(t);
+			OpenGLPane gears = new OpenGLPane();
+			gears.setFillToParentHeight(true);
+			gears.setFillToParentWidth(true);
+			gears.setRendererCallback(new GearsDemo.GearsApplication(gears));
+			tab.setContent(gears);
 			
-			SearchField search = new SearchField();
-			t.getChildren().add(search);
+			Label label = new Label("This is an OpenGL pane!");
+			label.setTextFill(Color.WHITE);
+			gears.getChildren().add(label);
 		}
 		
 		// Set the scene

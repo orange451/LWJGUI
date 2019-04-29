@@ -352,4 +352,20 @@ public class Context {
 	protected void setLastPressed(Node node) {
 		this.lastPressed = node;
 	}
+
+	/**
+	 * Returns the viewport width for the context. Normally returns width, unless the pixel ratio is non 1.
+	 * @return
+	 */
+	public int getViewportWidth() {
+		return getWidth()*getPixelRatio();
+	}
+	
+	/**
+	 * Returns the viewport height for the context. Normally returns height, unless the pixel ratio is non 1.
+	 * @return
+	 */
+	public int getViewportHeight() {
+		return getHeight()*getPixelRatio();
+	}
 }

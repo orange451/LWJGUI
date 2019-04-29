@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import lwjgui.gl.Renderer;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.scene.Node;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
@@ -12,13 +13,11 @@ import lwjgui.scene.control.Menu;
 import lwjgui.scene.control.MenuBar;
 import lwjgui.scene.control.MenuItem;
 import lwjgui.scene.layout.BorderPane;
-import lwjgui.scene.layout.StackPane;
+import lwjgui.scene.layout.OpenGLPane;
 
 public class GearsDemo extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
-	
-	public static StackPane viewportPane;
 
 	public static void main(String[] args) {
 
@@ -55,29 +54,21 @@ public class GearsDemo extends LWJGUIApplication {
 			edit.getItems().add(new MenuItem("Redo"));
 			bar.getItems().add(edit);
 		}
-		
-		// Create viewport frame
-		viewportPane = new StackPane();
-		viewportPane.setBackground(null);
-		viewportPane.setFillToParentHeight(true);
-		viewportPane.setFillToParentWidth(true);
-		root.setCenter(viewportPane);
 
 		// Add some text
 		Label label = new Label("Hello World!");
 		label.setTextFill(Color.WHITE);
-		viewportPane.getChildren().add(label);
+		root.setCenter(label);
 
 		// Set the scene
 		window.setScene(new Scene(root, WIDTH, HEIGHT));
 		window.show();
 
 		// Start the gears application
-		window.setRenderingCallback(new GearsApplication());
+		window.setRenderingCallback(new GearsApplication(null));
 	}
-
+	
 	static class GearsApplication implements Renderer {
-
 		static float[] pos = {5.0f, 5.0f, 10.0f, 0.0f};
 		static float[] red = {0.8f, 0.1f, 0.0f, 1.0f};
 		static float[] green = {0.0f, 0.8f, 0.2f, 1.0f};
@@ -85,8 +76,12 @@ public class GearsDemo extends LWJGUIApplication {
 		static float view_rotx = 20.0f, view_roty = 30.0f, view_rotz = 0.0f;
 		static int gear1, gear2, gear3;
 		static float angle = 0.0f;
+		
+		private Node calledFrom;
 
-		public GearsApplication() {
+		public GearsApplication(Node calledFrom) {
+			this.calledFrom = calledFrom;
+			
 			glLightfv(GL_LIGHT0, GL_POSITION, pos);
 			glEnable(GL_LIGHTING);
 			glEnable(GL_LIGHT0);
@@ -228,16 +223,17 @@ public class GearsDemo extends LWJGUIApplication {
 		public void render(Context context) {
 			angle += 1.0e-1f;
 			
-			// We're using the viewportPane object instead of the context
-			// Because the viewportPane contains the size without the toolbar ontop
-			int w = (int)viewportPane.getWidth();
-			int h = (int)viewportPane.getHeight();
-			int ratio = context.getPixelRatio(); // for HighDPI displays
-
-			float aspect = (float)h / (float)w;
+			int w = (int)context.getWidth();
+			int h = (int)context.getHeight();
+			if ( calledFrom != null ) {
+				w = (int) calledFrom.getWidth();
+				h = (int) calledFrom.getHeight();
+			}
+			float aspect = (float)h/(float)w;
 			
+			// Clear to black
 			glClearColor(0,0,0,1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 			// Reset opengl flags
 			glCullFace(GL_BACK);
@@ -245,7 +241,6 @@ public class GearsDemo extends LWJGUIApplication {
 			glEnable(GL_DEPTH_TEST);
 
 			// Setup camera
-			glViewport(0, 0, w*ratio, h*ratio);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glFrustum(-1.0, 1.0, -aspect, aspect, 5.0, 60.0);

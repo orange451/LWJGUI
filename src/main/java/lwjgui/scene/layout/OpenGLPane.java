@@ -83,14 +83,11 @@ public class OpenGLPane extends StackPane {
 					float g = internalBackground.getGreen()/255f;
 					float b = internalBackground.getBlue()/255f;
 					GL11.glClearColor(r, g, b, 1);
-					GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+					GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 				}
 				GL11.glViewport(0, 0, (int)getWidth(), (int)getHeight());
 				renderer.render(context);
 				this.buffer.unbind();
-	
-				// Render FBO to screen
-				//this.buffer.render(context, (int)this.getAbsoluteX()+(int)getWidth(), (int)(context.getHeight()-this.getHeight())-(int)this.getAbsoluteY());
 			}
 			
 			// Restore nanovg

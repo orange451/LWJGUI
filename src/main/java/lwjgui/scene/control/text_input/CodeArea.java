@@ -21,12 +21,12 @@ public class CodeArea extends TextArea {
 		this.setFontSize(16);
 		
 		// Replace content window with our custom one
-		this.fakeBox = new CodeAreaContent(this);
-		this.internalScrollPane.setContent(fakeBox);
+		this.internalRenderingPane = new CodeAreaContent(this);
+		this.internalScrollPane.setContent(internalRenderingPane);
 
 		// Add line counter to scrollpane
 		this.lineCounter = new LineCounterNode();
-		this.fakeBox.getChildren().add(lineCounter);
+		this.internalRenderingPane.getChildren().add(lineCounter);
 	}
 	
 	public CodeArea() {

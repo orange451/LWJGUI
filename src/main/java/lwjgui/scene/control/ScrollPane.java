@@ -14,12 +14,13 @@ import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Node;
 import lwjgui.scene.Window;
 import lwjgui.scene.layout.Pane;
 import lwjgui.theme.Theme;
 
-public class ScrollPane extends Control {
+public class ScrollPane extends FillableRegion {
 	
 	private Node content;
 	protected ScrollCanvas internalScrollCanvas;
@@ -46,6 +47,7 @@ public class ScrollPane extends Control {
 	private Color controlFill = Theme.current().getControl();
 	
 	private Color controlOutlineFill = Theme.current().getControlOutline();
+	protected boolean decorated = true;
 	
 	public ScrollPane() {
 		this.setPrefSize(100, 100);
@@ -53,7 +55,7 @@ public class ScrollPane extends Control {
 		this.flag_clip = true;
 		this.viewportSize = new Vector2i();
 		
-		this.setBackground(Theme.current().getPane());
+		//this.setBackground(Theme.current().getPane());
 		
 		this.vBar = new ScrollBar(Orientation.VERTICAL);
 		this.hBar = new ScrollBar(Orientation.HORIZONTAL);
@@ -182,6 +184,9 @@ public class ScrollPane extends Control {
 		this.controlOutlineFill = controlOutlineFill;
 	}
 
+	/**
+	 * Returns unmodifiable list of children.
+	 */
 	@Override
 	public ObservableList<Node> getChildren() {
 		return new ObservableList<Node>(internalScrollCanvas);
@@ -329,8 +334,10 @@ public class ScrollPane extends Control {
 		}
 		
 		// Pane Outline
-		Color outlineColor = this.isDescendentSelected() ? selectionFill : controlOutlineFill;
-		LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth(), getHeight(), outlineColor);
+		if ( decorated ) {
+			Color outlineColor = this.isDescendentSelected() ? selectionFill : controlOutlineFill;
+			LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth(), getHeight(), outlineColor);
+		}
 	}
 	
 	public void setContent( Node content ) {

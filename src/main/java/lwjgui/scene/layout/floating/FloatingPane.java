@@ -2,9 +2,9 @@ package lwjgui.scene.layout.floating;
 
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.Node;
-import lwjgui.scene.Region;
+import lwjgui.scene.layout.Pane;
 
-public class FloatingPane extends Region {
+public class FloatingPane extends Pane {
 	private double absx;
 	private double absy;
 

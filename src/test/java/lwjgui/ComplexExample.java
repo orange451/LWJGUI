@@ -21,6 +21,7 @@ import lwjgui.scene.control.Tab;
 import lwjgui.scene.control.TabPane;
 import lwjgui.scene.control.ToggleGroup;
 import lwjgui.scene.control.ToolBar;
+import lwjgui.scene.control.text_input.SearchField;
 import lwjgui.scene.control.text_input.TextArea;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
@@ -239,6 +240,13 @@ public class ComplexExample extends LWJGUIApplication {
 		{
 			Tab tab = new Tab("Tab 3");
 			tabPane.getTabs().add(tab);
+			
+			StackPane t = new StackPane();
+			t.setPadding(new Insets(8));
+			tab.setContent(t);
+			
+			SearchField search = new SearchField();
+			t.getChildren().add(search);
 		}
 		
 		// Set the scene

@@ -26,6 +26,8 @@ class TextInputContentRenderer extends Pane {
 		this.setBackground(null);
 		
 		this.setAlignment(Pos.TOP_LEFT);
+		
+		this.flag_clip = true;
 	}
 	
 	private long lastTime;
@@ -36,7 +38,7 @@ class TextInputContentRenderer extends Pane {
 			textInputControl.setText(textInputControl.getText());
 		}
 		
-		this.clip(context);
+		this.clip(context, -2);
 		this.textInputControl.renderCaret += lastTime-System.currentTimeMillis();
 		lastTime = System.currentTimeMillis();
 		
@@ -167,5 +169,7 @@ class TextInputContentRenderer extends Pane {
 				}
 			}
 		}
+		
+		super.render(context);
 	}
 }

@@ -89,7 +89,7 @@ public class Tab {
 				}
 			});
 			
-			this.setBackground(null);
+			//this.setBackground(null);
 			this.setPrefSize(4, 4);
 			this.setPadding(new Insets(3,6,3,6));
 		}

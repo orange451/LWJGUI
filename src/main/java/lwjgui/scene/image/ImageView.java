@@ -3,7 +3,6 @@ package lwjgui.scene.image;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.LWJGUIUtil;
 import lwjgui.scene.Context;
 import lwjgui.scene.FillableRegion;
 
@@ -12,7 +11,6 @@ public class ImageView extends FillableRegion {
 	private boolean stretchToFit = true;
 	
 	public ImageView() {
-		this.setBackground(null);
 		this.setPrefSize(100, 100);
 	}
 	
@@ -32,7 +30,6 @@ public class ImageView extends FillableRegion {
 
 	@Override
 	public void render(Context context) {
-		LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), getBackground());
 		
 		if ( image == null )
 			return;

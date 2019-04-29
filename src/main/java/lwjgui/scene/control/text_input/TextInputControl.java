@@ -46,7 +46,8 @@ public abstract class TextInputControl extends Control {
 	int selectionEndPosition;
 	
 	protected TextInputScrollPane internalScrollPane;
-	protected TextInputContentRenderer fakeBox;
+	protected TextInputContentRenderer internalRenderingPane;
+	protected float cornerRadius = 0;
 	
 	private StateStack<TextState> undoStack;
 	private boolean forceSaveState;
@@ -83,17 +84,11 @@ public abstract class TextInputControl extends Control {
 	protected TextInputControlShortcuts shortcuts;
 	
 	public TextInputControl() {
-
-		/*
-		 * Visual setup
-		 */
-		
-		setBackground(Theme.current().getBackground());
 		
 		/*
 		 * Input setup
 		 */
-		this.fakeBox = new TextInputContentRenderer(this);
+		this.internalRenderingPane = new TextInputContentRenderer(this);
 		
 		undoStack = new StateStack<TextState>();
 		setText("");
@@ -132,7 +127,7 @@ public abstract class TextInputControl extends Control {
 		 */
 		
 		internalScrollPane = new TextInputControl.TextInputScrollPane();
-		internalScrollPane.setContent(fakeBox);
+		internalScrollPane.setContent(internalRenderingPane);
 		children.add(internalScrollPane);
 	}
 	
@@ -643,7 +638,7 @@ public abstract class TextInputControl extends Control {
 		internalScrollPane.setPrefSize(getWidth(), getHeight());
 
 		int width = getMaxTextWidth();
-		this.fakeBox.setMinSize(width, lines.size()*fontSize);
+		this.internalRenderingPane.setMinSize(width, lines.size()*fontSize);
 		
 		super.resize();
 		
@@ -866,18 +861,18 @@ public abstract class TextInputControl extends Control {
 		float y = (int)(getY()+this.getInnerBounds().getY());
 		float w = (int)this.getInnerBounds().getWidth();
 		float h = (int)this.getInnerBounds().getHeight();
-		float r = 2;
+		float r = 2 + this.cornerRadius;
 
-		this.clip(context,40);
+		this.clip(context,8);
 		
 		// Selection graphic
 		if (isDescendentSelected() && isDecorated()) {
 			int feather = 4;
 			Color color = context.isFocused() ? selectionFill : selectionPassiveFill;
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
-				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w+1,h+1, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w,h, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 				NanoVG.nvgBeginPath(vg);
-				NanoVG.nvgRect(vg, -feather,-feather, w+feather*2,h+feather*2);
+				NanoVG.nvgRoundedRect(vg, -feather,-feather, w+feather*2,h+feather*2, r);
 				NanoVG.nvgFillPaint(vg, paint);
 				NanoVG.nvgFill(vg);
 				paint.free();
@@ -888,27 +883,25 @@ public abstract class TextInputControl extends Control {
 		if (isDecorated()) {
 			Color outlineColor = this.isDescendentSelected()? selectionFill : controlOutlineFill;
 			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRoundedRect(context.getNVG(), x, y, w, h, (float) 2);
+			NanoVG.nvgRoundedRect(context.getNVG(), x, y, w, h, (float) r);
 			NanoVG.nvgFillColor(context.getNVG(), outlineColor.getNVG());
 			NanoVG.nvgFill(context.getNVG());
 		}
 		
 		// Background
-		if (isDecorated() && getBackground() != null ) {	
+		if (isDecorated() ) {	
 			int inset = 1;
-			LWJGUIUtil.fillRect(context, getX()+inset, getY()+inset, w-inset*2, h-inset*2, this.getBackground());
+			LWJGUIUtil.fillRoundRect(context, getX()+inset, getY()+inset, w-inset*2, h-inset*2, this.cornerRadius+1, Theme.current().getBackground());
 		}
 		
-		//Orange, you were calling both these, so I commented this one out. Feel free to switch it around later.
+		// Draw sub nodes
 		//this.internalScrollPane.render(context);
-		
-		// Draw text
 		super.render(context);
 		
 		// Draw Prompt
 		if ( getLength() == 0 && prompt != null && prompt.length() > 0 ) {
-			int xx = (int) this.fakeBox.getX();
-			int yy = (int) this.fakeBox.getY();
+			int xx = (int) this.internalRenderingPane.getX();
+			int yy = (int) this.internalRenderingPane.getY();
 			
 			// Setup font
 			NanoVG.nvgFontSize(vg, fontSize);
@@ -926,7 +919,7 @@ public abstract class TextInputControl extends Control {
 		if (isDecorated()) {
 			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRect(vg, x, y, w, 4);
+			NanoVG.nvgRoundedRect(vg, x, y, w, h, r);
 			NanoVG.nvgFillPaint(vg, bg);
 			NanoVG.nvgFill(vg);
 		}
@@ -939,7 +932,7 @@ public abstract class TextInputControl extends Control {
 					float inset = 1.33f;
 					w += 1;
 					h += 1;
-					NanoVG.nvgRoundedRect(vg, inset, inset, w-inset*2,h-inset*2, (float) r-inset);
+					NanoVG.nvgRoundedRect(vg, inset, inset, w-inset*2-1,h-inset*2-1, (float) r-inset);
 					NanoVG.nvgStrokeColor(vg, col.getNVG());
 					NanoVG.nvgStrokeWidth(vg, inset*1.25f);
 					NanoVG.nvgStroke(vg);
@@ -977,7 +970,6 @@ public abstract class TextInputControl extends Control {
 			setVbarPolicy(ScrollBarPolicy.NEVER);
 			setHbarPolicy(ScrollBarPolicy.NEVER);
 			setPadding(new Insets(4,4,4,4));
-			setBackground(null);
 			
 			// Enter
 			getViewport().setOnMouseEntered(event -> {
@@ -1020,6 +1012,8 @@ public abstract class TextInputControl extends Control {
 				caretPosition = getCaretAtMouse();
 				selectionEndPosition = caretPosition;
 			});
+			
+			this.decorated = false;
 		}
 		
 		public void scrollToBottom() {

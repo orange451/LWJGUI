@@ -971,6 +971,8 @@ public abstract class TextInputControl extends Control {
 			setHbarPolicy(ScrollBarPolicy.NEVER);
 			setPadding(new Insets(3,4,4,3));
 			
+			this.flag_clip = false;
+			
 			// Enter
 			getViewport().setOnMouseEntered(event -> {
 				getScene().setCursor(Cursor.IBEAM);

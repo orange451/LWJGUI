@@ -85,7 +85,7 @@ public class ScrollPane extends FillableRegion {
 	}
 	
 	private void update() {
-		viewportSize.set((int)getWidth(),(int)getHeight());
+		viewportSize.set((int)getWidth()-1,(int)getHeight()-1);
 		if ( vBar.active )
 			viewportSize.x -= (thickness+barPadding*2);
 		if ( hBar.active )
@@ -109,7 +109,7 @@ public class ScrollPane extends FillableRegion {
 			internalScrollCanvas.setAbsolutePosition(this.getX()+1, this.getY()+1);
 			content.setAbsolutePosition(internalScrollCanvas.getX()+this.padding.getLeft()-hBar.pixel, internalScrollCanvas.getY()+this.padding.getTop()-vBar.pixel);
 			
-			sizeInternal(viewportSize.x-this.getPadding().getWidth(), viewportSize.y-this.getPadding().getHeight());
+			sizeInternal(viewportSize.x-1, viewportSize.y-1);
 			this.internalScrollCanvas.setParent(this);
 			
 			// Update scrollbars
@@ -288,7 +288,7 @@ public class ScrollPane extends FillableRegion {
 		
 		hoveredBar = getBarUnderMouse();
 
-		clip(context);
+		clip(context, 0);
 
 		double svx = getX()+viewportSize.x;
 		double svy = getY()+1;
@@ -331,7 +331,7 @@ public class ScrollPane extends FillableRegion {
 		// Pane Outline
 		if ( decorated ) {
 			Color outlineColor = this.isDescendentSelected() ? selectionFill : controlOutlineFill;
-			LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth(), getHeight(), outlineColor);
+			LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth()-1, getHeight()-1, outlineColor);
 		}
 	}
 	
@@ -347,7 +347,7 @@ public class ScrollPane extends FillableRegion {
 	
 	static class ScrollCanvas extends Pane {
 		ScrollCanvas() {
-			this.flag_clip = false;
+			this.flag_clip = true;
 			this.setBackground(null);
 			this.setAlignment(Pos.TOP_LEFT);
 		}
@@ -356,7 +356,11 @@ public class ScrollPane extends FillableRegion {
 			this.parent = node;
 		}
 		
-		
+		@Override
+		public void render(Context context) {
+			this.clip(context,-1);
+			super.render(context);
+		}
 	}
 	
 	public enum ScrollBarPolicy {

@@ -59,7 +59,10 @@ public class CodeAreaContextMenuExample extends LWJGUIApplication {
 		}
 		
 		// Add some text
-		c.setText("printf(\"Hello World\");");
+		c.setText("print(\"Hello World\")\n"
+				+ "\n"
+				+ "var a = 10\n"
+				+ "var test = \"I'm a string\"");
 		
 		// Set the scene
 		window.setScene(new Scene(pane, WIDTH, HEIGHT));

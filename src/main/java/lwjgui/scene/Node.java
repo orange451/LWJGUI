@@ -386,8 +386,16 @@ public abstract class Node implements Resizable {
 				// Update temp bounds
 				tempBounds.minX = (int)par.getX();
 				tempBounds.minY = (int)par.getY();
-				tempBounds.maxX = (int)Math.ceil(par.getX()+par.getWidth()+0.5);
-				tempBounds.maxY = (int)Math.ceil(par.getY()+par.getHeight()+0.5);
+				tempBounds.maxX = (int)Math.ceil(par.getX()+par.getWidth());
+				tempBounds.maxY = (int)Math.ceil(par.getY()+par.getHeight());
+				
+				if ( par instanceof Region ) {
+					Insets pad = ((Region)par).getPadding();
+					tempBounds.minX += pad.getLeft();
+					tempBounds.maxX -= pad.getRight();
+					tempBounds.minY += pad.getTop();
+					tempBounds.maxY -= pad.getBottom();
+				}
 				
 				// Clamp
 				if ( tempBounds.minX > clipBoundsTemp.minX )

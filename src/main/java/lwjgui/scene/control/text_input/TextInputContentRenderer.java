@@ -38,7 +38,7 @@ class TextInputContentRenderer extends Pane {
 			textInputControl.setText(textInputControl.getText());
 		}
 		
-		this.clip(context, -2);
+		this.clip(context, -1);
 		this.textInputControl.renderCaret += lastTime-System.currentTimeMillis();
 		lastTime = System.currentTimeMillis();
 		

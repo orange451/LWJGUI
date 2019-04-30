@@ -51,6 +51,7 @@ import lwjgui.event.listener.WindowFocusListener;
 import lwjgui.event.listener.WindowSizeListener;
 import lwjgui.gl.Renderer;
 import lwjgui.paint.Color;
+import lwjgui.scene.control.PopupWindow;
 import lwjgui.theme.Theme;
 
 public class Window {
@@ -105,7 +106,13 @@ public class Window {
 
 			@Override
 			public void invoke(long window, int codepoint) {
-				notifyTextInput(Window.this.scene, new TypeEvent(codepoint));
+			notifyTextInput(Window.this.scene, new TypeEvent(codepoint));
+			
+			ObservableList<PopupWindow> popups = Window.this.scene.getPopups();
+			for (int i = 0; i < popups.size(); i++) {
+				Node root = popups.get(i);
+				notifyTextInput(root, new TypeEvent(codepoint));
+			}
 			}
 			
 			private void notifyTextInput(Node root, TypeEvent event) {
@@ -153,6 +160,12 @@ public class Window {
 				 */
 
 				notifyKeyInput(Window.this.scene, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+				
+				ObservableList<PopupWindow> popups = Window.this.scene.getPopups();
+				for (int i = 0; i < popups.size(); i++) {
+					Node root = popups.get(i);
+					notifyKeyInput(root, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+				}
 			}
 			
 			private void notifyKeyInput(Node root, int key, int scancode, int action, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {

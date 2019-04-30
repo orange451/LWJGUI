@@ -10,7 +10,7 @@ import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 
 public class RadioButton extends ToggleButton {
-	private int size = 16;
+	private int size = 18;
 
 	public RadioButton( String name, ToggleGroup group ) {
 		super(name, group);
@@ -61,7 +61,7 @@ public class RadioButton extends ToggleButton {
 			int xx = (int) (this.getX()+this.size/2f);
 			int yy = (int) (this.getY()+this.size/2f);
 			
-			float r = size * 0.25f;
+			float r = size * 0.225f;
 
 			NanoVG.nvgBeginPath(nvg);
 			NanoVG.nvgShapeAntiAlias(nvg, true);

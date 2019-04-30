@@ -127,7 +127,7 @@ public abstract class ButtonBase extends Labeled {
 			if ( isDisabled() )
 				sel = Theme.current().getSelectionPassive().getNVG();
 			
-			NVGPaint paint = NanoVG.nvgBoxGradient(vg, x,y, w,h,c, feather, sel, Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+			NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+1,y+1, w-2,h-2,c, feather, sel, Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
 			buttonMask( vg, x-feather, y-feather, w+feather*2, h+feather*2, 0 );
 			NanoVG.nvgFillPaint(vg, paint);
@@ -199,7 +199,7 @@ public abstract class ButtonBase extends Labeled {
 	}
 
 	private void buttonMask(long vg, float x, float y, float w, float h, float rOffset) {
-		NanoVG.nvgRoundedRectVarying(vg, x, y, w, h, (float)cornerNW+rOffset, (float)cornerNE+rOffset, (float)cornerSE+rOffset, (float)cornerSW+rOffset);
+		NanoVG.nvgRoundedRectVarying(vg, x+1, y+1, w-2, h-2, (float)cornerNW+rOffset, (float)cornerNE+rOffset, (float)cornerSE+rOffset, (float)cornerSW+rOffset);
 	}
 	
 	protected Point getDrawSize() {

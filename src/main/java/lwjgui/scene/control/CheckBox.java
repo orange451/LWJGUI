@@ -15,7 +15,7 @@ import lwjgui.theme.Theme;
 public class CheckBox extends ButtonBase {
 	private boolean checked;
 	
-	private int size = 16;
+	private int size = 18;
 	
 	private String checkmark = "\u2714";
 

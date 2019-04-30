@@ -656,7 +656,7 @@ public abstract class TextInputControl extends Control {
 			editing = true;
 		} else {
 			if ( editing ) {
-				if ( onSelectEvent != null ) {
+				if ( onDeselectEvent != null ) {
 					EventHelper.fireEvent(onDeselectEvent, new Event());
 				}
 				this.deselect();

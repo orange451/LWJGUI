@@ -1,5 +1,7 @@
 package lwjgui.scene.layout;
 
+import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
@@ -51,22 +53,41 @@ public class GridPane extends Pane {
 				int col = getColumn(selected);
 				int row = getRow(selected);
 				
-				Node e = null;
-				int tries = 0;
-				while ( e == null && tries < 32 ) {
-					tries++;
-					if ( event.isShiftDown ) {
-						row--;
-					} else {
-						row++;
-					}
-					row = Math.min(maxY-1, Math.max(row, 0));
-					e = elements[col][row];
+				// Search vertically for a node
+				Vector2i direction = new Vector2i( 0, event.isShiftDown?-1:1 );
+				Node e = searchForNextNode( new Vector2i( col, row ), direction);
+				
+				// Search horizontally for a node
+				if ( e == null ) {
+					direction = new Vector2i( event.isShiftDown?-1:1, 0 );
+					e = searchForNextNode( new Vector2i( col, row ), direction);
 				}
 				
-				LWJGUI.getCurrentContext().setSelected(e);
+				// If we found a node, select it
+				if ( e != null ) {
+					LWJGUI.getCurrentContext().setSelected(e);
+				}
 			}
 		});
+	}
+	
+	private Node searchForNextNode( Vector2i position, Vector2i direction ) {
+		Node ret = null;
+		int tries = 0;
+		
+		int x = position.x;
+		int y = position.y;
+		
+		while ( ret == null && tries < 32 ) {
+			x += direction.x;
+			y += direction.y;
+			if ( x >= 0 && x < maxX && y >= 0 && y < maxY ) {
+				ret = elements[x][y];
+			}
+			tries++;
+		}
+		
+		return ret;
 	}
 	
 	/**

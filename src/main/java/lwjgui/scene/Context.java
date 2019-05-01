@@ -19,11 +19,11 @@ import lwjgui.scene.control.PopupWindow;
 import lwjgui.util.Bounds;
 
 public class Context {
-	private long windowHandle;
+	private long windowHandle = -1;
 	private long nvgContext;
 
-	private int windowWidth = 1;
-	private int windowHeight = 1;
+	protected int windowWidth = 1;
+	protected int windowHeight = 1;
 	private int screenPixelRatio = 1;
 	
 	private boolean modernOpenGL;
@@ -89,6 +89,9 @@ public class Context {
 	}
 	
 	protected void updateContext() {
+		if ( windowHandle == -1 )
+			return;
+		
 		int[] windowWidthArr = {0}, windowHeightArr = {0};
 		int[] frameBufferWidthArr = {0}, frameBufferHeightArr = {0};
 		int[] xposArr = {0}, yposArr = {0};

@@ -146,6 +146,7 @@ public abstract class TextInputControl extends Control {
 	public void clear() {
 		saveState();
 		setText("");
+		deselect();
 	}
 	
 	public void deselect() {
@@ -170,7 +171,6 @@ public abstract class TextInputControl extends Control {
 			this.glyphData.clear();
 		}
 		this.caretPosition = 0;
-		this.deselect();
 		
 		String trail = "[!$*]T!R@A#I$L%I^N&G[!$*]"; // Naive fix to allow trailing blank lines to still be parsed
 		text = text.replace("\r", "");
@@ -282,6 +282,7 @@ public abstract class TextInputControl extends Control {
 		String before = getText(0, index);
 		String after = getText(index, getLength());
 		setText(before + text + after);
+		deselect();
 	}
 	
 	protected boolean deleteSelection() {
@@ -303,7 +304,8 @@ public abstract class TextInputControl extends Control {
 		String after = getText(range.getEnd(), getLength());
 
 		saveState();
-		this.setText(before+after);
+		setText(before+after);
+		deselect();
 	}
 	
 	public void deleteText(int start, int end) {
@@ -395,6 +397,7 @@ public abstract class TextInputControl extends Control {
 		if ( state == null )
 			return;
 		setText(state.text);
+		deselect();
 		this.setCaretPosition(state.caretPosition);
 		forceSaveState = true;
 	}
@@ -405,6 +408,7 @@ public abstract class TextInputControl extends Control {
 			return;
 		//this.undoStack.Rewind(); // Go back one more, since setting text will overwrite
 		setText(state.text);
+		deselect();
 		this.setCaretPosition(state.caretPosition);
 	}
 	

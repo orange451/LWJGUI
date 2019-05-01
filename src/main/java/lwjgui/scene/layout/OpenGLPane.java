@@ -13,13 +13,15 @@ import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 
-public class OpenGLPane extends StackPane {
+public class OpenGLPane extends Pane {
 	private Vector2i oldSize = new Vector2i(1,1);
+	private Context internalContext;
 	private OffscreenBuffer buffer;
 	private Renderer renderer;
 	private Color internalBackground;
 	private int nanoImage = -1;
 	private boolean flipY;
+	private boolean autoClear = true;
 	
 	public OpenGLPane() {
 		resizeBuffer();
@@ -37,6 +39,15 @@ public class OpenGLPane extends StackPane {
 			return;
 		}
 		
+		if ( internalContext == null ) {
+			internalContext = new Context(-1) {
+				{
+					this.windowWidth = (int) OpenGLPane.this.getWidth();
+					this.windowHeight = (int) OpenGLPane.this.getHeight();
+				}
+			};
+		}
+		
 		if ( this.cached_context.isModernOpenGL() ) {
 			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.cached_context.getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
 		} else {
@@ -50,6 +61,18 @@ public class OpenGLPane extends StackPane {
 	
 	public void setFlipY(boolean flip) {
 		this.flipY = flip;
+	}
+	
+	public boolean getFlipY() {
+		return this.flipY;
+	}
+	
+	public void setAutoClear(boolean autoClear) {
+		this.autoClear = autoClear;
+	}
+	
+	public boolean isAutoClear() {
+		return this.autoClear;
 	}
 	
 	@Override
@@ -74,19 +97,28 @@ public class OpenGLPane extends StackPane {
 		// FBO Rendering
 		if ( renderer != null && nanoImage != -1 ) {
 			NanoVG.nvgSave(context.getNVG());
-			NanoVG.nvgEndFrame(context.getNVG());
+			//NanoVG.nvgEndFrame(context.getNVG());
 			{
 				// Bind & render to FBO
 				this.buffer.bind();
-				if ( this.internalBackground != null ) {
-					float r = internalBackground.getRed()/255f;
-					float g = internalBackground.getGreen()/255f;
-					float b = internalBackground.getBlue()/255f;
-					GL11.glClearColor(r, g, b, 1);
-					GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
+				{
+					// Background fill
+					if ( this.internalBackground != null && isAutoClear() ) {
+						float r = internalBackground.getRed()/255f;
+						float g = internalBackground.getGreen()/255f;
+						float b = internalBackground.getBlue()/255f;
+						GL11.glClearColor(r, g, b, 1);
+						GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
+					}
+					
+					// Viewport
+					GL11.glViewport(0, 0, (int)getWidth(), (int)getHeight());
+					
+					// Drawing
+					NanoVG.nvgBeginFrame(internalContext.getNVG(), (int)getWidth(), (int)getHeight(), internalContext.getPixelRatio());
+					renderer.render(internalContext);
+					NanoVG.nvgEndFrame(internalContext.getNVG());
 				}
-				GL11.glViewport(0, 0, (int)getWidth(), (int)getHeight());
-				renderer.render(context);
 				this.buffer.unbind();
 			}
 			

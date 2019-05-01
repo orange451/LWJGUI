@@ -45,16 +45,14 @@ public class CodeArea extends TextArea {
 		// Position line counter
 		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
 		lineCounter.setLocalPosition(this.internalScrollPane, 
-				-internalScrollPane.getPadding().getLeft(), 
+				-internalScrollPane.getPadding().getLeft()+1, 
 				(internalScrollPane.getContent().getY()-internalScrollPane.getPadding().getTop())-internalScrollPane.getY());
 	}
 	
 	@Override
 	public void render(Context context) {
-		super.render(context);
-		
-		this.clip(context);
 		lineCounter.render(context);
+		super.render(context);
 	}
 	
 	class CodeAreaContent extends TextInputContentRenderer {

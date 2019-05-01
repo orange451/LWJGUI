@@ -1,6 +1,5 @@
 package lwjgui.scene.control;
 
-import org.joml.Vector2d;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGPaint;
@@ -16,7 +15,6 @@ import lwjgui.gl.Renderer;
 import lwjgui.paint.Color;
 import lwjgui.paint.ColorNameLookup;
 import lwjgui.scene.Context;
-import lwjgui.scene.Node;
 import lwjgui.scene.Scene;
 import lwjgui.scene.control.text_input.TextField;
 import lwjgui.scene.layout.GridPane;
@@ -30,6 +28,7 @@ import lwjgui.theme.Theme;
 
 public class ColorPicker extends ButtonBase {
 	private Color color;
+	private Color cancelColor;
 	private PopupWindow context;
 	
 	public ColorPicker(Color color) {
@@ -53,7 +52,10 @@ public class ColorPicker extends ButtonBase {
 	}
 	
 	public void setColor(Color color) {
-		this.color = color;
+		if ( color == null )
+			return;
+		
+		this.color = new Color(color);
 		this.setText(ColorNameLookup.matchName(color));
 		
 		StackPane g = new StackPane();
@@ -148,14 +150,24 @@ public class ColorPicker extends ButtonBase {
 		private TextField b;
 		
 		private void update(Color newColor) {
-			colorS.setBackground(newColor);
+			tempColor(newColor);
 			r.setText(""+newColor.getRed());
 			g.setText(""+newColor.getGreen());
 			b.setText(""+newColor.getBlue());
 		}
 		
+		private void tempColor(Color newColor) {
+			colorS.setBackground(newColor);
+			colorPick.setBackground(newColor);
+			setColor(newColor);
+			
+			if ( buttonEvent != null ) {
+				EventHelper.fireEvent(buttonEvent, new ActionEvent());
+			}
+		}
+		
 		private void updateFromText() {
-			colorS.setBackground(new Color( Integer.parseInt(r.getText()), Integer.parseInt(g.getText()), Integer.parseInt(b.getText()) ));
+			tempColor(new Color( Integer.parseInt(r.getText()), Integer.parseInt(g.getText()), Integer.parseInt(b.getText()) ));
 			
 			LWJGUI.runLater(()->{
 				Color newColor = colorS.getBackground();
@@ -186,7 +198,7 @@ public class ColorPicker extends ButtonBase {
 						int y = index/(int)colorPane.getWidth();
 						int x = index%(int)colorPane.getWidth();
 						colorPick.setAbsolutePosition(colorPane.getX()+x-colorPick.getWidth()/2f, colorPane.getY()+(colorPane.getHeight()-y)-colorPick.getHeight()/2f);
-						colorPick.setBackground(newColor);
+						tempColor(newColor);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -247,10 +259,8 @@ public class ColorPicker extends ButtonBase {
 		
 		private void apply() {
 			setColor(colorS.getBackground());
-			
-			if ( buttonEvent != null ) {
-				EventHelper.fireEvent(buttonEvent, new ActionEvent());
-			}
+			cancelColor.set(color);
+			tempColor(color);
 		}
 		
 		public ColorPopup() {
@@ -343,6 +353,7 @@ public class ColorPicker extends ButtonBase {
 						g.setText(""+c.getGreen());
 						b.setText(""+c.getBlue());
 						colorPick.setBackground(c);
+						tempColor(c);
 					}
 				};
 				
@@ -385,8 +396,23 @@ public class ColorPicker extends ButtonBase {
 		}
 		
 		@Override
+		public void close() {
+			super.close();
+			try {
+				setColor(cancelColor);
+				
+				if ( buttonEvent != null ) {
+					EventHelper.fireEvent(buttonEvent, new ActionEvent());
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		@Override
 		public void show(Scene scene, double absoluteX, double absoluteY) {
 			super.show(scene, absoluteX, absoluteY);
+			cancelColor = new Color(color);
 			update(color);
 		}
 

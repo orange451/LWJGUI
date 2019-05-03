@@ -10,7 +10,6 @@ import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.OpenGLPane;
 import lwjgui.scene.layout.StackPane;
-import lwjgui.scene.layout.VBox;
 
 public class OpenGLPaneExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
@@ -32,9 +31,6 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 		// Create a simple pane
 		StackPane root = new StackPane();
 
-		VBox vbox = new VBox();
-		root.getChildren().add(vbox);
-
 		// Create an OpenGL pane (canvas)
 		OpenGLPane ogl = new OpenGLPane();
 		ogl.setPrefSize(24, 24);
@@ -44,7 +40,7 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 
 		// Create label, set icon to opengl pane
 		Label testLabel = new Label( "This label's icon is rendered with OpenGL!", ogl );
-		vbox.getChildren().add(testLabel);
+		root.getChildren().add(testLabel);
 
 		// Set the scene
 		window.setScene(new Scene(root, WIDTH, HEIGHT));

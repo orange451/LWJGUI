@@ -63,7 +63,7 @@ public class PannableExample extends LWJGUIApplication {
 		{
 			HBox ui = new HBox();
 			ui.setBackground(null);
-			ui.setPadding(new Insets(8, 8, 8, 8));
+			ui.setPadding(new Insets(8, 0, 0, 0));
 			root.getChildren().add(ui);
 			
 			Button b = new Button("Center");

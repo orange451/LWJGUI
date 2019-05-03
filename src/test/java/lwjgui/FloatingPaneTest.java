@@ -39,7 +39,7 @@ public class FloatingPaneTest extends LWJGUIApplication {
 		t.getChildren().add(new Label("Hello World!"));
 		
 		// Set the scene
-		window.setScene(new Scene(pane));
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
 		window.show();
 	}
 

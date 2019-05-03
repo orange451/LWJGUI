@@ -9,6 +9,7 @@ import lwjgui.event.ChangeEvent;
 import lwjgui.event.ElementCallback;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
+import lwjgui.event.TabDragEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
@@ -31,7 +32,7 @@ public class TabPane extends Control {
 	private TabPaneButtonBox tabButtons;
 	private StackPane contentPane;
 	
-	//private TabDragEvent tabDragEvent;
+	private TabDragEvent tabDragEvent;
 	private EventHandler<ChangeEvent<Tab>> selectionChangeEvent;
 	
 	public TabPane() {
@@ -62,20 +63,6 @@ public class TabPane extends Control {
 			public void onEvent(Tab changed) {
 				tabButtons.getChildren().add(changed.button);
 				changed.tabPane = TabPane.this;
-				
-				changed.button.setOnMousePressed(event -> {
-					select(changed);
-					event.consume();
-				});
-				
-				changed.button.setOnMouseReleased(event -> {
-					select(changed);
-					event.consume();
-				});
-				
-				changed.button.setOnMouseDragged(event -> {
-					System.out.println("Not implemented yet");
-				});
 			}
 		});		
 		this.tabs.setRemoveCallback(new ElementCallback<Tab>() {
@@ -170,7 +157,7 @@ public class TabPane extends Control {
 		// Render internal pane
 		this.clip(context);
 		internal.render(context);
-		
+
 		for (int i = 0; i < tabs.size(); i++) {
 			Tab tab = tabs.get(i);
 			TabButton button = tab.button;
@@ -208,7 +195,7 @@ public class TabPane extends Control {
 		TabPaneButtonBox() {
 			this.flag_clip = true;
 			this.setFillToParentWidth(true);
-			this.setSpacing(2);
+			this.setSpacing(1);
 			this.setPadding(new Insets(6,4,0,4));
 			this.setPrefHeight(28);
 			this.setMinHeight(this.getPrefHeight());

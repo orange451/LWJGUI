@@ -36,7 +36,7 @@ public class TabPaneExample extends LWJGUIApplication {
 		
 		// Tab 2
 		{
-			Tab tab = new Tab("Tab 2");
+			Tab tab = new Tab("Tab 2", false);
 			tab.setContent(new Rectangle(96, 96, 8, Color.RED));
 			tabs.getTabs().add(tab);
 		}

@@ -224,8 +224,6 @@ public class Window {
 		});
 		
         GLFW.glfwSetMouseButtonCallback(context.getWindowHandle(), new GLFWMouseButtonCallback() {
-    		Node lastPressed = null;
-    			
 			@Override
 			public void invoke(long window, int button, int downup, int modifier) {
 				/*
@@ -251,8 +249,6 @@ public class Window {
 					if ( hovered != null ) {
 						hovered.onMousePressed(context.getMouseX(), context.getMouseY(), button);
 					}
-					lastPressed = hovered;
-					context.setLastPressed(hovered);
 				} else { // Release
 					
 					Node hovered = context.getHovered();
@@ -265,8 +261,8 @@ public class Window {
 						}
 					}
 					
-					if ( lastPressed != null ) {
-						lastPressed.mousePressed = false;
+					if ( context.getLastPressed() != null && hovered != null && !context.getLastPressed().equals(hovered) ) {
+						context.getLastPressed().onMouseReleased(context.getMouseX(), context.getMouseY(), button);
 					}
 				}
 			}

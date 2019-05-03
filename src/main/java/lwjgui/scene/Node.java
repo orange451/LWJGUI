@@ -808,6 +808,7 @@ public abstract class Node implements Resizable {
 	
 	protected void onMousePressed(double mouseX, double mouseY, int button) {
 		mousePressed = true;
+		cached_context.setLastPressed(this);
 		
 		MouseEvent event = new MouseEvent(mouseX, mouseY, button);
 		

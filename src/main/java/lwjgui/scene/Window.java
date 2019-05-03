@@ -262,7 +262,8 @@ public class Window {
 					}
 					
 					if ( context.getLastPressed() != null && hovered != null && !context.getLastPressed().equals(hovered) ) {
-						context.getLastPressed().onMouseReleased(context.getMouseX(), context.getMouseY(), button);
+						//context.getLastPressed().onMouseReleased(context.getMouseX(), context.getMouseY(), button);
+						context.getLastPressed().mousePressed = false;
 					}
 				}
 			}

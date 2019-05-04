@@ -122,8 +122,6 @@ public abstract class Labeled extends Control {
 	
 	@Override
 	public void render(Context context) {
-		// super.render(context);
-		
 		int textHeight = (int) Math.max(getTextHeight(useString), graphic==null?0:graphic.getHeight());
 		
 		// get Absolute position

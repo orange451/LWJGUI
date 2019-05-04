@@ -226,15 +226,16 @@ public class TabPane extends Control {
 		
 		// Drop tab
 		if ( isDragging && !currentTab.dragging ) {
-			dropTab();
+			isDragging = false;
 			
-			EventHelper.fireEvent(tabDragEvent, new TabDragEvent(currentTab));
+			if ( this.isDescendentHovered() ) {
+				dropTab();
+				EventHelper.fireEvent(tabDragEvent, new TabDragEvent(currentTab));
+			}
 		}
 	}
 	
 	private void dropTab() {
-		isDragging = false;
-		
 		int leftIndex = tabDragIndex-1;
 		int rightIndex = tabDragIndex+0;
 		if ( leftIndex < 0 )
@@ -265,6 +266,7 @@ public class TabPane extends Control {
 		}
 		
 		this.tabButtons.refresh();
+		tabDragIndex = -1;
 	}
 
 	static class TabPaneInternal extends VBox {

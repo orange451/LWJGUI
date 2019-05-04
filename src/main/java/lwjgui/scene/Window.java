@@ -271,7 +271,7 @@ public class Window {
 					}
 					
 					// If we released on a different node than the one we clicked on...
-					if ( context.getLastPressed() != null && hovered != null && !context.getLastPressed().equals(hovered) ) {
+					if ( context.getLastPressed() != null && context.getLastPressed() != hovered ) {
 						context.getLastPressed().mousePressed = false;
 						
 						double x = context.getMouseX();
@@ -532,7 +532,7 @@ public class Window {
 			double sh = Math.max(maxHei, scene.getPrefHeight());
 			
 			// Size window
-			GLFW.glfwSetWindowSize(context.getWindowHandle(), (int)Math.ceil(sw)+1, (int)Math.ceil(sh)+1);
+			GLFW.glfwSetWindowSize(context.getWindowHandle(), (int)Math.ceil(sw), (int)Math.ceil(sh));
 			context.updateContext();
 		}catch(Exception e) {
 			e.printStackTrace();

@@ -56,7 +56,10 @@ public abstract class Labeled extends Control {
 	 * Cannot add children to the label publicly.
 	 */
 	public ObservableList<Node> getChildren() {
-		return new ObservableList<Node>();
+		if ( graphic == null )
+			return new ObservableList<Node>();
+		
+		return new ObservableList<Node>(graphic);
 	}
 
 	@Override
@@ -119,7 +122,7 @@ public abstract class Labeled extends Control {
 	
 	@Override
 	public void render(Context context) {
-		super.render(context);
+		// super.render(context);
 		
 		int textHeight = (int) Math.max(getTextHeight(useString), graphic==null?0:graphic.getHeight());
 		

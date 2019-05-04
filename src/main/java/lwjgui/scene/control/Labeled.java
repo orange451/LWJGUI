@@ -69,7 +69,9 @@ public abstract class Labeled extends Control {
 			this.children.remove(this.graphic);
 		
 		this.graphic = graphic;
-		this.children.add(graphic);
+		if ( graphic != null ) {
+			this.children.add(graphic);
+		}
 	}
 	
 	@Override

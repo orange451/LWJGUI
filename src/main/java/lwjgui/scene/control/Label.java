@@ -5,16 +5,16 @@ import lwjgui.scene.Node;
 public class Label extends Labeled {
 	
 	public Label() {
-		//
+		this("");
 	}
 	
 	public Label(String text) {
-		super();
-		setText(text);
+		this(text, null);
 	}
 	
 	public Label(String text, Node graphic) {
-		this(text);
+		super();
+		this.setText(text);
 		this.setGraphic(graphic);
 	}
 }

@@ -41,7 +41,7 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 
 		// Create label, set icon to opengl pane
 		Label testLabel = new Label( "This label's icon is rendered with OpenGL!", ogl );
-		testLabel.setContentDisplay(ContentDisplay.BOTTOM);
+		testLabel.setContentDisplay(ContentDisplay.RIGHT);
 		root.getChildren().add(testLabel);
 
 		// Set the scene

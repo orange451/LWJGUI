@@ -31,14 +31,26 @@ public abstract class Labeled extends Control {
 		this.flag_clip = false;
 	}
 
+	/**
+	 * Set the text used for this label.
+	 * @param text
+	 */
 	public void setText(String text) {
 		this.text = text;
 	}
 
+	/**
+	 * Set the font used to draw the text in this label.
+	 * @param font
+	 */
 	public void setFont(Font font) {
 		this.font = font;
 	}
 
+	/**
+	 * Set the size of the font for this label.
+	 * @param size
+	 */
 	public void setFontSize( float size ) {
 		if ( size == this.fontSize )
 			return;
@@ -46,6 +58,10 @@ public abstract class Labeled extends Control {
 		this.fontSize = size;
 	}
 
+	/**
+	 * Set the font style for this label.
+	 * @param style
+	 */
 	public void setFontStyle( FontStyle style ) {
 		if ( fontStyle != null && style.equals(this.fontStyle) )
 			return;
@@ -54,9 +70,10 @@ public abstract class Labeled extends Control {
 	}
 	
 	/**
-	 * Cannot add children to the label publicly.
+	 * Unmodifyable list of children.
 	 */
-	public ObservableList<Node> getChildren() {
+	@Override
+	protected ObservableList<Node> getChildren() {
 		if ( graphic == null )
 			return new ObservableList<Node>();
 		
@@ -68,6 +85,10 @@ public abstract class Labeled extends Control {
 		return false;
 	}
 	
+	/**
+	 * Sets the graphic node for this label. Setting to null removes the graphic.
+	 * @param graphic
+	 */
 	public void setGraphic( Node graphic ) {
 		if ( this.graphic != null )
 			this.children.remove(this.graphic);
@@ -78,10 +99,20 @@ public abstract class Labeled extends Control {
 		}
 	}
 	
+	/**
+	 * Sets the gap in pixels between a label and its graphic.
+	 * @param gap
+	 */
 	public void setGraphicTextGap( double gap ) {
 		this.contentGap = gap;
 	}
 	
+	/**
+	 * Sets the content display for this label.<br>
+	 * A content display is used to position a labels graphic in relation to it.<br>
+	 * A label with a content display of {@link ContentDisplay#RIGHT} will put the graphic node to the right of the text.
+	 * @param display
+	 */
 	public void setContentDisplay( ContentDisplay display ) {
 		if ( display == null )
 			display = ContentDisplay.LEFT;
@@ -102,7 +133,7 @@ public abstract class Labeled extends Control {
 			
 			// Get some text bounds
 			float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize, garbage);
-			double curWid = getTextWidth() + this.getPadding().getWidth();
+			double curWid = getTextWidth(text) + this.getPadding().getWidth();
 			
 			// Set initial size
 			size.x = Math.min( Math.max(curWid, size.x), getMaxWidth() );
@@ -206,16 +237,28 @@ public abstract class Labeled extends Control {
 		NanoVG.nvgText(vg, absX, absY, useString);
 	}
 
+	/**
+	 * Sets the color for the text of this label.
+	 * @param color
+	 */
 	public void setTextFill(Color color) {
 		this.textColor = color;
 	}
 
+	/**
+	 * Returns the current font-size used to draw this label.
+	 * @return
+	 */
 	public float getFontSize() {
 		return this.fontSize;
 	}
 
+	/**
+	 * Returns the width of the text in this label.
+	 * @return
+	 */
 	public double getTextWidth() {
-		return getTextWidth(text);
+		return getTextWidth(text)-getGraphicWidthInternalUse();
 	}
 	
 	private float getGraphicWidthInternalUse() {
@@ -239,6 +282,22 @@ public abstract class Labeled extends Control {
 		
 		return gWid;	
 	}
+	
+	/**
+	 * Returns the text of the label.
+	 * @return
+	 */
+	public String getText() {
+		return this.text;
+	}
+
+	/**
+	 * Returns the color of the text of this label.
+	 * @return
+	 */
+	public Color getTextFill() {
+		return this.textColor;
+	}
 
 	private float[] garbage = new float[4];
 	private double getTextWidth(String string) {
@@ -251,13 +310,5 @@ public abstract class Labeled extends Control {
 		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize, garbage);
 		float gHei = getGraphicHeightInternalUse();
 		return bounds[3] - bounds[1] + gHei;
-	}
-
-	public String getText() {
-		return this.text;
-	}
-
-	public Color getTextFill() {
-		return this.textColor;
 	}
 }

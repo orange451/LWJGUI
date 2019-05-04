@@ -10,6 +10,8 @@ public class EventHelper {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static boolean fireEvent(EventHandler eventHandler, Event event) {
+		if ( eventHandler == null )
+			return false;
 		eventHandler.handle(event);
 		return event.isConsumed();
 	}

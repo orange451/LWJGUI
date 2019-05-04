@@ -59,11 +59,7 @@ public class ObservableList<E> {
 	}
 	
 	public void add(E element) {
-		internal.add(element);
-
-		if (addCallback != null) {
-			addCallback.onEvent(element);
-		}
+		add( internal.size(), element );
 	}
 	
 	@SuppressWarnings("unchecked")

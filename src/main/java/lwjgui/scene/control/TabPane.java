@@ -32,8 +32,12 @@ public class TabPane extends Control {
 	private TabPaneButtonBox tabButtons;
 	private StackPane contentPane;
 	
-	private TabDragEvent tabDragEvent;
+	private EventHandler<TabDragEvent> tabDragEvent;
 	private EventHandler<ChangeEvent<Tab>> selectionChangeEvent;
+	
+	private boolean canDrag = true;
+	private int tabDragIndex;
+	private boolean isDragging;
 	
 	public TabPane() {
 		this.setFillToParentHeight(true);
@@ -73,8 +77,37 @@ public class TabPane extends Control {
 		});
 	}
 	
+	/**
+	 * Sets whether or not the user can drag tabs around this tab-pane.
+	 * @param drag
+	 * @return
+	 */
+	public void setCanDrag(boolean drag) {
+		this.canDrag = drag;
+	}
+	
+	/**
+	 * Return modifyable list of tabs.
+	 * @return
+	 */
 	public ObservableList<Tab> getTabs() {
 		return tabs;
+	}
+	
+	/**
+	 * Set the event callback for when a tab is dragged and dropped.
+	 * @param event
+	 */
+	public void setOnTabDroppedEvent(EventHandler<TabDragEvent> event) {
+		this.tabDragEvent = event;
+	}
+	
+	/**
+	 * Returns the event callback for when a tab is dragged and dropped.
+	 * @return
+	 */
+	public EventHandler<TabDragEvent> getOnTabDroppedEvent() {
+		return this.tabDragEvent;
 	}
 	
 	@Override
@@ -116,12 +149,15 @@ public class TabPane extends Control {
 		this.contentPane.getChildren().clear();
 	}
 	
+	/**
+	 * Set the current selected tab in this tab-pane.
+	 * @param tab
+	 */
 	public void select(Tab tab) {
 		if ( tabs.size() == 0 )
 			return;
 		if ( !tabs.contains(tab) ) {
-			System.err.println("Tab does not exist within tab pane");
-			return;
+			throw new RuntimeException("Tab does not exist within tab pane");
 		}
 		boolean stored = false;
 		if ( currentTab != null ) {
@@ -132,7 +168,7 @@ public class TabPane extends Control {
 			}
 		}
 		
-		if ( selectionChangeEvent != null ) {
+		if ( selectionChangeEvent != null && currentTab != tab ) {
 			boolean consumed = EventHelper.fireEvent(selectionChangeEvent, new ChangeEvent<Tab>(currentTab, tab));
 			if ( consumed )
 				return;
@@ -148,6 +184,10 @@ public class TabPane extends Control {
 		}
 	}
 	
+	/**
+	 * Return the currently selected tab.
+	 * @return
+	 */
 	public Tab getSelected() {
 		return currentTab;
 	}
@@ -163,8 +203,70 @@ public class TabPane extends Control {
 			TabButton button = tab.button;
 			button.pressed = currentTab.equals(tab);
 		}
+		
+		if ( canDrag && currentTab.dragging ) {
+			isDragging = true;
+			// Get the tab index we're dragging to
+			for (int i = 0; i < tabs.size(); i++) {
+				Tab tab = tabs.get(i);
+				if ( context.getMouseX() > tab.button.getX() )
+					tabDragIndex = i;
+				if ( context.getMouseX() > tab.button.getX()+tab.button.getWidth()/2 )
+					tabDragIndex = i+1;
+			}
+
+			// Turn drag index into x coordinate
+			float dragX = (float) tabs.get(Math.min(tabDragIndex, tabs.size()-1)).button.getX();
+			if ( tabDragIndex >= tabs.size() )
+				dragX += tabs.get(tabs.size()-1).button.getWidth();
+			
+			// Draw
+			LWJGUIUtil.fillRect(context, dragX, tabs.get(0).button.getY(), 2, tabs.get(0).button.getHeight(), Color.BLACK);
+		}
+		
+		// Drop tab
+		if ( isDragging && !currentTab.dragging ) {
+			dropTab();
+			
+			EventHelper.fireEvent(tabDragEvent, new TabDragEvent(currentTab));
+		}
 	}
 	
+	private void dropTab() {
+		isDragging = false;
+		
+		int leftIndex = tabDragIndex-1;
+		int rightIndex = tabDragIndex+0;
+		if ( leftIndex < 0 )
+			leftIndex = 0;
+		if ( rightIndex >= tabs.size() )
+			rightIndex = tabs.size()-1;
+		
+		// Dragging on far left or far right
+		if ( leftIndex == rightIndex ) {
+			
+			// Left
+			if ( leftIndex == 0 ) {
+				tabs.remove(currentTab);
+				tabs.add(0, currentTab);
+				select(currentTab);
+			} else if ( leftIndex == tabs.size()-1 ) { // Right
+				tabs.remove(currentTab);
+				tabs.add(currentTab);
+				select(currentTab);
+			}
+		} else {
+			int placeIndex = rightIndex;
+			if ( currentTabIndex < rightIndex )
+				placeIndex--;
+			
+			tabs.remove(currentTab);
+			tabs.add(placeIndex, currentTab);
+		}
+		
+		this.tabButtons.refresh();
+	}
+
 	static class TabPaneInternal extends VBox {
 		TabPaneInternal() {
 			this.flag_clip = true;
@@ -175,9 +277,11 @@ public class TabPane extends Control {
 		
 		@Override
 		public void render(Context context) {
+			// Render children
 			super.render(context);
 			
 			this.clip(context);
+			
 			// Dropshadow
 			long vg = context.getNVG();
 			float x = (float) getX();
@@ -191,7 +295,7 @@ public class TabPane extends Control {
 		}
 	}
 	
-	static class TabPaneButtonBox extends HBox {
+	class TabPaneButtonBox extends HBox {
 		TabPaneButtonBox() {
 			this.flag_clip = true;
 			this.setFillToParentWidth(true);
@@ -201,6 +305,13 @@ public class TabPane extends Control {
 			this.setMinHeight(this.getPrefHeight());
 		}
 		
+		protected void refresh() {
+			this.children.clear();
+			for (int i = 0; i < tabs.size(); i++) {
+				this.children.add(tabs.get(i).button);
+			}
+		}
+
 		@Override
 		public void render(Context context) {
 			LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Theme.current().getBackgroundAlt());

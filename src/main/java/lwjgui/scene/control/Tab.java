@@ -24,6 +24,7 @@ public class Tab {
 	protected TabPane tabPane;
 	protected boolean userCanClose = true;
 	protected String name = "";
+	protected boolean dragging;
 	
 	protected EventHandler<Event> closeRequestEvent;
 	
@@ -39,29 +40,52 @@ public class Tab {
 	}
 	
 	public Tab() {
-		this("");
+		this("Tab");
 	}
 	
+	/**
+	 * Sets the flag that controls whether or not the user can close this tab.<br>
+	 * A tab that cannot be closed will not have a close graphic.
+	 * @param canClose
+	 */
 	public void setUserCanClose(boolean canClose) {
 		this.userCanClose = canClose;
 		this.button.refresh();
 	}
 	
+	/**
+	 * Set the content node for this tab. See {@link #getContent()}.
+	 * @param node
+	 */
 	public void setContent(Node node) {
 		this.content = node;
 	}
 	
+	/**
+	 * Set the text for this tab.
+	 * @param text
+	 */
 	public void setText(String text) {
 		this.name = text;
 		button.label.setText(text);
 	}
 
+	/**
+	 * Returns the content node for this tab. The content node is drawn when the tab 
+	 * is currently selected in a tab pane.
+	 * @return
+	 */
 	public Node getContent() {
 		return content;
 	}
 	
 	public void setOnCloseRequest(EventHandler<Event> e) {
 		closeRequestEvent = e;
+	}
+	
+	@Override
+	public String toString() {
+		return "Tab:(" + name + ")";
 	}
 
 	class TabButton extends FillableRegion {
@@ -87,9 +111,13 @@ public class Tab {
 					this.setOnMouseReleasedInternal((event)->{
 						TabButton.this.onMouseReleased(event.getMouseX(), event.getMouseY(), event.getButton());
 					});
-					
+
 					this.setOnMouseDraggedInternal((event)->{
 						TabButton.this.mouseDraggedEventInternal.handle(event);
+					});
+					
+					this.setOnMouseDraggedEndInternal((event)->{
+						TabButton.this.mouseDraggedEndEventInternal.handle(event);
 					});
 				}
 			};
@@ -147,7 +175,13 @@ public class Tab {
 			
 			// On Drag
 			this.setOnMouseDraggedInternal(event -> {
-				System.out.println("Not implemented yet");
+				dragging = true;
+				event.consume();
+			});
+			
+			// On Drag End
+			this.setOnMouseDraggedEndInternal(event -> {
+				dragging = false;
 				event.consume();
 			});
 		}

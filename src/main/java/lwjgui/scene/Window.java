@@ -91,6 +91,7 @@ public class Window {
 				if ( selected == null ) return;
 				
 				if (selected.mousePressed) {
+					selected.mouseDragged = true;
 					if (selected.mouseDraggedEvent != null) {
 						EventHelper.fireEvent(selected.mouseDraggedEvent, new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
 					} 
@@ -259,11 +260,32 @@ public class Window {
 						if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT && !consumed) {
 							context.setSelected(hovered);
 						}
+						
+						double x = context.getMouseX();
+						double y = context.getMouseY();
+						if ( hovered.mouseDragged )
+							EventHelper.fireEvent(hovered.getMouseDraggedEndEvent(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
+						if ( hovered.mouseDragged )
+							EventHelper.fireEvent(hovered.getMouseDraggedEndEventInternal(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
+						hovered.mouseDragged = false;
 					}
 					
+					// If we released on a different node than the one we clicked on...
 					if ( context.getLastPressed() != null && hovered != null && !context.getLastPressed().equals(hovered) ) {
-						//context.getLastPressed().onMouseReleased(context.getMouseX(), context.getMouseY(), button);
 						context.getLastPressed().mousePressed = false;
+						
+						double x = context.getMouseX();
+						double y = context.getMouseY();
+						
+						if ( context.getLastPressed().mouseDragged ) {
+							EventHelper.fireEvent(context.getLastPressed().getMouseDraggedEndEvent(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
+						}
+						
+						if ( context.getLastPressed().mouseDragged ) {
+							EventHelper.fireEvent(context.getLastPressed().getMouseDraggedEndEventInternal(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
+						}
+						
+						context.getLastPressed().mouseDragged = false;
 					}
 				}
 			}

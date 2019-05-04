@@ -58,6 +58,9 @@ public abstract class Node implements Resizable {
 	protected EventHandler<MouseEvent> mouseDraggedEvent;
 	protected EventHandler<MouseEvent> mouseDraggedEventInternal;
 	
+	protected EventHandler<MouseEvent> mouseDraggedEndEvent;
+	protected EventHandler<MouseEvent> mouseDraggedEndEventInternal;
+	
 	protected EventHandler<ScrollEvent> mouseScrollEvent;
 	protected EventHandler<ScrollEvent> mouseScrollEventInternal;
 	
@@ -79,6 +82,7 @@ public abstract class Node implements Resizable {
 	private boolean mouseTransparent = false;
 	protected boolean flag_clip = false;
 	protected boolean mousePressed = false;
+	protected boolean mouseDragged = false;
 	
 	protected Context cached_context;
 	
@@ -808,7 +812,9 @@ public abstract class Node implements Resizable {
 	
 	protected void onMousePressed(double mouseX, double mouseY, int button) {
 		mousePressed = true;
-		cached_context.setLastPressed(this);
+		if ( cached_context != null ) {
+			cached_context.setLastPressed(this);
+		}
 		
 		MouseEvent event = new MouseEvent(mouseX, mouseY, button);
 		
@@ -944,6 +950,14 @@ public abstract class Node implements Resizable {
 		this.mouseDraggedEvent = event;
 	}
 	
+	public EventHandler<MouseEvent> getMouseDraggedEndEvent() {
+		return this.mouseDraggedEndEvent;
+	}
+	
+	public void setOnMouseDraggedEnd( EventHandler<MouseEvent> event ) {
+		this.mouseDraggedEndEvent = event;
+	}
+	
 	public EventHandler<TypeEvent> getOnTextInput() {
 		return this.textInputEvent;
 	}
@@ -1032,6 +1046,14 @@ public abstract class Node implements Resizable {
 
 	protected void setOnMouseDraggedInternal(EventHandler<MouseEvent> mouseDraggedEventInternal) {
 		this.mouseDraggedEventInternal = mouseDraggedEventInternal;
+	}
+
+	protected EventHandler<MouseEvent> getMouseDraggedEndEventInternal() {
+		return mouseDraggedEndEventInternal;
+	}
+
+	protected void setOnMouseDraggedEndInternal(EventHandler<MouseEvent> mouseDraggedEndEventInternal) {
+		this.mouseDraggedEndEventInternal = mouseDraggedEndEventInternal;
 	}
 
 	protected EventHandler<ScrollEvent> getMouseScrollEventInternal() {

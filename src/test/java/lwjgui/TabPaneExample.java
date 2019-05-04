@@ -29,17 +29,22 @@ public class TabPaneExample extends LWJGUIApplication {
 		
 		// Tab 1
 		{
-			Tab tab = new Tab("Tab 1");
+			Tab tab = new Tab("Circle");
 			tab.setContent(new Circle(64));
 			tabs.getTabs().add(tab);
 		}
 		
 		// Tab 2
 		{
-			Tab tab = new Tab("Tab 2", false);
-			tab.setContent(new Rectangle(96, 96, 8, Color.RED));
+			Tab tab = new Tab("Rectangle", false);
+			tab.setContent(new Rectangle(100, 100, 8, Color.RED));
 			tabs.getTabs().add(tab);
 		}
+
+		// Blank tabs
+		tabs.getTabs().add(new Tab("Tab 3"));
+		tabs.getTabs().add(new Tab("Tab 4"));
+		tabs.getTabs().add(new Tab("Tab 5"));
 		
 		// Set the scene
 		window.setScene(new Scene(pane, WIDTH, HEIGHT));

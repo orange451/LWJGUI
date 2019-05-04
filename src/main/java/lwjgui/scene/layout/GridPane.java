@@ -1,6 +1,5 @@
 package lwjgui.scene.layout;
 
-import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 

@@ -7,6 +7,7 @@ import lwjgui.gl.Renderer;
 import lwjgui.scene.Context;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.control.ContentDisplay;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.OpenGLPane;
 import lwjgui.scene.layout.StackPane;
@@ -40,6 +41,7 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 
 		// Create label, set icon to opengl pane
 		Label testLabel = new Label( "This label's icon is rendered with OpenGL!", ogl );
+		testLabel.setContentDisplay(ContentDisplay.BOTTOM);
 		root.getChildren().add(testLabel);
 
 		// Set the scene

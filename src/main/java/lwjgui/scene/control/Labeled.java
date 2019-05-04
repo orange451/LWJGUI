@@ -21,7 +21,8 @@ public abstract class Labeled extends Control {
 	private FontStyle fontStyle = FontStyle.REGULAR;
 	private Color textColor;
 	
-	private static final int GRAPHIC_SPACING = 4;
+	private ContentDisplay contentDisplay = ContentDisplay.LEFT;
+	private double contentGap = 4;
 	
 	private static final String ELIPSES = "\u2026";
 
@@ -77,6 +78,17 @@ public abstract class Labeled extends Control {
 		}
 	}
 	
+	public void setGraphicTextGap( double gap ) {
+		this.contentGap = gap;
+	}
+	
+	public void setContentDisplay( ContentDisplay display ) {
+		if ( display == null )
+			display = ContentDisplay.LEFT;
+		
+		this.contentDisplay = display;
+	}
+	
 	@Override
 	protected void resize() {
 		super.resize();
@@ -86,7 +98,7 @@ public abstract class Labeled extends Control {
 			useString = text;
 			
 			// Get max width of parent element
-			double graphicWid = graphic == null ? 0 : (graphic.getWidth()+GRAPHIC_SPACING);
+			double graphicWid = graphic == null ? 0 : (graphic.getWidth()+contentGap);
 			
 			// Get some text bounds
 			float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize, garbage);
@@ -116,24 +128,26 @@ public abstract class Labeled extends Control {
 			// Compute preferred height
 			float[] bounds = font.getTextBounds(cached_context, useString, fontStyle, fontSize, garbage);
 			double hei = (bounds[3] - bounds[1]) + this.padding.getHeight();
+			if ( contentDisplay.equals(ContentDisplay.BOTTOM) || contentDisplay.equals(ContentDisplay.TOP))
+				hei += getGraphicHeightInternalUse();
 			this.size.y = hei;
 		}
 	}
 	
 	@Override
 	public void render(Context context) {
-		int textHeight = (int) Math.max(getTextHeight(useString), graphic==null?0:graphic.getHeight());
-		
 		// get Absolute position
 		long vg = context.getNVG();
 		int absX = (int)(getX() + this.padding.getLeft());
-		int absY = (int)(getY() + this.getPadding().getTop() + (this.getInnerBounds().getHeight()/2f-textHeight/2f));
+		int absY = (int)(getY() + this.getPadding().getTop());// + (this.getInnerBounds().getHeight()/2f-textHeight/2f));
 
 		// Get width of graphic
-		double gWid = graphic == null ? -1 : (graphic.getWidth()+GRAPHIC_SPACING);
+		double gWid = getGraphicWidthInternalUse();
+		double gHei = getGraphicHeightInternalUse();
 		
 		// Offset the label if there's a difference between its size and its text width
-		double widthDifference = getWidth()-(getTextWidth(useString)+getPadding().getWidth());
+		double textWidth = getTextWidth(useString);
+		double widthDifference = getWidth()-(textWidth+getPadding().getWidth());
 		double xMult = 0;
 		if ( this.getAlignment().getHpos() == HPos.CENTER )
 			xMult = 0.5f;
@@ -141,12 +155,25 @@ public abstract class Labeled extends Control {
 			xMult = 1.0f;
 		absX += Math.abs(widthDifference)*xMult;
 		
-		// Offset graphic
-		if ( gWid >= 0 ) {
-			graphic.setAbsolutePosition(absX, absY);
+		// Offset the label if there's a difference between its size and its height
+		double textHeight = getTextHeight(useString);
+		double heightDifference = getHeight()-(textHeight+getPadding().getHeight());
+		double ty = 0;
+		if ( this.getAlignment().getVpos() == VPos.CENTER )
+			ty = 0.5f;
+		if ( this.getAlignment().getVpos() == VPos.BOTTOM )
+			ty = 1.0f;
+		absY += Math.abs(heightDifference)*ty;
+		
+		// Offset graphic horizontally (if its horizontal alignment)
+		if ( gWid > 0 ) {
+			if ( contentDisplay.equals(ContentDisplay.LEFT ) ) {
+				graphic.setAbsolutePosition(absX, absY);
+				absX += gWid;
+			} else {
+				graphic.setAbsolutePosition(absX+textWidth-graphic.getWidth(), absY);
+			}
 			graphic.render(context);
-			
-			absX += gWid;
 			
 			double yMult = 0;
 			if ( this.getAlignment().getVpos() == VPos.CENTER )
@@ -154,6 +181,17 @@ public abstract class Labeled extends Control {
 			if ( this.getAlignment().getVpos() == VPos.BOTTOM )
 				yMult = 1.0f;
 			absY += (graphic.getHeight()-fontSize)*yMult;
+		}
+		
+		// Offset graphic vertically (if it's vertical alignment)
+		if ( gHei > 0 ) {
+			if ( contentDisplay.equals(ContentDisplay.TOP ) ) {
+				graphic.setAbsolutePosition(absX, absY);
+				absY += gHei;
+			} else {
+				graphic.setAbsolutePosition(absX, absY+fontSize);
+			}
+			graphic.render(context);
 		}
 
 		// Setup font
@@ -179,17 +217,40 @@ public abstract class Labeled extends Control {
 	public double getTextWidth() {
 		return getTextWidth(text);
 	}
+	
+	private float getGraphicWidthInternalUse() {
+		float gWid = 0;
+		if ( graphic == null )
+			return gWid;
+		
+		if ( contentDisplay.equals(ContentDisplay.LEFT) || contentDisplay.equals(ContentDisplay.RIGHT) )
+			gWid += graphic.getWidth() + contentGap;
+		
+		return gWid;	
+	}
+	
+	private float getGraphicHeightInternalUse() {
+		float gWid = 0;
+		if ( graphic == null )
+			return gWid;
+		
+		if ( contentDisplay.equals(ContentDisplay.BOTTOM) || contentDisplay.equals(ContentDisplay.TOP) )
+			gWid += graphic.getHeight() + contentGap;
+		
+		return gWid;	
+	}
 
 	private float[] garbage = new float[4];
 	private double getTextWidth(String string) {
 		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize, garbage);
-		float gWid = (float) (graphic == null ? 0 : (graphic.getWidth()+GRAPHIC_SPACING));
+		float gWid = getGraphicWidthInternalUse();
 		return bounds[2] - bounds[0] + gWid;
 	}
 
 	private double getTextHeight(String string) {
 		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize, garbage);
-		return bounds[3] - bounds[1];
+		float gHei = getGraphicHeightInternalUse();
+		return bounds[3] - bounds[1] + gHei;
 	}
 
 	public String getText() {

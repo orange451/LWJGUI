@@ -78,7 +78,7 @@ public class ToggleSwitch extends Labeled implements Toggle {
 							}
 						}
 					};
-					t.setCornerRadius(4);
+					t.setCornerRadius(5);
 					t.setMouseTransparent(true);
 					this.getChildren().add(t);
 					

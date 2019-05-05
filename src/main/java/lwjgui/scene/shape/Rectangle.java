@@ -64,7 +64,7 @@ public class Rectangle extends Shape {
 		
 		if (strokeFill != null) {
 			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+			NanoVG.nvgRoundedRect(vg, x+0.5f, y+0.5f, w-1, h-1, cornerRadius-1);
 			NanoVG.nvgStrokeColor(vg, strokeFill.getNVG());
 			NanoVG.nvgStroke(vg);
 			NanoVG.nvgClosePath(vg);

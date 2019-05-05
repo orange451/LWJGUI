@@ -30,7 +30,7 @@ public class ToggleSwitch extends Labeled implements Toggle {
 	}
 	
 	public ToggleSwitch( String name, boolean selected ) {
-		this.setPrefWidth(90);
+		this.setPrefWidth(80);
 		
 		this.setText(name);
 		this.setGraphic(new ToggleSwitchButton());
@@ -70,14 +70,16 @@ public class ToggleSwitch extends Labeled implements Toggle {
 							
 							if ( isSelected() ) {
 								this.setFill(Theme.current().getSelection());
+								this.setStrokeFill(Theme.current().getSelectionAlt());
 							} else {
 								this.setFill(Theme.current().getControlAlt());
+								this.setStrokeFill(Theme.current().getSelectionPassive());
 							}
 						}
 					};
 					t.setCornerRadius(4);
-					this.getChildren().add(t);
 					t.setMouseTransparent(true);
+					this.getChildren().add(t);
 					
 					this.setOnMouseReleasedInternal((event)->{
 						//if ( ToggleSwitch.this.isDisabled() )

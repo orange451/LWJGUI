@@ -78,10 +78,10 @@ public class Pane extends FillableRegion {
 	@Override
 	public void render(Context context) {
 		if ( getBackground() != null ) {
-			double boundsX = getNodeBounds().getX();
-			double boundsY = getNodeBounds().getY();
-			double boundsW = getNodeBounds().getWidth();
-			double boundsH = getNodeBounds().getHeight();
+			double boundsX = getX();
+			double boundsY = getY();
+			double boundsW = getWidth();
+			double boundsH = getHeight();
 			
 			NanoVG.nvgBeginPath(context.getNVG());
 			NanoVG.nvgRect(context.getNVG(), (int) boundsX, (int) boundsY, (float) boundsW, (float) boundsH);

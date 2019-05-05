@@ -18,6 +18,7 @@ import lwjgui.theme.Theme;
 
 public abstract class ButtonBase extends Labeled {
 	protected EventHandler<ActionEvent> buttonEvent;
+	protected EventHandler<ActionEvent> buttonInternalEvent;
 
 	protected double cornerNW;
 	protected double cornerNE;
@@ -41,16 +42,15 @@ public abstract class ButtonBase extends Labeled {
 		this.setText(name);
 		
 		// Fire the click event when we're clicked
-		this.setOnMouseReleased( new EventHandler<MouseEvent>() {
+		this.setOnMouseReleasedInternal( new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				if ( disabled )
 					return;
 				
 				if ( event.button == 0 ) {
-					if ( buttonEvent != null ) {
-						EventHelper.fireEvent(buttonEvent, new ActionEvent());
-					}
+					EventHelper.fireEvent(buttonInternalEvent, new ActionEvent());
+					EventHelper.fireEvent(buttonEvent, new ActionEvent());
 				}
 			}
 		});
@@ -59,9 +59,8 @@ public abstract class ButtonBase extends Labeled {
 		this.setOnKeyPressedInternal( (event) -> {
 			if ( event.getKey() == GLFW.GLFW_KEY_ENTER ) {
 				if ( this.cached_context.isSelected(this) ) {
-					if ( buttonEvent != null ) {
-						EventHelper.fireEvent(buttonEvent, new ActionEvent());
-					}
+					EventHelper.fireEvent(buttonInternalEvent, new ActionEvent());
+					EventHelper.fireEvent(buttonEvent, new ActionEvent());
 				}
 			}
 		});
@@ -92,11 +91,6 @@ public abstract class ButtonBase extends Labeled {
 	public Vector2d getAvailableSize() {
 		return new Vector2d(getMaxWidth(),getMaxHeight());
 	}*/
-	
-	@Override
-	protected void resize() {
-		super.resize();
-	}
 	
 	protected boolean isPressed() {
 		if ( cached_context == null )
@@ -208,6 +202,10 @@ public abstract class ButtonBase extends Labeled {
 
 	public void setOnAction(EventHandler<ActionEvent> event) {
 		this.buttonEvent = event;
+	}
+
+	protected void setOnActionInternal(EventHandler<ActionEvent> event) {
+		this.buttonInternalEvent = event;
 	}
 
 }

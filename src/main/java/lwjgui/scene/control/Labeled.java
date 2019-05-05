@@ -74,10 +74,7 @@ public abstract class Labeled extends Control {
 	 */
 	@Override
 	protected ObservableList<Node> getChildren() {
-		if ( graphic == null )
-			return new ObservableList<Node>();
-		
-		return new ObservableList<Node>(graphic);
+		return new ObservableList<Node>(children);
 	}
 
 	@Override
@@ -105,6 +102,14 @@ public abstract class Labeled extends Control {
 	 */
 	public void setGraphicTextGap( double gap ) {
 		this.contentGap = gap;
+	}
+	
+	/**
+	 * Returns the gap in pixels between the label and the graphic.
+	 * @return
+	 */
+	public double getGraphicTextGap() {
+		return this.contentGap;
 	}
 	
 	/**
@@ -157,16 +162,14 @@ public abstract class Labeled extends Control {
 			}
 			
 			// Compute preferred height
-			float[] bounds = font.getTextBounds(cached_context, useString, fontStyle, fontSize, garbage);
-			double hei = (bounds[3] - bounds[1]) + this.padding.getHeight();
-			if ( contentDisplay.equals(ContentDisplay.BOTTOM) || contentDisplay.equals(ContentDisplay.TOP))
-				hei += getGraphicHeightInternalUse();
-			this.size.y = hei;
+			this.size.y = Math.max(Math.max(this.getPrefHeight(), this.getHeight()), getTextHeight(useString)+getPadding().getHeight());
 		}
 	}
 	
 	@Override
 	public void render(Context context) {
+		//LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA);
+		
 		// get Absolute position
 		long vg = context.getNVG();
 		int absX = (int)(getX() + this.padding.getLeft());
@@ -198,20 +201,19 @@ public abstract class Labeled extends Control {
 		
 		// Offset graphic horizontally (if its horizontal alignment)
 		if ( gWid > 0 ) {
-			if ( contentDisplay.equals(ContentDisplay.LEFT ) ) {
-				graphic.setAbsolutePosition(absX, absY);
-				absX += gWid;
-			} else {
-				graphic.setAbsolutePosition(absX+textWidth-graphic.getWidth(), absY);
-			}
-			graphic.render(context);
-			
 			double yMult = 0;
 			if ( this.getAlignment().getVpos() == VPos.CENTER )
 				yMult = 0.5f;
 			if ( this.getAlignment().getVpos() == VPos.BOTTOM )
 				yMult = 1.0f;
-			absY += (graphic.getHeight()-fontSize)*yMult;
+			double graphicOffsetY = (graphic.getHeight()-fontSize)*yMult;
+			
+			if ( contentDisplay.equals(ContentDisplay.LEFT ) ) {
+				graphic.setAbsolutePosition(absX, absY+graphicOffsetY);
+				absX += gWid;
+			} else {
+				graphic.setAbsolutePosition(absX+textWidth-graphic.getWidth(), absY-graphicOffsetY);
+			}
 		}
 		
 		// Offset graphic vertically (if it's vertical alignment)
@@ -222,6 +224,10 @@ public abstract class Labeled extends Control {
 			} else {
 				graphic.setAbsolutePosition(absX, absY+fontSize);
 			}
+		}
+		
+		if ( graphic != null ) {
+			graphic.updateChildren();
 			graphic.render(context);
 		}
 

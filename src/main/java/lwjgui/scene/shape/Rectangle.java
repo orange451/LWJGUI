@@ -11,17 +11,17 @@ public class Rectangle extends Shape {
 	
 	protected Color strokeFill = null;
 	
-	public Rectangle(int width, int height, Color color) {
+	public Rectangle(double width, double height, Color color) {
 		this(width, height, 0, color);
 	}
 	
-	public Rectangle(int width, int height, int cornerRadius, Color color) {
+	public Rectangle(double width, double height, int cornerRadius, Color color) {
 		super(color);
 		this.setPrefSize(width, height);
 		this.cornerRadius = cornerRadius;
 	}
 	
-	public Rectangle(int width, int height) {
+	public Rectangle(double width, double height) {
 		this(width, height, 0, Theme.current().getText());
 	}
 	

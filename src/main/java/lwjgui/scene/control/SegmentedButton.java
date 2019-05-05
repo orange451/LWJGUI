@@ -33,7 +33,7 @@ public class SegmentedButton extends CombinedButton {
 		super.position(parent);
 		
 		for (int i = 0; i < buttons.size(); i++) {
-			ToggleButton b = (ToggleButton) buttons.get(i);
+			Button b = buttons.get(i);
 			
 			boolean first = false;
 			boolean last = false;

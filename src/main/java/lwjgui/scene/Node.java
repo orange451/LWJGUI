@@ -109,9 +109,7 @@ public abstract class Node implements Resizable {
 	}
 	
 	public void offset(double x, double y) {
-		//this.localPosition.add(x, y);
 		setAbsolutePosition( this.getX()+x, this.getY()+y);
-		
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			child.offset(x, y);
@@ -135,7 +133,8 @@ public abstract class Node implements Resizable {
 		this.parent = parent;
 		
 		cached_context = LWJGUI.getCurrentContext();
-		
+
+		resize();
 		updateChildren();
 		resize();
 		
@@ -529,7 +528,7 @@ public abstract class Node implements Resizable {
 	}
 	
 	/**
-	 * Return the labyout alignment used to position this node.
+	 * Return the layout alignment used to position this node.
 	 * @return
 	 */
 	public Pos usingAlignment() {
@@ -544,6 +543,7 @@ public abstract class Node implements Resizable {
 		
 		if ( useAlignment == null )
 			return Pos.CENTER;
+		
 		return useAlignment;
 	}
 	

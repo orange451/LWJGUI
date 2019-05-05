@@ -12,6 +12,7 @@ import lwjgui.scene.control.RadioButton;
 import lwjgui.scene.control.SegmentedButton;
 import lwjgui.scene.control.ToggleButton;
 import lwjgui.scene.control.ToggleGroup;
+import lwjgui.scene.control.ToggleSwitch;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.StackPane;
@@ -92,6 +93,8 @@ public class ControlExample extends LWJGUIApplication {
 		
 		SegmentedButton b = new SegmentedButton(b1, b2, b3, b4);
 		t.getChildren().add(b);
+		
+		t.getChildren().add( new ToggleSwitch("Toggle") );
 	}
 
 	private static void displayRadioButtons(Pane parent) {

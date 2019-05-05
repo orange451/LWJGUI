@@ -29,7 +29,7 @@ import lwjgui.theme.Theme;
 public class ColorPicker extends ButtonBase {
 	private Color color;
 	private Color cancelColor;
-	private PopupWindow context;
+	private ColorPopup context;
 	
 	public ColorPicker(Color color) {
 		super(color.toString());
@@ -154,6 +154,8 @@ public class ColorPicker extends ButtonBase {
 			r.setText(""+newColor.getRed());
 			g.setText(""+newColor.getGreen());
 			b.setText(""+newColor.getBlue());
+			
+			updateFromText();
 		}
 		
 		private void tempColor(Color newColor) {
@@ -287,14 +289,17 @@ public class ColorPicker extends ButtonBase {
 			r = new ColorNumberField();
 			r.setPrefWidth(tWid);
 			r.setPrompt("R");
+			r.setText(""+color.getRed());
 			
 			g = new ColorNumberField();
 			g.setPrefWidth(tWid);
 			g.setPrompt("G");
+			g.setText(""+color.getGreen());
 			
 			b = new ColorNumberField();
 			b.setPrefWidth(tWid);
 			b.setPrompt("B");
+			b.setText(""+color.getBlue());
 			
 			GridPane rgbPane = new GridPane();
 			rgbPane.setBackground(null);
@@ -415,6 +420,15 @@ public class ColorPicker extends ButtonBase {
 			super.show(scene, absoluteX, absoluteY);
 			cancelColor = new Color(color);
 			update(color);
+			
+			// Ugly hack to force wait 3 frames before setting color
+			LWJGUI.runLater(()->{
+				LWJGUI.runLater(()->{
+					LWJGUI.runLater(()->{
+						ColorPicker.this.context.updateFromText();
+					});
+				});
+			});
 		}
 
 		@Override

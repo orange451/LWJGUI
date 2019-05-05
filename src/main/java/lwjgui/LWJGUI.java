@@ -87,16 +87,17 @@ public class LWJGUI {
 		}
 		
 		// Run runnables
+		List<Runnable> newRunnable = new ArrayList<Runnable>();
 		synchronized(runnables) {
-			for (int i = 0; i < runnables.size(); i++) {
-				try {
-					runnables.get(i).run();
-				}catch(Exception ex) {
-					
-				}
+			while(runnables.size()>0) { 
+				newRunnable.add(runnables.get(0));
+				runnables.remove(0);
 			}
-			runnables.clear();
 		}
+		for (int i = 0; i < newRunnable.size(); i++) {
+			newRunnable.get(i).run();
+		}
+		newRunnable.clear();
 	}
 
 	public static Window getWindowFromContext(long context) {

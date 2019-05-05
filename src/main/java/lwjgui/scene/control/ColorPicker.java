@@ -392,6 +392,7 @@ public class ColorPicker extends ButtonBase {
 			
 			apply.setOnAction((event)->{
 				this.apply();
+				this.close();
 			});
 		}
 		

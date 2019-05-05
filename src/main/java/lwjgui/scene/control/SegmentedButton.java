@@ -1,7 +1,6 @@
 package lwjgui.scene.control;
 
 import lwjgui.collections.ObservableList;
-import lwjgui.scene.Node;
 
 public class SegmentedButton extends CombinedButton {
 	
@@ -25,34 +24,6 @@ public class SegmentedButton extends CombinedButton {
 		int h = (int) this.getMaxElementHeight();
 		for (int i = 0; i < buttons.size(); i++) {
 			buttons.get(i).setMinHeight(h);
-		}
-	}
-	
-	@Override
-	protected void position(Node parent) {
-		super.position(parent);
-		
-		for (int i = 0; i < buttons.size(); i++) {
-			Button b = buttons.get(i);
-			
-			boolean first = false;
-			boolean last = false;
-			
-			buttons.get(i).setDisabled(this.isDisabled());
-			
-			if ( i == 0 )
-				first = true;
-			if ( i == buttons.size()-1 )
-				last = true;
-
-			if ( !first ) {
-				b.cornerNW = 0;
-				b.cornerSW = 0;
-			}
-			if ( !last ) {
-				b.cornerNE = 0;
-				b.cornerSE = 0;
-			}
 		}
 	}
 }

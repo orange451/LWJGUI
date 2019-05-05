@@ -83,7 +83,6 @@ public class ToggleSwitch extends Labeled implements Toggle {
 						//if ( ToggleSwitch.this.isDisabled() )
 							//return;
 						
-						System.out.println(button.buttonInternalEvent);
 						EventHelper.fireEvent(button.buttonInternalEvent, new ActionEvent());
 					});
 				}
@@ -110,7 +109,6 @@ public class ToggleSwitch extends Labeled implements Toggle {
 			this.getChildren().add(track);
 			
 			this.button = new Button("");
-			this.button.setPrefWidth(50);
 			this.button.setOnActionInternal((event)->{
 				setSelected(!isSelected());
 				
@@ -124,6 +122,7 @@ public class ToggleSwitch extends Labeled implements Toggle {
 		@Override
 		public void position(Node parent) {
 			this.setPrefWidth(ToggleSwitch.this.getPrefWidth());
+			button.setPrefWidth(this.getPrefWidth()/2);
 			super.position(parent);
 			
 			if ( isSelected() ) {

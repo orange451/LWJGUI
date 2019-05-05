@@ -35,11 +35,11 @@ public abstract class ButtonBase extends Labeled {
 		
 		this.setMinSize(12, 24);
 		this.setPadding(new Insets(4,6,4,6));
-		this.setFontSize(16);
 		
 		this.setCornerRadius(2.5);
 		
 		this.setText(name);
+		this.setFontSize(16);
 		
 		// Fire the click event when we're clicked
 		this.setOnMouseReleasedInternal( new EventHandler<MouseEvent>() {

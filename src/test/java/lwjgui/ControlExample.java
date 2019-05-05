@@ -83,6 +83,8 @@ public class ControlExample extends LWJGUIApplication {
 
 	private static void displaySegmentedButton(Pane parent) {
 		HBox t = new HBox();
+		t.setSpacing(8);
+		t.setAlignment(Pos.CENTER);
 		parent.getChildren().add(t);
 		
 		ToggleGroup g = new ToggleGroup();

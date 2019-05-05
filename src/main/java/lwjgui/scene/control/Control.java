@@ -6,6 +6,7 @@ import lwjgui.scene.FillableRegion;
 
 public abstract class Control extends FillableRegion {
 	private ContextMenu context;
+	private boolean disabled;
 	
 	public Control() {
 		this.flag_clip = true;
@@ -30,5 +31,13 @@ public abstract class Control extends FillableRegion {
 	
 	public ContextMenu getContextMenu() {
 		return this.context;
+	}
+	
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+	
+	public boolean isDisabled() {
+		return this.disabled;
 	}
 }

@@ -8,6 +8,7 @@ import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.Pane;
@@ -69,7 +70,7 @@ public class ToggleSwitch extends Labeled implements Toggle {
 							super.resize();
 							this.setPrefSize(ToggleSwitch.this.getPrefWidth(), ToggleSwitch.this.getPrefHeight());
 							
-							if ( isSelected() ) {
+							if ( isSelected() && !button.isDisabled() ) {
 								this.setFill(Theme.current().getSelection());
 								this.setStrokeFill(Theme.current().getSelectionAlt());
 							} else {
@@ -95,14 +96,23 @@ public class ToggleSwitch extends Labeled implements Toggle {
 					super.render(context);
 					
 					if ( ToggleSwitch.this.getPrefWidth() > 50 ) {
+						Color color = Theme.current().getShadow();
+						if ( !button.isDisabled() ) {
+							if ( isSelected() ) {
+								color = Theme.current().getBackground();
+							} else {
+								color = Theme.current().getText();
+							}
+						}
+						
 						if ( isSelected() ) {
 							double ox = (track.getWidth()-button.getWidth())/2;
 							double oy = track.getHeight()/2;
-							LWJGUIUtil.drawText("ON", Font.SANS, FontStyle.BOLD, 16, Theme.current().getBackground(), getX()+ox, getY()+oy, Pos.CENTER);
+							LWJGUIUtil.drawText("ON", Font.SANS, FontStyle.BOLD, 16, color, getX()+ox, getY()+oy, Pos.CENTER);
 						} else {
 							double ox = button.getWidth()+(track.getWidth()-button.getWidth())/2;
 							double oy = track.getHeight()/2;
-							LWJGUIUtil.drawText("OFF", Font.SANS, FontStyle.BOLD, 16, Theme.current().getText(), getX()+ox, getY()+oy, Pos.CENTER);
+							LWJGUIUtil.drawText("OFF", Font.SANS, FontStyle.BOLD, 16, color, getX()+ox, getY()+oy, Pos.CENTER);
 						}
 					}
 				}
@@ -139,6 +149,8 @@ public class ToggleSwitch extends Labeled implements Toggle {
 			} else {
 				track.setAlignment(Pos.TOP_LEFT);
 			}
+			
+			button.setDisabled(ToggleSwitch.this.isDisabled());
 		}
 		
 		@Override

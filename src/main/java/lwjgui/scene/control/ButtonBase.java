@@ -27,8 +27,6 @@ public abstract class ButtonBase extends Labeled {
 	
 	protected double textOffset;
 	
-	protected boolean disabled;
-	
 	public ButtonBase(String name) {
 		super();
 		this.setText(name);
@@ -45,7 +43,7 @@ public abstract class ButtonBase extends Labeled {
 		this.setOnMouseReleasedInternal( new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				if ( disabled )
+				if ( isDisabled() )
 					return;
 				
 				if ( event.button == 0 ) {
@@ -71,14 +69,6 @@ public abstract class ButtonBase extends Labeled {
 		this.cornerNW = radius;
 		this.cornerSE = radius;
 		this.cornerSW = radius;
-	}
-	
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
-	
-	public boolean isDisabled() {
-		return this.disabled;
 	}
 	
 	@Override

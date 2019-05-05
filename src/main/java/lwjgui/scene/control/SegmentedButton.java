@@ -38,6 +38,8 @@ public class SegmentedButton extends CombinedButton {
 			boolean first = false;
 			boolean last = false;
 			
+			buttons.get(i).setDisabled(this.isDisabled());
+			
 			if ( i == 0 )
 				first = true;
 			if ( i == buttons.size()-1 )

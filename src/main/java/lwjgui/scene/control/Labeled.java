@@ -239,7 +239,7 @@ public abstract class Labeled extends Control {
 		// Draw
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgFontBlur(vg,0);
-		NanoVG.nvgFillColor(vg, textColor.getNVG());
+		NanoVG.nvgFillColor(vg, isDisabled()?Theme.current().getShadow().getNVG():textColor.getNVG());
 		NanoVG.nvgText(vg, absX, absY, useString);
 	}
 

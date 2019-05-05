@@ -59,6 +59,7 @@ public class ColorPicker extends ButtonBase {
 		this.setText(ColorNameLookup.matchName(color));
 		
 		StackPane g = new StackPane();
+		g.setMouseTransparent(true);
 		g.setPrefSize(16, 16);
 		g.setBackground(color);
 		this.setGraphic(g);

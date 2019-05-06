@@ -1,7 +1,5 @@
 package lwjgui;
 
-import org.lwjgl.glfw.GLFW;
-
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
@@ -128,7 +126,7 @@ public class ControlExample extends LWJGUIApplication {
 		
 		// Make the first checkbox selected visually and checked
 		b.setChecked(true);
-		LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext().setSelected(b);
+		LWJGUI.getCurrentContext().setSelected(b);
 	}
 
 	@Override

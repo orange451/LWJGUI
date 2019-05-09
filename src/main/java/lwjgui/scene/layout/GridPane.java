@@ -12,8 +12,9 @@ import lwjgui.scene.Region;
 
 public class GridPane extends Pane {
 	private VBox internalVBox;
-	
+
 	private Node[][] elements;
+	private Node[][] elementsEmpty;
 	private NodePair[][] elementsInternal;
 	private ColumnConstraint[] constraints;
 	private int maxX;
@@ -23,11 +24,13 @@ public class GridPane extends Pane {
 	private int vgap;
 	
 	private boolean modified;
+	private boolean empty = true;
 	
 	private static int MAX_SIZE = 1024;
 	
 	public GridPane() {
 		this.elements = new Node[MAX_SIZE][MAX_SIZE];
+		this.elementsEmpty = new Node[MAX_SIZE][MAX_SIZE];
 		this.constraints = new ColumnConstraint[MAX_SIZE];
 		
 		// Fill default constraints
@@ -127,28 +130,38 @@ public class GridPane extends Pane {
 	public void add(Node element, int x, int y) {
 		elements[x][y] = element;
 		modified = true;
-		
-		LWJGUI.runLater(()-> {
-			//modified = true;
-		});
+		empty = false;
 	}
 	
 	public void clear() {
-		maxX = getMaxX();
-		maxY = getMaxY();
-		for (int i = 0; i < maxX; i++) {
+		//maxX = getMaxX();
+		//maxY = getMaxY();
+		/*for (int i = 0; i < maxX; i++) {
 			for (int j = 0; j < maxY; j++) {
 				elements[i][j] = null;
 			}
+		}*/
+		
+		// Should be the fastest way to empty the elements array
+		for (int i = 0; i < elementsEmpty.length; i++) {
+			System.arraycopy(elementsEmpty[i], 0, elements[i], 0, elementsEmpty[i].length);
 		}
+		
+		empty = true;
+		
 		update();
 	}
 	
 	private void update() {
 		modified = false;
 		
-		maxX = getMaxX();
-		maxY = getMaxY();
+		if ( !empty ) {
+			maxX = getMaxX();
+			maxY = getMaxY();
+		} else {
+			maxX = 0;
+			maxY = 0;
+		}
 		
 		internalVBox.getChildren().clear();
 		this.elementsInternal = new NodePair[maxX][maxY];

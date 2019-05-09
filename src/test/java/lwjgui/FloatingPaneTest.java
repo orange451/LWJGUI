@@ -19,9 +19,10 @@ public class FloatingPaneTest extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create a simple pane
 		StackPane pane = new StackPane();
+		pane.setPrefSize(512, 512);
 		
 		// Create a new floating pane
-		FloatingPane floatPane = new FloatingPane();
+		/*FloatingPane floatPane = new FloatingPane();
 		floatPane.setBackground(Color.GREEN);
 		pane.getChildren().add(floatPane);
 		
@@ -37,9 +38,10 @@ public class FloatingPaneTest extends LWJGUIApplication {
 		
 		// Put a label in the floating pane
 		t.getChildren().add(new Label("Hello World!"));
+		*/
 		
 		// Set the scene
-		window.setScene(new Scene(pane, WIDTH, HEIGHT));
+		window.setScene(new Scene(pane));
 		window.show();
 	}
 

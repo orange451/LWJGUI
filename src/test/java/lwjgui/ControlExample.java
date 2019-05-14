@@ -40,14 +40,9 @@ public class ControlExample extends LWJGUIApplication {
 			displaySegmentedButton(vbox);
 		}
 		
-		// Add slider
+		// Add drop down
 		{
-			ComboBox<String> combo = new ComboBox<String>("");
-			combo.setPrefWidth(120);
-			combo.getItems().add("Visual Basic");
-			combo.getItems().add("Java");
-			combo.getItems().add("C++");
-			vbox.getChildren().add(combo);
+			displayDropdown(vbox);
 		}
 		
 		// Create hbox used to store two control types
@@ -68,6 +63,16 @@ public class ControlExample extends LWJGUIApplication {
 		window.show();
 	}
 	
+	private void displayDropdown(VBox vbox) {
+		ComboBox<String> combo = new ComboBox<String>("");
+		combo.setPrefWidth(120);
+		combo.getItems().add("Visual Basic");
+		combo.getItems().add("Java");
+		combo.getItems().add("C++");
+		combo.getItems().add("Other");
+		vbox.getChildren().add(combo);
+	}
+
 	private static VBox exampleBox(String title) {
 		VBox pane = new VBox();
 		pane.setSpacing(4);

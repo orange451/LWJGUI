@@ -40,7 +40,12 @@ public class ComboBox<T> extends CombinedButton {
 		main.setAlignment(Pos.CENTER_LEFT);
 		this.buttons.add(main);
 		
-		arrow = new Button("\u25bc");
+		arrow = new Button("\u25bc") {
+			@Override
+			public boolean isPressed() {
+				return super.isPressed() || context.isOpen();
+			}
+		};
 		arrow.setFont(Font.DINGBAT);
 		arrow.setFontSize(14);
 		arrow.setPadding(new Insets(5.5,5,2,6));

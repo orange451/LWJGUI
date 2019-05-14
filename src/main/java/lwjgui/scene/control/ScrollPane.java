@@ -126,6 +126,22 @@ public class ScrollPane extends FillableRegion {
 		updateBars();
 	}
 	
+	/**
+	 * Returns the width of the viewable region of the scroll pane.
+	 * @return
+	 */
+	public double getViewportWidth() {
+		return viewportSize.x;
+	}
+	
+	/**
+	 * Returns the height of the viewable region of the scroll pane.
+	 * @return
+	 */
+	public double getViewportHeight() {
+		return viewportSize.y;
+	}
+	
 	@Override
 	protected void position(Node parent) {
 		update();

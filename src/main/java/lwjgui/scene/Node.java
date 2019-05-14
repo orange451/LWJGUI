@@ -102,6 +102,7 @@ public abstract class Node implements Resizable {
 		double changey = (topLeftY + y)-absolutePosition.y;
 		
 		setAbsolutePosition( this.getX()+changex, this.getY()+changey);
+		updateChildren();
 	}
 	
 	public void setAbsolutePosition(double x, double y) {
@@ -110,6 +111,7 @@ public abstract class Node implements Resizable {
 	
 	public void offset(double x, double y) {
 		setAbsolutePosition( this.getX()+x, this.getY()+y);
+		updateChildren();
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			child.offset(x, y);

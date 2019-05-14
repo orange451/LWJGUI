@@ -21,7 +21,7 @@ public class LWJGUI {
 	protected static Context currentContext;
 	
 	/**
-	 * Initializes a LWJGUI window. The window contains a Scene class.<br>
+	 * Initializes a LWJGUI window from a GLFW window handle. The window contains a Scene class.<br>
 	 * Rendering components can be added to the scene. However, to set initial
 	 * rendering, the scene's root node must first be set.
 	 * @param window

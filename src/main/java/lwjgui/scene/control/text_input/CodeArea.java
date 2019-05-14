@@ -44,7 +44,7 @@ public class CodeArea extends TextArea {
 		
 		// Position line counter
 		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
-		lineCounter.setLocalPosition(this.internalScrollPane, 
+		this.lineCounter.setLocalPosition(this.internalScrollPane, 
 				-internalScrollPane.getPadding().getLeft(), 
 				(internalScrollPane.getContent().getY()-internalScrollPane.getPadding().getTop())-internalScrollPane.getY());
 	}

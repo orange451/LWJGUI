@@ -271,6 +271,8 @@ public class SplitPane extends Control {
 				d.setMaxHeight(t);
 				d.setLocalPosition(divider_holder, 0, filledLen);
 			}
+			
+			this.updateChildrenLocalRecursive();
 
 			filledLen += len + dividerThickness;
 		}

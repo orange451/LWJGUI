@@ -1,5 +1,7 @@
 package lwjgui.scene.control.text_input;
 
+import org.lwjgl.nanovg.NanoVG;
+
 import lwjgui.LWJGUIUtil;
 import lwjgui.font.Font;
 import lwjgui.geometry.Insets;
@@ -44,8 +46,11 @@ public class CodeArea extends TextArea {
 		
 		// Position line counter
 		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
-		this.lineCounter.setLocalPosition(this.internalScrollPane, 
-				-internalScrollPane.getPadding().getLeft(), 
+		
+		//this.lineCounter.setLocalPosition(lineCounter.getParent(), -14, 0);
+		
+		this.lineCounter.setLocalPosition(lineCounter.getParent(), 
+				-internalScrollPane.getPadding().getLeft()-1, 
 				(internalScrollPane.getContent().getY()-internalScrollPane.getPadding().getTop())-internalScrollPane.getY());
 	}
 	
@@ -87,6 +92,7 @@ public class CodeArea extends TextArea {
 			this.setAlignment(Pos.TOP_LEFT);
 			this.setBackground(null);
 			this.setPrefWidth(0);
+			this.flag_clip = false;
 		}
 		
 		public void update(int lines) {
@@ -96,7 +102,13 @@ public class CodeArea extends TextArea {
 				// Add line labels in
 				getChildren().clear();
 				for (int i = 0; i < lines; i++) {
-					Label l = new Label(" "+(i+1));
+					Label l = new Label(" "+(i+1)) {
+						@Override
+						public void render(Context context) {
+							NanoVG.nvgScissor(context.getNVG(), (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
+							super.render(context);
+						}
+					};
 					l.setFontSize(fontSize);
 					l.setFont(Font.COURIER);
 					getChildren().add(l);
@@ -109,6 +121,8 @@ public class CodeArea extends TextArea {
 			// Draw line counter background
 			LWJGUIUtil.fillRect(context, getX()+1, CodeArea.this.getY()+1, getWidth(), CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getPane());
 			LWJGUIUtil.fillRect(context, getX()+getWidth(), CodeArea.this.getY()+1, 1, CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getSelectionPassive());
+			
+			NanoVG.nvgScissor(context.getNVG(), (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
 			
 			super.render(context);
 		}

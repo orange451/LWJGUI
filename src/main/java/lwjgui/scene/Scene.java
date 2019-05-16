@@ -81,6 +81,7 @@ public class Scene extends Node {
 		for (int i = 0; i < (first?20:2); i++) {
 			position(null);
 		}
+		root.updateChildrenLocalRecursive();
 		
 		// Render normal
 		first = false;

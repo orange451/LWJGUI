@@ -29,6 +29,7 @@ public abstract class Node implements Resizable {
 	 * Positioning settings
 	 */
 	protected Vector2d absolutePosition = new Vector2d();
+	private Vector2d localPosition = new Vector2d(); // ONLY USER INTERNALLY DONT TOUCH
 	protected Vector2d size = new Vector2d();
 	protected Vector2d prefsize = new Vector2d();
 	protected LayoutBounds layoutBounds = new LayoutBounds(0,0,Integer.MAX_VALUE,Integer.MAX_VALUE);
@@ -102,11 +103,11 @@ public abstract class Node implements Resizable {
 		double changey = (topLeftY + y)-absolutePosition.y;
 		
 		setAbsolutePosition( this.getX()+changex, this.getY()+changey);
-		//updateChildren();
 	}
 	
 	public void setAbsolutePosition(double x, double y) {
 		this.absolutePosition.set(x,y);
+		computeLocalPosition();
 	}
 	
 	public void offset(double x, double y) {
@@ -127,45 +128,93 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
+	protected void updateChildrenLocalRecursive() {
+		for (int i = 0; i < children.size(); i++) {
+			Node child = children.get(i);
+			if ( child != null ) {
+				child.updateFromLocalPosition();
+				child.updateChildrenLocalRecursive();
+			}
+		}	
+	}
+	
 	/**
-	 * Computes the absolute position of this Node
-	 * @param parent
+	 * Computes the local position by comparing the absolute position to the parents absolute position.
 	 */
-	protected void position(Node parent) {
-		this.parent = parent;
-		
-		cached_context = LWJGUI.getCurrentContext();
+	private void computeLocalPosition() {
+		if ( parent == null )
+			return;
 
-		//resize();
-		updateChildren();
-		resize();
-		
+		LayoutBounds bounds = parent.getInnerBounds();
+
+		float topLeftX = (float) (parent.getX() + bounds.minX);
+		float topLeftY = (float) (parent.getY() + bounds.minY);
+		localPosition.set(absolutePosition.x-topLeftX, absolutePosition.y-topLeftY);
+	}
+	
+	/**
+	 * Sets absolute position based on local positions.
+	 */
+	private void updateFromLocalPosition() {
+		if ( parent == null )
+			return;
+
+		LayoutBounds bounds = parent.getInnerBounds();
+
+		float topLeftX = (float) (parent.getX() + bounds.minX);
+		float topLeftY = (float) (parent.getY() + bounds.minY);
+		absolutePosition.set(localPosition.x+topLeftX, localPosition.y+topLeftY);
+	}
+	
+	/**
+	 * Computes initial absolute position based on alignment rules.
+	 */
+	private void computeAbsolutePosition() {
 		Pos useAlignment = usingAlignment();
-		
+
 		double xMult = 0;
 		if ( useAlignment.getHpos() == HPos.CENTER)
 			xMult = 0.5f;
 		if ( useAlignment.getHpos() == HPos.RIGHT)
 			xMult = 1;
-		
+
 		double yMult = 0;
 		if ( useAlignment.getVpos() == VPos.CENTER)
 			yMult = 0.5f;
 		if ( useAlignment.getVpos() == VPos.BOTTOM)
 			yMult = 1f;
-		
+
 		if ( parent != null ) {
 			LayoutBounds bounds = parent.getInnerBounds();
-			
+
 			float topLeftX = (float) (parent.getX() + bounds.minX);
 			float topLeftY = (float) (parent.getY() + bounds.minY);
-			
+
 			double offsetX = (bounds.getWidth()-size.x)*xMult;
 			double offsetY = (bounds.getHeight()-size.y)*yMult;
-			
+
 			absolutePosition.x = topLeftX + offsetX;
 			absolutePosition.y = topLeftY + offsetY;
+			computeLocalPosition();
 		}
+	}
+	
+	/**
+	 * Computes the absolute position of this Node
+	 * @param parent
+	 */
+	protected void position(Node parent) {
+		Node oldParent = this.parent;
+		this.parent = parent;
+
+		if ( oldParent != this.parent )
+			computeAbsolutePosition();
+		
+		cached_context = LWJGUI.getCurrentContext();
+
+		updateChildren();
+		resize();
+		computeAbsolutePosition();
 	}
 	
 	/**

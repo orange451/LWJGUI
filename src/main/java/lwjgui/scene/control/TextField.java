@@ -1,4 +1,4 @@
-package lwjgui.scene.control.text_input;
+package lwjgui.scene.control;
 
 public class TextField extends TextInputControl {
 	public TextField() {

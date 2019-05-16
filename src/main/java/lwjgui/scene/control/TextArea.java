@@ -1,4 +1,4 @@
-package lwjgui.scene.control.text_input;
+package lwjgui.scene.control;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -26,31 +26,31 @@ public class TextArea extends TextInputControl {
 	public TextArea() {
 		this("");
 	}
-}
-
-class TextAreaShortcuts extends TextInputControlShortcuts {
-	@Override
-	public void process(TextInputControl tic, KeyEvent event) {
-		super.process(tic, event);
-		
-		if ( event.isConsumed() )
-			return;
-		
-		if ( !tic.isEditing() )
-			return;
-		
-		// Enter
-		if (event.key == GLFW.GLFW_KEY_ENTER ) {
-			tic.saveState();
-			tic.deleteSelection();
-			tic.insertText(tic.getCaretPosition(), "\n");
-			tic.setCaretPosition(tic.getCaretPosition()+1);
-			tic.deselect();
-		}
-		
-		// Tab
-		if (event.key == GLFW.GLFW_KEY_TAB ) {
-			tic.tab();
+	
+	class TextAreaShortcuts extends TextInputControlShortcuts {
+		@Override
+		public void process(TextInputControl tic, KeyEvent event) {
+			super.process(tic, event);
+			
+			if ( event.isConsumed() )
+				return;
+			
+			if ( !tic.isEditing() )
+				return;
+			
+			// Enter
+			if (event.key == GLFW.GLFW_KEY_ENTER ) {
+				tic.saveState();
+				tic.deleteSelection();
+				tic.insertText(tic.getCaretPosition(), "\n");
+				tic.setCaretPosition(tic.getCaretPosition()+1);
+				tic.deselect();
+			}
+			
+			// Tab
+			if (event.key == GLFW.GLFW_KEY_TAB ) {
+				tic.tab();
+			}
 		}
 	}
 }

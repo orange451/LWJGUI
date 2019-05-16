@@ -2,7 +2,7 @@ package lwjgui;
 
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
-import lwjgui.scene.control.text_input.CodeArea;
+import lwjgui.scene.control.CodeArea;
 import lwjgui.scene.layout.BorderPane;
 
 public class CodeAreaExample extends LWJGUIApplication {

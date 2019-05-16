@@ -1,4 +1,4 @@
-package lwjgui.scene.control.text_input;
+package lwjgui.scene.control;
 
 import org.lwjgl.nanovg.NanoVG;
 
@@ -9,7 +9,6 @@ import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
 
@@ -46,9 +45,6 @@ public class CodeArea extends TextArea {
 		
 		// Position line counter
 		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
-		
-		//this.lineCounter.setLocalPosition(lineCounter.getParent(), -14, 0);
-		
 		this.lineCounter.setLocalPosition(lineCounter.getParent(), 
 				-internalScrollPane.getPadding().getLeft()-1, 
 				(internalScrollPane.getContent().getY()-internalScrollPane.getPadding().getTop())-internalScrollPane.getY());

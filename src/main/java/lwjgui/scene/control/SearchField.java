@@ -1,4 +1,4 @@
-package lwjgui.scene.control.text_input;
+package lwjgui.scene.control;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -8,7 +8,6 @@ import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Node;
-import lwjgui.scene.control.Label;
 import lwjgui.theme.Theme;
 
 public class SearchField extends TextField {

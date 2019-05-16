@@ -16,7 +16,6 @@ import lwjgui.paint.Color;
 import lwjgui.paint.ColorNameLookup;
 import lwjgui.scene.Context;
 import lwjgui.scene.Scene;
-import lwjgui.scene.control.text_input.TextField;
 import lwjgui.scene.layout.GridPane;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.OpenGLPane;

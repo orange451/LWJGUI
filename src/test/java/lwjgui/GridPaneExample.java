@@ -7,8 +7,8 @@ import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
-import lwjgui.scene.control.text_input.PasswordField;
-import lwjgui.scene.control.text_input.TextField;
+import lwjgui.scene.control.PasswordField;
+import lwjgui.scene.control.TextField;
 import lwjgui.scene.layout.GridPane;
 import lwjgui.scene.layout.StackPane;
 

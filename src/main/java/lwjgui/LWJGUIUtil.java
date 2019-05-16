@@ -94,14 +94,51 @@ public class LWJGUIUtil {
 		return window;
 	}
 	
+	/**
+	 * Creates a standard OpenGL 3.2 window with a Core Profile.
+	 * On Windows OS there is not a difference between old and new OpenGL contexts, graphics drivers 
+	 * allow for the mixing of these two.<br><br>
+	 * On Mac OS there is a difference between old and new OpenGL contexts. If you wish to use modern 
+	 * OpenGL commands, they must be done on a OpenGL 3.2 Core context. If you wish to use depricated 
+	 * OpenGL commands, they must be done on a OpenGL 2.0 Non Core context.
+	 * @param name
+	 * @param width
+	 * @param height
+	 * @param resizable
+	 * @param ontop
+	 * @return GLFW Window Handle
+	 */
 	public static long createOpenGLCoreWindow(String name, int width, int height, boolean resizable, boolean ontop) {
 		return createOpenGLWindow( name, width, height, resizable, ontop, true );
 	}
 	
+	/**
+	 * Creates a standard OpenGL 2.0 window with NON Core profile.<br>
+	 * On Windows OS there is not a difference between old and new OpenGL contexts, graphics drivers 
+	 * allow for the mixing of these two.<br><br>
+	 * On Mac OS there is a difference between old and new OpenGL contexts. If you wish to use modern 
+	 * OpenGL commands, they must be done on a OpenGL 3.2 Core context. If you wish to use depricated 
+	 * OpenGL commands, they must be done on a OpenGL 2.0 Non Core context.
+	 * @param name
+	 * @param width
+	 * @param height
+	 * @param resizable
+	 * @param ontop
+	 * @return GLFW Window Handle
+	 */
 	public static long createOpenGLDepricatedWindow(String name, int width, int height, boolean resizable, boolean ontop) {
 		return createOpenGLWindow( name, width, height, resizable, ontop, false );
 	}
 
+	/**
+	 * Fills a NanoVG rectangle at a given x/y with a given width/height and a specified color.
+	 * @param context
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param color
+	 */
 	public static void fillRect(Context context, double x, double y, double width, double height, Color color) {
 		if ( color == null )
 			return;
@@ -113,6 +150,15 @@ public class LWJGUIUtil {
 		NanoVG.nvgClosePath(context.getNVG());
 	}
 
+	/**
+	 * Fills a rounded NanoVG rectangle at a given x/y with a given width/height and a specified color.
+	 * @param context
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param color
+	 */
 	public static void fillRoundRect(Context context, double x, double y, double width, double height, double radius, Color color) {
 		if ( color == null )
 			return;
@@ -124,6 +170,15 @@ public class LWJGUIUtil {
 		NanoVG.nvgClosePath(context.getNVG());
 	}
 
+	/**
+	 * Outlines a NanoVG rectangle at a given x/y with a given width/height and a specified color.
+	 * @param context
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param color
+	 */
 	public static void outlineRect(Context context, double x, double y, double w, double h, Color color) {
 		if ( color == null )
 			return;
@@ -288,6 +343,9 @@ public class LWJGUIUtil {
 		return true;
 	}
 
+	/**
+	 * Draws a NanoVG string at a given location.
+	 */
 	private static float[] garbage = new float[4];
 	public static void drawText(String text, Font font, FontStyle style, double size, Color color, double x, double y, Pos alignment) {
 		Context vg = LWJGUI.getCurrentContext();
@@ -322,6 +380,11 @@ public class LWJGUIUtil {
 		NanoVG.nvgText(vg.getNVG(), (float)xx, (float)yy, text);
 	}
 	
+	/**
+	 * Opens the users web-browser to a given URL.
+	 * @param url
+	 * @throws IOException
+	 */
 	public static void openURLInBrowser(String url) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 		

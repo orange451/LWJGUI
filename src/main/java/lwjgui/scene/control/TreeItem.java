@@ -33,6 +33,10 @@ public class TreeItem<E> extends TreeBase<E> {
 		this.label.label.setText(text);
 	}
 	
+	public String getText() {
+		return this.label.label.getText();
+	}
+	
 	public void setExpanded(boolean expanded) {
 		this.opened = expanded;
 	}

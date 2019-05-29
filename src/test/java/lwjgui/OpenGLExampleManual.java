@@ -53,7 +53,7 @@ public class OpenGLExampleManual {
 		Window window = LWJGUI.initialize(handle);
 		window.setWindowAutoClear(false); // We must call glClear ourselves.
 		window.setWindowAutoDraw(false); // We must call glfwSwapBuffers ourselves.
-		window.show();
+		window.show(); // Display window if it's invisible.
 		
 		// Add some components
 		addComponents(window.getScene());

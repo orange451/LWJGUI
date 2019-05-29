@@ -75,7 +75,7 @@ public class LWJGUI {
 				try {
 					window.render();
 				}catch(Exception ex) {
-					
+					ex.printStackTrace();
 				}
 			}
 		}

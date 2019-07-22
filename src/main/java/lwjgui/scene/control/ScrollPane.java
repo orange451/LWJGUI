@@ -361,7 +361,7 @@ public class ScrollPane extends FillableRegion {
 		return this.content;
 	}
 	
-	static class ScrollCanvas extends Pane {
+	class ScrollCanvas extends Pane {
 		ScrollCanvas() {
 			this.flag_clip = true;
 			this.setBackground(null);
@@ -374,6 +374,7 @@ public class ScrollPane extends FillableRegion {
 		
 		@Override
 		public void render(Context context) {
+			ScrollCanvas.this.cached_context = ScrollPane.this.cached_context;
 			this.clip(context,-1);
 			super.render(context);
 		}

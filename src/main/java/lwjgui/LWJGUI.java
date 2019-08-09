@@ -86,7 +86,7 @@ public class LWJGUI {
 			windows.remove(windowsToClose.get(i));
 		}
 		
-		// Run runnables
+		// Get list of runnables
 		List<Runnable> newRunnable = new ArrayList<Runnable>();
 		synchronized(runnables) {
 			while(runnables.size()>0) { 
@@ -94,6 +94,8 @@ public class LWJGUI {
 				runnables.remove(0);
 			}
 		}
+		
+		// Execute Runnables
 		for (int i = 0; i < newRunnable.size(); i++) {
 			newRunnable.get(i).run();
 		}
@@ -104,16 +106,28 @@ public class LWJGUI {
 		return windows.get(context);
 	}
 
+	/**
+	 * Runs the specified runnable object at the end of the current LWJGUI frame.
+	 * @param runnable
+	 */
 	public static void runLater(Runnable runnable) {
 		synchronized(runnables) {
 			runnables.add(runnable);
 		}
 	}
 
+	/**
+	 * Returns the context of the current LWJGUI window.
+	 * @return
+	 */
 	public static Context getCurrentContext() {
 		return currentContext;
 	}
 
+	/**
+	 * Sets which context LWJGUI is currently modifying.
+	 * @param context
+	 */
 	public static void setCurrentContext(Context context) {
 		currentContext = context;
 	}

@@ -56,6 +56,23 @@ public class TreeNode<E> extends HBox {
 			event.consume();
 		});
 		
+		// Double click
+		setOnMouseClicked(cc -> {
+			if ( cc.getButton() != GLFW.GLFW_MOUSE_BUTTON_LEFT )
+				return;
+			
+			EventHandler<MouseEvent> t = item.getOnMouseClicked();
+			MouseEvent ev = new MouseEvent(cc.mouseX, cc.mouseY, cc.button,cc.getClickCount());
+			if ( t != null )
+				t.handle(ev);
+			
+			if ( !ev.isConsumed() ) {
+				if ( cc.getClickCount() == 2 ) {
+					item.setExpanded(!item.isExpanded());
+				}
+			}
+		});
+		
 		this.setOnMousePressed(new EventHandler<MouseEvent>() {
 			//long lastPressed = -1;
 			
@@ -90,21 +107,8 @@ public class TreeNode<E> extends HBox {
 					root.clearSelectedItems();
 					root.selectItem(item);
 
-					if ( event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
-						// Double click
-						setOnMouseClicked(cc -> {
-							EventHandler<MouseEvent> t = item.getOnMouseClicked();
-							MouseEvent ev = new MouseEvent(cc.mouseX, cc.mouseY, cc.button,cc.getClickCount());
-							if ( t != null )
-								t.handle(ev);
-							
-							if ( !ev.isConsumed() ) {
-								if ( cc.getClickCount() == 2 ) {
-									item.setExpanded(!item.isExpanded());
-								}
-							}
-						});
-					} else {
+					// Right click open context
+					if ( event.button == GLFW.GLFW_MOUSE_BUTTON_RIGHT ) {
 						ContextMenu context = item.context;
 						System.out.println(context);
 						if ( context != null ) {

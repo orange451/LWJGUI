@@ -139,6 +139,14 @@ public class TreeNode<E> extends HBox {
 		inset.setMinWidth(i);
 	}
 	
+	public TreeItem<E> getItem() {
+		return this.item;
+	}
+	
+	public TreeView<E> getRoot() {
+		return this.root;
+	}
+	
 	@Override
 	public void render(Context context) {
 		super.render(context);

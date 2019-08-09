@@ -1,18 +1,7 @@
 package lwjgui.scene.control;
 
-import org.lwjgl.glfw.GLFW;
-
-import lwjgui.LWJGUIUtil;
-import lwjgui.event.EventHandler;
-import lwjgui.event.MouseEvent;
-import lwjgui.font.Font;
-import lwjgui.geometry.Pos;
-import lwjgui.paint.Color;
-import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.HBox;
-import lwjgui.scene.layout.StackPane;
-import lwjgui.theme.Theme;
 
 public class TreeItem<E> extends TreeBase<E> {
 	private E root;

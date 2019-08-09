@@ -101,9 +101,9 @@ public class TreeView<E> extends TreeBase<E> {
 		if ( root instanceof TreeItem && !((TreeItem<E>)root).isExpanded() )
 			return;
 		
-		ObservableList<TreeItem<E>> itm = root.getItems();
+		ObservableList<TreeNode<E>> itm = root.nodes;
 		for (int i = 0; i < itm.size(); i++) {
-			TreeItem<E> child = (TreeItem<E>)itm.get(i);
+			TreeItem<E> child = itm.get(i).getItem();
 			TreeNode<E> node = root.getNode(child);
 			node.root = this;
 			node.setPrefWidth(TreeView.this.getWidth());

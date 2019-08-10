@@ -30,7 +30,7 @@ public class CheckBox extends ButtonBase {
 
 		this.setPadding(Insets.EMPTY);
 
-		this.setOnAction(new EventHandler<ActionEvent>() {
+		this.setOnActionInternal(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				checked = !checked;

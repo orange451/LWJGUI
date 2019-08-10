@@ -175,6 +175,8 @@ public abstract class ButtonBase extends Labeled {
 		
 		if ( isDisabled() ) {
 			this.setTextFill(Theme.current().getShadow());
+		} else {
+			this.setTextFill(Theme.current().getText());
 		}
 
 		this.offset(textOffset, 0);

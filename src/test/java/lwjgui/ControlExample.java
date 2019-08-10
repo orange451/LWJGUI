@@ -3,6 +3,7 @@ package lwjgui;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.control.Button;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.ComboBox;
 import lwjgui.scene.control.Label;
@@ -20,6 +21,8 @@ public class ControlExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
+	private static Button lockableButton;
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -44,7 +47,7 @@ public class ControlExample extends LWJGUIApplication {
 		{
 			displayDropdown(vbox);
 		}
-		
+
 		// Create hbox used to store two control types
 		HBox hbox = new HBox();
 		hbox.setSpacing(32);
@@ -57,6 +60,13 @@ public class ControlExample extends LWJGUIApplication {
 			// Redio Buttons
 			displayRadioButtons(hbox);
 		}
+		
+		// Disableable button
+		{
+			lockableButton = new Button("Click");
+			vbox.getChildren().add(lockableButton);
+		}
+		
 		
 		// Set the scene
 		window.setScene(new Scene(background, WIDTH, HEIGHT));
@@ -127,7 +137,13 @@ public class ControlExample extends LWJGUIApplication {
 		b.setDisabled(true);
 		pane.getChildren().add(b);
 		pane.getChildren().add(new CheckBox("Testing"));
-		pane.getChildren().add(new CheckBox("Check if you are cool!"));
+		
+		// Toggle lockable button
+		CheckBox lock = new CheckBox("Click to lock button");
+		lock.setOnAction((event)->{
+			lockableButton.setDisabled(!lockableButton.isDisabled());
+		});
+		pane.getChildren().add(lock);
 		
 		// Make the first checkbox selected visually and checked
 		b.setChecked(true);

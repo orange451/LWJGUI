@@ -81,17 +81,20 @@ public class GridView extends FillableRegion {
 				cLen = (float) item.getHeight();
 				maxLen = (float) this.getHeight();
 			}
-			currentLen += cLen + spacing;
+			currentLen += cLen;
 			
 			if ( currentLen <= maxLen || current.getChildren().size() == 0) {
 				current.getChildren().add(item);
+				currentLen += spacing;
 			} else {
-				currentLen = 0;
 				current = new HBox();
 				if ( this.orientation.equals(Orientation.VERTICAL ) )
 					current = new VBox();
 				current.setSpacing(spacing);
 				this.internalBox.getChildren().add(current);
+				currentLen = 0;
+				
+				// Rerun for this item
 				i--;
 			}
 		}

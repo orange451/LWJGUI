@@ -42,8 +42,6 @@ public class GridView extends FillableRegion {
 	
 	@Override
 	protected void position(Node parent) {
-		super.position(parent);
-		
 		float wid = (float) this.getWidth();
 		float hei = (float) this.getHeight();
 		
@@ -52,6 +50,8 @@ public class GridView extends FillableRegion {
 			rebuild();
 			position(parent);
 		}
+		
+		super.position(parent);
 	}
 	
 	protected void rebuild() {

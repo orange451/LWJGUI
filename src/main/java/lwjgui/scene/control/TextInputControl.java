@@ -1,6 +1,9 @@
 package lwjgui.scene.control;
 
+import java.awt.font.TextHitInfo;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGGlyphPosition;
@@ -993,9 +996,13 @@ public abstract class TextInputControl extends Control {
 	}
 	
 	float renderCaret = 0;
+	long lastClickTime = 0;
+	long lastLastClickTime = 0;
+	int DOUBLE_CLICK_SPEED = 225; // Time between clicks, in milliseconds.
+	int TRIPLE_CLICK_SPEED = 650; // Time between all clicks, in milliseconds.
 	
 	class TextInputScrollPane extends ScrollPane {
-		
+
 		public TextInputScrollPane() {
 			setFillToParentHeight(true);
 			setFillToParentWidth(true);
@@ -1021,7 +1028,9 @@ public abstract class TextInputControl extends Control {
 					return;
 				}
 				
-				if ( event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
+				long clickTime = System.currentTimeMillis();
+
+				if ( event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT && clickTime - lastClickTime > DOUBLE_CLICK_SPEED ) {
 					LWJGUI.runLater(()-> {
 						cached_context.setSelected(getViewport());
 					});
@@ -1034,11 +1043,48 @@ public abstract class TextInputControl extends Control {
 					if ( state != GLFW.GLFW_PRESS ) {
 						selectionStartPosition = caretPosition;
 					}
+				} else if ( event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT && clickTime - lastClickTime <= DOUBLE_CLICK_SPEED ) {
+
+					if (clickTime - lastLastClickTime <= TRIPLE_CLICK_SPEED && lastLastClickTime != 0) {
+						// Triple clicked.
+						String line = lines.get(getRowFromCaret(caretPosition));
+						int rowStart = getCaretFromRowLine(getRowFromCaret(caretPosition), 0);
+						int rowEnd = rowStart + line.length() - 1;
+
+						selectionStartPosition = rowStart;
+						selectionEndPosition = rowEnd;
+
+						lastLastClickTime = 0;
+					} else {
+						lastLastClickTime = lastClickTime;
+						// Double clicked.
+						setCaretPosition(getCaretAtMouse());
+						selectionEndPosition = caretPosition;
+
+						String line = lines.get(getRowFromCaret(caretPosition));
+
+						int caretIndex = getIndexFromCaret(caretPosition);
+
+						Pattern pattern = Pattern.compile("\\w+|\\d+");
+						Matcher matcher = pattern.matcher(line);
+
+						while (matcher.find()) {
+							if (matcher.start() <= caretIndex && matcher.end() >= caretIndex) {
+								selectionStartPosition = caretPosition - (caretIndex - matcher.start());
+								selectionEndPosition = caretPosition + (matcher.end() - caretIndex);
+								break;
+							}
+						}
+					}
+
+					setCaretPosition(selectionEndPosition);
 				} else if ( event.getButton() == GLFW.GLFW_MOUSE_BUTTON_RIGHT ) {
 					if ( TextInputControl.this.getContextMenu() != null ) {
 						TextInputControl.this.getContextMenu().show(this.getScene(), event.getMouseX(), event.getMouseY());
 					}
 				}
+
+				lastClickTime = clickTime;
 			});
 			
 			// Drag mouse

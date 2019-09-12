@@ -1049,7 +1049,14 @@ public abstract class TextInputControl extends Control {
 						// Triple clicked.
 						String line = lines.get(getRowFromCaret(caretPosition));
 						int rowStart = getCaretFromRowLine(getRowFromCaret(caretPosition), 0);
-						int rowEnd = rowStart + line.length() - 1;
+
+						int lineLength = line.length();
+
+						if (line.charAt(lineLength-1) == '\n' || line.charAt(lineLength-1) == '\r') {
+							lineLength--;
+						}
+
+						int rowEnd = rowStart + lineLength;
 
 						selectionStartPosition = rowStart;
 						selectionEndPosition = rowEnd;

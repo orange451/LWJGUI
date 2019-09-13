@@ -1011,7 +1011,7 @@ public abstract class TextInputControl extends Control {
 			setPadding(new Insets(3,4,4,3));
 			
 			this.flag_clip = false;
-			
+
 			// Enter
 			getViewport().setOnMouseEntered(event -> {
 				getScene().setCursor(Cursor.IBEAM);
@@ -1098,6 +1098,9 @@ public abstract class TextInputControl extends Control {
 			getViewport().setOnMouseDragged(event -> {
 				caretPosition = getCaretAtMouse();
 				selectionEndPosition = caretPosition;
+
+				lastClickTime = 0;
+				lastLastClickTime = 0;
 			});
 			
 			this.decorated = false;

@@ -343,7 +343,7 @@ public class Color {
 			float fA = getAlpha()/255.0f;
 			
 			if ( nvg == null ) {
-				nvg = NVGColor.calloc();
+				nvg = NVGColor.create();
 			}
 			
 			nvg.r(fR);

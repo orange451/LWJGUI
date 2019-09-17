@@ -13,8 +13,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
-		<lwjgl.version>3.2.2</lwjgl.version>
-		<joml.version>1.9.16</joml.version>
+		<lwjgl.version>3.2.3</lwjgl.version>
+		<joml.version>1.9.17</joml.version>
 	</properties>
 	<build>
 		<plugins>
@@ -26,119 +26,162 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>windows</id>
+			<id>lwjgl-natives-linux-amd64</id>
 			<activation>
 				<os>
-					<family>Windows</family>
+					<family>unix</family>
+					<arch>amd64</arch>
 				</os>
 			</activation>
 			<properties>
-				<platform>windows</platform>
+				<lwjgl.natives>natives-linux</lwjgl.natives>
 			</properties>
 		</profile>
 		<profile>
-			<id>linux</id>
+			<id>lwjgl-natives-linux-aarch64</id>
 			<activation>
 				<os>
-					<family>Linux</family>
+					<family>unix</family>
+					<arch>aarch64</arch>
 				</os>
 			</activation>
 			<properties>
-				<platform>linux</platform>
+				<lwjgl.natives>natives-linux-arm64</lwjgl.natives>
 			</properties>
 		</profile>
 		<profile>
-			<id>mac</id>
+			<id>lwjgl-natives-linux-arm</id>
 			<activation>
 				<os>
-					<family>Mac</family>
+					<family>unix</family>
+					<arch>arm</arch>
 				</os>
 			</activation>
 			<properties>
-				<platform>macos</platform>
+				<lwjgl.natives>natives-linux-arm32</lwjgl.natives>
+			</properties>
+		</profile>
+		<profile>
+			<id>lwjgl-natives-linux-arm32</id>
+			<activation>
+				<os>
+					<family>unix</family>
+					<arch>arm32</arch>
+				</os>
+			</activation>
+			<properties>
+				<lwjgl.natives>natives-linux-arm32</lwjgl.natives>
+			</properties>
+		</profile>
+		<profile>
+			<id>lwjgl-natives-macos-amd64</id>
+			<activation>
+				<os>
+					<family>mac</family>
+					<arch>amd64</arch>
+				</os>
+			</activation>
+			<properties>
+				<lwjgl.natives>natives-macos</lwjgl.natives>
+			</properties>
+		</profile>
+		<profile>
+			<id>lwjgl-natives-windows-amd64</id>
+			<activation>
+				<os>
+					<family>windows</family>
+					<arch>amd64</arch>
+				</os>
+			</activation>
+			<properties>
+				<lwjgl.natives>natives-windows</lwjgl.natives>
+			</properties>
+		</profile>
+		<profile>
+			<id>lwjgl-natives-windows-x86</id>
+			<activation>
+				<os>
+					<family>windows</family>
+					<arch>x86</arch>
+				</os>
+			</activation>
+			<properties>
+				<lwjgl.natives>natives-windows-x86</lwjgl.natives>
 			</properties>
 		</profile>
 	</profiles>
-	<repositories>
-		<repository>
-			<id>oss.sonatype.org</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.lwjgl</groupId>
+				<artifactId>lwjgl-bom</artifactId>
+				<version>${lwjgl.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-glfw</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-nanovg</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-opengl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-stb</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-tinyfd</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-glfw</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-nanovg</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-opengl</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-stb</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-tinyfd</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
 		<dependency>
 			<groupId>org.joml</groupId>
 			<artifactId>joml</artifactId>
 			<version>${joml.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl</artifactId>
-			<version>${lwjgl.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-opengl</artifactId>
-			<version>${lwjgl.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-glfw</artifactId>
-			<version>${lwjgl.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-nanovg</artifactId>
-			<version>${lwjgl.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${platform}</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-opengl</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${platform}</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-glfw</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${platform}</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-nanovg</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${platform}</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-stb</artifactId>
-			<version>${lwjgl.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-stb</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${platform}</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-tinyfd</artifactId>
-			<version>${lwjgl.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-tinyfd</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${platform}</classifier>
 		</dependency>
 	</dependencies>
 </project>

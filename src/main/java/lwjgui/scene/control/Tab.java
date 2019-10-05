@@ -8,6 +8,7 @@ import lwjgui.LWJGUIUtil;
 import lwjgui.event.Event;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
+import lwjgui.font.Font;
 import lwjgui.geometry.Insets;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
@@ -128,6 +129,7 @@ public class Tab {
 			this.label = new Label(name);
 			this.label.setMouseTransparent(true);
 			this.label.setFontSize(16);
+			this.label.setFont(Font.SEGOE);
 			this.internal.getChildren().add(label);
 			
 			this.x = new Label(new String(Character.toChars(0x2716)));

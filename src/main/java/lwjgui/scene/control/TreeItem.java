@@ -1,5 +1,7 @@
 package lwjgui.scene.control;
 
+import lwjgui.font.Font;
+import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.HBox;
 
@@ -62,8 +64,12 @@ class TreeItemLabel extends HBox {
 	private Node graphic;
 	
 	public TreeItemLabel(String text) {
+		this.setAlignment(Pos.CENTER_LEFT);
 		this.label = new Label();
+		this.label.setFont(Font.SEGOE);
 		this.label.setFontSize(16);
+		this.label.setPrefHeight(23);
+		this.label.setAlignment(Pos.CENTER_LEFT);
 		this.setSpacing(4);
 		this.setMouseTransparent(true);
 		this.setBackground(null);

@@ -25,6 +25,7 @@ public class Font {
 	public static Font COURIER = new Font("lwjgui/scene/layout/", "Courier-New-Regular.ttf", "Courier-New-Bold.ttf", "Courier-New-Italic.ttf", null);
 	public static Font CONSOLAS = new Font("lwjgui/scene/layout/", "Consolas-Regular.ttf", "Consolas-Bold.ttf", "Consolas-Italic.ttf", null);
 	public static Font ARIAL = new Font("lwjgui/scene/layout/", "Arial-Unicode.ttf");
+	public static Font SEGOE = new Font("lwjgui/scene/layout/", "selawk.ttf", "selawkb.ttf", null, "selawkl.ttf");
 	public static Font DINGBAT = new Font("lwjgui/scene/layout/", "ErlerDingbats.ttf");
 
 	private static ByteBuffer fallbackSansEmoji;

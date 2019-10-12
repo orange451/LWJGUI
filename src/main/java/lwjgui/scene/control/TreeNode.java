@@ -30,6 +30,7 @@ public class TreeNode<E> extends HBox {
 		inset.setMouseTransparent(true);
 		inset.setPrefSize(1, 1);
 		inset.setBackground(null);
+		this.setAlignment(Pos.CENTER_LEFT);
 		getChildren().add(inset);
 		
 		StackPane stateButton = new StackPane();
@@ -38,7 +39,7 @@ public class TreeNode<E> extends HBox {
 		stateButton.setBackground(null);
 		openGraphic = new Label();
 		openGraphic.setFont(Font.COURIER);
-		openGraphic.setFontSize(12);
+		openGraphic.setFontSize(13);
 		openGraphic.setMouseTransparent(true);
 		stateButton.getChildren().add(openGraphic);
 		

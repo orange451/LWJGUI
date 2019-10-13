@@ -74,7 +74,7 @@ public abstract class TextInputControl extends Control {
 	private boolean decorated = true;
 	private boolean selectionOutlineEnabled = true;
 	
-	Color caretFill = Color.BLACK;
+	Color caretFill = Theme.current().getText();
 	boolean caretFading = false;
 	
 	private Color selectionFill = Theme.current().getSelection();

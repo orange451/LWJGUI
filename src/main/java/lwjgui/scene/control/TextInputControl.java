@@ -81,6 +81,7 @@ public abstract class TextInputControl extends Control {
 	private Color selectionPassiveFill = Theme.current().getSelectionPassive();
 	Color selectionAltFill = Theme.current().getSelectionAlt();
 	private Color controlOutlineFill = Theme.current().getControlOutline();
+	private Color promptFill = Theme.current().getText().alpha(0.4f);
 	
 	protected TextInputControlShortcuts shortcuts;
 	
@@ -916,7 +917,7 @@ public abstract class TextInputControl extends Control {
 			// Draw
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgFontBlur(vg,0);
-			NanoVG.nvgFillColor(vg, Theme.current().getShadow().getNVG());
+			NanoVG.nvgFillColor(vg, promptFill.getNVG());
 			NanoVG.nvgText(vg, xx, yy, prompt);
 		}
 		

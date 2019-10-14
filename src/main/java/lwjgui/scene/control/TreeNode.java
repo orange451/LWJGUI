@@ -86,35 +86,40 @@ public class TreeNode<E> extends HBox {
 								|| GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_RIGHT_SUPER) == GLFW.GLFW_PRESS;
 				boolean isShiftDown = GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS
 								|| GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_RIGHT_SHIFT) == GLFW.GLFW_PRESS;
+				boolean isLeftDown = event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT;
+				boolean isRightDown = event.button == GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 				
-				if ( isCtrlDown ) { // Control click
-					if ( root.isItemSelected(item) ) {
-						root.deselectItem(item);
-					} else {
+				if ( isLeftDown ) {
+					if ( isCtrlDown ) { // Control click
+						if ( root.isItemSelected(item) ) {
+							root.deselectItem(item);
+						} else {
+							root.selectItem(item);
+						}
+					} else if ( isShiftDown ) { // Shift click
+						int start = root.getItemIndex(root.getLastSelectedItem());
+						if ( start == -1 )
+							start = 0;
+						int end = root.getItemIndex(item);
+						if (end == -1)
+							end = root.getItems().size()-1;
+						
+						root.selectItems(new IndexRange(start,end));
+					} else { // Normal click
+						
+						// Select
+						root.clearSelectedItems();
 						root.selectItem(item);
 					}
-				} else if ( isShiftDown ) { // Shift click
-					int start = root.getItemIndex(root.getLastSelectedItem());
-					if ( start == -1 )
-						start = 0;
-					int end = root.getItemIndex(item);
-					if (end == -1)
-						end = root.getItems().size()-1;
+				} else if ( isRightDown ) {
+					if ( !root.isItemSelected(item) ) {
+						root.selectItem(item);
+					}
 					
-					root.selectItems(new IndexRange(start,end));
-				} else { // Normal click
-					
-					// Select
-					root.clearSelectedItems();
-					root.selectItem(item);
-
-					// Right click open context
-					if ( event.button == GLFW.GLFW_MOUSE_BUTTON_RIGHT ) {
-						ContextMenu context = item.context;
-						System.out.println(context);
-						if ( context != null ) {
-							context.show(getScene(), getX(), getY()+getHeight());
-						}
+					ContextMenu context = item.context;
+					System.out.println(context);
+					if ( context != null ) {
+						context.show(getScene(), getX(), getY()+getHeight());
 					}
 				}
 				cached_context.setSelected(TreeNode.this);

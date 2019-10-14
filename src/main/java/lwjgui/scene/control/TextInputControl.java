@@ -625,6 +625,15 @@ public abstract class TextInputControl extends Control {
 		return line;
 	}
 	
+	/**
+	 * Returns the text of the line at the specified caret position.
+	 * @param caretPosition
+	 * @return
+	 */
+	public String getLine(int caretPosition) {
+		return lines.get(this.getRowFromCaret(caretPosition));
+	}
+	
 	public void setTextParser(TextParser parser) {
 		this.textParser = parser;
 	}

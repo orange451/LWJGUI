@@ -34,6 +34,8 @@ public class TreeView<E> extends TreeBase<E> {
 		this.visibleItems = new ObservableList<TreeItem<E>>();
 		
 		this.setOnMousePressedInternal(event -> {
+			if ( event.button != GLFW.GLFW_MOUSE_BUTTON_LEFT )
+				return;
 			clearSelectedItems();
 		});
 		

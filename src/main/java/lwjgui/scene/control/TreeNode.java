@@ -3,6 +3,7 @@ package lwjgui.scene.control;
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUIUtil;
+import lwjgui.collections.ObservableList;
 import lwjgui.event.EventHandler;
 import lwjgui.event.MouseEvent;
 import lwjgui.font.Font;
@@ -107,12 +108,26 @@ public class TreeNode<E> extends HBox {
 						root.selectItems(new IndexRange(start,end));
 					} else { // Normal click
 						
-						// Select
-						root.clearSelectedItems();
+						// Deselect all BUT the clicked item
+						ObservableList<TreeItem<E>> items = root.getSelectedItems();
+						items.remove(item);
+						for (int i = 0; i < items.size(); i++) {
+							root.deselectItem(items.get(i));
+						}
+						
+						// Select clicked item
 						root.selectItem(item);
 					}
 				} else if ( isRightDown ) {
 					if ( !root.isItemSelected(item) ) {
+						// Deselect all BUT the clicked item
+						ObservableList<TreeItem<E>> items = root.getSelectedItems();
+						items.remove(item);
+						for (int i = 0; i < items.size(); i++) {
+							root.deselectItem(items.get(i));
+						}
+						
+						// Select clicked item
 						root.selectItem(item);
 					}
 					

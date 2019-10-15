@@ -112,7 +112,7 @@ public class TreeNode<E> extends HBox {
 						ObservableList<TreeItem<E>> items = root.getSelectedItems();
 						items.remove(item);
 						for (int i = 0; i < items.size(); i++) {
-							root.deselectItem(items.get(i));
+							root.deselectItem(items.get(i--));
 						}
 						
 						// Select clicked item
@@ -124,7 +124,7 @@ public class TreeNode<E> extends HBox {
 						ObservableList<TreeItem<E>> items = root.getSelectedItems();
 						items.remove(item);
 						for (int i = 0; i < items.size(); i++) {
-							root.deselectItem(items.get(i));
+							root.deselectItem(items.get(i--));
 						}
 						
 						// Select clicked item

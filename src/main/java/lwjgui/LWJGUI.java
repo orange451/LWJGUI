@@ -53,6 +53,8 @@ public class LWJGUI {
 		// poll events to callbacks
 		glfwPollEvents();
 		
+		long currentContext = GLFW.glfwGetCurrentContext();
+		
 		// Render all windows
 		ArrayList<Long> windowsToClose = new ArrayList<Long>();
 		Iterator<Entry<Long, Window>> it = windows.entrySet().iterator();
@@ -79,6 +81,9 @@ public class LWJGUI {
 				}
 			}
 		}
+		
+		// Reset context to how it was before LWJGUI started rendering
+		GLFW.glfwMakeContextCurrent(currentContext);
 		
 		// Close all windows that need to close
 		for (int i = 0; i < windowsToClose.size(); i++) {

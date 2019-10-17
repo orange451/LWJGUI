@@ -24,7 +24,8 @@ public class OpenGLPane extends Pane {
 	private boolean autoClear = true;
 	
 	public OpenGLPane() {
-		resizeBuffer();
+		// Should not resize here, because we may not be in a OPENGL context.
+		//resizeBuffer();
 		
 		this.setBackground(Theme.current().getPane());
 	}

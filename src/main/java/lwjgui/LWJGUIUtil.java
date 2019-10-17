@@ -12,8 +12,10 @@ import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.opengl.GL11.GL_FALSE;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11C.GL_FALSE;
+import static org.lwjgl.opengl.GL11C.GL_TRUE;
+import static org.lwjgl.opengl.GL11C.GL_VERSION;
+import static org.lwjgl.opengl.GL11C.glGetString;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.BufferedReader;
@@ -85,11 +87,7 @@ public class LWJGUIUtil {
 		// Create context
 		GL.createCapabilities();
 		
-		int[] major = new int[1];
-		int[] minor = new int[1];
-		int[] rev = new int[1];
-		GLFW.glfwGetVersion(major, minor, rev);
-		System.out.println("Creating opengl window: " + major[0] + "." + minor[0] + "." + rev[0]);
+		System.out.println("Creating opengl window: " + glGetString(GL_VERSION));
 
 		return window;
 	}

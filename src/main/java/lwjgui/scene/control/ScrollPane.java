@@ -29,7 +29,7 @@ public class ScrollPane extends FillableRegion {
 	
 	private double thickness = 7;
 	private double barPadding = 2;
-	private double scrollGestureSpeedMultiplier = 8;
+	private double scrollGestureSpeedMultiplier = 20;
 	
 	private ScrollBar holdingBar;
 	private ScrollBar hoveredBar;

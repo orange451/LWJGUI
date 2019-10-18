@@ -369,6 +369,10 @@ public class Window {
 				 */
 				ArrayList<EventListener> listeners = getEventListenersForType(MOUSE_WHEEL_LISTENER);
 				
+				// Scale scrolling down if not 1 or -1
+				dx = Math.signum(dx) * (dx*dx);
+				dy = Math.signum(dy) * (dy*dy);
+				
 				for (int i = 0; i < listeners.size(); i++) {
 					((MouseWheelListener) listeners.get(i)).invoke(window, dx, dy);
 				}

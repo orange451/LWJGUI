@@ -3,6 +3,7 @@ package lwjgui.scene.control;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.event.ActionEvent;
+import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
@@ -17,6 +18,8 @@ import lwjgui.theme.Theme;
 
 public class ToggleSwitch extends Labeled implements Toggle {
 	protected boolean selected;
+	
+	protected EventHandler<ActionEvent> toggleEvent;
 	
 	public ToggleSwitch() {
 		this("");
@@ -39,6 +42,10 @@ public class ToggleSwitch extends Labeled implements Toggle {
 		this.setGraphic(new ToggleSwitchButton());
 		this.setSelected(selected);
 		this.setContentDisplay(ContentDisplay.RIGHT);
+	}
+	
+	public void setOnActionEvent(EventHandler<ActionEvent> event) {
+		this.toggleEvent = event;
 	}
 	
 	/**
@@ -129,6 +136,9 @@ public class ToggleSwitch extends Labeled implements Toggle {
 			this.button.setPadding(Insets.EMPTY);
 			this.button.setOnActionInternal((event)->{
 				setSelected(!isSelected());
+				
+				if ( toggleEvent != null )
+					EventHelper.fireEvent(toggleEvent, new ActionEvent());
 				
 				LWJGUI.runLater(()->{
 					cached_context.setSelected(button);

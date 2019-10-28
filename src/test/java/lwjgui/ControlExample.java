@@ -23,6 +23,8 @@ public class ControlExample extends LWJGUIApplication {
 
 	private static Button lockableButton;
 	
+	private static ComboBox<String> combo;
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -74,7 +76,7 @@ public class ControlExample extends LWJGUIApplication {
 	}
 	
 	private void displayDropdown(VBox vbox) {
-		ComboBox<String> combo = new ComboBox<String>("");
+		combo = new ComboBox<String>("");
 		combo.setPrefWidth(120);
 		combo.getItems().add("Visual Basic");
 		combo.getItems().add("Java");
@@ -109,7 +111,11 @@ public class ControlExample extends LWJGUIApplication {
 		SegmentedButton b = new SegmentedButton(b1, b2, b3, b4);
 		t.getChildren().add(b);
 		
-		t.getChildren().add( new ToggleSwitch("Toggle") );
+		ToggleSwitch toggle = new ToggleSwitch("Toggle");
+		toggle.setOnActionEvent((event)->{
+			combo.setDisabled(toggle.isSelected());
+		});
+		t.getChildren().add( toggle );
 	}
 
 	private static void displayRadioButtons(Pane parent) {
@@ -148,11 +154,5 @@ public class ControlExample extends LWJGUIApplication {
 		// Make the first checkbox selected visually and checked
 		b.setChecked(true);
 		LWJGUI.getCurrentContext().setSelected(b);
-	}
-
-	@Override
-	protected void run() {
-		// TODO Auto-generated method stub
-		
 	}
 }

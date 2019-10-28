@@ -9,6 +9,7 @@ import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
 
@@ -105,7 +106,8 @@ public class CodeArea extends TextArea {
 					Label l = new Label(" "+(i+1)) {
 						@Override
 						public void render(Context context) {
-							NanoVG.nvgScissor(context.getNVG(), (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
+							Pane viewport = CodeArea.this.getInternalScrollPane().getViewport();
+							NanoVG.nvgScissor(context.getNVG(), (int)viewport.getX(), (int)viewport.getY(), (int)viewport.getWidth(), (int)viewport.getHeight());
 							super.render(context);
 						}
 					};

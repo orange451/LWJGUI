@@ -67,6 +67,7 @@ public class BorderPane extends Pane {
 			
 			//center.setMaxWidth((getWidth()-width)-(spacing*h));
 		}*/
+		updateChildren();
 	}
 	
 	public void setSpacing( double spacing ) {

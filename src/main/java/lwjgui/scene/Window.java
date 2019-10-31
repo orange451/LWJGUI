@@ -542,8 +542,12 @@ public class Window {
 			}
 			
 			// Set window to match scene's size
-			double sw = Math.max(maxWid, scene.getPrefWidth());
-			double sh = Math.max(maxHei, scene.getPrefHeight());
+			double sw = Math.min(maxWid, scene.getPrefWidth());
+			double sh = Math.min(maxHei, scene.getPrefHeight());
+			if ( scene.getPrefHeight() != 0 && scene.getPrefWidth() != 0 ) {
+				sw = scene.getPrefWidth();
+				sh = scene.getPrefHeight();
+			}
 			
 			// Size window
 			GLFW.glfwSetWindowSize(context.getWindowHandle(), (int)Math.ceil(sw), (int)Math.ceil(sh));

@@ -26,6 +26,7 @@ import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Cursor;
+import lwjgui.scene.Node;
 import lwjgui.scene.layout.Pane;
 import lwjgui.theme.Theme;
 
@@ -644,6 +645,11 @@ public abstract class TextInputControl extends Control {
 	
 	public boolean isEditing() {
 		return this.editing;
+	}
+	
+	@Override
+	protected void position(Node parent) {
+		super.position(parent);
 	}
 	
 	@Override

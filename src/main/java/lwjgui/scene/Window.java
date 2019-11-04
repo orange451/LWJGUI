@@ -512,7 +512,8 @@ public class Window {
 	 */
 	public void show() {
 		glfwShowWindow(context.getWindowHandle());
-		focus();
+		//focus();
+		focusHack();
 	}
 	
 	public void setScene(Scene scene) {
@@ -626,7 +627,7 @@ public class Window {
 	 * Remove all EventListeners of the given type.
 	 * @param type
 	 */
-	public void removeAll(EventListenerType type) {
+	public void removeAllEventListeners(EventListenerType type) {
 		eventListeners.put(type, new ArrayList<EventListener>());
 	}
 	

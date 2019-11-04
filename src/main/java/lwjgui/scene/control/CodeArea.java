@@ -40,19 +40,14 @@ public class CodeArea extends TextArea {
 		
 		// Normal positioning
 		super.position(parent);
+		this.getInternalScrollPane().updateChildren();
 		
 		// Only update if the amount of lines has changed
 		lineCounter.update(this.getNumLines());
 		
 		// Position line counter
 		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
-		/*this.lineCounter.setLocalPosition(lineCounter.getParent(), 
-				-internalScrollPane.getPadding().getLeft()-1, 
-				(internalScrollPane.getContent().getY()-internalScrollPane.getPadding().getTop())+internalScrollPane.getY());*/
-		
-		this.lineCounter.setLocalPosition(lineCounter.getParent(), 
-				-internalScrollPane.getPadding().getLeft()-1, 
-				0);
+		this.lineCounter.setAbsolutePosition(this.getX(), (internalScrollPane.getContent().getY()-internalScrollPane.getPadding().getTop()) + 4);
 	}
 	
 	@Override
@@ -93,7 +88,7 @@ public class CodeArea extends TextArea {
 			this.setAlignment(Pos.TOP_LEFT);
 			this.setBackground(null);
 			this.setPrefWidth(0);
-			this.flag_clip = false;
+			this.flag_clip = true;
 		}
 		
 		public void update(int lines) {

@@ -6,6 +6,8 @@ import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.ComboBox;
+import lwjgui.scene.control.CustomTextField;
+import lwjgui.scene.control.CustomTextFieldBase;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.RadioButton;
 import lwjgui.scene.control.SegmentedButton;
@@ -16,6 +18,7 @@ import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
+import lwjgui.scene.shape.Rectangle;
 
 public class ControlExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
@@ -76,13 +79,27 @@ public class ControlExample extends LWJGUIApplication {
 	}
 	
 	private void displayDropdown(VBox vbox) {
+		HBox temp = new HBox();
+		temp.setSpacing(8);
+		vbox.getChildren().add(temp);
+		
 		combo = new ComboBox<String>("");
 		combo.setPrefWidth(120);
 		combo.getItems().add("Visual Basic");
 		combo.getItems().add("Java");
 		combo.getItems().add("C++");
 		combo.getItems().add("Other");
-		vbox.getChildren().add(combo);
+		temp.getChildren().add(combo);
+		
+		CustomTextField t = new CustomTextField();
+		temp.getChildren().add(t);
+		
+		Label clearNode = new Label(new String(Character.toChars(0x2716)));
+		t.setRightNode(clearNode);
+		
+		clearNode.setOnMouseClicked((event)->{
+			t.setText("");
+		});
 	}
 
 	private static VBox exampleBox(String title) {
@@ -114,6 +131,7 @@ public class ControlExample extends LWJGUIApplication {
 		ToggleSwitch toggle = new ToggleSwitch("Toggle");
 		toggle.setOnActionEvent((event)->{
 			combo.setDisabled(toggle.isSelected());
+			lockableButton.setDisabled(toggle.isSelected());
 		});
 		t.getChildren().add( toggle );
 	}

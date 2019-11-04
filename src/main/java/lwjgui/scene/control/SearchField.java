@@ -6,14 +6,9 @@ import lwjgui.LWJGUI;
 import lwjgui.event.ActionEvent;
 import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
-import lwjgui.geometry.Insets;
-import lwjgui.scene.Node;
 import lwjgui.theme.Theme;
 
-public class SearchField extends TextField {
-	
-	private Label searchNode;
-	private Label clearNode;
+public class SearchField extends CustomTextFieldBase {
 	
 	private EventHandler<ActionEvent> searchEvent;
 	
@@ -29,32 +24,23 @@ public class SearchField extends TextField {
 		
 		this.setPrompt("Search");
 		
-		this.internalScrollPane.setPadding(
-			new Insets(
-				this.internalScrollPane.getPadding().getTop(),
-				20, 
-				this.internalScrollPane.getPadding().getBottom(),
-				24
-			)
-		);
-		
 		this.cornerRadius = 10;
 
-		searchNode = new Label(new String(Character.toChars(0x1F50D)));
+		// Search button
+		Label searchNode = new Label(new String(Character.toChars(0x1F50D)));
 		searchNode.setTextFill(Theme.current().getShadow());
 		searchNode.setFontSize(16);
-		this.getChildren().add(searchNode);
-		
-		clearNode = new Label(new String(Character.toChars(0x2716)));
-		clearNode.setTextFill(Theme.current().getShadow());
-		clearNode.setFontSize(16);
-		this.getChildren().add(clearNode);
+		this.setLeftNode(searchNode);
 		
 		// Clear button
+		Label clearNode = new Label(new String(Character.toChars(0x2716)));
+		clearNode.setTextFill(Theme.current().getShadow());
+		clearNode.setFontSize(16);
 		clearNode.setMouseTransparent(false);
 		clearNode.setOnMouseClicked((event)->{
 			SearchField.this.setText("");
 		});
+		this.setRightNode(clearNode);
 		
 		// Clear Node color changing
 		clearNode.setOnMouseEntered((event)->{
@@ -98,13 +84,5 @@ public class SearchField extends TextField {
 	
 	public void setOnSearchEvent(EventHandler<ActionEvent> event) {
 		this.searchEvent = event;
-	}
-	
-	@Override
-	protected void position(Node parent) {
-		super.position(parent);
-		
-		searchNode.setLocalPosition(this, this.internalScrollPane.getPadding().getLeft()/2-searchNode.getWidth()/2+1,this.getHeight()/2-searchNode.getHeight()/2+1);
-		clearNode.setLocalPosition(this, this.getWidth()-this.internalScrollPane.getPadding().getRight(),this.getHeight()/2-clearNode.getHeight()/2);
 	}
 }

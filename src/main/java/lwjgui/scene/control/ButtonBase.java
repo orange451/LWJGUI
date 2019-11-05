@@ -64,11 +64,15 @@ public abstract class ButtonBase extends Labeled {
 		});
 	}
 	
-	protected void setCornerRadius(double radius) {
-		this.cornerNE = radius;
-		this.cornerNW = radius;
-		this.cornerSE = radius;
-		this.cornerSW = radius;
+	public void setCornerRadius(double radius) {
+		this.setCornerRadius(radius, radius, radius, radius);
+	}
+	
+	public void setCornerRadius( double radiusTopLeft, double radiusTopRight, double radiusBottomRight, double radiusBottomLeft) {
+		this.cornerNE = radiusTopRight;
+		this.cornerNW = radiusTopLeft;
+		this.cornerSE = radiusBottomRight;
+		this.cornerSW = radiusBottomLeft;
 	}
 	
 	@Override

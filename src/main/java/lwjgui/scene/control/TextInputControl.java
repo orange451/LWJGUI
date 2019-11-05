@@ -49,7 +49,11 @@ public abstract class TextInputControl extends Control {
 	
 	protected TextInputScrollPane internalScrollPane;
 	protected TextInputContentRenderer internalRenderingPane;
-	protected float cornerRadius = 0;
+	//protected float cornerRadius = 0;
+	protected float cornerRadiusNE = 0;
+	protected float cornerRadiusNW = 0;
+	protected float cornerRadiusSE = 0;
+	protected float cornerRadiusSW = 0;
 	
 	private StateStack<TextState> undoStack;
 	private boolean forceSaveState;
@@ -136,6 +140,17 @@ public abstract class TextInputControl extends Control {
 	
 	protected void saveState() {
 		undoStack.Push(new TextState(getText(),caretPosition));
+	}
+	
+	public void setCornerRadius(double radius) {
+		this.setCornerRadius( radius, radius, radius, radius );
+	}
+	
+	public void setCornerRadius( double radiusTopLeft, double radiusTopRight, double radiusBottomRight, double radiusBottomLeft ) {
+		this.cornerRadiusNW = (float) radiusTopLeft;
+		this.cornerRadiusNE = (float) radiusTopRight;
+		this.cornerRadiusSE = (float) radiusBottomRight;
+		this.cornerRadiusSW = (float) radiusBottomLeft;
 	}
 	
 	public void setWordWrap(boolean wrap) {
@@ -882,12 +897,16 @@ public abstract class TextInputControl extends Control {
 		float y = (int)(getY()+this.getInnerBounds().getY());
 		float w = (int)this.getInnerBounds().getWidth();
 		float h = (int)this.getInnerBounds().getHeight();
-		float r = 2 + this.cornerRadius;
+		float rNE = this.cornerRadiusNE;
+		float rNW = this.cornerRadiusNW;
+		float rSE = this.cornerRadiusSE;
+		float rSW = this.cornerRadiusSW;
 
 		this.clip(context,8);
 		
 		// Selection graphic
 		if (isDescendentSelected() && isDecorated() && !this.isDisabled()) {
+			float r = (rNE + rNW + rSE + rSW) / 4f + 1;
 			int feather = 4;
 			Color color = context.isFocused() ? selectionFill : selectionPassiveFill;
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
@@ -904,7 +923,7 @@ public abstract class TextInputControl extends Control {
 		if (isDecorated()) {
 			Color outlineColor = (this.isDescendentSelected()&&!this.isDisabled())? selectionFill : controlOutlineFill;
 			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRoundedRect(context.getNVG(), x, y, w, h, (float) r);
+			NanoVG.nvgRoundedRectVarying(context.getNVG(), x, y, w, h, rNW, rNE, rSE, rSW);
 			NanoVG.nvgFillColor(context.getNVG(), outlineColor.getNVG());
 			NanoVG.nvgFill(context.getNVG());
 		}
@@ -915,7 +934,7 @@ public abstract class TextInputControl extends Control {
 			Color c = Theme.current().getBackground();
 			if ( this.isDisabled() )
 				c = Theme.current().getSelectionPassive();
-			LWJGUIUtil.fillRoundRect(context, getX()+inset, getY()+inset, w-inset*2, h-inset*2, this.cornerRadius+1, c);
+			LWJGUIUtil.fillRoundRect(context, getX()+inset, getY()+inset, w-inset*2, h-inset*2, Math.max(0, this.cornerRadiusNW-1), Math.max(0, this.cornerRadiusNE-1), Math.max(0, this.cornerRadiusSE-1), Math.max(0, this.cornerRadiusSW-1), c);
 		}
 		
 		// Draw sub nodes
@@ -943,7 +962,7 @@ public abstract class TextInputControl extends Control {
 		if (isDecorated() && !this.isDisabled()) {
 			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
 			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRoundedRect(vg, x, y, w, h, r);
+			NanoVG.nvgRoundedRectVarying(vg, x, y, w, h, rNW, rNE, rSE, rSW);
 			NanoVG.nvgFillPaint(vg, bg);
 			NanoVG.nvgFill(vg);
 		}
@@ -956,7 +975,7 @@ public abstract class TextInputControl extends Control {
 					float inset = 1.33f;
 					w += 1;
 					h += 1;
-					NanoVG.nvgRoundedRect(vg, inset, inset, w-inset*2-1,h-inset*2-1, (float) r-inset);
+					NanoVG.nvgRoundedRectVarying(vg, inset, inset, w-inset*2-1,h-inset*2-1, (float) rNW-inset, (float) rNE-inset, (float) rSE-inset, (float) rSW-inset);
 					NanoVG.nvgStrokeColor(vg, col.getNVG());
 					NanoVG.nvgStrokeWidth(vg, inset*1.25f);
 					NanoVG.nvgStroke(vg);

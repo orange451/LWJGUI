@@ -169,6 +169,26 @@ public class LWJGUIUtil {
 	}
 
 	/**
+	 * Fills a rounded NanoVG rectangle at a given x/y with a given width/height and a specified color.
+	 * @param context
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param color
+	 */
+	public static void fillRoundRect(Context context, double x, double y, double width, double height, double radiusTopLeft, double radiusTopRight, double radiusBottomRight, double radiusBottomLeft, Color color) {
+		if ( color == null )
+			return;
+
+		NanoVG.nvgBeginPath(context.getNVG());
+		NanoVG.nvgRoundedRectVarying(context.getNVG(), (int)x, (int)y, (int)width, (int)height, (float)radiusTopLeft, (float)radiusTopRight, (float)radiusBottomRight, (float)radiusBottomLeft);
+		NanoVG.nvgFillColor(context.getNVG(), color.getNVG());
+		NanoVG.nvgFill(context.getNVG());
+		NanoVG.nvgClosePath(context.getNVG());
+	}
+
+	/**
 	 * Outlines a NanoVG rectangle at a given x/y with a given width/height and a specified color.
 	 * @param context
 	 * @param x

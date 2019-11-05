@@ -24,7 +24,7 @@ public class SearchField extends CustomTextFieldBase {
 		
 		this.setPrompt("Search");
 		
-		this.cornerRadius = 10;
+		this.setCornerRadius(10);
 
 		// Search button
 		Label searchNode = new Label(new String(Character.toChars(0x1F50D)));

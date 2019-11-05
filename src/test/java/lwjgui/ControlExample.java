@@ -7,7 +7,6 @@ import lwjgui.scene.control.Button;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.ComboBox;
 import lwjgui.scene.control.CustomTextField;
-import lwjgui.scene.control.CustomTextFieldBase;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.RadioButton;
 import lwjgui.scene.control.SegmentedButton;
@@ -18,14 +17,12 @@ import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
-import lwjgui.scene.shape.Rectangle;
 
 public class ControlExample extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
 	public static final int HEIGHT  = 240;
 
 	private static Button lockableButton;
-	
 	private static ComboBox<String> combo;
 	
 	public static void main(String[] args) {
@@ -131,7 +128,6 @@ public class ControlExample extends LWJGUIApplication {
 		ToggleSwitch toggle = new ToggleSwitch("Toggle");
 		toggle.setOnActionEvent((event)->{
 			combo.setDisabled(toggle.isSelected());
-			lockableButton.setDisabled(toggle.isSelected());
 		});
 		t.getChildren().add( toggle );
 	}
@@ -165,7 +161,7 @@ public class ControlExample extends LWJGUIApplication {
 		// Toggle lockable button
 		CheckBox lock = new CheckBox("Click to lock button");
 		lock.setOnAction((event)->{
-			lockableButton.setDisabled(!lockableButton.isDisabled());
+			lockableButton.setDisabled(lock.isChecked());
 		});
 		pane.getChildren().add(lock);
 		

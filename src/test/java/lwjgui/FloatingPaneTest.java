@@ -1,8 +1,11 @@
 package lwjgui;
 
+import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
+import lwjgui.scene.layout.floating.FloatingPane;
 
 public class FloatingPaneTest extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
@@ -19,7 +22,7 @@ public class FloatingPaneTest extends LWJGUIApplication {
 		pane.setPrefSize(512, 512);
 		
 		// Create a new floating pane
-		/*FloatingPane floatPane = new FloatingPane();
+		FloatingPane floatPane = new FloatingPane();
 		floatPane.setBackground(Color.GREEN);
 		pane.getChildren().add(floatPane);
 		
@@ -35,10 +38,9 @@ public class FloatingPaneTest extends LWJGUIApplication {
 		
 		// Put a label in the floating pane
 		t.getChildren().add(new Label("Hello World!"));
-		*/
 		
 		// Set the scene
-		window.setScene(new Scene(pane));
+		window.setScene(new Scene(pane, WIDTH, HEIGHT));
 		window.show();
 	}
 

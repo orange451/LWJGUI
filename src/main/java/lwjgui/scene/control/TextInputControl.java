@@ -50,10 +50,10 @@ public abstract class TextInputControl extends Control {
 	protected TextInputScrollPane internalScrollPane;
 	protected TextInputContentRenderer internalRenderingPane;
 	//protected float cornerRadius = 0;
-	protected float cornerRadiusNE = 0;
-	protected float cornerRadiusNW = 0;
-	protected float cornerRadiusSE = 0;
-	protected float cornerRadiusSW = 0;
+	protected float cornerRadiusNE;
+	protected float cornerRadiusNW;
+	protected float cornerRadiusSE;
+	protected float cornerRadiusSW;
 	
 	private StateStack<TextState> undoStack;
 	private boolean forceSaveState;
@@ -101,6 +101,7 @@ public abstract class TextInputControl extends Control {
 		setText("");
 		saveState();
 		this.flag_clip = true;
+		this.setCornerRadius(3);
 		
 		setOnTextInputInternal( new EventHandler<TypeEvent>() {
 			@Override
@@ -906,7 +907,7 @@ public abstract class TextInputControl extends Control {
 		
 		// Selection graphic
 		if (isDescendentSelected() && isDecorated() && !this.isDisabled()) {
-			float r = (rNE + rNW + rSE + rSW) / 4f + 1;
+			float r = (rNE + rNW + rSE + rSW) / 4f + 0.5f;
 			int feather = 4;
 			Color color = context.isFocused() ? selectionFill : selectionPassiveFill;
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	

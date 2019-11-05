@@ -130,4 +130,12 @@ public class FloatingPane extends Pane {
 		this.absx = x;
 		this.absy = y;
 	}
+	
+	public double getX() {
+		return this.absx;
+	}
+	
+	public double getY() {
+		return this.absy;
+	}
 }

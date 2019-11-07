@@ -105,6 +105,10 @@ public class SplitPane extends Control {
 		Context context = window.getContext();
 		double mx = context.getMouseX();
 		double my = context.getMouseY();
+		
+		Node hoveredNode = context.getHovered();
+		if ( hoveredNode != null && hoveredNode != this && !hoveredNode.isDescendentOf(this) )
+			return null;
 
 		for (int i = 0; i < dividers.size(); i++) {
 			Divider d = dividers.get(i);
@@ -159,7 +163,11 @@ public class SplitPane extends Control {
 			pChange = pixelSpaceToDividerSpace(my);
 
 		this.setDividerPosition(divider_cache.get(grabbedDivider), grabbedDivider.position+pChange);
-		mouseGrabLocation.add(mx, my); 
+		
+		// Update new mouse location
+		Vector4d bounds = this.getDividerBounds(grabbedDivider);
+		if ( context.getMouseX() > bounds.x && context.getMouseX() < bounds.x + bounds.z && context.getMouseY() > bounds.y && context.getMouseY() < bounds.y + bounds.w )
+			mouseGrabLocation.add(mx, my);
 
 		for (int i = 0; i < 4; i++) {
 			this.updateChildren();

@@ -25,6 +25,7 @@ public class TreeViewExample extends LWJGUIApplication {
 		// Create a scroll pane (for the tree)
 		ScrollPane scroll = new ScrollPane();
 		scroll.setPrefSize(200, 200);
+		pane.setPrefSize(200, 200);
 		pane.getChildren().add(scroll);
 		
 		// Create a tree

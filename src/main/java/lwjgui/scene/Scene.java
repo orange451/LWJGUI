@@ -16,7 +16,7 @@ public class Scene extends Node {
 	private ObservableList<PopupWindow> popups = new ObservableList<PopupWindow>();
 
 	public Scene(Node root) {
-		this(root, 1, 1);
+		this(root, root.getPrefWidth(), root.getPrefHeight());
 	}
 	
 	public Scene(Node root, double prefWidth, double prefHeight) {

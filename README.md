@@ -35,6 +35,7 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 - [LWJGL3](https://www.lwjgl.org/)
 - [JOML](https://github.com/JOML-CI/JOML) (Can download with [LWJGL](https://www.lwjgl.org/customize))
 - [NanoVG](https://github.com/memononen/nanovg) (Can download with [LWJGL](https://www.lwjgl.org/customize))
+- [TinyFD](https://github.com/native-toolkit/tinyfiledialogs) (Can download with [LWJGL](https://www.lwjgl.org/customize))
 
 # Setup with gradle/maven/sbt/leiningen
 1. Open https://jitpack.io/

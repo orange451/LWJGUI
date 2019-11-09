@@ -1,6 +1,7 @@
 package lwjgui;
 
 import lwjgui.LWJGUIApplication;
+import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.*;
 import lwjgui.scene.layout.*;
@@ -26,13 +27,28 @@ public class SliderExample extends LWJGUIApplication {
 		pane.getChildren().add(vbox);
 		
 		// Add slider/label combo
-		Label label = new Label("50");
-		Slider slider = new Slider();
-		slider.setOnValueChangedEvent((event)-> {
-			double val = ((int)(slider.getValue() * 100))/100d;
-			label.setText(""+val);
+		Label label = new Label("(50.0, 50.0)");
+		Slider sliderH = new Slider();
+		
+		
+		Slider sliderV = new Slider();
+		sliderV.setOrientation(Orientation.VERTICAL);
+		sliderV.setBlockIncrement(2.0);
+		
+		// Update the label
+		sliderH.setOnValueChangedEvent((event)-> {
+			double x = ((int) (sliderH.getValue() * 100)) / 100d;
+			double y = ((int) (sliderV.getValue() * 100)) / 100d;
+			label.setText("(" + x + ", " + y + ")");
 		});
-		vbox.getChildren().add(slider);
+		sliderV.setOnValueChangedEvent((event)-> {
+			double x = ((int) (sliderH.getValue() * 100)) / 100d;
+			double y = ((int) (sliderV.getValue() * 100)) / 100d;
+			label.setText("(" + x + ", " + y + ")");
+		});
+		
+		vbox.getChildren().add(sliderH);
+		vbox.getChildren().add(sliderV);
 		vbox.getChildren().add(label);
 		
 		// Create a new scene

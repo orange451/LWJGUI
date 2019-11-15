@@ -22,12 +22,12 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 
 # Screenshots
 ![Modena](http://magaimg.net/img/7gkq.png)
-![PicControlExample](http://magaimg.net/img/7gkp.png)
+![PicControlExample](http://magaimg.net/img/9lb8.png)
 ![SyntaxHighlight](http://magaimg.net/img/9lb5.png)
 ![PicOpenGL](http://magaimg.net/img/7utn.png)
 ![ScrollSplitPane](https://i.imgur.com/EKVvWdP.png)
 ![Gears](http://magaimg.net/img/7ux5.png)
-![TextArea](http://magaimg.net/img/7upk.png)
+![TextArea](http://magaimg.net/img/9lb6.png)
 ![TreeView](https://i.imgur.com/WZQxpvU.png)
 ![IDE](http://magaimg.net/img/7upi.png)
 
@@ -47,7 +47,8 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 
 # Projects That Use LWJGUI
 - [Anarchy Engine - 3D Java/lua game engine](https://github.com/orange451/AnarchyEngine)
-- [JDialogue - branching dialogue editor for video games](https://github.com/SkyAphid/JDialogue)
+- [Lime - 2D game engine](https://github.com/cozmic185/Lime)
+- [BumboEditoni - Minecraft 1.14+ World Editor](https://github.com/DaNetNavern0/BumboEditoni)
 
 # Similar projects
 - [Clear](https://github.com/SkyAphid/Clear/)

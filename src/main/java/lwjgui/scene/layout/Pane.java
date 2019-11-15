@@ -2,24 +2,29 @@ package lwjgui.scene.layout;
 
 import org.lwjgl.nanovg.NanoVG;
 
+import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.paint.Color;
 import lwjgui.scene.Node;
+import lwjgui.style.StyleBackground;
+import lwjgui.style.StyleCornerRadius;
 import lwjgui.scene.Context;
 import lwjgui.scene.FillableRegion;
 import lwjgui.theme.Theme;
 
-public class Pane extends FillableRegion {
+public class Pane extends FillableRegion implements StyleCornerRadius,StyleBackground {
 	//private boolean scrollableX;
 	//private boolean scrollableY;
 	
 	private Color backgroundColor;
 	private Color paddingColor;
+	private float[] cornerRadii;
 
 	public Pane() {
 		this.setBackground(Theme.current().getPane());
 		this.setPrefSize(1, 1);
 		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		this.setCornerRadii(0);
 	}
 
 	@Override
@@ -82,11 +87,16 @@ public class Pane extends FillableRegion {
 			double boundsY = getY();
 			double boundsW = getWidth();
 			double boundsH = getHeight();
+			boolean hasCorner = getCornerRadii()[0] != 0 || getCornerRadii()[1] != 0 || getCornerRadii()[2] != 0 || getCornerRadii()[3] != 0;
 			
-			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRect(context.getNVG(), (int) boundsX, (int) boundsY, (float) boundsW, (float) boundsH);
-			NanoVG.nvgFillColor(context.getNVG(), getBackground().getNVG());
-			NanoVG.nvgFill(context.getNVG());
+			if ( hasCorner ) {
+				LWJGUIUtil.fillRoundRect(context, boundsX, boundsY, boundsW, boundsH, getCornerRadii()[0], getCornerRadii()[1], getCornerRadii()[2], getCornerRadii()[3], getBackground());
+			} else {
+				NanoVG.nvgBeginPath(context.getNVG());
+				NanoVG.nvgRect(context.getNVG(), (int) boundsX, (int) boundsY, (float) boundsW, (float) boundsH);
+				NanoVG.nvgFillColor(context.getNVG(), getBackground().getNVG());
+				NanoVG.nvgFill(context.getNVG());
+			}
 		}
 		
 		if ( this.getPaddingColor() != null ) {
@@ -128,5 +138,20 @@ public class Pane extends FillableRegion {
 		}
 		
 		super.render(context);
+	}
+
+	@Override
+	public float[] getCornerRadii() {
+		return cornerRadii;
+	}
+
+	@Override
+	public void setCornerRadii(float radius) {
+		this.setCornerRadii(radius, radius, radius, radius);
+	}
+
+	@Override
+	public void setCornerRadii(float cornerTopLeft, float cornerTopRight, float cornerBottomRight, float cornerBottomLeft) {
+		this.cornerRadii = new float[] {cornerTopLeft, cornerTopRight, cornerBottomRight, cornerBottomLeft};
 	}
 }

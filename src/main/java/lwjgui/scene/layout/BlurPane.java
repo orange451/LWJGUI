@@ -189,6 +189,7 @@ public class BlurPane extends StackPane {
 			GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uColor"), internalBackground.getRed()/255f-0.5f, internalBackground.getGreen()/255f-0.5f, internalBackground.getBlue()/255f-0.5f, internalBackground.getAlpha()/255f);
 			GL20.glUniform1f(GL20.glGetUniformLocation(quadShader.getProgram(), "uBlurSize"), blurRadius);
 			GL20.glUniform2f(GL20.glGetUniformLocation(quadShader.getProgram(), "uTexelSize"), 1.0f/(float)w, 1.0f/(float)h);
+			GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uCornerRadii"), (float)Math.max(BlurPane.this.getCornerRadii()[0], 0.1), (float)Math.max(BlurPane.this.getCornerRadii()[1], 0.1), (float)Math.max(BlurPane.this.getCornerRadii()[2], 0.1), (float)Math.max(BlurPane.this.getCornerRadii()[3], 0.1));
 			
 			
 			// Draw quad

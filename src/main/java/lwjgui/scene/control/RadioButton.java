@@ -51,7 +51,7 @@ public class RadioButton extends ToggleButton {
 		//this.graphicLabel.offset.x = size + spacing;
 		//this.graphicLabel.alignment = Pos.CENTER_LEFT;
 		
-		this.setCornerRadius(size/2f);
+		this.setCornerRadii(size/2f);
 		
 		super.render(context);
 

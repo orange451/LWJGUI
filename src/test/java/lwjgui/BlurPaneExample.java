@@ -24,6 +24,7 @@ public class BlurPaneExample extends LWJGUIApplication {
 
 		// Put a label in the pane
 		BlurPane pane = new BlurPane();
+		pane.setCornerRadii(8);
 		pane.setPrefSize(150, 150);
 		root.setCenter(pane);
 		

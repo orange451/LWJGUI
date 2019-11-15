@@ -68,12 +68,10 @@ public class CombinedButton extends Control {
 				last = true;
 
 			if ( !first ) {
-				b.cornerNW = 0;
-				b.cornerSW = 0;
+				b.setCornerRadii(0, b.getCornerRadii()[1], b.getCornerRadii()[2], 0);
 			}
 			if ( !last ) {
-				b.cornerNE = 0;
-				b.cornerSE = 0;
+				b.setCornerRadii(b.getCornerRadii()[0], 0, 0, b.getCornerRadii()[3]);
 			}
 		}
 	}

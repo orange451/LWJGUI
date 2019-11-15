@@ -36,8 +36,8 @@ public abstract class CustomTextFieldBase extends TextField {
 	protected void position(Node parent) {
 		super.position(parent);
 
-		float rightRad = (this.cornerRadiusNE + this.cornerRadiusSE) / 2f;
-		float leftRad = (this.cornerRadiusNW + this.cornerRadiusSW) / 2f;
+		float rightRad = (this.getCornerRadii()[1] + this.getCornerRadii()[2]) / 2f;
+		float leftRad = (this.getCornerRadii()[0] + this.getCornerRadii()[3]) / 2f;
 		
 		this.internalScrollPane.setPadding(
 			new Insets(

@@ -22,7 +22,7 @@ public class CheckBox extends ButtonBase {
 	public CheckBox(String name) {
 		super(name);
 		
-		this.setCornerRadius(2);
+		this.setCornerRadii(2);
 
 		this.setAlignment(Pos.CENTER_LEFT);
 		

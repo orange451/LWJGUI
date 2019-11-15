@@ -14,18 +14,16 @@ import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.style.StyleCornerRadius;
 import lwjgui.theme.Theme;
 
-public abstract class ButtonBase extends Labeled {
+public abstract class ButtonBase extends Labeled implements StyleCornerRadius {
 	protected EventHandler<ActionEvent> buttonEvent;
 	protected EventHandler<ActionEvent> buttonInternalEvent;
-
-	protected double cornerNW;
-	protected double cornerNE;
-	protected double cornerSW;
-	protected double cornerSE;
 	
 	protected double textOffset;
+	
+	private float[] cornerRadii;
 	
 	public ButtonBase(String name) {
 		super();
@@ -34,7 +32,7 @@ public abstract class ButtonBase extends Labeled {
 		this.setMinSize(12, 24);
 		this.setPadding(new Insets(4,6,4,6));
 		
-		this.setCornerRadius(2.5);
+		this.setCornerRadii(2.5f);
 		
 		this.setText(name);
 		this.setFontSize(16);
@@ -64,15 +62,19 @@ public abstract class ButtonBase extends Labeled {
 		});
 	}
 	
-	public void setCornerRadius(double radius) {
-		this.setCornerRadius(radius, radius, radius, radius);
+	@Override
+	public float[] getCornerRadii() {
+		return cornerRadii;
 	}
-	
-	public void setCornerRadius( double radiusTopLeft, double radiusTopRight, double radiusBottomRight, double radiusBottomLeft) {
-		this.cornerNE = radiusTopRight;
-		this.cornerNW = radiusTopLeft;
-		this.cornerSE = radiusBottomRight;
-		this.cornerSW = radiusBottomLeft;
+
+	@Override
+	public void setCornerRadii(float radius) {
+		this.setCornerRadii(radius, radius, radius, radius);
+	}
+
+	@Override
+	public void setCornerRadii(float cornerTopLeft, float cornerTopRight, float cornerBottomRight, float cornerBottomLeft) {
+		this.cornerRadii = new float[] {cornerTopLeft, cornerTopRight, cornerBottomRight, cornerBottomLeft};
 	}
 	
 	@Override
@@ -110,7 +112,7 @@ public abstract class ButtonBase extends Labeled {
 		// Selection graphic
 		if ( context.isSelected(this) && context.isFocused() ) {
 			int feather = 6;
-			float c = (float) Math.max(cornerNW,Math.max(cornerNE,Math.max(cornerSE,cornerSW)));
+			float c = (float) Math.max(this.getCornerRadii()[0],Math.max(this.getCornerRadii()[1],Math.max(this.getCornerRadii()[2],this.getCornerRadii()[3])));
 			NVGColor sel = Theme.current().getSelection().getNVG();
 			if ( isDisabled() )
 				sel = Theme.current().getSelectionPassive().getNVG();
@@ -189,7 +191,7 @@ public abstract class ButtonBase extends Labeled {
 	}
 
 	private void buttonMask(long vg, float x, float y, float w, float h, float rOffset) {
-		NanoVG.nvgRoundedRectVarying(vg, x+1, y+1, w-2, h-2, (float)cornerNW+rOffset, (float)cornerNE+rOffset, (float)cornerSE+rOffset, (float)cornerSW+rOffset);
+		NanoVG.nvgRoundedRectVarying(vg, x+1, y+1, w-2, h-2, (float)this.getCornerRadii()[0]+rOffset, (float)this.getCornerRadii()[1]+rOffset, (float)this.getCornerRadii()[2]+rOffset, (float)this.getCornerRadii()[3]+rOffset);
 	}
 	
 	protected Point getDrawSize() {

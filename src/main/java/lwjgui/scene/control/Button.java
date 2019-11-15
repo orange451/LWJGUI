@@ -20,11 +20,6 @@ public class Button extends ButtonBase {
 	}
 	
 	@Override
-	public void setCornerRadius( double radius ) {
-		super.setCornerRadius(radius);
-	}
-	
-	@Override
 	public boolean isResizeable() {
 		return false;
 	}

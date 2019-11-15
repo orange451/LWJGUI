@@ -29,7 +29,7 @@ public class SliderExample extends LWJGUIApplication {
 		// Add slider/label combo
 		Label label = new Label("(50.0, 50.0)");
 		Slider sliderH = new Slider();
-		
+		sliderH.setBlockIncrement(10);
 		
 		Slider sliderV = new Slider();
 		sliderV.setOrientation(Orientation.VERTICAL);

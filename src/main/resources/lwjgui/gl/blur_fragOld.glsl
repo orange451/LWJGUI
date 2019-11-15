@@ -4,6 +4,7 @@ uniform sampler2D colorSampler;
 uniform vec4 uColor;
 uniform float uBlurSize;
 uniform vec2 uTexelSize;
+uniform vec4 uCornerRadii;
 
 varying vec4 passColor;
 

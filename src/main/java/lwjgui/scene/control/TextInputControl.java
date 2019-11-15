@@ -28,12 +28,13 @@ import lwjgui.scene.Context;
 import lwjgui.scene.Cursor;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.Pane;
+import lwjgui.style.StyleCornerRadius;
 import lwjgui.theme.Theme;
 
 /**
  * This class acts as the core controller for text input classes.
  */
-public abstract class TextInputControl extends Control {
+public abstract class TextInputControl extends Control implements StyleCornerRadius {
 	ArrayList<String> lines;
 	ArrayList<ArrayList<GlyphData>> glyphData;
 	ArrayList<String> linesDraw;
@@ -49,11 +50,6 @@ public abstract class TextInputControl extends Control {
 	
 	protected TextInputScrollPane internalScrollPane;
 	protected TextInputContentRenderer internalRenderingPane;
-	//protected float cornerRadius = 0;
-	protected float cornerRadiusNE;
-	protected float cornerRadiusNW;
-	protected float cornerRadiusSE;
-	protected float cornerRadiusSW;
 	
 	private StateStack<TextState> undoStack;
 	private boolean forceSaveState;
@@ -75,6 +71,7 @@ public abstract class TextInputControl extends Control {
 	protected Font font = Font.SANS;
 	protected Color fontFill = Theme.current().getText();
 	protected FontStyle style = FontStyle.REGULAR;
+	private float[] cornerRadii;
 	
 	private boolean decorated = true;
 	private boolean selectionOutlineEnabled = true;
@@ -101,7 +98,7 @@ public abstract class TextInputControl extends Control {
 		setText("");
 		saveState();
 		this.flag_clip = true;
-		this.setCornerRadius(3);
+		this.setCornerRadii(3);
 		
 		setOnTextInputInternal( new EventHandler<TypeEvent>() {
 			@Override
@@ -143,15 +140,19 @@ public abstract class TextInputControl extends Control {
 		undoStack.Push(new TextState(getText(),caretPosition));
 	}
 	
-	public void setCornerRadius(double radius) {
-		this.setCornerRadius( radius, radius, radius, radius );
+	@Override
+	public float[] getCornerRadii() {
+		return cornerRadii;
 	}
-	
-	public void setCornerRadius( double radiusTopLeft, double radiusTopRight, double radiusBottomRight, double radiusBottomLeft ) {
-		this.cornerRadiusNW = (float) radiusTopLeft;
-		this.cornerRadiusNE = (float) radiusTopRight;
-		this.cornerRadiusSE = (float) radiusBottomRight;
-		this.cornerRadiusSW = (float) radiusBottomLeft;
+
+	@Override
+	public void setCornerRadii(float radius) {
+		this.setCornerRadii(radius, radius, radius, radius);
+	}
+
+	@Override
+	public void setCornerRadii(float cornerTopLeft, float cornerTopRight, float cornerBottomRight, float cornerBottomLeft) {
+		this.cornerRadii = new float[] {cornerTopLeft, cornerTopRight, cornerBottomRight, cornerBottomLeft};
 	}
 	
 	public void setWordWrap(boolean wrap) {
@@ -898,10 +899,10 @@ public abstract class TextInputControl extends Control {
 		float y = (int)(getY()+this.getInnerBounds().getY());
 		float w = (int)this.getInnerBounds().getWidth();
 		float h = (int)this.getInnerBounds().getHeight();
-		float rNE = this.cornerRadiusNE;
-		float rNW = this.cornerRadiusNW;
-		float rSE = this.cornerRadiusSE;
-		float rSW = this.cornerRadiusSW;
+		float rNW = this.cornerRadii[0];
+		float rNE = this.cornerRadii[1];
+		float rSE = this.cornerRadii[2];
+		float rSW = this.cornerRadii[3];
 
 		this.clip(context,8);
 		
@@ -935,7 +936,7 @@ public abstract class TextInputControl extends Control {
 			Color c = Theme.current().getBackground();
 			if ( this.isDisabled() )
 				c = Theme.current().getSelectionPassive();
-			LWJGUIUtil.fillRoundRect(context, getX()+inset, getY()+inset, w-inset*2, h-inset*2, Math.max(0, this.cornerRadiusNW-1), Math.max(0, this.cornerRadiusNE-1), Math.max(0, this.cornerRadiusSE-1), Math.max(0, this.cornerRadiusSW-1), c);
+			LWJGUIUtil.fillRoundRect(context, getX()+inset, getY()+inset, w-inset*2, h-inset*2, Math.max(0, rNW-1), Math.max(0, rNE-1), Math.max(0, rSE-1), Math.max(0, rSW-1), c);
 		}
 		
 		// Draw sub nodes

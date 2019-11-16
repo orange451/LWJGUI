@@ -23,6 +23,22 @@ public class OpenGLPane extends Pane {
 	private boolean flipY;
 	private boolean autoClear = true;
 	
+	class OpenGLPaneContext extends Context {
+		public OpenGLPaneContext(long window) {
+			super(window);
+			this.windowWidth = (int) OpenGLPane.this.getWidth();
+			this.windowHeight = (int) OpenGLPane.this.getHeight();
+		}
+		
+		@Override
+		public void refresh() {
+			this.windowWidth = (int) OpenGLPane.this.getWidth();
+			this.windowHeight = (int) OpenGLPane.this.getHeight();
+			this.updateContext();
+			super.refresh();
+		}
+	}
+	
 	public OpenGLPane() {
 		// Should not resize here, because we may not be in a OPENGL context.
 		//resizeBuffer();
@@ -41,12 +57,7 @@ public class OpenGLPane extends Pane {
 		}
 		
 		if ( internalContext == null ) {
-			internalContext = new Context(-1) {
-				{
-					this.windowWidth = (int) OpenGLPane.this.getWidth();
-					this.windowHeight = (int) OpenGLPane.this.getHeight();
-				}
-			};
+			internalContext = new OpenGLPaneContext(-1);
 		}
 		
 		if ( this.cached_context.isModernOpenGL() ) {
@@ -117,7 +128,8 @@ public class OpenGLPane extends Pane {
 					
 					// Drawing
 					NanoVG.nvgBeginFrame(internalContext.getNVG(), (int)getWidth(), (int)getHeight(), internalContext.getPixelRatio());
-					renderer.render(internalContext);
+					internalContext.refresh();
+					renderer.render(context);
 					NanoVG.nvgEndFrame(internalContext.getNVG());
 				}
 				this.buffer.unbind();

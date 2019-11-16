@@ -33,8 +33,8 @@ public class Context {
 	private Node hovered = null;
 	private Node lastPressed = null;
 
-	private double mouseX;
-	private double mouseY;
+	protected double mouseX;
+	protected double mouseY;
 	protected boolean focused;
 
 	public Context( long window ) {
@@ -99,9 +99,8 @@ public class Context {
 		glfwGetFramebufferSize(windowHandle, frameBufferWidthArr, frameBufferHeightArr);
 		glfwGetWindowPos(windowHandle, xposArr, yposArr);
 
-		if ( windowWidthArr[0] == 0 ) {
+		if ( windowWidthArr[0] == 0 )
 			return;
-		}
 
 		windowWidth = windowWidthArr[0];
 		windowHeight = windowHeightArr[0];

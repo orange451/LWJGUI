@@ -15,7 +15,7 @@ import lwjgui.theme.Theme;
 
 public class OpenGLPane extends Pane {
 	private Vector2i oldSize = new Vector2i(1,1);
-	private Context internalContext;
+	private OpenGLPaneContext internalContext;
 	private OffscreenBuffer buffer;
 	private Renderer renderer;
 	private Color internalBackground;
@@ -36,6 +36,12 @@ public class OpenGLPane extends Pane {
 			this.windowHeight = (int) OpenGLPane.this.getHeight();
 			this.updateContext();
 			super.refresh();
+		}
+		
+		public void refresh(Context other) {
+			this.mouseX = other.getMouseX() - OpenGLPane.this.getX();
+			this.mouseY = other.getMouseY() - OpenGLPane.this.getY();
+			this.refresh();
 		}
 	}
 	
@@ -128,8 +134,8 @@ public class OpenGLPane extends Pane {
 					
 					// Drawing
 					NanoVG.nvgBeginFrame(internalContext.getNVG(), (int)getWidth(), (int)getHeight(), internalContext.getPixelRatio());
-					internalContext.refresh();
-					renderer.render(context);
+					internalContext.refresh(context);
+					renderer.render(internalContext);
 					NanoVG.nvgEndFrame(internalContext.getNVG());
 				}
 				this.buffer.unbind();

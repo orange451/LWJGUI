@@ -100,7 +100,7 @@ public abstract class ButtonBase extends Labeled implements StyleCornerRadius {
 
 	@Override
 	public void render(Context context) {
-		clip(context, 8);
+		clip(context, 0);
 	
 		long vg = context.getNVG();
 		Point p = getDrawSize();

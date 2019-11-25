@@ -40,7 +40,6 @@ public class CodeArea extends TextArea {
 		
 		// Normal positioning
 		super.position(parent);
-		this.getInternalScrollPane().updateChildren();
 		
 		// Only update if the amount of lines has changed
 		lineCounter.update(this.getNumLines());

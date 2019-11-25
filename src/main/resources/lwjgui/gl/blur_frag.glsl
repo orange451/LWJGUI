@@ -37,11 +37,7 @@ void main(void) {
 	final = final * vec4(1,1,1,uColor.a);
 	final = final + vec4(uColor.rgb,0.0);
 	
-	// Discard corner pieces
-	/*vec2 texelRadii = uCornerRadii.xx * uTexelSize;
-	if ( passTexCoord.x < texelRadii.x && passTexCoord.y < texelRadii.y )
-		final = texture(colorSampler, passTexCoord);*/
-	
+	// Apply round corner logic
 	vec4 baseSample = texture(colorSampler, passTexCoord);
 	final = mix( baseSample, final, 
 		min( 

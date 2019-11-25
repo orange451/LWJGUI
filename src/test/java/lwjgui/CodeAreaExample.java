@@ -24,8 +24,7 @@ public class CodeAreaExample extends LWJGUIApplication {
 		
 		// Create code area
 		CodeArea c = new CodeArea();
-		//c.setPrefSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
-		//pane.setCenter(c);
+		c.setPrefSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		c.setFillToParentHeight(true);
 		c.setFillToParentWidth(true);
 		t.getChildren().add(c);

@@ -24,6 +24,10 @@ public abstract class PopupWindow extends FloatingPane {
 		scene.showPopup(this);
 		mouseEntered = false;
 		this.open = true;
+		
+		for (int i = 0; i < 8; i++) {
+			this.position(this.getScene());
+		}
 	}
 	
 	@Override

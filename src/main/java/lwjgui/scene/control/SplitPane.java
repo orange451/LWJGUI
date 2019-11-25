@@ -72,18 +72,21 @@ public class SplitPane extends Control {
 	private double lastLen = 0;
 	@Override
 	protected void position(Node parent) {
+		grabDividers();
+
+		super.position(parent);
+		
 		double curLen = getWidth();
 		if ( !this.orientation.equals(Orientation.VERTICAL) ) {
 			curLen = getHeight();
 		}
-
+		
 		if ( curLen != lastLen ) {
 			onSizeChange(lastLen);
+			this.resize();
+			this.updateChildrenLocalRecursive();
 			lastLen = curLen;
 		}
-		grabDividers();
-
-		super.position(parent);
 	}
 
 	private void clickDividers() {
@@ -280,7 +283,7 @@ public class SplitPane extends Control {
 				d.setLocalPosition(divider_holder, 0, filledLen);
 			}
 			
-			this.updateChildrenLocalRecursive();
+			//this.updateChildrenLocalRecursive();
 
 			filledLen += len + dividerThickness;
 		}

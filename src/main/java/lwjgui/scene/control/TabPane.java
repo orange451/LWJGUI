@@ -182,6 +182,10 @@ public class TabPane extends Control {
 		if ( stored && currentTab.lastSelected != null ) {
 			cached_context.setSelected(currentTab.lastSelected);
 		}
+		
+		for (int i = 0; i < 1; i++) {
+			this.position(this.getParent());
+		}
 	}
 	
 	/**

@@ -6,7 +6,9 @@ import org.lwjgl.glfw.GLFW;
 import lwjgui.LWJGUI;
 import lwjgui.geometry.HPos;
 import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Node;
 import lwjgui.scene.Region;
 
@@ -133,15 +135,7 @@ public class GridPane extends Pane {
 		empty = false;
 	}
 	
-	public void clear() {
-		//maxX = getMaxX();
-		//maxY = getMaxY();
-		/*for (int i = 0; i < maxX; i++) {
-			for (int j = 0; j < maxY; j++) {
-				elements[i][j] = null;
-			}
-		}*/
-		
+	public void clear() {		
 		// Should be the fastest way to empty the elements array
 		for (int i = 0; i < elementsEmpty.length; i++) {
 			System.arraycopy(elementsEmpty[i], 0, elements[i], 0, elementsEmpty[i].length);
@@ -177,9 +171,9 @@ public class GridPane extends Pane {
 			
 			for (int j = 0; j < maxX; j++) {
 				Node element = elements[j][i];
-				if ( element == null ) {
+				if ( element == null )
 					element = new NodeFiller();
-				}
+				
 				Node sizer = new NodeFiller();
 				elementsInternal[j][i] = new NodePair(element, sizer);
 				
@@ -187,13 +181,10 @@ public class GridPane extends Pane {
 				cell.setBackground(null);
 				row.getChildren().add(cell);
 				
-				if ( element.getAlignment() != null && element.getAlignment().getHpos().equals(HPos.RIGHT) ) {
-					cell.getChildren().add(sizer);
-					cell.getChildren().add(element);
-				} else {
-					cell.getChildren().add(element);
-					cell.getChildren().add(sizer);
-				}
+				cell.getChildren().add(element);
+				cell.getChildren().add(sizer);
+				
+				//cell.setBackground(Color.WHITE.red(i/(float)(maxY-1)).green(j/(float)(maxX-1)));
 			}
 			internalVBox.getChildren().add(row);
 		}
@@ -205,7 +196,12 @@ public class GridPane extends Pane {
 			update();
 		
 		super.position(parent);
-		
+	}
+	
+	@Override
+	protected void resize() {
+		super.resize();
+
 		adjustSize();
 		internalVBox.setFillToParentWidth(this.isFillToParentWidth());
 		internalVBox.setFillToParentHeight(this.isFillToParentHeight());
@@ -223,16 +219,17 @@ public class GridPane extends Pane {
 			double desiredColumnWidth = constraints[i].getPrefWidth();
 			
 			// Get total width of columns except for the current one
-			int totalWidthWithoutMe = 0;
+			double totalWidthWithoutMe = 0;
 			for (int j = 0; j < maxX; j++) {
 				if ( j == i )
 					continue;
 				totalWidthWithoutMe += elementsInternal[j][0].getWidth();
+				totalWidthWithoutMe += hgap;
 			}
 			
 			// If this column is marked to grow, use the above value to calculate width
 			if ( constraints[i].getHgrow().equals(Priority.ALWAYS) ) {
-				desiredColumnWidth = GridPane.this.getWidth()-totalWidthWithoutMe;
+				desiredColumnWidth = (GridPane.this.getWidth()-Math.ceil(totalWidthWithoutMe));
 			}
 			
 			if ( columnWidth < desiredColumnWidth )
@@ -247,11 +244,26 @@ public class GridPane extends Pane {
 				
 				if ( e != null ) {
 					if( constraints[i].isFillWidth() ) {
-						e.nodeReal.setPrefWidth(columnWidth);
-						e.nodeFiller.setPrefWidth(0);
+						if ( e.nodeReal instanceof FillableRegion && ((FillableRegion)e.nodeReal).isFillToParentWidth() ) {
+							FillableRegion t = (FillableRegion)e.nodeReal;
+							t.forceWidth(columnWidth);
+							e.nodeFiller.setPrefWidth(0);
+							t.getParent().forceWidth(t.getWidth());
+						} else {
+							e.nodeReal.setPrefWidth(columnWidth);
+							e.nodeFiller.setPrefWidth(0);
+						}
 					} else {
-						int mWid = (int) e.nodeReal.getWidth();
-						e.nodeFiller.setPrefWidth(Math.max(0, columnWidth-mWid));
+						if ( e.nodeReal instanceof FillableRegion && ((FillableRegion)e.nodeReal).isFillToParentWidth() ) {
+							FillableRegion t = (FillableRegion)e.nodeReal;
+							t.forceWidth(columnWidth);
+							t.setPrefWidth(columnWidth);
+							e.nodeFiller.setPrefWidth(0);
+							t.getParent().forceWidth(t.getWidth());
+						} else {
+							int mWid = (int) e.nodeReal.getWidth();
+							e.nodeFiller.setPrefWidth(Math.max(0, columnWidth-mWid));
+						}
 					}
 				}
 			}

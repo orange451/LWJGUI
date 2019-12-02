@@ -405,13 +405,13 @@ public class SplitPane extends Control {
 			// Inner Gradient
 			NanoVG.nvgTranslate(vg, (int)bounds.x, (int)bounds.y);
 			if ( this.orientation.equals(Orientation.VERTICAL) ) {
-				NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, (int)bounds.z, 0, Theme.current().getControlHover().getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.calloc());
+				NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, (int)bounds.z, 0, Theme.current().getControlHover().getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.create());
 				NanoVG.nvgBeginPath(vg);
 				NanoVG.nvgRect(vg, 1, 0, (int)bounds.z-2,(int)bounds.w);
 				NanoVG.nvgFillPaint(vg, bg);
 				NanoVG.nvgFill(vg);
 			} else {
-				NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (int)bounds.w, Theme.current().getControlHover().getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.calloc());
+				NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (int)bounds.w, Theme.current().getControlHover().getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.create());
 				NanoVG.nvgBeginPath(vg);
 				NanoVG.nvgRect(vg, 0, 1, (int)bounds.z,(int)bounds.w-2);
 				NanoVG.nvgFillPaint(vg, bg);

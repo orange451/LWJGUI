@@ -235,7 +235,7 @@ public class Tab {
 			// Draw main background
 			Color c1 = isPressed()?Theme.current().getControlHover():(pressed?Theme.current().getControl():(isHovered()?Theme.current().getControlHover():Theme.current().getControl()));
 			Color c2 = pressed?Theme.current().getPane():Theme.current().getControlAlt();
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1.getNVG(), c2.getNVG(), NVGPaint.calloc());
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1.getNVG(), c2.getNVG(), NVGPaint.create());
 			NanoVG.nvgBeginPath(vg);
 			buttonMask(vg, x+1,y+1,w-2,h-1,0);
 			NanoVG.nvgFillPaint(vg, bg);

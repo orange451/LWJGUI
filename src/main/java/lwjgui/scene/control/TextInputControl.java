@@ -912,7 +912,7 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 			int feather = 4;
 			Color color = context.isFocused() ? selectionFill : selectionPassiveFill;
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
-				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w,h, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w,h, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
 				NanoVG.nvgBeginPath(vg);
 				NanoVG.nvgRoundedRect(vg, -feather,-feather, w+feather*2,h+feather*2, r);
 				NanoVG.nvgFillPaint(vg, paint);
@@ -962,7 +962,7 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 		
 		// Dropshadow
 		if (isDecorated() && !this.isDisabled()) {
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRoundedRectVarying(vg, x, y, w, h, rNW, rNE, rSE, rSW);
 			NanoVG.nvgFillPaint(vg, bg);

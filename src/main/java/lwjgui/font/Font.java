@@ -9,10 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -139,7 +139,7 @@ public class Font {
 			throw new FileNotFoundException(path);
 		}
 		byte[] bytes = toByteArray(stream);
-		data = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder()).put(bytes);
+		data = BufferUtils.createByteBuffer(bytes.length).put(bytes);
 		data.flip();
 		return data;
 	}

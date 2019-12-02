@@ -293,7 +293,7 @@ public class TabPane extends Control {
 			float x = (float) getX();
 			float y = (float) getY();
 			float w = (float) getWidth();
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-16, x, y+6, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-16, x, y+6, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRect(vg, x, y, w, 6);
 			NanoVG.nvgFillPaint(vg, bg);

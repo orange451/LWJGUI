@@ -169,7 +169,7 @@ public class Slider extends Control {
 		{
 			Color c1 = Theme.current().getPaneAlt();
 			Color c2 = Theme.current().getBackground();
-			NVGPaint grad2 = NanoVG.nvgLinearGradient(vg, x, y+h*0.5f, x, y+h, c2.getNVG(), c1.getNVG(), NVGPaint.calloc());
+			NVGPaint grad2 = NanoVG.nvgLinearGradient(vg, x, y+h*0.5f, x, y+h, c2.getNVG(), c1.getNVG(), NVGPaint.create());
 			
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRoundedRect(vg, x, y, w, h, r);

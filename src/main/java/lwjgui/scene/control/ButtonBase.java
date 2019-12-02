@@ -117,7 +117,7 @@ public abstract class ButtonBase extends Labeled implements StyleCornerRadius {
 			if ( isDisabled() )
 				sel = Theme.current().getSelectionPassive().getNVG();
 			
-			NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+1,y+1, w-2,h-2,c, feather, sel, Color.TRANSPARENT.getNVG(), NVGPaint.calloc());
+			NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+1,y+1, w-2,h-2,c, feather, sel, Color.TRANSPARENT.getNVG(), NVGPaint.create());
 			NanoVG.nvgBeginPath(vg);
 			buttonMask( vg, x-feather, y-feather, w+feather*2, h+feather*2, 0 );
 			NanoVG.nvgFillPaint(vg, paint);
@@ -145,7 +145,7 @@ public abstract class ButtonBase extends Labeled implements StyleCornerRadius {
 		NanoVG.nvgBeginPath(vg);
 		{
 			Color buttonColor = isPressed()?Theme.current().getControlOutline():((context.isHovered(this)&&!isDisabled())?Theme.current().getControlHover():Theme.current().getControl());
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*3, buttonColor.getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.calloc());
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*3, buttonColor.getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.create());
 			buttonMask(vg, x+0.5f,y+0.5f,w-1,h-1, 0);
 			NanoVG.nvgFillPaint(vg, bg);
 			NanoVG.nvgFill(vg);
@@ -158,7 +158,7 @@ public abstract class ButtonBase extends Labeled implements StyleCornerRadius {
 				c2 = buttonColor.darker().getNVG();
 				c1 = c2;
 			}
-			NanoVG.nvgStrokePaint(vg, NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1, c2, NVGPaint.calloc()));
+			NanoVG.nvgStrokePaint(vg, NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1, c2, NVGPaint.create()));
 			NanoVG.nvgStrokeWidth(vg, 1f);
 			NanoVG.nvgStroke(vg);
 			bg.free();

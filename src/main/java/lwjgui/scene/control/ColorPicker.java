@@ -81,7 +81,7 @@ public class ColorPicker extends ButtonBase {
 			this.setRendererCallback(new Renderer() {
 				
 				private void drawColor( Context context, Color c1, Color c2, double x1, double y1, double x2, double y2, double sx1, double sy1, double sx2, double sy2 ) {
-					NVGPaint paint = NanoVG.nvgLinearGradient(context.getNVG(), (float)sx1, (float)sy1, (float)sx2, (float)sy2, c1.getNVG(), c2.getNVG(), NVGPaint.calloc());
+					NVGPaint paint = NanoVG.nvgLinearGradient(context.getNVG(), (float)sx1, (float)sy1, (float)sx2, (float)sy2, c1.getNVG(), c2.getNVG(), NVGPaint.create());
 					
 					NanoVG.nvgBeginPath(context.getNVG());
 					NanoVG.nvgRect(context.getNVG(), (int)x1, (int)y1, (int)(x2-x1), (int)(y2-y1));

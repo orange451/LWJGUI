@@ -64,7 +64,7 @@ public class ImageView extends FillableRegion {
 				hh = h;
 			}
 		}
-		NVGPaint imagePaint = NanoVG.nvgImagePattern(vg, xx, yy, ww, hh, 0, img, 1, NVGPaint.calloc());
+		NVGPaint imagePaint = NanoVG.nvgImagePattern(vg, xx, yy, ww, hh, 0, img, 1, NVGPaint.create());
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgRect(vg, x, y, w, h);
 		NanoVG.nvgFillPaint(vg, imagePaint);

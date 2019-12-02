@@ -87,8 +87,6 @@ public class ColorPicker extends ButtonBase {
 					NanoVG.nvgRect(context.getNVG(), (int)x1, (int)y1, (int)(x2-x1), (int)(y2-y1));
 					NanoVG.nvgFillPaint(context.getNVG(), paint);
 					NanoVG.nnvgFill(context.getNVG());
-					
-					paint.free();
 				}
 				
 				@Override

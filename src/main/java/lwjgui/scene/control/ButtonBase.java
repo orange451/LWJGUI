@@ -122,7 +122,6 @@ public abstract class ButtonBase extends Labeled implements StyleCornerRadius {
 			buttonMask( vg, x-feather, y-feather, w+feather*2, h+feather*2, 0 );
 			NanoVG.nvgFillPaint(vg, paint);
 			NanoVG.nvgFill(vg);
-			paint.free();
 			NanoVG.nvgClosePath(vg);
 		}
 
@@ -161,7 +160,6 @@ public abstract class ButtonBase extends Labeled implements StyleCornerRadius {
 			NanoVG.nvgStrokePaint(vg, NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1, c2, NVGPaint.create()));
 			NanoVG.nvgStrokeWidth(vg, 1f);
 			NanoVG.nvgStroke(vg);
-			bg.free();
 		}
 		NanoVG.nvgClosePath(vg);
 		

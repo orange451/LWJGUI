@@ -917,7 +917,6 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 				NanoVG.nvgRoundedRect(vg, -feather,-feather, w+feather*2,h+feather*2, r);
 				NanoVG.nvgFillPaint(vg, paint);
 				NanoVG.nvgFill(vg);
-				paint.free();
 			NanoVG.nvgTranslate(context.getNVG(), -x, -y);	
 		}
 		

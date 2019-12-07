@@ -28,13 +28,25 @@ public class LWJGUI {
 	 * @return Returns a LWJGUI Window that contains a rendering Context and a Scene.
 	 */
 	public static Window initialize(long window) {
+		return initialize(window, false);
+	}
+
+	/**
+	 * Initializes a LWJGUI window from a GLFW window handle. The window contains a Scene class.<br>
+	 * Rendering components can be added to the scene. However, to set initial
+	 * rendering, the scene's root node must first be set.
+	 * @param window
+	 * @param external Set true if window object's creation/destruction is managed outside of LWJGUI
+	 * @return Returns a LWJGUI Window that contains a rendering Context and a Scene.
+	 */
+	public static Window initialize(long window, boolean external) {
 		if ( windows.containsKey(window) ) {
 			System.err.println("Failed to initialize this LWJGUI Window. Already initialized.");
 			return null;
 		}
 		Context context = new Context(window);
 		Scene scene = new Scene(new StackPane());
-		Window wind = new Window(context, scene);
+		Window wind = new Window(context, scene, true);
 		windows.put(window, wind);
 		
 		currentContext = context;
@@ -87,8 +99,8 @@ public class LWJGUI {
 		
 		// Close all windows that need to close
 		for (int i = 0; i < windowsToClose.size(); i++) {
-			GLFW.glfwDestroyWindow(windowsToClose.get(i));
-			windows.remove(windowsToClose.get(i));
+			if (!windows.remove(windowsToClose.get(i)).isExternalWindow())
+				GLFW.glfwDestroyWindow(windowsToClose.get(i));
 		}
 		
 		// Get list of runnables

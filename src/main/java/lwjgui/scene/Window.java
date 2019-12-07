@@ -62,12 +62,18 @@ public class Window {
 	private Renderer renderCallback;
 	private boolean autoDraw = true;
 	private boolean autoClear = true;
+	private boolean external;
 
 	private int lastWidth;
 	private int lastHeight;
 	
 	private HashMap<EventListenerType, ArrayList<EventListener>> eventListeners = new HashMap<>();
-	
+
+	public Window(final Context context, Scene scene, boolean external) {
+		this(context, scene);
+		this.external = external;
+	}
+
 	public Window(final Context context, Scene scene) {
 		this.context = context;
 		this.scene = scene;
@@ -454,6 +460,10 @@ public class Window {
 	
 	public boolean isWindowAutoClear() {
 		return this.autoClear;
+	}
+
+	public boolean isExternalWindow() {
+		return this.external;
 	}
 	
 	public void render() {

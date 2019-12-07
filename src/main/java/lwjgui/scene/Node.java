@@ -291,37 +291,35 @@ public abstract class Node implements Resizable {
 	protected void resize() {
 		
 		// Resize if smaller than pref size
-		synchronized(size) {
-			
-			// Size up to pref size
-			if ( size.x < this.getPrefWidth() )
-				size.x = this.getPrefWidth();
-			if ( size.y < this.getPrefHeight() )
-				size.y = this.getPrefHeight();
-			
-			// Get available size
-			Vector2d available = this.getAvailableSize();
-			double availableWidth = available.x;
-			double availableHeight = available.y;
-			
-			// Cap size to available size
-			if ( size.x > availableWidth )
-				size.x = availableWidth;
-			if ( size.y > availableHeight )
-				size.y = availableHeight;
-			
-			// Cap size to min size
-			if ( size.x < this.getMinWidth() )
-				size.x = this.getMinWidth();
-			if ( size.y < this.getMinHeight() )
-				size.y = this.getMinHeight();
-			
-			// Cap size to max size
-			if ( size.x > this.getMaxWidth() )
-				size.x = this.getMaxWidth();
-			if ( size.y > this.getMaxHeight() )
-				size.y = this.getMaxHeight();
-		}
+
+		// Size up to pref size
+		if ( size.x < this.getPrefWidth() )
+			size.x = this.getPrefWidth();
+		if ( size.y < this.getPrefHeight() )
+			size.y = this.getPrefHeight();
+
+		// Get available size
+		Vector2d available = this.getAvailableSize();
+		double availableWidth = available.x;
+		double availableHeight = available.y;
+
+		// Cap size to available size
+		if ( size.x > availableWidth )
+			size.x = availableWidth;
+		if ( size.y > availableHeight )
+			size.y = availableHeight;
+
+		// Cap size to min size
+		if ( size.x < this.getMinWidth() )
+			size.x = this.getMinWidth();
+		if ( size.y < this.getMinHeight() )
+			size.y = this.getMinHeight();
+
+		// Cap size to max size
+		if ( size.x > this.getMaxWidth() )
+			size.x = this.getMaxWidth();
+		if ( size.y > this.getMaxHeight() )
+			size.y = this.getMaxHeight();
 	}
 	
 	protected double getMaxPotentialWidth() {

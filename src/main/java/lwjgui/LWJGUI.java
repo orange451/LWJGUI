@@ -46,7 +46,7 @@ public class LWJGUI {
 		}
 		Context context = new Context(window);
 		Scene scene = new Scene(new StackPane());
-		Window wind = new Window(context, scene, true);
+		Window wind = new Window(context, scene, external);
 		windows.put(window, wind);
 		
 		currentContext = context;

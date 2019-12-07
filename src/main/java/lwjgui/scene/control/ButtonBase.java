@@ -1,11 +1,14 @@
 package lwjgui.scene.control;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import java.awt.Point;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.event.ActionEvent;
 import lwjgui.event.EventHandler;
@@ -108,60 +111,61 @@ public abstract class ButtonBase extends Labeled implements StyleCornerRadius {
 		int y = (int) this.getY();
 		int w = p.x;
 		int h = p.y;
-		
-		// Selection graphic
-		if ( context.isSelected(this) && context.isFocused() ) {
-			int feather = 6;
-			float c = (float) Math.max(this.getCornerRadii()[0],Math.max(this.getCornerRadii()[1],Math.max(this.getCornerRadii()[2],this.getCornerRadii()[3])));
-			NVGColor sel = Theme.current().getSelection().getNVG();
-			if ( isDisabled() )
-				sel = Theme.current().getSelectionPassive().getNVG();
-			
-			NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+1,y+1, w-2,h-2,c, feather, sel, Color.TRANSPARENT.getNVG(), NVGPaint.create());
+		try (MemoryStack stack = stackPush()) {
+			// Selection graphic
+			if ( context.isSelected(this) && context.isFocused() ) {
+				int feather = 6;
+				float c = (float) Math.max(this.getCornerRadii()[0],Math.max(this.getCornerRadii()[1],Math.max(this.getCornerRadii()[2],this.getCornerRadii()[3])));
+				NVGColor sel = Theme.current().getSelection().getNVG();
+				if ( isDisabled() )
+					sel = Theme.current().getSelectionPassive().getNVG();
+
+				NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+1,y+1, w-2,h-2,c, feather, sel, Color.TRANSPARENT.getNVG(), NVGPaint.callocStack(stack));
+				NanoVG.nvgBeginPath(vg);
+				buttonMask( vg, x-feather, y-feather, w+feather*2, h+feather*2, 0 );
+				NanoVG.nvgFillPaint(vg, paint);
+				NanoVG.nvgFill(vg);
+				NanoVG.nvgClosePath(vg);
+			}
+
+			// Draw button outline
 			NanoVG.nvgBeginPath(vg);
-			buttonMask( vg, x-feather, y-feather, w+feather*2, h+feather*2, 0 );
-			NanoVG.nvgFillPaint(vg, paint);
-			NanoVG.nvgFill(vg);
+			{
+				Color outlineColor = (context.isSelected(this)&&context.isFocused()&&!isDisabled())?Theme.current().getSelection():Theme.current().getControlOutline();
+
+				buttonMask(vg, x,y,w,h,+0.5f);
+				NanoVG.nvgFillColor(vg, outlineColor.getNVG());
+				NanoVG.nvgFill(vg);
+				NanoVG.nvgShapeAntiAlias(vg, true);
+				NanoVG.nvgStrokeWidth(vg, 2.0f);
+				NanoVG.nvgStrokeColor(vg, outlineColor.getNVG());
+				NanoVG.nvgStroke(vg);
+			}
+			NanoVG.nvgClosePath(vg);
+
+			// Draw main background	
+			NanoVG.nvgBeginPath(vg);
+			{
+				Color buttonColor = isPressed()?Theme.current().getControlOutline():((context.isHovered(this)&&!isDisabled())?Theme.current().getControlHover():Theme.current().getControl());
+				NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*3, buttonColor.getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.callocStack(stack));
+				buttonMask(vg, x+0.5f,y+0.5f,w-1,h-1, 0);
+				NanoVG.nvgFillPaint(vg, bg);
+				NanoVG.nvgFill(vg);
+
+				// Draw inset outline
+				buttonMask(vg, x+1,y+1,w-2,h-2, 0);
+				NVGColor c1 = Theme.current().getControlHover().getNVG();
+				NVGColor c2 = Theme.current().getControlAlt().getNVG();
+				if ( isPressed() ) {
+					c2 = buttonColor.darker().getNVG();
+					c1 = c2;
+				}
+				NanoVG.nvgStrokePaint(vg, NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1, c2, NVGPaint.callocStack(stack)));
+				NanoVG.nvgStrokeWidth(vg, 1f);
+				NanoVG.nvgStroke(vg);
+			}
 			NanoVG.nvgClosePath(vg);
 		}
-
-		// Draw button outline
-		NanoVG.nvgBeginPath(vg);
-		{
-			Color outlineColor = (context.isSelected(this)&&context.isFocused()&&!isDisabled())?Theme.current().getSelection():Theme.current().getControlOutline();
-
-			buttonMask(vg, x,y,w,h,+0.5f);
-			NanoVG.nvgFillColor(vg, outlineColor.getNVG());
-			NanoVG.nvgFill(vg);
-			NanoVG.nvgShapeAntiAlias(vg, true);
-			NanoVG.nvgStrokeWidth(vg, 2.0f);
-			NanoVG.nvgStrokeColor(vg, outlineColor.getNVG());
-			NanoVG.nvgStroke(vg);
-		}
-		NanoVG.nvgClosePath(vg);
-
-		// Draw main background	
-		NanoVG.nvgBeginPath(vg);
-		{
-			Color buttonColor = isPressed()?Theme.current().getControlOutline():((context.isHovered(this)&&!isDisabled())?Theme.current().getControlHover():Theme.current().getControl());
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*3, buttonColor.getNVG(), Theme.current().getControlOutline().getNVG(), NVGPaint.create());
-			buttonMask(vg, x+0.5f,y+0.5f,w-1,h-1, 0);
-			NanoVG.nvgFillPaint(vg, bg);
-			NanoVG.nvgFill(vg);
-			
-			// Draw inset outline
-			buttonMask(vg, x+1,y+1,w-2,h-2, 0);
-			NVGColor c1 = Theme.current().getControlHover().getNVG();
-			NVGColor c2 = Theme.current().getControlAlt().getNVG();
-			if ( isPressed() ) {
-				c2 = buttonColor.darker().getNVG();
-				c1 = c2;
-			}
-			NanoVG.nvgStrokePaint(vg, NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1, c2, NVGPaint.create()));
-			NanoVG.nvgStrokeWidth(vg, 1f);
-			NanoVG.nvgStroke(vg);
-		}
-		NanoVG.nvgClosePath(vg);
 		
 		// internal selection graphic
 		if ( context.isSelected(this) && context.isFocused() ) {

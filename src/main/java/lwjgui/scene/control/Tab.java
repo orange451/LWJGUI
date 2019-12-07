@@ -1,8 +1,11 @@
 package lwjgui.scene.control;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUIUtil;
 import lwjgui.event.Event;
@@ -235,11 +238,13 @@ public class Tab {
 			// Draw main background
 			Color c1 = isPressed()?Theme.current().getControlHover():(pressed?Theme.current().getControl():(isHovered()?Theme.current().getControlHover():Theme.current().getControl()));
 			Color c2 = pressed?Theme.current().getPane():Theme.current().getControlAlt();
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1.getNVG(), c2.getNVG(), NVGPaint.create());
-			NanoVG.nvgBeginPath(vg);
-			buttonMask(vg, x+1,y+1,w-2,h-1,0);
-			NanoVG.nvgFillPaint(vg, bg);
-			NanoVG.nvgFill(vg);
+			try (MemoryStack stack = stackPush()) {
+				NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y, x, y+h, c1.getNVG(), c2.getNVG(), NVGPaint.callocStack(stack));
+				NanoVG.nvgBeginPath(vg);
+				buttonMask(vg, x+1,y+1,w-2,h-1,0);
+				NanoVG.nvgFillPaint(vg, bg);
+				NanoVG.nvgFill(vg);
+			}
 			
 			// Draw dark line show this tab button is not selected
 			if ( !pressed ) {

@@ -1,7 +1,10 @@
 package lwjgui.scene.control;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
@@ -106,11 +109,13 @@ public class MenuBar extends FillableRegion {
 		long vg = context.getNVG();
 		
 		// Gradient
-		NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight(), Theme.current().getPane().getNVG(), Theme.current().getPaneAlt().getNVG(), NVGPaint.create());
-		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
-		NanoVG.nvgFillPaint(vg, bg);
-		NanoVG.nvgFill(vg);
+		try (MemoryStack stack = stackPush()) {
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight(), Theme.current().getPane().getNVG(), Theme.current().getPaneAlt().getNVG(), NVGPaint.callocStack(stack));
+			NanoVG.nvgBeginPath(vg);
+			NanoVG.nvgRect(vg, (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
+			NanoVG.nvgFillPaint(vg, bg);
+			NanoVG.nvgFill(vg);
+		}
 		
 		// Divider line
 		NanoVG.nvgBeginPath(vg);

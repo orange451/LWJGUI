@@ -1,11 +1,14 @@
 package lwjgui.scene.layout;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.joml.Vector2i;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL2;
 import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.gl.OffscreenBuffer;
 import lwjgui.gl.Renderer;
@@ -155,12 +158,13 @@ public class OpenGLPane extends Pane {
 				y = y + h;
 				h = -h;
 			}
-			NVGPaint imagePaint = NanoVG.nvgImagePattern(nanovg, x, y, w, h, 0, nanoImage, 1, NVGPaint.calloc());
-			NanoVG.nvgBeginPath(nanovg);
-			NanoVG.nvgRect(nanovg, x, y, w, h);
-			NanoVG.nvgFillPaint(nanovg, imagePaint);
-			NanoVG.nvgFill(nanovg);
-			imagePaint.free();
+			try (MemoryStack stack = stackPush()) {
+				NVGPaint imagePaint = NanoVG.nvgImagePattern(nanovg, x, y, w, h, 0, nanoImage, 1, NVGPaint.callocStack(stack));
+				NanoVG.nvgBeginPath(nanovg);
+				NanoVG.nvgRect(nanovg, x, y, w, h);
+				NanoVG.nvgFillPaint(nanovg, imagePaint);
+				NanoVG.nvgFill(nanovg);
+			}
 		}
 		
 		// Render children

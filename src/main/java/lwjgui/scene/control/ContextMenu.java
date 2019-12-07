@@ -1,7 +1,10 @@
 package lwjgui.scene.control;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
@@ -115,11 +118,13 @@ public class ContextMenu extends PopupWindow {
 		
 		// Draw Drop Shadow
 		//this.clip(context,16);
-		NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+2,y+3, w-2,h, 4, 12, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
-		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, x-16,y-16, w+32,h+32);
-		NanoVG.nvgFillPaint(vg, paint);
-		NanoVG.nvgFill(vg);
+		try (MemoryStack stack = stackPush()) {
+			NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+2,y+3, w-2,h, 4, 12, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.callocStack(stack));
+			NanoVG.nvgBeginPath(vg);
+			NanoVG.nvgRect(vg, x-16,y-16, w+32,h+32);
+			NanoVG.nvgFillPaint(vg, paint);
+			NanoVG.nvgFill(vg);
+		}
 		
 		// Draw Outline
 		NanoVG.nvgBeginPath(context.getNVG());

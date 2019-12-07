@@ -1,7 +1,10 @@
 package lwjgui.scene.image;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.scene.Context;
 import lwjgui.scene.FillableRegion;
@@ -64,11 +67,13 @@ public class ImageView extends FillableRegion {
 				hh = h;
 			}
 		}
-		NVGPaint imagePaint = NanoVG.nvgImagePattern(vg, xx, yy, ww, hh, 0, img, 1, NVGPaint.create());
-		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, x, y, w, h);
-		NanoVG.nvgFillPaint(vg, imagePaint);
-		NanoVG.nvgFill(vg);
+		try (MemoryStack stack = stackPush()) {
+			NVGPaint imagePaint = NanoVG.nvgImagePattern(vg, xx, yy, ww, hh, 0, img, 1, NVGPaint.callocStack(stack));
+			NanoVG.nvgBeginPath(vg);
+			NanoVG.nvgRect(vg, x, y, w, h);
+			NanoVG.nvgFillPaint(vg, imagePaint);
+			NanoVG.nvgFill(vg);
+		}
 	}
 	
 	public void setImage(Image image) {

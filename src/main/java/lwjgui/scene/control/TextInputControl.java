@@ -1,6 +1,7 @@
 package lwjgui.scene.control;
 
-import java.awt.font.TextHitInfo;
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,6 +10,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGGlyphPosition;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
@@ -911,12 +913,14 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 			float r = (rNE + rNW + rSE + rSW) / 4f + 0.5f;
 			int feather = 4;
 			Color color = context.isFocused() ? selectionFill : selectionPassiveFill;
-			NanoVG.nvgTranslate(context.getNVG(), x, y);	
-				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w,h, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
+			NanoVG.nvgTranslate(context.getNVG(), x, y);
+			try (MemoryStack stack = stackPush()) {
+				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w,h, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.callocStack(stack));
 				NanoVG.nvgBeginPath(vg);
 				NanoVG.nvgRoundedRect(vg, -feather,-feather, w+feather*2,h+feather*2, r);
 				NanoVG.nvgFillPaint(vg, paint);
 				NanoVG.nvgFill(vg);
+			}
 			NanoVG.nvgTranslate(context.getNVG(), -x, -y);	
 		}
 		
@@ -961,11 +965,13 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 		
 		// Dropshadow
 		if (isDecorated() && !this.isDisabled()) {
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
-			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRoundedRectVarying(vg, x, y, w, h, rNW, rNE, rSE, rSW);
-			NanoVG.nvgFillPaint(vg, bg);
-			NanoVG.nvgFill(vg);
+			try (MemoryStack stack = stackPush()) {
+				NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.callocStack(stack));
+				NanoVG.nvgBeginPath(vg);
+				NanoVG.nvgRoundedRectVarying(vg, x, y, w, h, rNW, rNE, rSE, rSW);
+				NanoVG.nvgFillPaint(vg, bg);
+				NanoVG.nvgFill(vg);
+			}
 		}
 		
 		if (isDescendentSelected() && isSelectionOutlineEnabled() && !this.isDisabled()) {

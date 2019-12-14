@@ -1,13 +1,12 @@
 package lwjgui;
 
-import lwjgui.LWJGUIApplication;
 import lwjgui.paint.Color;
-import lwjgui.scene.*;
-import lwjgui.scene.layout.*;
-import lwjgui.style.BackgroundLinearGradient;
+import lwjgui.scene.Scene;
+import lwjgui.scene.Window;
+import lwjgui.scene.control.Label;
+import lwjgui.scene.layout.StackPane;
 import lwjgui.style.BorderStyle;
 import lwjgui.style.BoxShadow;
-import lwjgui.scene.control.*;
 
 public class BoxShadowTest2 extends LWJGUIApplication {
 	public static final int WIDTH   = 320;

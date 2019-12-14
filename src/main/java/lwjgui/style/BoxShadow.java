@@ -68,4 +68,28 @@ public class BoxShadow {
 	public Color getToColor() {
 		return this.toColor;
 	}
+
+	public void setSpread(float spread) {
+		this.spread = spread;
+	}
+	
+	public void setBlurRadius(float radius) {
+		this.blurRadius = radius;
+	}
+	
+	public void setXOffset(float xOffset) {
+		this.xOffset = xOffset;
+	}
+	
+	public void setYOffset(float yOffset) {
+		this.yOffset = yOffset;
+	}
+	
+	public void setFromColor(Color color) {
+		this.fromColor = color;
+	}
+	
+	public void setInset(boolean inset) {
+		this.inset = inset;
+	}
 }

@@ -53,6 +53,16 @@ public class Insets {
         this.bottom = bottom;
         this.left = left;
     }
+    
+    /**
+     * Constructs a new Insets instance with two different offsets.
+     * 
+     * @param top the top offset
+     * @param right the right offset
+     */
+    public Insets(double top, double right) {
+    	this(top, right, top, right);
+    }
 
     /**
      * Constructs a new Insets instance with same value for all four offsets.

@@ -41,6 +41,12 @@ public abstract class Node implements Resizable {
 	/*
 	 * Event Handlers
 	 */
+	protected EventHandler<Event> selectedEvent;
+	protected EventHandler<Event> selectedEventInternal;
+
+	protected EventHandler<Event> deselectedEvent;
+	protected EventHandler<Event> deselectedEventInternal;
+	
 	protected EventHandler<MouseEvent> mousePressedEvent;
 	protected EventHandler<MouseEvent> mousePressedEventInternal;
 	
@@ -960,6 +966,22 @@ public abstract class Node implements Resizable {
 		this.mouseExitedEvent = event;
 	}
 	
+	public EventHandler<Event> getSelectedEvent() {
+		return selectedEvent;
+	}
+	
+	public void setOnSelectedEvent(EventHandler<Event> event) {
+		this.selectedEvent = event;
+	}
+	
+	public EventHandler<Event> getDeselectedEvent() {
+		return deselectedEvent;
+	}
+	
+	public void setOnDeselectedEvent(EventHandler<Event> event) {
+		this.deselectedEvent = event;
+	}
+	
 	public EventHandler<MouseEvent> getMousePressedEvent() {
 		return this.mousePressedEvent;
 	}
@@ -1049,6 +1071,22 @@ public abstract class Node implements Resizable {
 	 * Internal Event Handlers setters/getters
 	 * 
 	 */
+	
+	protected EventHandler<Event> getSelectedEventInternal() {
+		return selectedEventInternal;
+	}
+	
+	protected void setOnSelectedEventInternal(EventHandler<Event> event) {
+		this.selectedEventInternal = event;
+	}
+	
+	protected EventHandler<Event> getDeselectedEventInternal() {
+		return deselectedEventInternal;
+	}
+	
+	protected void setOnDeselectedEventInternal(EventHandler<Event> event) {
+		this.deselectedEventInternal = event;
+	}
 	
 	protected EventHandler<MouseEvent> getMousePressedEventInternal() {
 		return mousePressedEventInternal;

@@ -15,6 +15,8 @@ import org.lwjgl.opengl.GL30;
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIApplication;
 import lwjgui.collections.ObservableList;
+import lwjgui.event.Event;
+import lwjgui.event.EventHelper;
 import lwjgui.scene.control.PopupWindow;
 import lwjgui.util.Bounds;
 
@@ -268,7 +270,20 @@ public class Context {
 	 * @param node
 	 */
 	public void setSelected(Node node) {
+		if ( node == this.selected )
+			return;
+		
+		Node previouslySelected = this.getSelected();
+		if ( previouslySelected != null ) {
+			EventHelper.fireEvent(previouslySelected.getDeselectedEventInternal(), new Event());
+			EventHelper.fireEvent(previouslySelected.getDeselectedEvent(), new Event());
+		}
+		
 		this.selected = node;
+		if ( this.selected != null ) {
+			EventHelper.fireEvent(this.selected.getSelectedEventInternal(), new Event());
+			EventHelper.fireEvent(this.selected.getSelectedEvent(), new Event());
+		}
 	}
 	
 	/**

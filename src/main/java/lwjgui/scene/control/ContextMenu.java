@@ -1,17 +1,16 @@
 package lwjgui.scene.control;
 
-import org.lwjgl.nanovg.NVGPaint;
-import org.lwjgl.nanovg.NanoVG;
-
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
+import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
-import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.Scene;
 import lwjgui.scene.layout.VBox;
+import lwjgui.style.BorderStyle;
+import lwjgui.style.BoxShadow;
 import lwjgui.theme.Theme;
 
 public class ContextMenu extends PopupWindow {
@@ -24,6 +23,7 @@ public class ContextMenu extends PopupWindow {
 	public ContextMenu() {
 		this.setAutoHide(true);
 		this.internalBox = new VBox();
+		this.internalBox.setBackgroundLegacy(null);
 		this.children.add(this.internalBox);
 		
 		this.items.setAddCallback(new ElementCallback<MenuItem>() {
@@ -39,6 +39,16 @@ public class ContextMenu extends PopupWindow {
 				recalculate();
 			}
 		});
+		
+		// Style
+		float r = 2;
+		this.getBoxShadowList().add(new BoxShadow(4,5,12,-2));
+		this.setBorderColor(Theme.current().getControlOutline());
+		this.setBackgroundLegacy(Theme.current().getPane());
+		this.setBorderWidth(1);
+		this.setBorderStyle(BorderStyle.SOLID);
+		this.setBorderRadii(r);
+		this.setPadding(new Insets(r,0,r,0));
 	}
 
 	@Override
@@ -87,11 +97,8 @@ public class ContextMenu extends PopupWindow {
 	@Override
 	public void render(Context context) {
 		// Position the menu
-		this.position(getParent());
-		
-		// Position internal box inside menu
 		this.setAlignment(Pos.TOP_LEFT);
-		//internalBox.position(this);
+		this.position(getParent());
 		
 		// Get my width, and resize internal buttons so that they match the width of the box
 		double innerWidth = this.getInnerBounds().getWidth();
@@ -105,27 +112,6 @@ public class ContextMenu extends PopupWindow {
 		if ( context.isHovered(this) ) {
 			this.mouseEntered = true;
 		}
-		
-		// Setup rendering info
-		long vg = context.getNVG();
-		int x = (int) getX();
-		int y = (int) getY();
-		int w = (int) getWidth();
-		int h = (int) getHeight();
-		
-		// Draw Drop Shadow
-		//this.clip(context,16);
-		NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+2,y+3, w-2,h, 4, 12, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
-		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, x-16,y-16, w+32,h+32);
-		NanoVG.nvgFillPaint(vg, paint);
-		NanoVG.nvgFill(vg);
-		
-		// Draw Outline
-		NanoVG.nvgBeginPath(context.getNVG());
-		NanoVG.nvgRect(context.getNVG(), (int)x-1, (int)y-1, (int)w+2, (int)h+2);
-		NanoVG.nvgFillColor(context.getNVG(), Theme.current().getControlOutline().getNVG());
-		NanoVG.nvgFill(context.getNVG());
 		
 		// Render insides
 		//this.internalBox.render(context);

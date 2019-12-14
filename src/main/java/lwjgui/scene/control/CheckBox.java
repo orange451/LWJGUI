@@ -22,7 +22,7 @@ public class CheckBox extends ButtonBase {
 	public CheckBox(String name) {
 		super(name);
 		
-		this.setCornerRadii(2);
+		this.setBorderRadii(2);
 
 		this.setAlignment(Pos.CENTER_LEFT);
 		
@@ -58,7 +58,10 @@ public class CheckBox extends ButtonBase {
 
 	@Override
 	public void render(Context context) {
+		double wid = this.getWidth();
+		this.forceWidth(size);
 		super.render(context);
+		this.forceWidth(wid);
 
 		if ( checked ) {
 			float drawSize = size*1.1f;

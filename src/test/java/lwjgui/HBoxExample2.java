@@ -24,7 +24,7 @@ public class HBoxExample2 extends LWJGUIApplication {
 		p1.setFillToParentHeight(true);
 		p1.setMaxWidth(64);
 		p1.setMinWidth(64);
-		p1.setBackground(Color.GREEN);
+		p1.setBackgroundLegacy(Color.GREEN);
 		box.getChildren().add(p1);
 		
 		// This is the middle pane. It fills the whole width
@@ -32,7 +32,7 @@ public class HBoxExample2 extends LWJGUIApplication {
 		p2.setFillToParentWidth(true); // default: true
 		p2.setFillToParentHeight(true);
 		p2.setMinWidth(32);
-		p2.setBackground(Color.PINK);
+		p2.setBackgroundLegacy(Color.PINK);
 		box.getChildren().add(p2);
 		
 		// This is the right pane
@@ -40,7 +40,7 @@ public class HBoxExample2 extends LWJGUIApplication {
 		p3.setFillToParentHeight(true);
 		p3.setMaxWidth(64);
 		p3.setMinWidth(64);
-		p3.setBackground(Color.CYAN);
+		p3.setBackgroundLegacy(Color.CYAN);
 		box.getChildren().add(p3);
 		
 		// Set the scene

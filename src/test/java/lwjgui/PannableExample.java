@@ -39,7 +39,7 @@ public class PannableExample extends LWJGUIApplication {
 		
 		// Create a draggable pane
 		DraggablePane floatPane = new DraggablePane();
-		floatPane.setBackground(Color.GREEN);
+		floatPane.setBackgroundLegacy(Color.GREEN);
 		floatPane.setPrefSize(64, 64);
 		Label label = new Label("I'm draggable!");
 		label.setMouseTransparent(true);
@@ -54,7 +54,7 @@ public class PannableExample extends LWJGUIApplication {
 		// Create a second draggable pane
 		DraggablePane d = new DraggablePane();
 		d.setAbsolutePosition(32, 48);
-		d.setBackground(Color.RED);
+		d.setBackgroundLegacy(Color.RED);
 		d.setPrefSize(64, 64);
 		Label label2 = new Label("Me too!");
 		label2.setMouseTransparent(true);
@@ -64,7 +64,7 @@ public class PannableExample extends LWJGUIApplication {
 		// Overlapping UI
 		{
 			HBox ui = new HBox();
-			ui.setBackground(null);
+			ui.setBackgroundLegacy(null);
 			ui.setPadding(new Insets(8, 0, 0, 0));
 			root.getChildren().add(ui);
 			

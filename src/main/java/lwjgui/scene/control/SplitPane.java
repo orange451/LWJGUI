@@ -42,7 +42,7 @@ public class SplitPane extends Control {
 		this.divider_holder = new StackPane();
 		this.divider_holder.setFillToParentHeight(true);
 		this.divider_holder.setFillToParentWidth(true);
-		this.divider_holder.setBackground(Color.TRANSPARENT);
+		this.divider_holder.setBackgroundLegacy(null);
 		this.children.add(divider_holder);
 
 		this.items.setAddCallback(new ElementCallback<Node>() {

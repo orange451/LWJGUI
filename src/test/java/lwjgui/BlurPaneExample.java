@@ -21,12 +21,12 @@ public class BlurPaneExample extends LWJGUIApplication {
 		// Create a simple pane
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(16,16,16,16));
-		root.setBackground(null);
+		root.setBackgroundLegacy(null);
 
 		// Put a label in the pane
 		BlurPane pane = new BlurPane();
-		pane.setBackground(Color.GRAY);
-		pane.setCornerRadii(8);
+		pane.setBackgroundLegacy(Color.GRAY);
+		pane.setBorderRadii(8);
 		pane.setPrefSize(150, 150);
 		root.setCenter(pane);
 		

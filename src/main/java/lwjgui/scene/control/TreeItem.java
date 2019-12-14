@@ -17,7 +17,7 @@ public class TreeItem<E> extends TreeBase<E> {
 		this.label = new TreeItemLabel(root.toString());
 		this.label.setGraphic(icon);
 		
-		this.setBackground(null);
+		this.setBackgroundLegacy(null);
 	}
 	
 	public void setText(String text) {
@@ -72,7 +72,7 @@ class TreeItemLabel extends HBox {
 		this.label.setAlignment(Pos.CENTER_LEFT);
 		this.setSpacing(4);
 		this.setMouseTransparent(true);
-		this.setBackground(null);
+		this.setBackgroundLegacy(null);
 		setText(text);
 	}
 	

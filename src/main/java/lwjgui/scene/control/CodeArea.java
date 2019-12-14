@@ -85,7 +85,7 @@ public class CodeArea extends TextArea {
 			this.setMouseTransparent(true);
 			this.setPadding(new Insets(0,4,0,0));
 			this.setAlignment(Pos.TOP_LEFT);
-			this.setBackground(null);
+			this.setBackgroundLegacy(null);
 			this.setPrefWidth(0);
 			this.flag_clip = true;
 		}

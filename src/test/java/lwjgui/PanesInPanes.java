@@ -30,14 +30,14 @@ public class PanesInPanes extends LWJGUIApplication {
 		pane.setMinWidth(100);
 		pane.setPadding(new Insets(4,4,4,4));
 		pane.setAlignment(Pos.TOP_LEFT);
-		pane.setBackground(Color.LIGHT_GRAY);
+		pane.setBackgroundLegacy(Color.LIGHT_GRAY);
 		background.getChildren().add(pane);
 		
 		StackPane pane2 = new StackPane();
 		pane2.setAlignment(Pos.BOTTOM_RIGHT);
 		pane2.setPrefSize(200, 100);
 		pane2.setPadding(new Insets(4,4,4,4));
-		pane2.setBackground(Color.DARK_GRAY);
+		pane2.setBackgroundLegacy(Color.DARK_GRAY);
 		pane.getChildren().add(pane2);
 		
 		Label label = new Label("Hello World! LONG TEXT");

@@ -32,7 +32,7 @@ public class FlowPaneExample extends LWJGUIApplication {
 		for (int i = 0; i < 64; i++) {
 			StackPane pane = new StackPane();
 			pane.setPrefSize(18, 18);
-			pane.setBackground(Color.RED);
+			pane.setBackgroundLegacy(Color.RED);
 			flow.getItems().add(pane);
 		}
 		

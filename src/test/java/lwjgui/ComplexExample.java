@@ -30,6 +30,7 @@ import lwjgui.scene.layout.VBox;
 import lwjgui.scene.shape.Circle;
 import lwjgui.scene.shape.Rectangle;
 import lwjgui.scene.shape.Shape;
+import lwjgui.style.BorderStyle;
 import lwjgui.theme.Theme;
 
 public class ComplexExample extends LWJGUIApplication {
@@ -214,10 +215,12 @@ public class ComplexExample extends LWJGUIApplication {
 			
 			// Holds shape
 			StackPane p = new StackPane();
-			p.setBackground(Theme.current().getBackground());
+			p.setBackgroundLegacy(Theme.current().getBackground());
 			p.setFillToParentHeight(true);
 			p.setPrefWidth(180);
-			p.setPaddingColor(Theme.current().getControlOutline());
+			p.setBorderColor(Theme.current().getControlOutline());
+			p.setBorderWidth(1);
+			p.setBorderStyle(BorderStyle.SOLID);
 			p.setPadding(new Insets(1));
 			hbox.getChildren().add(p);
 			

@@ -10,6 +10,7 @@ public abstract class DirectionalBox extends Pane {
 		//this.setFillToParentWidth(true);
 		this.setPrefSize(0, 0);
 		this.setAlignment(Pos.TOP_LEFT);
+		this.flag_clip = false;
 	}
 	
 	public void setSpacing(double d) {

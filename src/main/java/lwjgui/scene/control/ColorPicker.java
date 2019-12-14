@@ -23,6 +23,7 @@ import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;
 import lwjgui.scene.layout.floating.FloatingPane;
+import lwjgui.style.BackgroundSolid;
 import lwjgui.theme.Theme;
 
 public class ColorPicker extends ButtonBase {
@@ -60,7 +61,7 @@ public class ColorPicker extends ButtonBase {
 		StackPane g = new StackPane();
 		g.setMouseTransparent(true);
 		g.setPrefSize(16, 16);
-		g.setBackground(color);
+		g.setBackgroundLegacy(color);
 		this.setGraphic(g);
 	}
 	
@@ -157,8 +158,8 @@ public class ColorPicker extends ButtonBase {
 		}
 		
 		private void tempColor(Color newColor) {
-			colorS.setBackground(newColor);
-			colorPick.setBackground(newColor);
+			colorS.setBackgroundLegacy(newColor);
+			colorPick.setBackgroundLegacy(newColor);
 			setColor(newColor);
 			
 			if ( buttonEvent != null ) {
@@ -170,7 +171,7 @@ public class ColorPicker extends ButtonBase {
 			tempColor(new Color( Integer.parseInt(r.getText()), Integer.parseInt(g.getText()), Integer.parseInt(b.getText()) ));
 			
 			LWJGUI.runLater(()->{
-				Color newColor = colorS.getBackground();
+				Color newColor = ((BackgroundSolid)colorS.getBackground()).getColor();
 				try {
 					int r1 = newColor.getRed();
 					int g1 = newColor.getGreen();
@@ -258,21 +259,21 @@ public class ColorPicker extends ButtonBase {
 		}
 		
 		private void apply() {
-			setColor(colorS.getBackground());
+			setColor(((BackgroundSolid)colorS.getBackground()).getColor());
 			cancelColor.set(color);
 			tempColor(color);
 		}
 		
 		public ColorPopup() {
 			this.setPadding(new Insets(1));
-			this.setPaddingColor(Theme.current().getControlOutline());
-			this.setBackground(Theme.current().getBackground());
+			this.setBorderColor(Theme.current().getControlOutline());
+			this.setBackgroundLegacy(Theme.current().getBackground());
 			this.setAlignment(Pos.TOP_CENTER);
 			this.setPrefSize(100, 100);
 			
 			VBox background = new VBox();
 			background.setSpacing(4);
-			background.setBackground(null);
+			background.setBackgroundLegacy(null);
 			background.setPadding(new Insets(4));
 			this.getChildren().add(background);
 
@@ -282,7 +283,7 @@ public class ColorPicker extends ButtonBase {
 			colorS.setPrefWidth(tWid);
 			colorS.setFillToParentHeight(true);
 			colorS.setPadding(new Insets(1));
-			colorS.setPaddingColor(Color.DARK_GRAY);
+			colorS.setBorderColor(Color.DARK_GRAY);
 			
 			r = new ColorNumberField();
 			r.setPrefWidth(tWid);
@@ -300,7 +301,7 @@ public class ColorPicker extends ButtonBase {
 			b.setText(""+color.getBlue());
 			
 			GridPane rgbPane = new GridPane();
-			rgbPane.setBackground(null);
+			rgbPane.setBackgroundLegacy(null);
 			rgbPane.setHgap(4);
 			rgbPane.add(colorS, 0, 0);
 			rgbPane.add(r, 1, 0);
@@ -309,7 +310,7 @@ public class ColorPicker extends ButtonBase {
 			background.getChildren().add(rgbPane);
 			
 			StackPane temp = new StackPane();
-			temp.setBackground(Color.GRAY);
+			temp.setBackgroundLegacy(Color.GRAY);
 			temp.setPrefHeight(100);
 			temp.setFillToParentWidth(true);
 			temp.setPadding(new Insets(1));
@@ -326,7 +327,7 @@ public class ColorPicker extends ButtonBase {
 				colorPick.setMouseTransparent(true);
 				colorPick.setPrefSize(pickSize, pickSize);
 				colorPick.setPadding(new Insets(1));
-				colorPick.setPaddingColor(Color.DARK_GRAY);
+				colorPick.setBorderColor(Color.DARK_GRAY);
 				colorPane.getChildren().add(colorPick);
 				
 				Runnable forceUpdate = new Runnable() {
@@ -351,11 +352,11 @@ public class ColorPicker extends ButtonBase {
 						Color c = new Color((rgb >> 0) & 0xFF, (rgb >> 8) & 0xFF, (rgb >> 16) & 0xFF, 255);
 						
 						// Update the temp color
-						colorS.setBackground(c);
+						colorS.setBackgroundLegacy(c);
 						r.setText(""+c.getRed());
 						g.setText(""+c.getGreen());
 						b.setText(""+c.getBlue());
-						colorPick.setBackground(c);
+						colorPick.setBackgroundLegacy(c);
 						tempColor(c);
 					}
 				};
@@ -373,14 +374,14 @@ public class ColorPicker extends ButtonBase {
 			}
 			
 			StackPane temp2 = new StackPane();
-			temp2.setBackground(null);
+			temp2.setBackgroundLegacy(null);
 			temp2.setAlignment(Pos.CENTER_RIGHT);
 			temp2.setFillToParentWidth(true);
 			background.getChildren().add(temp2);
 			
 			HBox buttons = new HBox();
 			buttons.setSpacing(4);
-			buttons.setBackground(null);
+			buttons.setBackgroundLegacy(null);
 			temp2.getChildren().add(buttons);
 
 			Button cancel = new Button("Cancel");

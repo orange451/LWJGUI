@@ -7,6 +7,7 @@ import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.floating.DraggablePane;
+import lwjgui.style.BoxShadow;
 import lwjgui.scene.layout.StackPane;
 
 public class DraggableExample extends LWJGUIApplication {
@@ -27,8 +28,9 @@ public class DraggableExample extends LWJGUIApplication {
 		 */
 		
 		DraggablePane dragPane1 = new DraggablePane();
-		dragPane1.setBackground(Color.GREEN);
+		dragPane1.setBackgroundLegacy(Color.GREEN);
 		dragPane1.setPrefHeight(64);
+		dragPane1.getBoxShadowList().add(new BoxShadow(3, 3, 6, Color.LIGHT_GRAY));
 		
 		//Put pane in center of screen
 		dragPane1.setAbsolutePosition(WIDTH/2, HEIGHT/2);
@@ -49,8 +51,9 @@ public class DraggableExample extends LWJGUIApplication {
 		 */
 		
 		DraggablePane dragPane2 = new DraggablePane();
-		dragPane2.setBackground(Color.VIOLET);
+		dragPane2.setBackgroundLegacy(Color.VIOLET);
 		dragPane2.setPrefHeight(64);
+		dragPane2.getBoxShadowList().add(new BoxShadow(4, 4, 12, Color.GRAY));
 		
 		//Put pane in center of screen
 		dragPane2.setAbsolutePosition(WIDTH/2, HEIGHT/2);

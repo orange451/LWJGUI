@@ -59,7 +59,7 @@ public class MenuItem extends Node {
 		
 		internalLabel.setText(string);
 		internalLabel.setGraphic(graphic);
-		internalLabel.setPadding(new Insets(0, 12, 0, 12));
+		internalLabel.setPadding(new Insets(0, 16, 0, 16));
 
 		if (font != null) {
 			internalLabel.setFont(font);

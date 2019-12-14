@@ -28,19 +28,31 @@ import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL32;
+import org.lwjgl.opengl.GL33;
 
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.HPos;
 import lwjgui.geometry.Pos;
 import lwjgui.geometry.VPos;
+import lwjgui.gl.BoxShadowShader;
+import lwjgui.gl.TexturedQuad;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.style.BoxShadow;
 import lwjgui.util.OperatingSystem;
 
 public class LWJGUIUtil {
+	private static BoxShadowShader boxShadowShader;
+	private static TexturedQuad unitQuad;
+	
 	private static void hints(boolean modernOpenGL) {
 		if ( modernOpenGL ) {
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -183,7 +195,8 @@ public class LWJGUIUtil {
 
 		NanoVG.nvgBeginPath(context.getNVG());
 		NanoVG.nvgRoundedRectVarying(context.getNVG(), (int)x, (int)y, (int)width, (int)height, (float)radiusTopLeft, (float)radiusTopRight, (float)radiusBottomRight, (float)radiusBottomLeft);
-		NanoVG.nvgFillColor(context.getNVG(), color.getNVG());
+		if ( color != null )
+			NanoVG.nvgFillColor(context.getNVG(), color.getNVG());
 		NanoVG.nvgFill(context.getNVG());
 		NanoVG.nvgClosePath(context.getNVG());
 	}
@@ -432,6 +445,92 @@ public class LWJGUIUtil {
 		default:
 			System.err.println("This function will not work on this operating system.");
 			break;
+		}
+	}
+
+	public static void drawBoxShadow(Context context, BoxShadow boxShadow, float[] cornerRadii, double x, double y, double width, double height) {
+		float xx = (float)x - boxShadow.getSpread() + boxShadow.getXOffset();
+		float yy = (float)y - boxShadow.getSpread() + boxShadow.getYOffset();
+		float ww = (float)width + boxShadow.getSpread()*2;
+		float hh = (float)height + boxShadow.getSpread()*2;
+		
+		if ( boxShadow.isInset() ) {
+			xx += boxShadow.getSpread() * 2;
+			yy += boxShadow.getSpread() * 2;
+			ww -= boxShadow.getSpread() * 4;
+			hh -= boxShadow.getSpread() * 4;
+		}
+		
+		float averageCorner = 0;
+		if ( cornerRadii != null ) {
+			for (int i = 0; i < cornerRadii.length; i++) {
+				averageCorner += cornerRadii[i];
+			}
+			averageCorner /= (float)cornerRadii.length;
+		}
+		
+		float f = boxShadow.getBlurRadius();
+		float r = averageCorner + boxShadow.getSpread();
+		if ( boxShadow.isInset() )
+			r = averageCorner - boxShadow.getSpread();
+		
+		if ( boxShadow.isInset() ) {
+			NVGPaint paint = NanoVG.nvgBoxGradient(context.getNVG(), xx, yy, ww, hh, r, f, boxShadow.getToColor().getNVG(), boxShadow.getFromColor().getNVG(), NVGPaint.create());
+			NanoVG.nvgBeginPath(context.getNVG());
+			NanoVG.nvgRoundedRectVarying(context.getNVG(), (float)x, (float)y, (float)width, (float)height, cornerRadii[0], cornerRadii[1], cornerRadii[2], cornerRadii[3]);
+			NanoVG.nvgFillPaint(context.getNVG(), paint);
+			NanoVG.nvgFill(context.getNVG());
+			NanoVG.nvgClosePath(context.getNVG());
+		} else {
+			if ( context.isCoreOpenGL() ) {
+				// Save NANOVG
+				NanoVG.nvgSave(context.getNVG());
+				NanoVG.nvgEndFrame(context.getNVG());
+		
+				// Draw shadow to current FBO
+				{
+					if ( boxShadowShader == null )
+						boxShadowShader = new BoxShadowShader();
+					
+					if ( unitQuad == null )
+						unitQuad = new TexturedQuad(0, 0, 1, 1, -1);
+					
+					boxShadowShader.bind();
+					
+					// Flip the y :shrug:
+					//yy -= boxShadow.getYOffset() * 2;
+					yy = context.getHeight() - yy - hh;
+					
+					// Enable blending
+					GL32.glBlendFunc(GL32.GL_SRC_ALPHA, GL32.GL_ONE_MINUS_SRC_ALPHA);
+		            GL32.glEnable(GL32.GL_BLEND);
+					
+		            // Apply uniforms
+					GL20.glUniform4f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "box"), xx, yy, xx+ww, yy+hh );
+					GL20.glUniform2f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "window"), context.getWidth(), context.getHeight());
+					GL20.glUniform1f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "sigma"), f/2f);
+					GL20.glUniform1f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "corner"), Math.max(f/2, r));
+					GL20.glUniform4f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "boxColor"),
+							boxShadow.getFromColor().getRedF(),
+							boxShadow.getFromColor().getGreenF(),
+							boxShadow.getFromColor().getBlueF(),
+							boxShadow.getFromColor().getAlphaF());
+					
+					// Draw fullscreen quad
+					unitQuad.render();
+				}
+				
+				// Restore NANOVG
+				NanoVG.nvgRestore(context.getNVG());
+				context.refresh();
+			} else {
+				NVGPaint paint = NanoVG.nvgBoxGradient(context.getNVG(), xx, yy, ww, hh, r, f, boxShadow.getFromColor().getNVG(), boxShadow.getToColor().getNVG(), NVGPaint.create());
+				NanoVG.nvgBeginPath(context.getNVG());
+				NanoVG.nnvgRect(context.getNVG(), xx - boxShadow.getBlurRadius(), yy - boxShadow.getBlurRadius(), ww + boxShadow.getBlurRadius()*2, hh + boxShadow.getBlurRadius()*2);
+				NanoVG.nvgFillPaint(context.getNVG(), paint);
+				NanoVG.nvgFill(context.getNVG());
+				NanoVG.nvgClosePath(context.getNVG());
+			}
 		}
 	}
 }

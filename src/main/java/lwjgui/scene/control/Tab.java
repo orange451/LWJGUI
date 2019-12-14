@@ -122,7 +122,7 @@ public class Tab {
 					});
 				}
 			};
-			this.internal.setBackground(null);
+			this.internal.setBackgroundLegacy(null);
 			this.internal.setSpacing(4);
 			this.children.add(internal);
 			

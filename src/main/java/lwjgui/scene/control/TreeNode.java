@@ -13,6 +13,7 @@ import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
+import lwjgui.style.BackgroundSolid;
 import lwjgui.theme.Theme;
 
 public class TreeNode<E> extends HBox {
@@ -25,19 +26,19 @@ public class TreeNode<E> extends HBox {
 	public TreeNode(TreeItem<E> item) {
 		this.item = item;
 		
-		this.setBackground(null);
+		this.setBackgroundLegacy(null);
 		
 		inset = new StackPane();
 		inset.setMouseTransparent(true);
 		inset.setPrefSize(1, 1);
-		inset.setBackground(null);
+		inset.setBackgroundLegacy(null);
 		this.setAlignment(Pos.CENTER_LEFT);
 		getChildren().add(inset);
 		
 		StackPane stateButton = new StackPane();
 		stateButton.setAlignment(Pos.CENTER);
 		stateButton.setPrefSize(20, 20);
-		stateButton.setBackground(null);
+		stateButton.setBackgroundLegacy(null);
 		openGraphic = new Label();
 		openGraphic.setFont(Font.COURIER);
 		openGraphic.setFontSize(13);
@@ -183,7 +184,7 @@ public class TreeNode<E> extends HBox {
 		boolean selected = root.isItemSelected(item);
 		boolean active = context.isFocused();
 		Color color = selected?(active?Theme.current().getSelection():Theme.current().getSelectionPassive()):null;
-		this.setBackground(color);
+		this.setBackground(new BackgroundSolid(color));
 		
 		// Set appropriate colors
 		item.label.label.setTextFill((selected&&active)?Theme.current().getPane():Theme.current().getText());

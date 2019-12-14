@@ -32,7 +32,7 @@ public class MenuBar extends FillableRegion {
 		this.internalBox = new HBox();
 		this.internalBox.setAlignment(Pos.TOP_LEFT);
 		this.internalBox.setFillToParentHeight(true);
-		this.internalBox.setBackground(null);
+		this.internalBox.setBackgroundLegacy(null);
 		this.children.add(internalBox);
 		
 		this.items.setAddCallback(new ElementCallback<Menu>() {

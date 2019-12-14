@@ -25,7 +25,7 @@ public class AnimationExample extends LWJGUIApplication {
 		
 		// Create animation pane
 		StackPane test = new StackPane();
-		test.setBackground(Color.ORANGE);
+		test.setBackgroundLegacy(Color.ORANGE);
 		pane.getChildren().add(test);
 		
 		// Animation logic

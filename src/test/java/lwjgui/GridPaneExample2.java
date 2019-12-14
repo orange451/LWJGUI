@@ -39,7 +39,7 @@ public class GridPaneExample2 extends LWJGUIApplication {
 		grid.add(new Label("Test Label 5"), 0, 4);
 		
 		StackPane t = new StackPane();
-		t.setBackground(Color.BLUE);
+		t.setBackgroundLegacy(Color.BLUE);
 		t.setFillToParentWidth(true);
 		t.setFillToParentHeight(true);
 		grid.add(t, 1, 1);

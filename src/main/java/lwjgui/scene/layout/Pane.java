@@ -6,64 +6,40 @@ import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.paint.Color;
 import lwjgui.scene.Node;
+import lwjgui.style.Background;
+import lwjgui.style.BackgroundSolid;
+import lwjgui.style.BorderStyle;
+import lwjgui.style.BoxShadow;
 import lwjgui.style.StyleBackground;
-import lwjgui.style.StyleCornerRadius;
+import lwjgui.style.StyleBorder;
+import lwjgui.style.StyleBoxShadow;
 import lwjgui.scene.Context;
 import lwjgui.scene.FillableRegion;
 import lwjgui.theme.Theme;
 
-public class Pane extends FillableRegion implements StyleCornerRadius,StyleBackground {
-	//private boolean scrollableX;
-	//private boolean scrollableY;
+public class Pane extends FillableRegion implements StyleBorder,StyleBackground,StyleBoxShadow {
 	
-	private Color backgroundColor;
-	private Color paddingColor;
-	private float[] cornerRadii;
-
+	private Background background;
+	private Color borderColor;
+	private float[] borderRadii;
+	private float borderWidth;
+	private BorderStyle borderStyle;
+	private ObservableList<BoxShadow> boxShadows = new ObservableList<>();
+	
 	public Pane() {
-		this.setBackground(Theme.current().getPane());
+		this.setBackground(new BackgroundSolid(Theme.current().getPane()));
 		this.setPrefSize(1, 1);
 		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		this.setCornerRadii(0);
+		
+		this.setBorderStyle(BorderStyle.NONE);
+		this.setBorderRadii(0);
+		
+		this.flag_clip = false;
 	}
 
 	@Override
 	protected void position(Node parent) {
 		super.position(parent);
-	}
-	
-	/**
-	 * Set the background color of this node.
-	 * <br>
-	 * If set to null, then no background will draw.
-	 * @param color
-	 */
-	public void setBackground(Color color) {
-		this.backgroundColor = color;
-	}
-	
-	/**
-	 * Get the current background color of this node.
-	 * @return
-	 */
-	public Color getBackground() {
-		return this.backgroundColor;
-	}
-	
-	/**
-	 * Sets the color of this nodes padding. If the color is null, nothing will be drawn.
-	 * @param color
-	 */
-	public void setPaddingColor(Color color) {
-		this.paddingColor = color;
-	}
-	
-	/**
-	 * Returns the color used to draw the padding. If the color is null, nothing will be drawn.
-	 * @return
-	 */
-	public Color getPaddingColor() {
-		return this.paddingColor;
 	}
 
 	/**
@@ -82,76 +58,139 @@ public class Pane extends FillableRegion implements StyleCornerRadius,StyleBackg
 	
 	@Override
 	public void render(Context context) {
+		
+		// Draw drop shadows
+		for (int i = 0; i < getBoxShadowList().size(); i++) {
+			BoxShadow shadow = getBoxShadowList().get(i);
+			if ( shadow.isInset() )
+				continue;
+			LWJGUIUtil.drawBoxShadow(context, shadow, this.getBorderRadii(), (int) getX(), (int) getY(), (int)getWidth(), (int)getHeight());
+		}
+		
+		// Draw border
+		if ( this.getBorderStyle() != BorderStyle.NONE && this.getBorderWidth() > 0 && this.getBorderColor() != null ) {
+			float xx = (int) this.getX();
+			float yy = (int) this.getY();
+			float w = this.getBorderWidth();
+			float ww = (float) this.getWidth() + w*2;
+			float hh = (float) this.getHeight() + w*2;
+			
+			NanoVG.nvgBeginPath(context.getNVG());
+			NanoVG.nvgFillColor(context.getNVG(), getBorderColor().getNVG());
+
+			float b1 = Math.max((getBorderRadii()[0]-1) + w*2, 0);
+			float b2 = Math.max((getBorderRadii()[1]-1) + w*2, 0);
+			float b3 = Math.max((getBorderRadii()[2]-1) + w*2, 0);
+			float b4 = Math.max((getBorderRadii()[3]-1) + w*2, 0);
+			NanoVG.nvgRoundedRectVarying(context.getNVG(), xx-w, yy-w, ww, hh, b1, b2, b3, b4);
+			
+			if ( this.getBackground() == null ) {
+				NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CW);
+				NanoVG.nvgRoundedRectVarying(context.getNVG(), xx, yy, ww-w*2, hh-w*2, getBorderRadii()[0], getBorderRadii()[1], getBorderRadii()[2], getBorderRadii()[3]);
+				NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CCW);
+			}
+			
+			NanoVG.nvgFill(context.getNVG());
+			NanoVG.nnvgClosePath(context.getNVG());
+			
+		}
+		
+		// Draw background
 		if ( getBackground() != null ) {
 			double boundsX = getX();
 			double boundsY = getY();
 			double boundsW = getWidth();
 			double boundsH = getHeight();
-			boolean hasCorner = getCornerRadii()[0] != 0 || getCornerRadii()[1] != 0 || getCornerRadii()[2] != 0 || getCornerRadii()[3] != 0;
-			
-			if ( hasCorner ) {
-				LWJGUIUtil.fillRoundRect(context, boundsX, boundsY, boundsW, boundsH, getCornerRadii()[0], getCornerRadii()[1], getCornerRadii()[2], getCornerRadii()[3], getBackground());
-			} else {
-				NanoVG.nvgBeginPath(context.getNVG());
-				NanoVG.nvgRect(context.getNVG(), (int) boundsX, (int) boundsY, (float) boundsW, (float) boundsH);
-				NanoVG.nvgFillColor(context.getNVG(), getBackground().getNVG());
-				NanoVG.nvgFill(context.getNVG());
-			}
+			getBackground().render(context, boundsX, boundsY, boundsW, boundsH, getBorderRadii());
 		}
 		
-		if ( this.getPaddingColor() != null ) {
-			if ( this.getPadding().getTop() > 0 ) {
-				int xx1 = (int) (this.getX()+this.getInnerBounds().getX());
-				int yy1 = (int) (this.getY());
-				NanoVG.nvgBeginPath(context.getNVG());
-				NanoVG.nvgRect(context.getNVG(), xx1, yy1, (float)this.getInnerBounds().getWidth(), (float)this.getPadding().getTop());
-				NanoVG.nvgFillColor(context.getNVG(), getPaddingColor().getNVG());
-				NanoVG.nvgFill(context.getNVG());
-			}
-
-			if ( this.getPadding().getBottom() > 0 ) {
-				int xx1 = (int) (this.getX()+this.getInnerBounds().getX());
-				int yy1 = (int) (this.getY()+getHeight()-this.getPadding().getBottom());
-				NanoVG.nvgBeginPath(context.getNVG());
-				NanoVG.nvgRect(context.getNVG(), xx1, yy1, this.getInnerBounds().getWidth(), (float)this.getPadding().getBottom());
-				NanoVG.nvgFillColor(context.getNVG(), getPaddingColor().getNVG());
-				NanoVG.nvgFill(context.getNVG());
-			}
-			
-			if ( this.getPadding().getRight() > 0 ) {
-				int xx1 = (int) (this.getX()+getWidth()-this.getPadding().getRight());
-				int yy1 = (int) (this.getY());
-				NanoVG.nvgBeginPath(context.getNVG());
-				NanoVG.nvgRect(context.getNVG(), xx1, yy1, (float)this.getPadding().getRight(), (float)this.getHeight());
-				NanoVG.nvgFillColor(context.getNVG(), getPaddingColor().getNVG());
-				NanoVG.nvgFill(context.getNVG());
-			}
-			
-			if ( this.getPadding().getLeft() > 0 ) {
-				int xx1 = (int) (this.getX());
-				int yy1 = (int) (this.getY());
-				NanoVG.nvgBeginPath(context.getNVG());
-				NanoVG.nvgRect(context.getNVG(), xx1, yy1, (float)this.getPadding().getLeft(), (float)this.getHeight());
-				NanoVG.nvgFillColor(context.getNVG(), getPaddingColor().getNVG());
-				NanoVG.nvgFill(context.getNVG());
-			}
+		// Draw inset shadows
+		for (int i = 0; i < getBoxShadowList().size(); i++) {
+			BoxShadow shadow = getBoxShadowList().get(i);
+			if ( !shadow.isInset() )
+				continue;
+			LWJGUIUtil.drawBoxShadow(context, shadow, this.getBorderRadii(), (int) getX(), (int) getY(), (int)getWidth(), (int)getHeight());
 		}
 		
+		// Draw children
 		super.render(context);
 	}
-
+	
+	/**
+	 * Set the background color of this node.
+	 * <br>
+	 * If set to null, then no background will draw.
+	 * @param color
+	 */
+	public void setBackgroundLegacy(Color color) {
+		setBackground( new BackgroundSolid(color) );
+	}
+	
+	/**
+	 * Set the background color of this node.
+	 * <br>
+	 * If set to null, then no background will draw.
+	 * @param color
+	 */	
+	public void setBackground(Background color) {
+		this.background = color;
+	}
+	
+	/**
+	 * Get the current background color of this node.
+	 * @return
+	 */
+	public Background getBackground() {
+		return this.background;
+	}
+	
 	@Override
-	public float[] getCornerRadii() {
-		return cornerRadii;
+	public void setBorderStyle(BorderStyle style) {
+		this.borderStyle = style;
 	}
 
 	@Override
-	public void setCornerRadii(float radius) {
-		this.setCornerRadii(radius, radius, radius, radius);
+	public BorderStyle getBorderStyle() {
+		return this.borderStyle;
 	}
 
 	@Override
-	public void setCornerRadii(float cornerTopLeft, float cornerTopRight, float cornerBottomRight, float cornerBottomLeft) {
-		this.cornerRadii = new float[] {cornerTopLeft, cornerTopRight, cornerBottomRight, cornerBottomLeft};
+	public float[] getBorderRadii() {
+		return borderRadii;
+	}
+
+	@Override
+	public void setBorderRadii(float radius) {
+		this.setBorderRadii(radius, radius, radius, radius);
+	}
+
+	@Override
+	public void setBorderRadii(float cornerTopLeft, float cornerTopRight, float cornerBottomRight, float cornerBottomLeft) {
+		this.borderRadii = new float[] {cornerTopLeft, cornerTopRight, cornerBottomRight, cornerBottomLeft};
+	}
+
+	@Override
+	public void setBorderColor(Color color) {
+		this.borderColor = color;
+	}
+
+	@Override
+	public Color getBorderColor() {
+		return this.borderColor;
+	}
+
+	@Override
+	public void setBorderWidth(float width) {
+		this.borderWidth = width;
+	}
+
+	@Override
+	public float getBorderWidth() {
+		return this.borderWidth;
+	}
+
+	@Override
+	public ObservableList<BoxShadow> getBoxShadowList() {
+		return this.boxShadows;
 	}
 }

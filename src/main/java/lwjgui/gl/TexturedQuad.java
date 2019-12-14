@@ -101,8 +101,10 @@ public class TexturedQuad {
 		
 		// bind stuff
 		GL30.glBindVertexArray(vaoId);
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
+		if ( texId > -1 ) {
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
+		}
 
 		// draw it!
 		glBindVertexArray(vaoId);

@@ -124,7 +124,7 @@ public class ToggleSwitch extends Labeled implements Toggle {
 					}
 				}
 			};
-			this.track.setBackground(null);
+			this.track.setBackgroundLegacy(null);
 			this.track.setFillToParentHeight(true);
 			this.track.setFillToParentWidth(true);
 			this.track.setAlignment(Pos.CENTER_RIGHT);

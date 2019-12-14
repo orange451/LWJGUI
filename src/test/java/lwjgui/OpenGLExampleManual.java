@@ -85,14 +85,14 @@ public class OpenGLExampleManual {
 		// Create a simple pane
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(24));
-		root.setBackground(null); // See through, so we don't block the opengl drawn underneath
+		root.setBackgroundLegacy(null); // See through, so we don't block the opengl drawn underneath
 		scene.setRoot(root);
 
 		// Put labels in pane
 		{
 			VBox vbox = new VBox();
 			vbox.setAlignment(Pos.CENTER);
-			vbox.setBackground(Color.BLUE.alpha(0.4f));
+			vbox.setBackgroundLegacy(Color.BLUE.alpha(0.4f));
 			root.setCenter(vbox);
 
 			Label label1 = new Label("Hello World!");
@@ -112,7 +112,7 @@ public class OpenGLExampleManual {
 		{
 			HBox hbox = new HBox();
 			hbox.setSpacing(8);
-			hbox.setBackground(null);
+			hbox.setBackgroundLegacy(null);
 			root.setBottom(hbox);
 
 			// Add a checkbox

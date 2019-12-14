@@ -16,9 +16,10 @@ import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Node;
 import lwjgui.scene.Window;
 import lwjgui.scene.layout.Pane;
+import lwjgui.style.BorderStyle;
 import lwjgui.theme.Theme;
 
-public class ScrollPane extends FillableRegion {
+public class ScrollPane extends Pane {
 	
 	private Node content;
 	protected ScrollCanvas internalScrollCanvas;
@@ -44,14 +45,15 @@ public class ScrollPane extends FillableRegion {
 	private Color selectionPassiveFill = Theme.current().getBackgroundAlt();
 	private Color controlFill = Theme.current().getControl();
 	
-	private Color controlOutlineFill = Theme.current().getControlOutline();
-	protected boolean decorated = true;
-	
 	public ScrollPane() {
 		this.setPrefSize(100, 100);
 		this.setAlignment(Pos.TOP_LEFT);
 		this.flag_clip = true;
 		this.viewportSize = new Vector2i();
+		
+		this.setBorderWidth(1);
+		this.setBorderColor(Theme.current().getControlOutline());
+		this.setBorderStyle(BorderStyle.SOLID);
 		
 		//this.setBackground(Theme.current().getPane());
 		
@@ -185,14 +187,6 @@ public class ScrollPane extends FillableRegion {
 
 	public void setControlFill(Color controlFill) {
 		this.controlFill = controlFill;
-	}
-
-	public Color getControlOutlineFill() {
-		return controlOutlineFill;
-	}
-
-	public void setControlOutlineFill(Color controlOutlineFill) {
-		this.controlOutlineFill = controlOutlineFill;
 	}
 
 	/**
@@ -343,12 +337,6 @@ public class ScrollPane extends FillableRegion {
 				b.render(context);
 			}
 		}
-		
-		// Pane Outline
-		if ( decorated ) {
-			Color outlineColor = this.isDescendentSelected() ? selectionFill : controlOutlineFill;
-			LWJGUIUtil.outlineRect( context, getX(), getY(), getWidth()-1, getHeight()-1, outlineColor);
-		}
 	}
 	
 	public void setContent( Node content ) {
@@ -364,7 +352,7 @@ public class ScrollPane extends FillableRegion {
 	class ScrollCanvas extends Pane {
 		ScrollCanvas() {
 			this.flag_clip = true;
-			this.setBackground(null);
+			this.setBackgroundLegacy(null);
 			this.setAlignment(Pos.TOP_LEFT);
 		}
 		
@@ -468,7 +456,7 @@ public class ScrollPane extends FillableRegion {
 				y2 = bd.y;
 				len = x2-x1;
 			}
-			Color color = controlOutlineFill;
+			Color color = Theme.current().getControlOutline();
 			LWJGUIUtil.fillRoundRect(context, x1, y1, barThickness, barThickness, barThickness/2f, color);
 			LWJGUIUtil.fillRoundRect(context, x2, y2, barThickness, barThickness, barThickness/2f, color);
 			if ( len > 0 ) {

@@ -23,7 +23,7 @@ public class FloatingPaneTest extends LWJGUIApplication {
 		
 		// Create a new floating pane
 		FloatingPane floatPane = new FloatingPane();
-		floatPane.setBackground(Color.GREEN);
+		floatPane.setBackgroundLegacy(Color.GREEN);
 		pane.getChildren().add(floatPane);
 		
 		// Put pane in center of screen
@@ -31,7 +31,7 @@ public class FloatingPaneTest extends LWJGUIApplication {
 		
 		// Put a pane in to stretch it
 		FloatingPane t = new FloatingPane();
-		t.setBackground(Color.RED);
+		t.setBackgroundLegacy(Color.RED);
 		t.setPrefSize(64, 64);
 		t.setAbsolutePosition(floatPane.getX()+16, floatPane.getY()+32);
 		floatPane.getChildren().add(t);

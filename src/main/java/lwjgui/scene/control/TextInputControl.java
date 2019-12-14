@@ -12,6 +12,7 @@ import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
+import lwjgui.collections.ObservableList;
 import lwjgui.collections.StateStack;
 import lwjgui.event.Event;
 import lwjgui.event.EventHandler;
@@ -28,13 +29,19 @@ import lwjgui.scene.Context;
 import lwjgui.scene.Cursor;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.Pane;
-import lwjgui.style.StyleCornerRadius;
+import lwjgui.style.Background;
+import lwjgui.style.BackgroundSolid;
+import lwjgui.style.BorderStyle;
+import lwjgui.style.BoxShadow;
+import lwjgui.style.StyleBackground;
+import lwjgui.style.StyleBorder;
+import lwjgui.style.StyleBoxShadow;
 import lwjgui.theme.Theme;
 
 /**
  * This class acts as the core controller for text input classes.
  */
-public abstract class TextInputControl extends Control implements StyleCornerRadius {
+public abstract class TextInputControl extends Control implements StyleBorder,StyleBackground,StyleBoxShadow {
 	ArrayList<String> lines;
 	ArrayList<ArrayList<GlyphData>> glyphData;
 	ArrayList<String> linesDraw;
@@ -42,6 +49,13 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 	int caretPosition;
 	protected boolean editing = false;
 	protected boolean editable = true;
+	
+	private Background background;
+	private Color borderColor;
+	private float[] borderRadii;
+	private float borderWidth;
+	private BorderStyle borderStyle;
+	private ObservableList<BoxShadow> boxShadows = new ObservableList<>();
 	
 	private boolean wordWrap;
 	
@@ -71,9 +85,7 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 	protected Font font = Font.SANS;
 	protected Color fontFill = Theme.current().getText();
 	protected FontStyle style = FontStyle.REGULAR;
-	private float[] cornerRadii;
 	
-	private boolean decorated = true;
 	private boolean selectionOutlineEnabled = true;
 	
 	Color caretFill = Theme.current().getText();
@@ -88,6 +100,9 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 	protected TextInputControlShortcuts shortcuts;
 	
 	public TextInputControl() {
+		this.setBorderStyle(BorderStyle.SOLID);
+		this.setBorderRadii(3);
+		this.setBackground(new BackgroundSolid(Theme.current().getBackground()));
 		
 		/*
 		 * Input setup
@@ -98,7 +113,6 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 		setText("");
 		saveState();
 		this.flag_clip = true;
-		this.setCornerRadii(3);
 		
 		setOnTextInputInternal( new EventHandler<TypeEvent>() {
 			@Override
@@ -138,21 +152,6 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 	
 	protected void saveState() {
 		undoStack.Push(new TextState(getText(),caretPosition));
-	}
-	
-	@Override
-	public float[] getCornerRadii() {
-		return cornerRadii;
-	}
-
-	@Override
-	public void setCornerRadii(float radius) {
-		this.setCornerRadii(radius, radius, radius, radius);
-	}
-
-	@Override
-	public void setCornerRadii(float cornerTopLeft, float cornerTopRight, float cornerBottomRight, float cornerBottomLeft) {
-		this.cornerRadii = new float[] {cornerTopLeft, cornerTopRight, cornerBottomRight, cornerBottomLeft};
 	}
 	
 	public void setWordWrap(boolean wrap) {
@@ -831,14 +830,6 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 			row = 0;
 		return getCaretFromPixelOffset(row, (int) mx);
 	}
-	
-	public boolean isDecorated() {
-		return decorated;
-	}
-
-	public void setDecorated(boolean backgroundEnabled) {
-		this.decorated = backgroundEnabled;
-	}
 
 	public boolean isSelectionOutlineEnabled() {
 		return selectionOutlineEnabled;
@@ -850,6 +841,74 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 
 	public TextInputScrollPane getInternalScrollPane() {
 		return internalScrollPane;
+	}
+	
+	/**
+	 * Set the background color of this node.
+	 * <br>
+	 * If set to null, then no background will draw.
+	 * @param color
+	 */	
+	public void setBackground(Background color) {
+		this.background = color;
+	}
+	
+	/**
+	 * Get the current background color of this node.
+	 * @return
+	 */
+	public Background getBackground() {
+		return this.background;
+	}
+	
+	@Override
+	public void setBorderStyle(BorderStyle style) {
+		this.borderStyle = style;
+	}
+
+	@Override
+	public BorderStyle getBorderStyle() {
+		return this.borderStyle;
+	}
+
+	@Override
+	public float[] getBorderRadii() {
+		return borderRadii;
+	}
+
+	@Override
+	public void setBorderRadii(float radius) {
+		this.setBorderRadii(radius, radius, radius, radius);
+	}
+
+	@Override
+	public void setBorderRadii(float cornerTopLeft, float cornerTopRight, float cornerBottomRight, float cornerBottomLeft) {
+		this.borderRadii = new float[] {cornerTopLeft, cornerTopRight, cornerBottomRight, cornerBottomLeft};
+	}
+
+	@Override
+	public void setBorderColor(Color color) {
+		this.borderColor = color;
+	}
+
+	@Override
+	public Color getBorderColor() {
+		return this.borderColor;
+	}
+
+	@Override
+	public void setBorderWidth(float width) {
+		this.borderWidth = width;
+	}
+
+	@Override
+	public float getBorderWidth() {
+		return this.borderWidth;
+	}
+
+	@Override
+	public ObservableList<BoxShadow> getBoxShadowList() {
+		return this.boxShadows;
 	}
 	
 	public void setHighlighting(int startIndex, int endIndex, FontMetaData metaData) {
@@ -899,47 +958,88 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 		float y = (int)(getY()+this.getInnerBounds().getY());
 		float w = (int)this.getInnerBounds().getWidth();
 		float h = (int)this.getInnerBounds().getHeight();
-		float rNW = this.cornerRadii[0];
-		float rNE = this.cornerRadii[1];
-		float rSE = this.cornerRadii[2];
-		float rSW = this.cornerRadii[3];
+		float rNW = this.getBorderRadii()[0];
+		float rNE = this.getBorderRadii()[1];
+		float rSE = this.getBorderRadii()[2];
+		float rSW = this.getBorderRadii()[3];
 
 		this.clip(context,8);
 		
-		// Selection graphic
-		if (isDescendentSelected() && isDecorated() && !this.isDisabled()) {
-			float r = (rNE + rNW + rSE + rSW) / 4f + 0.5f;
-			int feather = 4;
-			Color color = context.isFocused() ? selectionFill : selectionPassiveFill;
-			NanoVG.nvgTranslate(context.getNVG(), x, y);	
-				NVGPaint paint = NanoVG.nvgBoxGradient(vg, 0,0, w,h, r, feather, color.getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
-				NanoVG.nvgBeginPath(vg);
-				NanoVG.nvgRoundedRect(vg, -feather,-feather, w+feather*2,h+feather*2, r);
-				NanoVG.nvgFillPaint(vg, paint);
-				NanoVG.nvgFill(vg);
-			NanoVG.nvgTranslate(context.getNVG(), -x, -y);	
+		// SETUP OUTLINE
+		this.setBorderStyle(BorderStyle.SOLID);
+		this.setBorderWidth(1);
+		Color outlineColor = (this.isDescendentSelected()&&!this.isDisabled())? selectionFill : controlOutlineFill;
+		this.setBorderColor(outlineColor);
+		
+		// SETUP SELECTION GRAPHIC
+		this.getBoxShadowList().clear();
+		this.getBoxShadowList().add(new BoxShadow( 0, 2, 8, -3, Theme.current().getShadow(), true ));
+		if (isDescendentSelected() && !this.isDisabled()) {
+			Color sel = Theme.current().getSelection();
+			if ( isDisabled() )
+				sel = Theme.current().getSelectionPassive();
+
+			this.getBoxShadowList().add(new BoxShadow(0, 0, 3, 1, sel));
+			this.getBoxShadowList().add(new BoxShadow(0, 0, 1.5f, 2, sel.alpha(0.2f), true));
 		}
 		
-		// Outline
-		if (isDecorated()) {
-			Color outlineColor = (this.isDescendentSelected()&&!this.isDisabled())? selectionFill : controlOutlineFill;
+		// Draw drop shadows
+		for (int i = 0; i < getBoxShadowList().size(); i++) {
+			BoxShadow shadow = getBoxShadowList().get(i);
+			if ( shadow.isInset() )
+				continue;
+			LWJGUIUtil.drawBoxShadow(context, shadow, this.getBorderRadii(), (int) getX(), (int) getY(), (int)getWidth(), (int)getHeight());
+		}
+		
+		// Draw border
+		if ( this.getBorderStyle() != BorderStyle.NONE && this.getBorderWidth() > 0 && this.getBorderColor() != null ) {
+			float xx = (int) this.getX();
+			float yy = (int) this.getY();
+			float bw = this.getBorderWidth();
+			float ww = (float) this.getWidth() + bw*2;
+			float hh = (float) this.getHeight() + bw*2;
+			
 			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRoundedRectVarying(context.getNVG(), x, y, w, h, rNW, rNE, rSE, rSW);
-			NanoVG.nvgFillColor(context.getNVG(), outlineColor.getNVG());
+			NanoVG.nvgFillColor(context.getNVG(), getBorderColor().getNVG());
+
+			float b1 = Math.max((getBorderRadii()[0]-1) + bw*2, 0);
+			float b2 = Math.max((getBorderRadii()[1]-1) + bw*2, 0);
+			float b3 = Math.max((getBorderRadii()[2]-1) + bw*2, 0);
+			float b4 = Math.max((getBorderRadii()[3]-1) + bw*2, 0);
+			NanoVG.nvgRoundedRectVarying(context.getNVG(), xx-bw, yy-bw, ww, hh, b1, b2, b3, b4);
+			
+			if ( this.getBackground() == null ) {
+				NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CW);
+				NanoVG.nvgRoundedRectVarying(context.getNVG(), xx, yy, ww-bw*2, hh-bw*2, getBorderRadii()[0], getBorderRadii()[1], getBorderRadii()[2], getBorderRadii()[3]);
+				NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CCW);
+			}
+			
 			NanoVG.nvgFill(context.getNVG());
+			NanoVG.nnvgClosePath(context.getNVG());
+			
 		}
 		
-		// Background
-		if (isDecorated() ) {	
-			int inset = 1;
-			Color c = Theme.current().getBackground();
-			if ( this.isDisabled() )
-				c = Theme.current().getSelectionPassive();
-			LWJGUIUtil.fillRoundRect(context, getX()+inset, getY()+inset, w-inset*2, h-inset*2, Math.max(0, rNW-1), Math.max(0, rNE-1), Math.max(0, rSE-1), Math.max(0, rSW-1), c);
+		// Draw background
+		if ( getBackground() != null ) {
+			double boundsX = getX();
+			double boundsY = getY();
+			double boundsW = getWidth();
+			double boundsH = getHeight();
+			getBackground().render(context, boundsX, boundsY, boundsW, boundsH, getBorderRadii());
+		}
+		
+		// Draw inset shadows
+		for (int i = 0; i < getBoxShadowList().size(); i++) {
+			BoxShadow shadow = getBoxShadowList().get(i);
+			if ( !shadow.isInset() )
+				continue;
+			LWJGUIUtil.drawBoxShadow(context, shadow, this.getBorderRadii(), (int) getX(), (int) getY(), (int)getWidth(), (int)getHeight());
 		}
 		
 		// Draw sub nodes
 		//this.internalScrollPane.render(context);
+		this.internalScrollPane.setBackground(null);
+		this.internalScrollPane.setBorderStyle(BorderStyle.NONE);
 		super.render(context);
 		
 		// Draw Prompt
@@ -960,15 +1060,15 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 		}
 		
 		// Dropshadow
-		if (isDecorated() && !this.isDisabled()) {
+		/*if (!this.isDisabled()) {
 			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRoundedRectVarying(vg, x, y, w, h, rNW, rNE, rSE, rSW);
 			NanoVG.nvgFillPaint(vg, bg);
 			NanoVG.nvgFill(vg);
-		}
+		}*/
 		
-		if (isDescendentSelected() && isSelectionOutlineEnabled() && !this.isDisabled()) {
+		/*if (isDescendentSelected() && isSelectionOutlineEnabled() && !this.isDisabled()) {
 			NanoVG.nvgTranslate(context.getNVG(), x, y);	
 				Color sel = context.isFocused() ? selectionFill : selectionPassiveFill;
 				Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);
@@ -982,7 +1082,7 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 					NanoVG.nvgStroke(vg);
 				NanoVG.nvgClosePath(vg);
 			NanoVG.nvgTranslate(context.getNVG(), -x, -y);
-		}
+		}*/
 	}
 	
 	class TextState {
@@ -1141,8 +1241,6 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 				lastClickTime = 0;
 				lastLastClickTime = 0;
 			});
-			
-			this.decorated = false;
 		}
 		
 		public void scrollToBottom() {
@@ -1165,7 +1263,7 @@ public abstract class TextInputControl extends Control implements StyleCornerRad
 		public TextInputContentRenderer(TextInputControl textInputControl) {
 			this.textInputControl = textInputControl;
 			this.setMouseTransparent(true);
-			this.setBackground(null);
+			this.setBackgroundLegacy(null);
 			
 			this.setAlignment(Pos.TOP_LEFT);
 			

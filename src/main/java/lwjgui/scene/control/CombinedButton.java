@@ -14,7 +14,7 @@ public class CombinedButton extends Control {
 		this.flag_clip = false;
 		
 		this.internal = new HBox();
-		this.internal.setSpacing(-0.5f);
+		this.internal.setSpacing(1f);
 		this.children.add(internal);
 		
 		this.buttons = new ObservableList<Button>();
@@ -68,10 +68,10 @@ public class CombinedButton extends Control {
 				last = true;
 
 			if ( !first ) {
-				b.setCornerRadii(0, b.getCornerRadii()[1], b.getCornerRadii()[2], 0);
+				b.setBorderRadii(0, b.getBorderRadii()[1], b.getBorderRadii()[2], 0);
 			}
 			if ( !last ) {
-				b.setCornerRadii(b.getCornerRadii()[0], 0, 0, b.getCornerRadii()[3]);
+				b.setBorderRadii(b.getBorderRadii()[0], 0, 0, b.getBorderRadii()[3]);
 			}
 		}
 	}

@@ -4,6 +4,7 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
 import lwjgui.scene.layout.StackPane;
+import lwjgui.style.BackgroundSolid;
 import lwjgui.theme.Theme;
 
 public class SeparatorMenuItem extends MenuItem {
@@ -16,7 +17,7 @@ public class SeparatorMenuItem extends MenuItem {
 		
 		// Container panel to hold the separator line
 		StackPane test = new StackPane();
-		test.setBackground(null);
+		test.setBackgroundLegacy(null);
 		test.setFillToParentWidth(true);
 		test.setPrefHeight(8);
 		test.setPadding(new Insets(3));
@@ -27,7 +28,7 @@ public class SeparatorMenuItem extends MenuItem {
 		draw.setMinHeight(1);
 		draw.setMaxHeight(1);
 		draw.setFillToParentWidth(true);
-		draw.setBackground(Theme.current().getControlOutline());
+		draw.setBackground(new BackgroundSolid(Theme.current().getControlOutline()));
 		test.getChildren().add(draw);
 	}
 	

@@ -22,14 +22,14 @@ public class BorderPane extends Pane {
 		
 		this.internalVBox = new VBox();
 		this.internalVBox.setAlignment(Pos.CENTER);
-		this.internalVBox.setBackground(null);
+		this.internalVBox.setBackgroundLegacy(null);
 		this.internalVBox.setFillToParentHeight(true);
 		this.internalVBox.setFillToParentWidth(true);
 		this.children.add(this.internalVBox);
 		
 		this.internalHBox = new HBox();
 		this.internalHBox.setAlignment(Pos.CENTER);
-		this.internalHBox.setBackground(null);
+		this.internalHBox.setBackgroundLegacy(null);
 		this.internalHBox.setFillToParentHeight(true);
 		this.internalHBox.setFillToParentWidth(true);
 		
@@ -142,7 +142,7 @@ public class BorderPane extends Pane {
 			ret.getChildren().add(node);
 			ret.setPrefWidth(node.getPrefWidth());
 		}
-		ret.setBackground(null);
+		ret.setBackgroundLegacy(null);
 		ret.setPrefHeight(1);
 		
 		return ret;

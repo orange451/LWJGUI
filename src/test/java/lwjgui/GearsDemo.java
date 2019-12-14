@@ -33,7 +33,7 @@ public class GearsDemo extends LWJGUIApplication {
 	public void start(String[] args, Window window) {
 		// Create a simple pane
 		BorderPane root = new BorderPane();
-		root.setBackground(null);
+		root.setBackgroundLegacy(null);
 		
 		// Top part of borderpane
 		{

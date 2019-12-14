@@ -211,7 +211,7 @@ public class Slider extends Control {
 			this.setMaxSize(size, size);
 			this.setPrefSize(size, size);
 			this.setPadding(Insets.EMPTY);
-			this.setCornerRadii(size/2f);
+			this.setBorderRadii(size/2f);
 			
 			this.setOnMousePressed((event)->{
 				if ( isDisabled() )

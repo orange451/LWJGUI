@@ -161,12 +161,12 @@ public class GridPane extends Pane {
 		this.elementsInternal = new NodePair[maxX][maxY];
 		
 		this.internalVBox.setSpacing(vgap);
-		this.internalVBox.setBackground(null);
+		this.internalVBox.setBackgroundLegacy(null);
 		
 		for (int i = 0; i < maxY; i++) {
 			HBox row = new HBox();
 			row.setSpacing(hgap);
-			row.setBackground(null);
+			row.setBackgroundLegacy(null);
 			row.setAlignment(Pos.TOP_LEFT);
 			
 			for (int j = 0; j < maxX; j++) {
@@ -178,7 +178,7 @@ public class GridPane extends Pane {
 				elementsInternal[j][i] = new NodePair(element, sizer);
 				
 				HBox cell = new HBox();
-				cell.setBackground(null);
+				cell.setBackgroundLegacy(null);
 				row.getChildren().add(cell);
 				
 				cell.getChildren().add(element);

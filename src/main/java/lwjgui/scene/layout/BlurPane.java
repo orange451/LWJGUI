@@ -17,11 +17,14 @@ import lwjgui.gl.OffscreenBuffer;
 import lwjgui.gl.TexturedQuad;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.style.Background;
+import lwjgui.style.BackgroundSolid;
+import lwjgui.style.BoxShadow;
 
 public class BlurPane extends StackPane {
 	private Vector2i oldSize = new Vector2i(1,1);
 	private float blurRadius = 52;
-	private Color internalBackground;
+	private Background internalBackground;
 
 	private BlurBuffer buffer;
 	private OffscreenBuffer bufferTemp;
@@ -30,7 +33,8 @@ public class BlurPane extends StackPane {
 	public BlurPane() {
 		resizeBuffer();
 		
-		this.setBackground(new Color(150,150,150,255));
+		this.setBackground(new BackgroundSolid(new Color(150,150,150,255)));
+		this.getBoxShadowList().add(new BoxShadow(4,4,16));
 	}
 
 	private void resizeBuffer() {
@@ -95,7 +99,7 @@ public class BlurPane extends StackPane {
 	}
 	
 	@Override
-	public void setBackground(Color color) {
+	public void setBackground(Background color) {
 		this.internalBackground = color;
 		super.setBackground(null);
 	}
@@ -145,10 +149,6 @@ public class BlurPane extends StackPane {
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER,srcfbo);
 	}
 	
-	class BlurBuffer2 {
-		
-	}
-	
 	class BlurBuffer extends OffscreenBuffer {
 
 		private OffscreenBuffer source;
@@ -186,10 +186,17 @@ public class BlurPane extends StackPane {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, source.getTexId());
 			
-			GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uColor"), internalBackground.getRed()/255f-0.5f, internalBackground.getGreen()/255f-0.5f, internalBackground.getBlue()/255f-0.5f, internalBackground.getAlpha()/255f);
+			if ( internalBackground instanceof BackgroundSolid ) {
+				BackgroundSolid bg = (BackgroundSolid)internalBackground;
+				GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uColor"),
+						bg.getColor().getRed()/255f-0.5f,
+						bg.getColor().getGreen()/255f-0.5f,
+						bg.getColor().getBlue()/255f-0.5f,
+						bg.getColor().getAlpha()/255f);
+			}
 			GL20.glUniform1f(GL20.glGetUniformLocation(quadShader.getProgram(), "uBlurSize"), blurRadius);
 			GL20.glUniform2f(GL20.glGetUniformLocation(quadShader.getProgram(), "uTexelSize"), 1.0f/(float)w, 1.0f/(float)h);
-			GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uCornerRadii"), (float)Math.max(BlurPane.this.getCornerRadii()[0], 0.1), (float)Math.max(BlurPane.this.getCornerRadii()[1], 0.1), (float)Math.max(BlurPane.this.getCornerRadii()[2], 0.1), (float)Math.max(BlurPane.this.getCornerRadii()[3], 0.1));
+			GL20.glUniform4f(GL20.glGetUniformLocation(quadShader.getProgram(), "uCornerRadii"), (float)Math.max(BlurPane.this.getBorderRadii()[0], 0.1), (float)Math.max(BlurPane.this.getBorderRadii()[1], 0.1), (float)Math.max(BlurPane.this.getBorderRadii()[2], 0.1), (float)Math.max(BlurPane.this.getBorderRadii()[3], 0.1));
 			
 			
 			// Draw quad

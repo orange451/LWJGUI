@@ -22,6 +22,7 @@ public class ToolBar extends Control {
 	
 	public ToolBar() {
 		this.setOrientation(Orientation.HORIZONTAL);
+		this.flag_clip = false;
 		
 		this.items.setAddCallback(new ElementCallback<Node>() {
 			@Override
@@ -49,7 +50,7 @@ public class ToolBar extends Control {
 			
 			this.children.clear();
 			this.internalBox = new HBox();
-			this.internalBox.setBackground(null);
+			this.internalBox.setBackgroundLegacy(null);
 			this.internalBox.setSpacing(4);
 			this.children.add(internalBox);
 			
@@ -62,7 +63,7 @@ public class ToolBar extends Control {
 			
 			this.children.clear();
 			this.internalBox = new VBox();
-			this.internalBox.setBackground(null);
+			this.internalBox.setBackgroundLegacy(null);
 			this.internalBox.setSpacing(3);
 			this.children.add(internalBox);
 

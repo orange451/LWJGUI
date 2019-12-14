@@ -11,6 +11,8 @@ import lwjgui.gl.OffscreenBuffer;
 import lwjgui.gl.Renderer;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.style.Background;
+import lwjgui.style.BackgroundSolid;
 import lwjgui.theme.Theme;
 
 public class OpenGLPane extends Pane {
@@ -49,7 +51,7 @@ public class OpenGLPane extends Pane {
 		// Should not resize here, because we may not be in a OPENGL context.
 		//resizeBuffer();
 		
-		this.setBackground(Theme.current().getPane());
+		this.setBackground(new BackgroundSolid(Theme.current().getPane()));
 	}
 	
 	private void resizeBuffer() {
@@ -94,12 +96,14 @@ public class OpenGLPane extends Pane {
 	}
 	
 	@Override
-	public void setBackground(Color color) {
-		this.internalBackground = color;
+	public void setBackground(Background color) {
+		if ( color instanceof BackgroundSolid ) {
+			this.internalBackground = ((BackgroundSolid)color).getColor();
+		}
 	}
 	
 	@Override
-	public Color getBackground() {
+	public Background getBackground() {
 		return null;
 	}
 	

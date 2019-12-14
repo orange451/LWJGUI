@@ -1,7 +1,10 @@
 package lwjgui.scene.control;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
@@ -102,14 +105,16 @@ public class ToolBar extends Control {
 		
 		// Gradient
 		NanoVG.nvgTranslate(vg, (int)getX(), (int)getY());
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight()*0.7f, Theme.current().getPane().getNVG(), Theme.current().getPaneAlt().getNVG(), NVGPaint.create());
+		try (MemoryStack stack = stackPush()) {
+			NVGPaint bg = NanoVG.nvgLinearGradient(vg, 0, 0, 0, (float)getHeight()*0.7f, Theme.current().getPane().getNVG(), Theme.current().getPaneAlt().getNVG(), NVGPaint.callocStack(stack));
 			if ( orientation.equals(Orientation.VERTICAL) ) {
-				bg = NanoVG.nvgLinearGradient(vg, 0, 0, (float)getWidth(), 0, Theme.current().getPane().getNVG(), Theme.current().getPaneAlt().getNVG(), NVGPaint.create());
+				bg = NanoVG.nvgLinearGradient(vg, 0, 0, (float)getWidth(), 0, Theme.current().getPane().getNVG(), Theme.current().getPaneAlt().getNVG(), NVGPaint.callocStack(stack));
 			}
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRect(vg, 0, 0, (int)getWidth(), (int)getHeight());
 			NanoVG.nvgFillPaint(vg, bg);
 			NanoVG.nvgFill(vg);
+		}
 		NanoVG.nvgTranslate(vg, (int)-getX(), (int)-getY());
 		
 		// Divider line

@@ -1,8 +1,11 @@
 package lwjgui.scene.shape;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.joml.Vector2f;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
@@ -53,13 +56,14 @@ public class DropShadow extends Shape {
 		h += shadowOffset.y;
 		
 		clip(context, 16);
-		
-		NVGPaint paint = NanoVG.nvgBoxGradient(vg, x + shadowRadius, y + shadowRadius, w - (shadowRadius * 2), h - (shadowRadius * 2), 4, 12, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
-		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgRect(vg, x, y, w, h);
-		NanoVG.nvgFillPaint(vg, paint);
-		NanoVG.nvgFill(vg);
-		NanoVG.nvgClosePath(context.getNVG());
+		try (MemoryStack stack = stackPush()) {
+			NVGPaint paint = NanoVG.nvgBoxGradient(vg, x + shadowRadius, y + shadowRadius, w - (shadowRadius * 2), h - (shadowRadius * 2), 4, 12, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.callocStack(stack));
+			NanoVG.nvgBeginPath(vg);
+			NanoVG.nvgRect(vg, x, y, w, h);
+			NanoVG.nvgFillPaint(vg, paint);
+			NanoVG.nvgFill(vg);
+			NanoVG.nvgClosePath(context.getNVG());
+		}
 	}
 
 	@Override

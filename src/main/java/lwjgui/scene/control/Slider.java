@@ -1,8 +1,11 @@
 package lwjgui.scene.control;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.event.ActionEvent;
 import lwjgui.event.EventHandler;
@@ -169,13 +172,15 @@ public class Slider extends Control {
 		{
 			Color c1 = Theme.current().getPaneAlt();
 			Color c2 = Theme.current().getBackground();
-			NVGPaint grad2 = NanoVG.nvgLinearGradient(vg, x, y+h*0.5f, x, y+h, c2.getNVG(), c1.getNVG(), NVGPaint.create());
-			
-			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRoundedRect(vg, x, y, w, h, r);
-			NanoVG.nvgFillPaint(vg, grad2);
-			NanoVG.nvgFill(vg);
-			NanoVG.nvgClosePath(vg);
+			try (MemoryStack stack = stackPush()) {
+				NVGPaint grad2 = NanoVG.nvgLinearGradient(vg, x, y+h*0.5f, x, y+h, c2.getNVG(), c1.getNVG(), NVGPaint.callocStack(stack));
+
+				NanoVG.nvgBeginPath(vg);
+				NanoVG.nvgRoundedRect(vg, x, y, w, h, r);
+				NanoVG.nvgFillPaint(vg, grad2);
+				NanoVG.nvgFill(vg);
+				NanoVG.nvgClosePath(vg);
+			}
 		}
 		
 		// Outline

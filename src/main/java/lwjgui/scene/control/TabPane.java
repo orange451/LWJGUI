@@ -1,7 +1,10 @@
 package lwjgui.scene.control;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
@@ -293,11 +296,13 @@ public class TabPane extends Control {
 			float x = (float) getX();
 			float y = (float) getY();
 			float w = (float) getWidth();
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-16, x, y+6, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
-			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRect(vg, x, y, w, 6);
-			NanoVG.nvgFillPaint(vg, bg);
-			NanoVG.nvgFill(vg);
+			try (MemoryStack stack = stackPush()) {
+				NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-16, x, y+6, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.callocStack(stack));
+				NanoVG.nvgBeginPath(vg);
+				NanoVG.nvgRect(vg, x, y, w, 6);
+				NanoVG.nvgFillPaint(vg, bg);
+				NanoVG.nvgFill(vg);
+			}
 		}
 	}
 	

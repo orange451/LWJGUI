@@ -1,10 +1,13 @@
 package lwjgui.scene.control;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUI;
 import lwjgui.event.ActionEvent;
@@ -82,12 +85,14 @@ public class ColorPicker extends ButtonBase {
 			this.setRendererCallback(new Renderer() {
 				
 				private void drawColor( Context context, Color c1, Color c2, double x1, double y1, double x2, double y2, double sx1, double sy1, double sx2, double sy2 ) {
-					NVGPaint paint = NanoVG.nvgLinearGradient(context.getNVG(), (float)sx1, (float)sy1, (float)sx2, (float)sy2, c1.getNVG(), c2.getNVG(), NVGPaint.create());
-					
-					NanoVG.nvgBeginPath(context.getNVG());
-					NanoVG.nvgRect(context.getNVG(), (int)x1, (int)y1, (int)(x2-x1), (int)(y2-y1));
-					NanoVG.nvgFillPaint(context.getNVG(), paint);
-					NanoVG.nnvgFill(context.getNVG());
+					try (MemoryStack stack = stackPush()) {
+						NVGPaint paint = NanoVG.nvgLinearGradient(context.getNVG(), (float)sx1, (float)sy1, (float)sx2, (float)sy2, c1.getNVG(), c2.getNVG(), NVGPaint.callocStack(stack));
+
+						NanoVG.nvgBeginPath(context.getNVG());
+						NanoVG.nvgRect(context.getNVG(), (int)x1, (int)y1, (int)(x2-x1), (int)(y2-y1));
+						NanoVG.nvgFillPaint(context.getNVG(), paint);
+						NanoVG.nnvgFill(context.getNVG());
+					}
 				}
 				
 				@Override
@@ -446,11 +451,13 @@ public class ColorPicker extends ButtonBase {
 			
 			// Draw Drop Shadow
 			this.clip(context,16);
-			NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+2,y+3, w-2,h, 4, 8, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
-			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRect(vg, x-16,y-16, w+32,h+32);
-			NanoVG.nvgFillPaint(vg, paint);
-			NanoVG.nvgFill(vg);
+			try (MemoryStack stack = stackPush()) {
+				NVGPaint paint = NanoVG.nvgBoxGradient(vg, x+2,y+3, w-2,h, 4, 8, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.callocStack(stack));
+				NanoVG.nvgBeginPath(vg);
+				NanoVG.nvgRect(vg, x-16,y-16, w+32,h+32);
+				NanoVG.nvgFillPaint(vg, paint);
+				NanoVG.nvgFill(vg);
+			}
 			
 			super.render(context);
 		}

@@ -1,7 +1,10 @@
 package lwjgui.scene.control;
 
+import static org.lwjgl.system.MemoryStack.stackPush;
+
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
@@ -35,20 +38,22 @@ public class ProgressBar extends Control {
 		{
 			Color c1 = Theme.current().getPaneAlt();
 			Color c2 = Theme.current().getBackground();
-			NVGPaint grad1 = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*0.5f, c1.getNVG(), c2.getNVG(), NVGPaint.create());
-			NVGPaint grad2 = NanoVG.nvgLinearGradient(vg, x, y+h*0.5f, x, y+h, c2.getNVG(), c1.getNVG(), NVGPaint.create());
+			try (MemoryStack stack = stackPush()) {
+				NVGPaint grad1 = NanoVG.nvgLinearGradient(vg, x, y, x, y+h*0.5f, c1.getNVG(), c2.getNVG(), NVGPaint.callocStack(stack));
+				NVGPaint grad2 = NanoVG.nvgLinearGradient(vg, x, y+h*0.5f, x, y+h, c2.getNVG(), c1.getNVG(), NVGPaint.callocStack(stack));
 
-			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRoundedRectVarying(vg, x, y, w, h*0.5f, r, r, 0, 0);
-			NanoVG.nvgFillPaint(vg, grad1);
-			NanoVG.nvgFill(vg);
-			NanoVG.nvgClosePath(vg);
-			
-			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRoundedRectVarying(vg, x, y+h*0.5f, w, h*0.5f, 0, 0, r, r);
-			NanoVG.nvgFillPaint(vg, grad2);
-			NanoVG.nvgFill(vg);
-			NanoVG.nvgClosePath(vg);
+				NanoVG.nvgBeginPath(vg);
+				NanoVG.nvgRoundedRectVarying(vg, x, y, w, h*0.5f, r, r, 0, 0);
+				NanoVG.nvgFillPaint(vg, grad1);
+				NanoVG.nvgFill(vg);
+				NanoVG.nvgClosePath(vg);
+
+				NanoVG.nvgBeginPath(vg);
+				NanoVG.nvgRoundedRectVarying(vg, x, y+h*0.5f, w, h*0.5f, 0, 0, r, r);
+				NanoVG.nvgFillPaint(vg, grad2);
+				NanoVG.nvgFill(vg);
+				NanoVG.nvgClosePath(vg);
+			}
 		}
 		
 		// Outline

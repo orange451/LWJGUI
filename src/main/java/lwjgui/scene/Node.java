@@ -1322,4 +1322,28 @@ public abstract class Node implements Resizable {
 		this.mouseTransparent = t;
 	}
 
+	/**
+	 * Returns if this node is currently hovered.
+	 * @return
+	 */
+	public boolean isHover() {
+		return this.cached_context.isHovered(this);
+	}
+
+	/**
+	 * Returns if this node is currently selected.
+	 * @return
+	 */
+	public boolean isSelected() {
+		return this.cached_context.isSelected(this);
+	}
+
+	/**
+	 * Returns if this node is currently being clicked! (Hovered + mouse left down)
+	 * @return
+	 */
+	public boolean isClicked() {
+		return this.isHover() && this.cached_context.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT;
+	}
+
 }

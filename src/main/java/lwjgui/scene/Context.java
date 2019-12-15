@@ -41,6 +41,7 @@ public class Context {
 
 	protected double mouseX;
 	protected double mouseY;
+	protected int mouseButton;
 	protected boolean focused;
 	
 	private List<Stylesheet> currentSheets = new ArrayList<>();
@@ -118,6 +119,10 @@ public class Context {
 		GLFW.glfwGetCursorPos(windowHandle, mousePosX, mousePosY);
 		mouseX = mousePosX[0];
 		mouseY = mousePosY[0];
+		
+		mouseButton = 
+				(GLFW.glfwGetMouseButton(windowHandle, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) ? GLFW.GLFW_MOUSE_BUTTON_LEFT :
+					(GLFW.glfwGetMouseButton(windowHandle, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS ? GLFW.GLFW_MOUSE_BUTTON_RIGHT : -1);
 
 		mouseHover();
 	}
@@ -410,5 +415,13 @@ public class Context {
 	 */
 	public int getViewportHeight() {
 		return getHeight()*getPixelRatio();
+	}
+
+	/**
+	 * Returns which mouse button is currently being pressed. -1 if no button is pressed.
+	 * @return
+	 */
+	public int getMouseButton() {
+		return this.mouseButton;
 	}
 }

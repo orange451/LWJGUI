@@ -24,7 +24,24 @@ public class CSSExample extends LWJGUIApplication {
 		
 		// Apply some style!
 		pane.setStyle("stackpane { background-color:rgb(240,240,240) } .TestStyle { width:100px; height:100px; border-style:solid; border-radius:8px; }");
-		styledPane.setStyle(".TestStyle { background-color:red; border-color:rgba(0,0,0,0.75); border-width:1px; }");
+		styledPane.setStyle(""
+				+ ".TestStyle { "
+				+ "		background-color:red;"
+				+ "		border-color:rgba(0,0,0,0.75);"
+				+ "		border-width:1px;"
+				+ "}"
+				+ ""
+				+ ".TestStyle:hover {"
+				+ "		background-color:blue;"
+				+ "}"
+				+ ""
+				+ ".TestStyle:focus {"
+				+ "		background-color:green;"
+				+ "}"
+				+ ""
+				+ ".TestStyle:active {"
+				+ "		background-color:yellow;"
+				+ "}");
 		
 		// Create a new scene
 		window.setScene(new Scene(pane, WIDTH, HEIGHT));

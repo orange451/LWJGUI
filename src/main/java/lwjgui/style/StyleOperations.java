@@ -8,9 +8,14 @@ import lwjgui.scene.Node;
 public class StyleOperations {
 	protected static HashMap<String, StyleOperation> operations = new HashMap<>();
 	
+	private final static String AUTO = "auto";
+	
 	public static StyleOperation WIDTH = new StyleOperation("width") {
 		@Override
 		public void process(Node node, Object value) {
+			if ( value.equals(AUTO) )
+				value = 0;
+			
 			node.setPrefWidth(getNumber(value));
 		}
 	};
@@ -18,6 +23,9 @@ public class StyleOperations {
 	public static StyleOperation MIN_WIDTH = new StyleOperation("min-width") {
 		@Override
 		public void process(Node node, Object value) {
+			if ( value.equals(AUTO) )
+				value = 0;
+			
 			node.setMinWidth(getNumber(value));
 		}
 	};
@@ -25,6 +33,9 @@ public class StyleOperations {
 	public static StyleOperation MAX_WIDTH = new StyleOperation("max-width") {
 		@Override
 		public void process(Node node, Object value) {
+			if ( value.equals(AUTO) )
+				value = Integer.MAX_VALUE;
+			
 			node.setMaxWidth(getNumber(value));
 		}
 	};
@@ -32,6 +43,9 @@ public class StyleOperations {
 	public static StyleOperation HEIGHT = new StyleOperation("height") {
 		@Override
 		public void process(Node node, Object value) {
+			if ( value.equals(AUTO) )
+				value = 0;
+			
 			node.setPrefHeight(getNumber(value));
 		}
 	};
@@ -39,6 +53,9 @@ public class StyleOperations {
 	public static StyleOperation MIN_HEIGHT = new StyleOperation("min-height") {
 		@Override
 		public void process(Node node, Object value) {
+			if ( value.equals(AUTO) )
+				value = 0;
+			
 			node.setMinHeight(getNumber(value));
 		}
 	};
@@ -46,6 +63,9 @@ public class StyleOperations {
 	public static StyleOperation MAX_HEIGHT = new StyleOperation("max-height") {
 		@Override
 		public void process(Node node, Object value) {
+			if ( value.equals(AUTO) )
+				value = Integer.MAX_VALUE;
+			
 			node.setMaxHeight(getNumber(value));
 		}
 	};

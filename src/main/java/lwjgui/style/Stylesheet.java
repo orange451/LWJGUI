@@ -41,12 +41,25 @@ public class Stylesheet {
 			return false;
 		
 		// Apply the styling!
-		List<StyleOperationValue> operations = data.getStyleOperations("normal");
+		applyStyling(node, data, "normal");
+		if ( node.isHover() )
+			applyStyling(node, data, "hover");
+		if ( node.isSelected() )
+			applyStyling(node, data, "focus");
+		if ( node.isClicked() )
+			applyStyling(node, data, "active");
+		
+		return true;
+	}
+	
+	private void applyStyling(Node node, StyleData data, String methodType) {
+		List<StyleOperationValue> operations = data.getStyleOperations(methodType);
+		if ( operations.size() <= 0 )
+			return;
+		
 		for (int i = 0; i < operations.size(); i++) {
 			operations.get(i).process(node);
 		}
-		
-		return true;
 	}
 
 	public void compile() {
@@ -135,6 +148,8 @@ public class Stylesheet {
 			
 
 			List<StyleOperationValue> operations = sData.getStyleOperations(selector.getModifier());
+			if ( operations == null )
+				return;
 			data.entrySet().forEach(entry -> {
 				System.out.println(selector.selector + " :: '" + entry.getKey() + "' = '" + entry.getValue() + "'");
 				StyleOperation op = StyleOperations.match(entry.getKey().toString());
@@ -226,6 +241,8 @@ public class Stylesheet {
 		public StyleData() {
 			this.routines.put("normal", new ArrayList<>());
 			this.routines.put("hover", new ArrayList<>());
+			this.routines.put("active", new ArrayList<>());
+			this.routines.put("focus", new ArrayList<>());
 		}
 		
 		public List<StyleOperationValue> getStyleOperations(String modifier) {

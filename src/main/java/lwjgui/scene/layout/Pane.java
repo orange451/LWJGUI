@@ -78,30 +78,7 @@ public abstract class Pane extends FillableRegion implements StyleBorder,StyleBa
 		
 		// Draw border
 		if ( this.getBorderStyle() != BorderStyle.NONE && this.getBorderWidth() > 0 && this.getBorderColor() != null ) {
-			float xx = (int) this.getX();
-			float yy = (int) this.getY();
-			float w = this.getBorderWidth();
-			float ww = (float) this.getWidth() + w*2;
-			float hh = (float) this.getHeight() + w*2;
-			
-			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgFillColor(context.getNVG(), getBorderColor().getNVG());
-
-			float b1 = Math.max((getBorderRadii()[0]-1) + w*2, 0);
-			float b2 = Math.max((getBorderRadii()[1]-1) + w*2, 0);
-			float b3 = Math.max((getBorderRadii()[2]-1) + w*2, 0);
-			float b4 = Math.max((getBorderRadii()[3]-1) + w*2, 0);
-			NanoVG.nvgRoundedRectVarying(context.getNVG(), xx-w, yy-w, ww, hh, b1, b2, b3, b4);
-			
-			if ( this.getBackground() == null ) {
-				NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CW);
-				NanoVG.nvgRoundedRectVarying(context.getNVG(), xx, yy, ww-w*2, hh-w*2, getBorderRadii()[0], getBorderRadii()[1], getBorderRadii()[2], getBorderRadii()[3]);
-				NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CCW);
-			}
-			
-			NanoVG.nvgFill(context.getNVG());
-			NanoVG.nnvgClosePath(context.getNVG());
-			
+			LWJGUIUtil.drawBorder(context, getX(), getY(), getWidth(), getHeight(), this.getBorderWidth(), this.getBackground(), this.getBorderColor(), this.getBorderRadii() );
 		}
 		
 		// Draw background

@@ -46,6 +46,7 @@ import lwjgui.gl.BoxShadowShader;
 import lwjgui.gl.TexturedQuad;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.style.Background;
 import lwjgui.style.BoxShadow;
 import lwjgui.util.OperatingSystem;
 
@@ -535,5 +536,31 @@ public class LWJGUIUtil {
 				NanoVG.nvgClosePath(context.getNVG());
 			}
 		}
+	}
+
+	public static void drawBorder(Context context, double x, double y, double width, double height, double borderWidth, Background background, Color borderColor, float[] borderRadii) {
+		float xx = (int) x;
+		float yy = (int) y;
+		float w = (float)borderWidth;
+		float ww = (int) width + w*2;
+		float hh = (int) height + w*2;
+		
+		NanoVG.nvgBeginPath(context.getNVG());
+		NanoVG.nvgFillColor(context.getNVG(), borderColor.getNVG());
+
+		float b1 = Math.max((borderRadii[0]) + w, 0);
+		float b2 = Math.max((borderRadii[1]) + w, 0);
+		float b3 = Math.max((borderRadii[2]) + w, 0);
+		float b4 = Math.max((borderRadii[3]) + w, 0);
+		NanoVG.nvgRoundedRectVarying(context.getNVG(), xx-w, yy-w, ww, hh, b1, b2, b3, b4);
+		
+		if ( background == null ) {
+			NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CW);
+			NanoVG.nvgRoundedRectVarying(context.getNVG(), xx, yy, ww-w*2, hh-w*2, borderRadii[0], borderRadii[1], borderRadii[2], borderRadii[3]);
+			NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CCW);
+		}
+		
+		NanoVG.nvgFill(context.getNVG());
+		NanoVG.nnvgClosePath(context.getNVG());
 	}
 }

@@ -28,7 +28,7 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 ![ScrollSplitPane](https://i.imgur.com/EKVvWdP.png)
 ![Gears](http://magaimg.net/img/7ux5.png)
 ![TextArea](http://magaimg.net/img/9lb6.png)
-![TreeView](https://i.imgur.com/WZQxpvU.png)
+![TreeView](http://magaimg.net/img/a20c.png)
 ![IDE](http://magaimg.net/img/7upi.png)
 
 # Required Libraries

@@ -294,11 +294,7 @@ public abstract class ButtonBase extends Labeled implements StyleBorder,StyleBac
 		
 		// Draw background
 		if ( getBackground() != null ) {
-			double boundsX = getX();
-			double boundsY = getY();
-			double boundsW = getWidth();
-			double boundsH = getHeight();
-			getBackground().render(context, boundsX, boundsY, boundsW, boundsH, getBorderRadii());
+			getBackground().render(context, getX(), getY(), getWidth(), getHeight(), getBorderRadii());
 		}
 		
 		// Draw inset shadows

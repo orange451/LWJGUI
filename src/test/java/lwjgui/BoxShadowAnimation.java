@@ -75,7 +75,7 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			this.setBorderStyle(BorderStyle.SOLID);
 
 			Color shadowColor = new Color(Color.BLACK).alpha(0);
-			this.shadow = new BoxShadow(4, 4, 16, -1, shadowColor);
+			this.shadow = new BoxShadow(8, 8, 24, -4, shadowColor);
 			this.getBoxShadowList().add(shadow);
 
 			this.outline = new BoxShadow(0, 0, 0, 1, color.alpha(0.5f));

@@ -84,8 +84,9 @@ public class MenuItem extends Node {
 		}
 	}
 	
-	protected boolean isSelected() {
-		return this.cached_context.isHovered(this) || this.isDescendentHovered();
+	@Override
+	public boolean isSelected() {
+		return super.isSelected() || this.isDescendentHovered();
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class SeparatorMenuItem extends MenuItem {
 	}
 	
 	@Override
-	protected boolean isSelected() {
+	public boolean isSelected() {
 		return false;
 	}
 

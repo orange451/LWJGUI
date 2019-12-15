@@ -73,10 +73,11 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			this.setBorderRadii(3);
 			this.setBorderWidth(1);
 			this.setBorderStyle(BorderStyle.SOLID);
-			
-			this.shadow = new BoxShadow(4, 4, 16, -1, Color.BLACK.alpha(0));
+
+			Color shadowColor = new Color(Color.BLACK).alpha(0);
+			this.shadow = new BoxShadow(4, 4, 16, -1, shadowColor);
 			this.getBoxShadowList().add(shadow);
-			
+
 			this.outline = new BoxShadow(0, 0, 0, 1, color.alpha(0.5f));
 			this.getBoxShadowList().add(outline);
 			
@@ -115,9 +116,12 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			
 			this.setOnMouseEnteredInternal((event)->{
 				hovered = true;
-				
+
 				Transition t = new FillTransition(100, new Color(currentColor), color.brighter(), currentColor);
 				t.play();
+				
+				Transition t2 = new FillTransition(200, new Color(shadowColor), Color.BLACK.alpha(0.2f), shadowColor);
+				t2.play();
 			});
 			
 			this.setOnMouseExitedInternal((event)->{
@@ -125,40 +129,33 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 
 				Transition t = new FillTransition(100, new Color(currentColor), color, currentColor);
 				t.play();
+				
+				Transition t2 = new FillTransition(200, new Color(shadowColor), Color.BLACK.alpha(0.0f), shadowColor);
+				t2.play();
 			});
 			
 			this.setOnMousePressedInternal((event)->{
 
 				Transition t = new FillTransition(100, new Color(currentColor), color.darker(), currentColor);
 				t.play();
+				
+				Transition t2 = new FillTransition(200, new Color(shadowColor), Color.BLACK.alpha(0.5f), shadowColor);
+				t2.play();
 			});
 			
 			this.setOnMouseReleasedInternal((event)->{
 				if ( hovered ) {
 					Transition t = new FillTransition(200, new Color(currentColor), color.brighter(), currentColor);
 					t.play();
+					
+					Transition t2 = new FillTransition(200, new Color(shadowColor), Color.BLACK.alpha(0.2f), shadowColor);
+					t2.play();
 				}
 			});
 		}
 		
 		public BootStrapButton(Color color, String text) {
 			this(color, text, false);
-		}
-		
-		private float tween(double value1, double value2, double ratio) {
-			ratio = Math.min(Math.max(ratio, 0), 1);
-			double v = value1 + (value2-value1)*ratio;
-			return (float)v;
-		}
-		
-		protected void position(Node parent) {
-			super.position(parent);
-			
-			if ( hovered ) {
-				this.shadow.setFromColor(Color.BLACK.alpha(tween(this.shadow.getFromColor().getAlphaF(), 0.33, 1/50d)));
-			} else {
-				this.shadow.setFromColor(Color.BLACK.alpha(tween(this.shadow.getFromColor().getAlphaF(), 0, 1/400d)));
-			}
 		}
 	}
 }

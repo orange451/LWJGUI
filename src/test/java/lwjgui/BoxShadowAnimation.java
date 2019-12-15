@@ -13,6 +13,8 @@ import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.style.BorderStyle;
 import lwjgui.style.BoxShadow;
+import lwjgui.transition.FillTransition;
+import lwjgui.transition.Transition;
 
 public class BoxShadowAnimation extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
@@ -58,14 +60,14 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 		private Label label;
 		private boolean selected;
 		private boolean hovered;
-		private float rad = 0;
 		private BoxShadow outline;
 		private BoxShadow shadow;
 
 		public BootStrapButton(Color color, String text, boolean darkText ) {
 			color.immutable(true);
+			Color currentColor = new Color(color);
 			
-			this.setBackgroundLegacy(color);
+			this.setBackgroundLegacy(currentColor);
 			this.setPadding(new Insets(5, 16));
 			this.setBorderColor(color.darker());
 			this.setBorderRadii(3);
@@ -75,7 +77,7 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			this.shadow = new BoxShadow(4, 4, 16, -1, Color.BLACK.alpha(0));
 			this.getBoxShadowList().add(shadow);
 			
-			this.outline = new BoxShadow(0, 0, 0, rad, color.alpha(0.5f));
+			this.outline = new BoxShadow(0, 0, 0, 1, color.alpha(0.5f));
 			this.getBoxShadowList().add(outline);
 			
 			// Label
@@ -89,29 +91,53 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			
 			this.setOnSelectedEventInternal((event)->{
 				selected = true;
+				
+				Transition t = new Transition(75) {
+					@Override
+					public void tick(double progress) {
+						outline.setSpread(4 * (float)progress);
+					}
+				};
+				t.play();
 			});
 			
 			this.setOnDeselectedEventInternal((event)->{
 				selected = false;
+				
+				Transition t = new Transition(75) {
+					@Override
+					public void tick(double progress) {
+						outline.setSpread(4 - (4 * (float)progress));
+					}
+				};
+				t.play();
 			});
 			
 			this.setOnMouseEnteredInternal((event)->{
-				this.setBackgroundLegacy(color.brighter());
 				hovered = true;
+				
+				Transition t = new FillTransition(100, new Color(currentColor), color.brighter(), currentColor);
+				t.play();
 			});
 			
 			this.setOnMouseExitedInternal((event)->{
-				this.setBackgroundLegacy(color);
 				hovered = false;
+
+				Transition t = new FillTransition(100, new Color(currentColor), color, currentColor);
+				t.play();
 			});
 			
 			this.setOnMousePressedInternal((event)->{
-				this.setBackgroundLegacy(color.darker());
+
+				Transition t = new FillTransition(100, new Color(currentColor), color.darker(), currentColor);
+				t.play();
 			});
 			
 			this.setOnMouseReleasedInternal((event)->{
-				if ( hovered )
-					this.setBackgroundLegacy(color.brighter());
+				if ( hovered ) {
+					Transition t = new FillTransition(200, new Color(currentColor), color.brighter(), currentColor);
+					t.play();
+				}
 			});
 		}
 		
@@ -126,12 +152,7 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 		}
 		
 		protected void position(Node parent) {
-			super.position(parent);	
-			if ( selected ) {
-				this.outline.setSpread(tween(this.outline.getSpread(), 4, 1/20f));
-			} else {
-				this.outline.setSpread(tween(this.outline.getSpread(), 0, 1/60f));
-			}
+			super.position(parent);
 			
 			if ( hovered ) {
 				this.shadow.setFromColor(Color.BLACK.alpha(tween(this.shadow.getFromColor().getAlphaF(), 0.33, 1/50d)));

@@ -504,6 +504,9 @@ public class LWJGUIUtil {
 					// Enable blending
 					GL32.glBlendFunc(GL32.GL_SRC_ALPHA, GL32.GL_ONE_MINUS_SRC_ALPHA);
 		            GL32.glEnable(GL32.GL_BLEND);
+		            
+		            if ( f < 0.5 )
+		            	f = 0.5f;
 					
 		            // Apply uniforms
 					GL20.glUniform4f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "box"), xx, yy, xx+ww, yy+hh );

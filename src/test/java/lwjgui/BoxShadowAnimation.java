@@ -9,7 +9,6 @@ import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.FlowPane;
-import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.style.BorderStyle;
@@ -24,13 +23,15 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 	}
 	
 	@Override
-	public void start(String[] args, Window window) {		
+	public void start(String[] args, Window window) {
 		// Create a simple root pane
 		StackPane pane = new StackPane();
 		
+		// Setup flow pane to hold buttons
 		FlowPane flow = new FlowPane();
 		flow.setAlignment(Pos.CENTER);
 		flow.setFillToParentWidth(true);
+		flow.setFillToParentHeight(true);
 		flow.setOrientation(Orientation.HORIZONTAL);
 		flow.setHgap(8);
 		flow.setVgap(8);
@@ -74,13 +75,15 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			this.shadow = new BoxShadow(4, 4, 16, -1, Color.BLACK.alpha(0));
 			this.getBoxShadowList().add(shadow);
 			
-			this.outline = new BoxShadow(0, 0, 1, rad, color.alpha(0.5f));
+			this.outline = new BoxShadow(0, 0, 0, rad, color.alpha(0.5f));
 			this.getBoxShadowList().add(outline);
 			
 			// Label
 			this.label = new Label(text);
 			if ( !darkText )
 				this.label.setTextFill(Color.WHITE);
+			else
+				this.label.setTextFill(Color.DARK_GRAY);
 			this.label.setMouseTransparent(true);
 			this.getChildren().add(label);
 			

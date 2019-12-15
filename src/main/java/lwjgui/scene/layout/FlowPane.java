@@ -88,11 +88,13 @@ public class FlowPane extends FillableRegion {
 		this.getChildren().clear();
 		
 		this.internalBox = new VBox();
-		if ( this.orientation.equals(Orientation.VERTICAL ) )
+		if ( this.orientation.equals(Orientation.VERTICAL ) ) {
 			this.internalBox = new HBox();
+			this.internalBox.setFillToParentHeight(true);
+		} else {
+			this.internalBox.setFillToParentWidth(true);
+		}
 		this.internalBox.setSpacing((this.internalBox instanceof HBox)?hgap:vgap);
-		this.internalBox.setFillToParentWidth(true);
-		this.internalBox.setFillToParentHeight(true);
 		this.internalBox.setAlignment(this.getAlignment());
 		this.getChildren().add(this.internalBox);
 		

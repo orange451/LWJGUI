@@ -14,6 +14,10 @@ public class PannablePane extends DraggablePane {
 			this.center();
 		});
 	}
+
+	public String getElementType() {
+		return "pannablepane";
+	}
 	
 	/**
 	 * Puts the origin of the PannablePane (0,0) in the center of its container.

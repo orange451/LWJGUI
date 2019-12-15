@@ -83,6 +83,10 @@ public class FlowPane extends FillableRegion {
 			this.internalBox.getChildren().get(i).setAlignment(pos);
 		}
 	}
+
+	public String getElementType() {
+		return "flowpane";
+	}
 	
 	protected void rebuild() {
 		this.getChildren().clear();

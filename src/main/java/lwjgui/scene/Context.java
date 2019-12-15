@@ -6,6 +6,9 @@ import static org.lwjgl.glfw.GLFW.glfwGetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeLimits;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVGGL2;
 import org.lwjgl.nanovg.NanoVGGL3;
@@ -18,6 +21,7 @@ import lwjgui.collections.ObservableList;
 import lwjgui.event.Event;
 import lwjgui.event.EventHelper;
 import lwjgui.scene.control.PopupWindow;
+import lwjgui.style.Stylesheet;
 import lwjgui.util.Bounds;
 
 public class Context {
@@ -38,6 +42,8 @@ public class Context {
 	protected double mouseX;
 	protected double mouseY;
 	protected boolean focused;
+	
+	private List<Stylesheet> currentSheets = new ArrayList<>();
 
 	public Context( long window ) {
 		windowHandle = window;
@@ -359,6 +365,14 @@ public class Context {
 	 */
 	public Node getSelected() {
 		return this.selected;
+	}
+	
+	/**
+	 * Returns the current list of stylesheets used for rendering the node.
+	 * @return
+	 */
+	public List<Stylesheet> getCurrentStyling() {
+		return currentSheets;
 	}
 
 	/**

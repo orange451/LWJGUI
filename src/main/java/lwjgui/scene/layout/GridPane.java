@@ -74,6 +74,10 @@ public class GridPane extends Pane {
 			}
 		});
 	}
+
+	public String getElementType() {
+		return "gridpane";
+	}
 	
 	private Node searchForNextNode( Vector2i position, Vector2i direction ) {
 		Node ret = null;

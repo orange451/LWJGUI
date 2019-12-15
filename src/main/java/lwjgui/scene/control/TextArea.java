@@ -26,6 +26,10 @@ public class TextArea extends TextInputControl {
 	public TextArea() {
 		this("");
 	}
+
+	public String getElementType() {
+		return "textarea";
+	}
 	
 	class TextAreaShortcuts extends TextInputControlShortcuts {
 		@Override

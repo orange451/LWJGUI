@@ -17,6 +17,10 @@ public class Circle extends Shape {
 		super(fill);
 		this.setRadius(radius);
 	}
+
+	public String getElementType() {
+		return "circle";
+	}
 	
 	public float getRadius() {
 		return this.radius;

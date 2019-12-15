@@ -25,6 +25,10 @@ public class FloatingPane extends Pane {
 	public boolean isResizeable() {
 		return false;
 	}
+
+	public String getElementType() {
+		return "floatingpane";
+	}
 	
 	/*
 	@Override

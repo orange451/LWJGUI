@@ -22,4 +22,8 @@ public class TextField extends TextInputControl {
 	public void setText(String text) {
 		super.setText(text.replace("\n", "").replace("\t", ""));
 	}
+
+	public String getElementType() {
+		return "textfield";
+	}
 }

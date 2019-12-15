@@ -79,6 +79,10 @@ public class TabPane extends Control {
 			}
 		});
 	}
+
+	public String getElementType() {
+		return "tabpane";
+	}
 	
 	/**
 	 * Sets whether or not the user can drag tabs around this tab-pane.

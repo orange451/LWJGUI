@@ -26,6 +26,10 @@ public class ImageView extends FillableRegion {
 		this.stretchToFit = !maintain;
 	}
 
+	public String getElementType() {
+		return "imageview";
+	}
+
 	@Override
 	public boolean isResizeable() {
 		return false;

@@ -32,6 +32,10 @@ public class SectorCircle extends Shape {
 		this.rotation = rotation;
 		this.circlePoints = circlePoints;
 	}
+
+	public String getElementType() {
+		return "sectorcircle";
+	}
 	
 	public float getRadius() {
 		return this.radius;

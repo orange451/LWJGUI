@@ -52,4 +52,8 @@ public class HBox extends DirectionalBox {
 		//return this.getMaxElementHeight();
 		return 0;//getHeight()-this.getInnerBounds().getHeight();
 	}
+
+	public String getElementType() {
+		return "hbox";
+	}
 }

@@ -19,6 +19,10 @@ public class Group extends Parent {
 		// Apply normal resizing
 		super.resize();
 	}
+
+	public String getElementType() {
+		return "group";
+	}
 	
 	/**
 	 *

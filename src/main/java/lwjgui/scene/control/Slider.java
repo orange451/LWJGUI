@@ -54,6 +54,10 @@ public class Slider extends Control {
 		
 		this.orientation = Orientation.HORIZONTAL;
 	}
+
+	public String getElementType() {
+		return "slider";
+	}
 	
 	public void setOnValueChangedEvent(EventHandler<ActionEvent> event) {
 		this.onValueChangeEvent = event;
@@ -229,6 +233,10 @@ public class Slider extends Control {
 			
 				dragged = true;
 			});
+		}
+
+		public String getElementType() {
+			return "sliderthumb";
 		}
 		
 		private double mouseSpaceToTrackSpace(double mousePos) {

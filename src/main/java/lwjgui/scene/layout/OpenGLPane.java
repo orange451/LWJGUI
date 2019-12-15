@@ -77,6 +77,10 @@ public class OpenGLPane extends Pane {
 			nanoImage = NanoVGGL2.nvglCreateImageFromHandle(this.cached_context.getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
 		}
 	}
+
+	public String getElementType() {
+		return "openglpane";
+	}
 	
 	public void setRendererCallback(Renderer renderer) {
 		this.renderer = renderer;

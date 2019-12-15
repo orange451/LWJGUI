@@ -11,4 +11,8 @@ public class StackPane extends Pane {
 	public boolean isResizeable() {
 		return false;
 	}
+	
+	public String getElementType() {
+		return "stackpane";
+	}
 }

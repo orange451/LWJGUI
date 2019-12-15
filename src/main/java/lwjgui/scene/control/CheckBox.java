@@ -37,6 +37,10 @@ public class CheckBox extends ButtonBase {
 			}
 		});
 	}
+
+	public String getElementType() {
+		return "checkbox";
+	}
 	
 	@Override
 	protected void resize() {

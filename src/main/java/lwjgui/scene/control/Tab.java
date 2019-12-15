@@ -101,6 +101,10 @@ public class Tab {
 		protected TabButton() {
 			refresh();
 		}
+
+		public String getElementType() {
+			return "tab";
+		}
 		
 		protected void refresh() {
 			this.children.clear();

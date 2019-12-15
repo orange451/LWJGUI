@@ -70,6 +70,10 @@ public class BorderPane extends Pane {
 		updateChildren();
 	}
 	
+	public String getElementType() {
+		return "borderpane";
+	}
+	
 	public void setSpacing( double spacing ) {
 		this.spacing = spacing;
 		update();

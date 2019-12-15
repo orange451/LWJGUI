@@ -17,4 +17,8 @@ public class Label extends Labeled {
 		this.setText(text);
 		this.setGraphic(graphic);
 	}
+
+	public String getElementType() {
+		return "label";
+	}
 }

@@ -1,5 +1,8 @@
 package lwjgui.scene;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
@@ -18,6 +21,7 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.geometry.Resizable;
 import lwjgui.geometry.VPos;
+import lwjgui.style.Stylesheet;
 import lwjgui.util.Bounds;
 
 public abstract class Node implements Resizable {
@@ -37,6 +41,10 @@ public abstract class Node implements Resizable {
 	protected Pos alignment = Pos.CENTER;
 
 	protected Bounds nodeBounds = new Bounds(0, 0, 0, 0);
+	
+	private String id;
+	
+	private Stylesheet stylesheet;
 	
 	/*
 	 * Event Handlers
@@ -218,11 +226,119 @@ public abstract class Node implements Resizable {
 		
 		cached_context = LWJGUI.getCurrentContext();
 
+		idToNode.clear();
+		descendents.clear();
+		
 		updateChildren();
 		resize();
 		computeAbsolutePosition();
+		
+		registerToParent(this, this.getParent());
 	}
 	
+	private HashMap<String, Node> idToNode = new HashMap<>();
+	private ArrayList<Node> descendents = new ArrayList<Node>();
+	private ArrayList<String> classList = new ArrayList<String>();
+	
+	private void registerToParent(Node node, Node parent) {
+		if ( parent == null )
+			return;
+		
+		parent.idToNode.put(node.getElementId(), node);
+		parent.descendents.add(node);
+		registerToParent(node, parent.getParent());
+	}
+	
+	public void setStyle(String css) {
+		this.stylesheet = new Stylesheet(css);
+		this.stylesheet.compile();
+	}
+	
+	public Stylesheet getStyle() {
+		return this.stylesheet;
+	}
+	
+	/**
+	 * Returns the first descendant element that has the matching id.
+	 * @param id
+	 * @return
+	 */
+	public Node getElementById(String id) {
+		return idToNode.get(id);
+	}
+	
+	/**
+	 * Returns a list of all descendant elements with the matching tag (Element Type)
+	 * @param tag
+	 * @return
+	 */
+	public ArrayList<Node> getElementsByTag(String tag) {
+		ArrayList<Node> ret = new ArrayList<Node>();
+		
+		for (int i = 0; i < descendents.size(); i++) {
+			if ( i >= descendents.size() )
+				continue;
+			
+			Node t = descendents.get(i);
+			if ( t == null )
+				continue;
+			
+			if ( t.getElementType().equals(tag) )
+				ret.add(t);
+		}
+		
+		return ret;
+	}
+	
+	/**
+	 * returns a list of all descendant elements with the matching class name in its class list.
+	 * @param className
+	 * @return
+	 */
+	public ArrayList<Node> getElementsByClassName(String className) {
+		ArrayList<Node> ret = new ArrayList<Node>();
+		
+		for (int i = 0; i < descendents.size(); i++) {
+			if ( i >= descendents.size() )
+				continue;
+			
+			Node t = descendents.get(i);
+			if ( t == null )
+				continue;
+			
+			if ( t.getClassList().contains(className) )
+				ret.add(t);
+		}
+		
+		return ret;
+	}
+	
+	/**
+	 * Returns this elements class list. Used primarily for styling.
+	 * @return
+	 */
+	public ArrayList<String> getClassList() {
+		return this.classList;
+	}
+	
+	/**
+	 * Set the unique ID for this Node. Can be querried via context#getNodeById()
+	 * @param id
+	 */
+	public void setElementId(String id) {
+		if ( id == null )
+			id = "";
+		this.id = id;
+	}
+	
+	/**
+	 * Get the unique ID for this node.
+	 * @param id
+	 */
+	public String getElementId() {
+		return this.id;
+	}
+
 	/**
 	 * Calculates the bounding of this node based on its own position and the positions of its children. Meant to be used for some rendering (E.G. filling in the background) 
 	 * and input handling (ensuring that every child in the node is clickable).
@@ -864,6 +980,8 @@ public abstract class Node implements Resizable {
 			return minY;
 		}
 	}
+	
+	public abstract String getElementType();
 	
 	protected void onMousePressed(double mouseX, double mouseY, int button) {
 		mousePressed = true;

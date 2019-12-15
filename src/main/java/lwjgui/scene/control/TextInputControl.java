@@ -1270,6 +1270,10 @@ public abstract class TextInputControl extends Control implements StyleBorder,St
 			this.flag_clip = true;
 		}
 		
+		public String getElementType() {
+			return "textcontentpane";
+		}
+		
 		private long lastTime;
 		@Override
 		public void render(Context context) {

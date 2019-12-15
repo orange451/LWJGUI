@@ -20,6 +20,10 @@ public class DraggablePane extends StickyPane {
 			drag(e);
 		});
 	}
+
+	public String getElementType() {
+		return "draggablepane";
+	}
 	
 	protected void select(MouseEvent e) {
 		anchor.set(e.mouseX - this.getX(), e.mouseY - this.getY());

@@ -53,4 +53,7 @@ public class VBox extends DirectionalBox {
 		//return this.getMaxElementWidth();
 		return 0;//getPadding().getWidth();//getWidth()-this.getInnerBounds().getWidth();
 	}
+	public String getElementType() {
+		return "vbox";
+	}
 }

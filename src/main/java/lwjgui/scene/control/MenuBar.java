@@ -52,6 +52,11 @@ public class MenuBar extends FillableRegion {
 			}
 		});
 	}
+	
+
+	public String getElementType() {
+		return "menubar";
+	}
 
 	protected void recalculate() {
 		internalBox.getChildren().clear();

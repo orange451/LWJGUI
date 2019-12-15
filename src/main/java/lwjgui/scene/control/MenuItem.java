@@ -32,6 +32,10 @@ public class MenuItem extends Node {
 		this(string, font, null);
 	}
 	
+	public String getElementType() {
+		return "menuitem";
+	}
+	
 	public MenuItem(String string, Font font, Node graphic) {
 		if (string != null) {
 			setContent(string, font, graphic);

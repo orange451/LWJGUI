@@ -53,6 +53,10 @@ public class ColorPicker extends ButtonBase {
 	public ColorPicker() {
 		this(Color.WHITE);
 	}
+
+	public String getElementType() {
+		return "colorpicker";
+	}
 	
 	public void setColor(Color color) {
 		if ( color == null )

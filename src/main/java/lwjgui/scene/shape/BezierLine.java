@@ -13,6 +13,10 @@ public class BezierLine extends Shape {
 	public boolean isResizeable() {
 		return false;
 	}
+
+	public String getElementType() {
+		return "bezier";
+	}
 	
 	/**
 	 * Equivalent to setAbsolutePosition(). This method is purely syntax sugar to make the start/end points more clear from a writing perspective.

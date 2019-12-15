@@ -4,7 +4,6 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
-import lwjgui.scene.Node;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
@@ -75,7 +74,7 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			this.setBorderStyle(BorderStyle.SOLID);
 
 			Color shadowColor = new Color(Color.BLACK).alpha(0);
-			this.shadow = new BoxShadow(8, 8, 24, -4, shadowColor);
+			this.shadow = new BoxShadow(0, 8, 24, -4, shadowColor);
 			this.getBoxShadowList().add(shadow);
 
 			this.outline = new BoxShadow(0, 0, 0, 1, color.alpha(0.5f));
@@ -156,6 +155,10 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 		
 		public BootStrapButton(Color color, String text) {
 			this(color, text, false);
+		}
+
+		public String getElementType() {
+			return "button";
 		}
 	}
 }

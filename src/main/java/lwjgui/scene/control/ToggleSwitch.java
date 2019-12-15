@@ -61,6 +61,10 @@ public class ToggleSwitch extends Labeled implements Toggle {
 		selected = b;
 	}
 	
+	public String getElementType() {
+		return "toggle";
+	}
+	
 	class ToggleSwitchButton extends Pane {
 		protected Pane track;
 		protected Button button;
@@ -96,6 +100,10 @@ public class ToggleSwitch extends Labeled implements Toggle {
 						
 						EventHelper.fireEvent(button.buttonInternalEvent, new ActionEvent());
 					});
+				}
+
+				public String getElementType() {
+					return "toggletrack";
 				}
 				
 				@Override
@@ -145,6 +153,10 @@ public class ToggleSwitch extends Labeled implements Toggle {
 				});
 			});
 			this.track.getChildren().add(button);
+		}
+		
+		public String getElementType() {
+			return "toggle";
 		}
 		
 		@Override

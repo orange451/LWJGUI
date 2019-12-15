@@ -17,4 +17,8 @@ public class StickyPane extends FloatingPane {
 	public void offset( double x, double y ) {
 		setAbsolutePosition( getX()+x, getY()+y );
 	}
+
+	public String getElementType() {
+		return "stickypane";
+	}
 }

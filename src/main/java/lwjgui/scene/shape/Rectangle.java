@@ -24,6 +24,10 @@ public class Rectangle extends Shape {
 	public Rectangle(double width, double height) {
 		this(width, height, 0, Theme.current().getText());
 	}
+
+	public String getElementType() {
+		return "rectangle";
+	}
 	
 	public void setCornerRadius(float cornerRadius) {
 		this.cornerRadius = cornerRadius;

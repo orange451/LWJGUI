@@ -38,4 +38,8 @@ public class BackgroundSolid extends Background {
 		return this.color;
 	}
 
+	@Override
+	public String toString() {
+		return "BackgroundSolid("+color+")";
+	}
 }

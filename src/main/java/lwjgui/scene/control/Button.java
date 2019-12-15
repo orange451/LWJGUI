@@ -18,6 +18,10 @@ public class Button extends ButtonBase {
 		this.setText(name);
 		this.setGraphic(graphic);
 	}
+
+	public String getElementType() {
+		return "button";
+	}
 	
 	@Override
 	public boolean isResizeable() {

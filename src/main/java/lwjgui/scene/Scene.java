@@ -23,6 +23,10 @@ public class Scene extends Node {
 		setRoot(root);
 		this.setPrefSize(prefWidth, prefHeight);
 	}
+	
+	public String getElementType() {
+		return "scene";
+	}
 
 	@Override
 	public double getX() {
@@ -65,6 +69,9 @@ public class Scene extends Node {
 		
 		// Tick Transitions first so that any changes are reflected in the rendering
 		TransitionManager.tick();
+		
+		// Reset stylesheet stack
+		context.getCurrentStyling().clear();
 
 		// Stretch to match screen
 		root.setPrefSize(getWidth(), getHeight());

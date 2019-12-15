@@ -81,6 +81,10 @@ public class ScrollPane extends Pane {
 		});
 	}
 
+	public String getElementType() {
+		return "scrollpane";
+	}
+
 	@Override
 	public boolean isResizeable() {
 		return false;
@@ -354,6 +358,10 @@ public class ScrollPane extends Pane {
 			this.flag_clip = true;
 			this.setBackgroundLegacy(null);
 			this.setAlignment(Pos.TOP_LEFT);
+		}
+		
+		public String getElementType() {
+			return "scrollcanvas";
 		}
 		
 		public void setParent(Node node) {

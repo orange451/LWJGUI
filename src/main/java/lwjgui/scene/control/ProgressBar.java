@@ -24,6 +24,10 @@ public class ProgressBar extends Control {
 	public double getProgress() {
 		return this.progress;
 	}
+
+	public String getElementType() {
+		return "progressbar";
+	}
 	
 	@Override
 	public void render(Context context) {

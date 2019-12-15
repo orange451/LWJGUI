@@ -33,6 +33,10 @@ public class CombinedButton extends Control {
 			this.buttons.add(buttons[i]);
 		}
 	}
+
+	public String getElementType() {
+		return "combinedbutton";
+	}
 	
 	@Override
 	protected void resize() {

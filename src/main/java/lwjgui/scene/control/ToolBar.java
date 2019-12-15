@@ -42,6 +42,10 @@ public class ToolBar extends Control {
 		});
 	}
 
+	public String getElementType() {
+		return "toolbar";
+	}
+
 	public void setOrientation(Orientation orientation) {
 		this.orientation = orientation;
 		

@@ -94,6 +94,7 @@ public class FlowPane extends FillableRegion {
 		} else {
 			this.internalBox.setFillToParentWidth(true);
 		}
+		this.internalBox.setBackground(null);
 		this.internalBox.setSpacing((this.internalBox instanceof HBox)?hgap:vgap);
 		this.internalBox.setAlignment(this.getAlignment());
 		this.getChildren().add(this.internalBox);
@@ -103,6 +104,7 @@ public class FlowPane extends FillableRegion {
 			current = new VBox();
 		current.setSpacing((current instanceof HBox)?hgap:vgap);
 		current.setAlignment(this.getAlignment());
+		current.setBackground(null);
 		this.internalBox.getChildren().add(current);
 		
 		float currentLen = 0;
@@ -126,6 +128,7 @@ public class FlowPane extends FillableRegion {
 					current = new VBox();
 				current.setSpacing((current instanceof HBox)?hgap:vgap);
 				current.setAlignment(this.getAlignment());
+				current.setBackground(null);
 				this.internalBox.getChildren().add(current);
 				currentLen = 0;
 				

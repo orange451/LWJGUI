@@ -39,7 +39,25 @@ public abstract class Pane extends FillableRegion implements StyleBorder,StyleBa
 
 	@Override
 	protected void position(Node parent) {
+
+		if ( this.cached_context != null ) {
+			// Add our sheet to the stack
+			if ( this.getStyle() != null )
+				this.cached_context.getCurrentStyling().add(this.getStyle());
+			
+			// Apply styling!
+			for (int i = 0; i < cached_context.getCurrentStyling().size(); i++) {
+				cached_context.getCurrentStyling().get(i).applyStyling(this);
+			}
+		}
+		
 		super.position(parent);
+
+		// Remove our sheet from the stack
+		if ( this.cached_context != null ) {
+			if ( this.getStyle() != null )
+				cached_context.getCurrentStyling().remove(this.getStyle());
+		}
 	}
 
 	/**

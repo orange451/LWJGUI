@@ -23,10 +23,12 @@ public class CSSExample extends LWJGUIApplication {
 		pane.getChildren().add(styledPane);
 		
 		// Apply some style!
-		pane.setStyle("stackpane { background-color:rgb(240,240,240) } .TestStyle { width:100px; height:100px; border-style:solid; border-radius:8px; }");
+		pane.setStyle("stackpane { background-color:rgb(240,240,240) } .TestStyle { width:100px; height:100px; }");
 		styledPane.setStyle(""
-				+ ".TestStyle { "
+				+ ".TestStyle {"
 				+ "		background-color:red;"
+				+ "		border-style:solid;"
+				+ "		border-radius:8px;"
 				+ "		border-color:rgba(0,0,0,0.75);"
 				+ "		border-width:1px;"
 				+ "}"

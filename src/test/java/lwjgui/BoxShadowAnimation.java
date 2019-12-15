@@ -1,11 +1,14 @@
 package lwjgui;
 
 import lwjgui.geometry.Insets;
+import lwjgui.geometry.Orientation;
+import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Node;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
+import lwjgui.scene.layout.FlowPane;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.StackPane;
@@ -25,14 +28,23 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 		// Create a simple root pane
 		StackPane pane = new StackPane();
 		
-		HBox hbox = new HBox();
-		hbox.setSpacing(8);
-		pane.getChildren().add(hbox);
+		FlowPane flow = new FlowPane();
+		flow.setAlignment(Pos.CENTER);
+		flow.setFillToParentWidth(true);
+		flow.setOrientation(Orientation.HORIZONTAL);
+		flow.setHgap(8);
+		flow.setVgap(8);
+		pane.getChildren().add(flow);
 		
 		// Create buttons
-		hbox.getChildren().add(new BootStrapButton(new Color("#007bff"), "Click Me"));
-		hbox.getChildren().add(new BootStrapButton(new Color("#6c757d"), "Secondary"));
-		hbox.getChildren().add(new BootStrapButton(new Color("#28a745"), "Success"));
+		flow.getItems().add(new BootStrapButton(new Color("#007bff"), "Click Me"));
+		flow.getItems().add(new BootStrapButton(new Color("#6c757d"), "Secondary"));
+		flow.getItems().add(new BootStrapButton(new Color("#28a745"), "Success"));
+		flow.getItems().add(new BootStrapButton(new Color("#dc3545"), "Danger"));
+		flow.getItems().add(new BootStrapButton(new Color("#ffc107"), "Warning", true));
+		flow.getItems().add(new BootStrapButton(new Color("#17a2b8"), "Info"));
+		flow.getItems().add(new BootStrapButton(new Color("#f8f9fa"), "Light", true));
+		flow.getItems().add(new BootStrapButton(new Color("#343a40"), "Dark"));
 
 		// Create a new scene
 		window.setScene(new Scene(pane, WIDTH, HEIGHT));
@@ -48,8 +60,8 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 		private float rad = 0;
 		private BoxShadow outline;
 		private BoxShadow shadow;
-		
-		public BootStrapButton(Color color, String text) {
+
+		public BootStrapButton(Color color, String text, boolean darkText ) {
 			color.immutable(true);
 			
 			this.setBackgroundLegacy(color);
@@ -67,7 +79,8 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			
 			// Label
 			this.label = new Label(text);
-			this.label.setTextFill(Color.WHITE);
+			if ( !darkText )
+				this.label.setTextFill(Color.WHITE);
 			this.label.setMouseTransparent(true);
 			this.getChildren().add(label);
 			
@@ -97,6 +110,10 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 				if ( hovered )
 					this.setBackgroundLegacy(color.brighter());
 			});
+		}
+		
+		public BootStrapButton(Color color, String text) {
+			this(color, text, false);
 		}
 		
 		private float tween(double value1, double value2, double ratio) {

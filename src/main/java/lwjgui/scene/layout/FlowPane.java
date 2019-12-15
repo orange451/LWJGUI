@@ -5,6 +5,7 @@ import org.joml.Vector2f;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Orientation;
+import lwjgui.geometry.Pos;
 import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Node;
 
@@ -71,6 +72,18 @@ public class FlowPane extends FillableRegion {
 		super.position(parent);
 	}
 	
+	public void setAlignment(Pos pos) {
+		super.setAlignment(pos);
+		
+		if ( this.internalBox == null )
+			return;
+		
+		this.internalBox.setAlignment(pos);
+		for (int i = 0; i < this.internalBox.getChildren().size(); i++) {
+			this.internalBox.getChildren().get(i).setAlignment(pos);
+		}
+	}
+	
 	protected void rebuild() {
 		this.getChildren().clear();
 		
@@ -80,12 +93,14 @@ public class FlowPane extends FillableRegion {
 		this.internalBox.setSpacing((this.internalBox instanceof HBox)?hgap:vgap);
 		this.internalBox.setFillToParentWidth(true);
 		this.internalBox.setFillToParentHeight(true);
+		this.internalBox.setAlignment(this.getAlignment());
 		this.getChildren().add(this.internalBox);
 		
 		DirectionalBox current = new HBox();
 		if ( this.orientation.equals(Orientation.VERTICAL ) )
 			current = new VBox();
 		current.setSpacing((current instanceof HBox)?hgap:vgap);
+		current.setAlignment(this.getAlignment());
 		this.internalBox.getChildren().add(current);
 		
 		float currentLen = 0;
@@ -108,6 +123,7 @@ public class FlowPane extends FillableRegion {
 				if ( this.orientation.equals(Orientation.VERTICAL ) )
 					current = new VBox();
 				current.setSpacing((current instanceof HBox)?hgap:vgap);
+				current.setAlignment(this.getAlignment());
 				this.internalBox.getChildren().add(current);
 				currentLen = 0;
 				

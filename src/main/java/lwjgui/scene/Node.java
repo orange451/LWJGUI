@@ -2,6 +2,7 @@ package lwjgui.scene;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFW;
@@ -21,6 +22,7 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.geometry.Resizable;
 import lwjgui.geometry.VPos;
+import lwjgui.style.StyleTransition;
 import lwjgui.style.Stylesheet;
 import lwjgui.util.Bounds;
 
@@ -47,6 +49,7 @@ public abstract class Node implements Resizable {
 	private Stylesheet stylesheet;
 	private String localStyle;
 	private Stylesheet localStylesheet;
+	private Map<String, StyleTransition> styleTransitions = new HashMap<>();
 	
 	/*
 	 * Event Handlers
@@ -292,6 +295,24 @@ public abstract class Node implements Resizable {
 	 */
 	protected Stylesheet getStyleLocal() {
 		return this.localStylesheet;
+	}
+	
+	/**
+	 * Returns a specific style transition attached to a property in this node. NULL if no transition is specified.
+	 * @param name
+	 * @return
+	 */
+	public StyleTransition getStyleTransition(String property) {
+		return this.styleTransitions.get(property);
+	}
+
+	/**
+	 * Sets the specific style transition attached to a property in this node.
+	 * @param property
+	 * @param styleTransition
+	 */
+	public void setStyleTransition(String property, StyleTransition styleTransition) {
+		this.styleTransitions.put(property, styleTransition);
 	}
 	
 	/**
@@ -1381,5 +1402,4 @@ public abstract class Node implements Resizable {
 	public boolean isClicked() {
 		return this.isHover() && this.cached_context.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT;
 	}
-
 }

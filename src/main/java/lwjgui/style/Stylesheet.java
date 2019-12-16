@@ -3,7 +3,12 @@ package lwjgui.style;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import lwjgui.scene.Node;
 
@@ -44,25 +49,36 @@ public class Stylesheet {
 		if ( data == null )
 			return false;
 		
+		// Start list of operations
+		Map<String, StyleOperationValue> operations = new HashMap<>();
+		
 		// Apply the styling!
-		applyStyling(node, data, "normal");
+		getStyling(node, data, "normal", operations);
 		if ( node.isHover() )
-			applyStyling(node, data, "hover");
+			getStyling(node, data, "hover", operations);
 		if ( node.isSelected() )
-			applyStyling(node, data, "focus");
+			getStyling(node, data, "focus", operations);
 		if ( node.isClicked() )
-			applyStyling(node, data, "active");
+			getStyling(node, data, "active", operations);
+		
+		// Iterate over operations and apply
+		Iterator<Entry<String, StyleOperationValue>> iterator = operations.entrySet().iterator();
+		while(iterator.hasNext()) {
+			Entry<String, StyleOperationValue> val = iterator.next();
+			val.getValue().process(node);
+		}
 		
 		return true;
 	}
 	
-	private void applyStyling(Node node, StyleData data, String methodType) {
+	private void getStyling(Node node, StyleData data, String methodType, Map<String, StyleOperationValue> operationSet) {
 		List<StyleOperationValue> operations = data.getStyleOperations(methodType);
 		if ( operations.size() <= 0 )
 			return;
 		
 		for (int i = 0; i < operations.size(); i++) {
-			operations.get(i).process(node);
+			StyleOperationValue op = operations.get(i);
+			operationSet.put(op.getName(), op);
 		}
 	}
 
@@ -123,8 +139,13 @@ public class Stylesheet {
 			if (c == ';') {
 				String currentVal = t.toString().trim();
 				StyleVarArgs val = parseArgs(currentVal);
-				if ( val != null )
-					data.put(currentKey, val);
+				if ( val != null ) {
+					if ( data.containsKey(currentKey) ) {
+						data.get(currentKey).add(val);
+					} else {
+						data.put(currentKey, val);
+					}
+				}
 				currentKey = null;
 				t.setLength(0);
 				continue;
@@ -138,8 +159,13 @@ public class Stylesheet {
 		if ( t.length() > 0 && currentKey != null ) {
 			String currentVal = t.toString().trim();
 			StyleVarArgs val = parseArgs(currentVal);
-			if ( val != null )
-				data.put(currentKey, val);
+			if ( val != null ) {
+				if ( data.containsKey(currentKey) ) {
+					data.get(currentKey).add(val);
+				} else {
+					data.put(currentKey, val);
+				}
+			}
 			t.setLength(0);
 		}
 		
@@ -179,6 +205,10 @@ public class Stylesheet {
 	 * @return
 	 */
 	private StyleVarArgs parseArgs(String content) {
+		content = content.replace(", ", ",");
+		
+		StyleVarArgs arguments = new StyleVarArgs();
+		
 		ArrayList<Object> temp = new ArrayList<Object>();
 		String current = "";
 		boolean inFunction = false;
@@ -190,11 +220,22 @@ public class Stylesheet {
 				if ( i+1 == content.length() && !inFunction )
 					current += c;
 				
+				// Get the value from the param
 				String t = current.trim();
 				current = "";
 				Object o = parseVal(t);
-				if ( o != null ) {
+				
+				// Add current params as an argument, and reset.
+				if ( o != null )
 					temp.add(o);
+				
+				// If this is the last character, Add current params as an argument, and reset.
+				if ( i+1 == content.length() && !inFunction ) {
+					StyleParams params = new StyleParams(temp.toArray(new Object[temp.size()]));
+					if ( params.size() > 0 ) {
+						arguments.add(params);
+						temp.clear();
+					}
 				}
 			} else {
 				if ( c == '(' ) {
@@ -212,14 +253,25 @@ public class Stylesheet {
 					}
 					current = "";
 					continue;
+				} else if ( c == ',' && !inFunction ) { // Add current params as an argument, and reset.
+					// Get the value from the param
+					String t = current.trim();
+					current = "";
+					Object o = parseVal(t);
+					
+					// Add current params as an argument, and reset.
+					if ( o != null )
+						temp.add(o);
+					
+					arguments.add(new StyleParams(temp.toArray(new Object[temp.size()])));
+					temp.clear();
+					current = "";
 				} else {
 					current = current + c;
 				}
 			}
 		}
-		
-		Object[] objs = temp.toArray(new Object[temp.size()]);
-		return new StyleVarArgs(objs);
+		return arguments;
 	}
 
 	/**
@@ -417,9 +469,42 @@ public class Stylesheet {
 }
 
 class StyleVarArgs {
-	private ArrayList<Object> values = new ArrayList<Object>();
+	private List<StyleParams> params = new ArrayList<>();
 	
-	public StyleVarArgs(Object...objects) {
+	public StyleVarArgs(StyleParams...params) {
+		for (int i = 0; i < params.length; i++) {
+			this.params.add(params[i]);
+		}
+	}
+	
+	public void add(StyleVarArgs val) {
+		for (int i = 0; i < val.size(); i++) {
+			this.add(val.get(i));
+		}
+	}
+
+	public void add(StyleParams styleParams) {
+		params.add(styleParams);
+	}
+
+	public int size() {
+		return params.size();
+	}
+	
+	public StyleParams get(int index) {
+		return params.get(index);
+	}
+	
+	@Override
+	public String toString() {
+		return Arrays.toString(params.toArray(new Object[params.size()]));
+	}
+}
+
+class StyleParams {
+	private List<Object> values = new ArrayList<Object>();
+	
+	public StyleParams(Object...objects) {
 		for (int i = 0; i < objects.length; i++) {
 			values.add(objects[i]);
 		}
@@ -440,8 +525,20 @@ class StyleVarArgs {
 }
 
 abstract class StyleOperation {
+	private String name;
+	
 	public StyleOperation(String key) {
+		this.name = key;
 		StyleOperations.operations.put(key, this);
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 
 	public abstract void process(Node node, StyleVarArgs value);
@@ -456,7 +553,41 @@ class StyleOperationValue {
 		this.operation = operation;
 	}
 	
+	public String getName() {
+		return this.operation.getName();
+	}
+
 	public void process(Node node) {
 		operation.process(node, value);
+	}
+	
+	@Override
+	public String toString() {
+		return operation + " " + value;
+	}
+	
+	public int hashCode() {
+		return operation.getName().hashCode();
+	}
+	
+	public boolean equals(Object o) {
+		if ( o == null )
+			return false;
+		
+		if ( o == this )
+			return true;
+		
+		if ( o.getClass() != this.getClass() )
+			return false;
+		
+		StyleOperationValue other = (StyleOperationValue)o;
+		
+		if ( !other.operation.equals(this.operation) )
+			return false;
+		
+		if ( !other.value.equals(this.value) )
+			return false;
+		
+		return true;
 	}
 }

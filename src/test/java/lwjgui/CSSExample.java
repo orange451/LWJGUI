@@ -43,7 +43,6 @@ public class CSSExample extends LWJGUIApplication {
 				+ ""
 				+ ".TestStyle:hover {"
 				+ "		background-color: #1e86f7;"
-				+ "		box-shadow: 8px 8px 32px;"
 				+ "}"
 				+ ""
 				+ ".TestStyle:focus {"

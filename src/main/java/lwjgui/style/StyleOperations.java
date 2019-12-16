@@ -152,11 +152,21 @@ public class StyleOperations {
 				if ( value.size() == 2 ) {
 					t.getBoxShadowList().add(new BoxShadow(toNumber(value.get(0)), toNumber(value.get(1)), 0));
 				} else if ( value.size() == 3 ) {
-					t.getBoxShadowList().add(new BoxShadow(
-							toNumber(value.get(0)),
-							toNumber(value.get(1)),
-							toNumber(value.get(2))
-					));
+					boolean isNumber = isNumber(value.get(2));
+					if ( isNumber ) {
+						t.getBoxShadowList().add(new BoxShadow(
+								toNumber(value.get(0)),
+								toNumber(value.get(1)),
+								toNumber(value.get(2))
+						));
+					} else {
+						t.getBoxShadowList().add(new BoxShadow(
+								toNumber(value.get(0)),
+								toNumber(value.get(1)),
+								16,
+								getColor(value.get(2))
+						));
+					}
 				} else if ( value.size() == 4 ) {
 					t.getBoxShadowList().add(new BoxShadow(
 							toNumber(value.get(0)),
@@ -203,6 +213,15 @@ public class StyleOperations {
 			return (float) Double.parseDouble(value.toString());
 		} catch(Exception e) {
 			return 0;
+		}
+	}
+	
+	protected static boolean isNumber(Object value) {
+		try {
+			Double.parseDouble(value.toString());
+			return true;
+		} catch(Exception e) {
+			return false;
 		}
 	}
 

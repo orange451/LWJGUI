@@ -10,7 +10,7 @@ import lwjgui.scene.Context;
 import lwjgui.theme.Theme;
 
 public class RadioButton extends ToggleButton {
-	private int size = 18;
+	private int size = 16;
 
 	public RadioButton( String name, ToggleGroup group ) {
 		super(name, group);

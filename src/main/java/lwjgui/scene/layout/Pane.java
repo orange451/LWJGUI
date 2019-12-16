@@ -1,7 +1,5 @@
 package lwjgui.scene.layout;
 
-import org.lwjgl.nanovg.NanoVG;
-
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.paint.Color;
@@ -15,7 +13,6 @@ import lwjgui.style.StyleBorder;
 import lwjgui.style.StyleBoxShadow;
 import lwjgui.scene.Context;
 import lwjgui.scene.FillableRegion;
-import lwjgui.theme.Theme;
 
 public abstract class Pane extends FillableRegion implements StyleBorder,StyleBackground,StyleBoxShadow {
 	
@@ -27,7 +24,7 @@ public abstract class Pane extends FillableRegion implements StyleBorder,StyleBa
 	private ObservableList<BoxShadow> boxShadows = new ObservableList<>();
 	
 	public Pane() {
-		this.setBackground(new BackgroundSolid(Theme.current().getPane()));
+		this.setBackground(null);
 		this.setPrefSize(1, 1);
 		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		

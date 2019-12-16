@@ -63,7 +63,7 @@ public class Menu extends MenuItem {
 	
 	@Override
 	public boolean isSelected() {
-		return super.isSelected() || this.isOpen();
+		return this.isHover() || this.isOpen();
 	}
 	
 	@Override

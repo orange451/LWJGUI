@@ -4,6 +4,7 @@ import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.Scene;
 import lwjgui.scene.layout.floating.FloatingPane;
+import lwjgui.theme.Theme;
 
 /**
  * Creates a node that exists above a scene. This is useful in situations where you need GUI elements such as right click context menus, and so on.
@@ -20,6 +21,8 @@ public abstract class PopupWindow extends FloatingPane {
 		}
 		this.setAbsolutePosition((int)absoluteX, (int)absoluteY);
 		this.position(scene);
+		
+		this.setBackgroundLegacy(Theme.current().getPane());
 		
 		scene.showPopup(this);
 		mouseEntered = false;

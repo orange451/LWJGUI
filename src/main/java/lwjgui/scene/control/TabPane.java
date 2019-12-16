@@ -61,6 +61,7 @@ public class TabPane extends Control {
 		this.contentPane = new StackPane() {
 			{
 				flag_clip = true;
+				this.setBackgroundLegacy(Theme.current().getPane());
 			}
 		};
 		this.internal.getChildren().add(contentPane);

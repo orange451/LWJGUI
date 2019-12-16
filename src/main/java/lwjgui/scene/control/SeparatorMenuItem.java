@@ -17,7 +17,6 @@ public class SeparatorMenuItem extends MenuItem {
 		
 		// Container panel to hold the separator line
 		StackPane test = new StackPane();
-		test.setBackgroundLegacy(null);
 		test.setFillToParentWidth(true);
 		test.setPrefHeight(8);
 		test.setPadding(new Insets(3));

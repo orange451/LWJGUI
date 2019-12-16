@@ -475,7 +475,7 @@ public class Window {
 		
 		// Clear screen
 		if ( isWindowAutoClear() ) {
-			Color c = Theme.current().getBackground();
+			Color c = Theme.current().getPane();
 			glClearColor(c.getRed()/255f, c.getGreen()/255f, c.getBlue()/255f,1);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 		}

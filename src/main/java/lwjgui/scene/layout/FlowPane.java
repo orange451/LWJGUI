@@ -24,6 +24,7 @@ public class FlowPane extends FillableRegion {
 	}
 	
 	public FlowPane(Orientation orientation) {
+		this.setAlignment(Pos.TOP_LEFT);
 		this.orientation = orientation;
 		
 		this.items.setAddCallback(new ElementCallback<Node>() {

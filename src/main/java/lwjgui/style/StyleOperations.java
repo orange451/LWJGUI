@@ -144,10 +144,33 @@ public class StyleOperations {
 			
 			StyleBoxShadow t = (StyleBoxShadow)node;
 			
-			if ( value.get(0).equals(NONE) )
+			if ( value.get(0).equals(NONE) ) {
 				t.getBoxShadowList().clear();
-			else {
-				t.getBoxShadowList().add(new BoxShadow(0, 0, 0, 4, Color.RED.alpha(0.5f)));
+			} else {
+				if ( value.size() == 2 ) {
+					t.getBoxShadowList().add(new BoxShadow(toNumber(value.get(0)), toNumber(value.get(1)), 0));
+				} else if ( value.size() == 3 ) {
+					t.getBoxShadowList().add(new BoxShadow(
+							toNumber(value.get(0)),
+							toNumber(value.get(1)),
+							toNumber(value.get(2))
+					));
+				} else if ( value.size() == 4 ) {
+					t.getBoxShadowList().add(new BoxShadow(
+							toNumber(value.get(0)),
+							toNumber(value.get(1)),
+							toNumber(value.get(2)),
+							toNumber(value.get(3))
+					));
+				} else if ( value.size() == 5 ) {
+					t.getBoxShadowList().add(new BoxShadow(
+							toNumber(value.get(0)),
+							toNumber(value.get(1)),
+							toNumber(value.get(2)),
+							toNumber(value.get(3)),
+							getColor(value.get(4))
+					));
+				}
 			}
 		}
 	};
@@ -156,9 +179,9 @@ public class StyleOperations {
 		return operations.get(key);
 	}
 
-	protected static double toNumber(Object value) {
+	protected static float toNumber(Object value) {
 		try {
-			return Double.parseDouble(value.toString());
+			return (float) Double.parseDouble(value.toString());
 		} catch(Exception e) {
 			return 0;
 		}

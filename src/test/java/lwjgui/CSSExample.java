@@ -1,7 +1,9 @@
 package lwjgui;
 
+import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
 
 public class CSSExample extends LWJGUIApplication {
@@ -22,30 +24,34 @@ public class CSSExample extends LWJGUIApplication {
 		styledPane.getClassList().add("TestStyle");
 		pane.getChildren().add(styledPane);
 		
+		Label label = new Label("Click Me!");
+		label.setTextFill(Color.WHITE);
+		label.setMouseTransparent(true);
+		styledPane.getChildren().add(label);
+		
 		// Apply some style!
-		pane.setStyle("stackpane { background-color:rgb(240,240,240) } .TestStyle { width:100px; height:100px; }");
+		pane.setStyle("stackpane { background-color:rgb(240,240,240) }");
 		styledPane.setStyle(""
 				+ ".TestStyle {"
-				+ "		background-color: red;"
+				+ "		background-color: #007bff;"
 				+ "		border-style: solid;"
 				+ "		border-radius: 8px;"
-				+ "		border-color: rgba(0,0,0,0.75);"
+				+ "		border-color: #0865cc;"
 				+ "		border-width: 1px;"
 				+ "		box-shadow: none;"
 				+ "}"
 				+ ""
 				+ ".TestStyle:hover {"
-				+ "		background-color:blue;"
-				+ "		box-shadow: 8px 8px 16px;"
+				+ "		background-color: #1e86f7;"
+				+ "		box-shadow: 8px 8px 32px;"
 				+ "}"
 				+ ""
 				+ ".TestStyle:focus {"
-				+ "		background-color:green;"
-				+ "		box-shadow: 0px 0px 0px 6px rgba(255,100,0,0.5);"
+				+ "		box-shadow: 0px 0px 0px 6px #007bff80;"
 				+ "}"
 				+ ""
 				+ ".TestStyle:active {"
-				+ "		background-color:yellow;"
+				+ "		background-color: #0e6bd2;"
 				+ "}");
 		
 		// Create a new scene

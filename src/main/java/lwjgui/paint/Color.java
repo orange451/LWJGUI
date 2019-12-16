@@ -166,7 +166,11 @@ public class Color {
 	 * @param hex e.g. #FFFFFF for white.
 	 */
 	public Color(String hex) {
-		this(Integer.valueOf(hex.substring(1, 3), 16), Integer.valueOf(hex.substring(3, 5), 16), Integer.valueOf(hex.substring(5, 7), 16));
+		if ( hex.length() == 7 )
+			set(Integer.valueOf(hex.substring(1, 3), 16), Integer.valueOf(hex.substring(3, 5), 16), Integer.valueOf(hex.substring(5, 7), 16), 255);
+		else if ( hex.length() == 9 ) {
+			set(Integer.valueOf(hex.substring(1, 3), 16), Integer.valueOf(hex.substring(3, 5), 16), Integer.valueOf(hex.substring(5, 7), 16), Integer.valueOf(hex.substring(7, 9), 16));
+		}
 	}
 
 	/**

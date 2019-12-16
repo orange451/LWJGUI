@@ -119,6 +119,48 @@ public class Color {
 	}
 
 	/**
+	 * Creates an opaque sRGB color with the specified red, green, and blue values
+	 * in the range (0.0 - 1.0). Alpha is defaulted to 1.0. The actual color used in
+	 * rendering depends on finding the best match given the color space available
+	 * for a particular output device.
+	 *
+	 * @throws IllegalArgumentException if <code>r</code>, <code>g</code> or
+	 *                                  <code>b</code> are outside of the range 0.0
+	 *                                  to 1.0, inclusive
+	 * @param r the red component
+	 * @param g the green component
+	 * @param b the blue component
+	 * @see #getRed
+	 * @see #getGreen
+	 * @see #getBlue
+	 * @see #getRGBA
+	 */
+	public Color(double r, double g, double b) {
+		this((int) (r * 255), (int) (g * 255), (int) (b * 255));
+	}
+
+	/**
+	 * Creates an opaque sRGB color with the specified red, green, and blue values
+	 * in the range (0.0 - 1.0). Alpha is defaulted to 1.0. The actual color used in
+	 * rendering depends on finding the best match given the color space available
+	 * for a particular output device.
+	 *
+	 * @throws IllegalArgumentException if <code>r</code>, <code>g</code> or
+	 *                                  <code>b</code> are outside of the range 0.0
+	 *                                  to 1.0, inclusive
+	 * @param r the red component
+	 * @param g the green component
+	 * @param b the blue component
+	 * @see #getRed
+	 * @see #getGreen
+	 * @see #getBlue
+	 * @see #getRGBA
+	 */
+	public Color(double r, double g, double b, double a) {
+		this((int) (r * 255), (int) (g * 255), (int) (b * 255), (int) (a * 255));
+	}
+
+	/**
 	 * Creates a Color from a given HEX value.
 	 * 
 	 * @param hex e.g. #FFFFFF for white.

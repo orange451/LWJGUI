@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import lwjgui.paint.Color;
 import lwjgui.scene.Node;
+import lwjgui.style.Stylesheet.StyleFunction;
 
 public class StyleOperations {
 	protected static HashMap<String, StyleOperation> operations = new HashMap<>();
@@ -13,87 +14,87 @@ public class StyleOperations {
 	
 	public static StyleOperation WIDTH = new StyleOperation("width") {
 		@Override
-		public void process(Node node, Object value) {
-			if ( value.equals(AUTO) )
-				value = 0;
+		public void process(Node node, StyleVarArgs value) {
+			if ( value.size() == 0 )
+				value = new StyleVarArgs(0);
 			
-			node.setPrefWidth(getNumber(value));
+			node.setPrefWidth(toNumber(value.get(0)));
 		}
 	};
 	
 	public static StyleOperation MIN_WIDTH = new StyleOperation("min-width") {
 		@Override
-		public void process(Node node, Object value) {
-			if ( value.equals(AUTO) )
-				value = 0;
+		public void process(Node node, StyleVarArgs value) {
+			if ( value.size() == 0 )
+				value = new StyleVarArgs(0);
 			
-			node.setMinWidth(getNumber(value));
+			node.setMinWidth(toNumber(value.get(0)));
 		}
 	};
 	
 	public static StyleOperation MAX_WIDTH = new StyleOperation("max-width") {
 		@Override
-		public void process(Node node, Object value) {
-			if ( value.equals(AUTO) )
-				value = Integer.MAX_VALUE;
+		public void process(Node node, StyleVarArgs value) {
+			if ( value.size() == 0 )
+				value = new StyleVarArgs(Integer.MAX_VALUE);
 			
-			node.setMaxWidth(getNumber(value));
+			node.setMaxWidth(toNumber(value.get(0)));
 		}
 	};
 	
 	public static StyleOperation HEIGHT = new StyleOperation("height") {
 		@Override
-		public void process(Node node, Object value) {
-			if ( value.equals(AUTO) )
-				value = 0;
+		public void process(Node node, StyleVarArgs value) {
+			if ( value.size() == 0 )
+				value = new StyleVarArgs(0);
 			
-			node.setPrefHeight(getNumber(value));
+			node.setPrefHeight(toNumber(value.get(0)));
 		}
 	};
 	
 	public static StyleOperation MIN_HEIGHT = new StyleOperation("min-height") {
 		@Override
-		public void process(Node node, Object value) {
-			if ( value.equals(AUTO) )
-				value = 0;
+		public void process(Node node, StyleVarArgs value) {
+			if ( value.size() == 0 )
+				value = new StyleVarArgs(0);
 			
-			node.setMinHeight(getNumber(value));
+			node.setMinHeight(toNumber(value.get(0)));
 		}
 	};
 	
 	public static StyleOperation MAX_HEIGHT = new StyleOperation("max-height") {
 		@Override
-		public void process(Node node, Object value) {
-			if ( value.equals(AUTO) )
-				value = Integer.MAX_VALUE;
+		public void process(Node node, StyleVarArgs value) {
+			if ( value.size() == 0 )
+				value = new StyleVarArgs(Integer.MAX_VALUE);
 			
-			node.setMaxHeight(getNumber(value));
+			node.setMaxHeight(toNumber(value.get(0)));
 		}
 	};
 	
 	public static StyleOperation BORDER_RADIUS = new StyleOperation("border-radius") {
 		@Override
-		public void process(Node node, Object value) {
+		public void process(Node node, StyleVarArgs value) {
 			if ( !(node instanceof StyleBorder) )
 				return;
 			
 			StyleBorder t = (StyleBorder)node;
-			if ( value.toString().contains(",") ) {
+			if ( value.get(0).toString().contains(",") ) {
 				// Not implemented yet
 			} else {
-				t.setBorderRadii((float) getNumber(value));	
+				t.setBorderRadii((float) toNumber(value.get(0)));	
 			}
 		}
 	};
 	
 	public static StyleOperation BORDER_STYLE = new StyleOperation("border-style") {
 		@Override
-		public void process(Node node, Object value) {
+		public void process(Node node, StyleVarArgs value) {
 			if ( !(node instanceof StyleBorder) )
 				return;
 			
 			StyleBorder t = (StyleBorder)node;
-			BorderStyle bs = BorderStyle.valueOf(value.toString().toUpperCase());
+			BorderStyle bs = BorderStyle.valueOf(value.get(0).toString().toUpperCase());
 			if ( bs == null )
 				bs = BorderStyle.NONE;
 			
@@ -103,48 +104,51 @@ public class StyleOperations {
 	
 	public static StyleOperation BORDER_WIDTH = new StyleOperation("border-width") {
 		@Override
-		public void process(Node node, Object value) {
+		public void process(Node node, StyleVarArgs value) {
 			if ( !(node instanceof StyleBorder) )
 				return;
 			
 			StyleBorder t = (StyleBorder)node;
-			t.setBorderWidth((float)getNumber(value));
+			t.setBorderWidth((float)toNumber(value.get(0)));
 		}
 	};
 	
 	public static StyleOperation BORDER_COLOR = new StyleOperation("border-color") {
 		@Override
-		public void process(Node node, Object value) {
+		public void process(Node node, StyleVarArgs value) {
 			if ( !(node instanceof StyleBorder) )
 				return;
 			
 			StyleBorder t = (StyleBorder)node;
-			t.setBorderColor(getColor(value.toString()));
+			t.setBorderColor(getColor(value.get(0)));
 		}
 	};
 	
 	public static StyleOperation BACKGROUND_COLOR = new StyleOperation("background-color") {
 		@Override
-		public void process(Node node, Object value) {
+		public void process(Node node, StyleVarArgs value) {
 			if ( !(node instanceof StyleBackground) )
 				return;
 			
 			StyleBackground t = (StyleBackground)node;
-			Color color = getColor(value.toString());
+			Color color = getColor(value.get(0));
 			t.setBackground(new BackgroundSolid(color));
 		}
 	};
 	
 	public static StyleOperation BOX_SHADOW = new StyleOperation("box-shadow") {
 		@Override
-		public void process(Node node, Object value) {
+		public void process(Node node, StyleVarArgs value) {
 			if ( !(node instanceof StyleBoxShadow) )
 				return;
 			
 			StyleBoxShadow t = (StyleBoxShadow)node;
 			
-			if ( value.equals(NONE) )
+			if ( value.get(0).equals(NONE) )
 				t.getBoxShadowList().clear();
+			else {
+				t.getBoxShadowList().add(new BoxShadow(0, 0, 0, 4, Color.RED.alpha(0.5f)));
+			}
 		}
 	};
 
@@ -152,7 +156,7 @@ public class StyleOperations {
 		return operations.get(key);
 	}
 
-	protected static double getNumber(Object value) {
+	protected static double toNumber(Object value) {
 		try {
 			return Double.parseDouble(value.toString());
 		} catch(Exception e) {
@@ -160,32 +164,21 @@ public class StyleOperations {
 		}
 	}
 
-	protected static Color getColor(String string) {
-		
+	protected static Color getColor(Object arg) {
+
 		// Color by function
-		if ( (string.startsWith("rgb(") || string.startsWith("rgba(")) && string.endsWith(")") ) {
-			String str = string.replace("rgba(", "").replace("rgb(", "").replace(")", "");
-			String[] split = str.split(",");
-			Number[] vals = new Number[split.length];
-			for (int i = 0; i < split.length; i++) {
-				try {
-					Number test = Double.parseDouble(split[i].trim());
-					if ( test.intValue() == test.doubleValue() )
-						test = test.intValue();
-					
-					vals[i] = test;
-				} catch(Exception e) {
-					e.printStackTrace();
-					return Color.PINK;
-				}
-			}
+		if ( arg instanceof StyleFunction ) {
+			StyleFunction func = (StyleFunction)arg;
+			StyleVarArgs funcArgs = func.getArgs();
 			
-			int alpha = 255;
-			if ( vals.length == 4 )
-				alpha = (int) (vals[3].doubleValue() * 255);
+			if ( func.getName().equals("rgb") )
+				return new Color(toNumber(funcArgs.get(0))/255d, toNumber(funcArgs.get(1))/255d, toNumber(funcArgs.get(2))/255d);
 			
-			return new Color(vals[0].intValue(), vals[1].intValue(), vals[2].intValue(), alpha);
+			if ( func.getName().equals("rgba") )
+				return new Color(toNumber(funcArgs.get(0))/255d, toNumber(funcArgs.get(1))/255d, toNumber(funcArgs.get(2))/255d, toNumber(funcArgs.get(3)));
 		}
+		
+		String string = arg.toString();
 		
 		// Color by hex
 		if ( string.startsWith("#") ) {

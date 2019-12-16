@@ -93,10 +93,15 @@ public class Stylesheet {
 		}
 	}
 
+	/**
+	 * Parse all content for a selector
+	 * @param selectors
+	 * @param content
+	 */
 	private void parseContent(List<StyleSelector> selectors, String content) {
 		System.out.println("Found selectors (" + selectors.size() + "): " + Arrays.toString(selectors.toArray()));
 
-		HashMap<Object, Object> data = new HashMap<>();
+		HashMap<Object, StyleVarArgs> data = new HashMap<>();
 
 		String currentKey = null;
 		StringBuilder t = new StringBuilder();
@@ -113,8 +118,9 @@ public class Stylesheet {
 			// End key
 			if (c == ';') {
 				String currentVal = t.toString().trim();
-				Object val = parseVal(currentVal);
-				data.put(currentKey, val);
+				StyleVarArgs val = parseArgs(currentVal);
+				if ( val != null )
+					data.put(currentKey, val);
 				currentKey = null;
 				t.setLength(0);
 				continue;
@@ -124,11 +130,12 @@ public class Stylesheet {
 			t.append(c);
 		}
 		
-		// In case there was an unfinished one...
+		// In case there was an unfinished key...
 		if ( t.length() > 0 && currentKey != null ) {
 			String currentVal = t.toString().trim();
-			Object val = parseVal(currentVal);
-			data.put(currentKey, val);
+			StyleVarArgs val = parseArgs(currentVal);
+			if ( val != null )
+				data.put(currentKey, val);
 			t.setLength(0);
 		}
 		
@@ -161,9 +168,58 @@ public class Stylesheet {
 			});
 		}
 	}
+	
+	/**
+	 * Take a css value and parse it into a list of args
+	 * @param content
+	 * @return
+	 */
+	private StyleVarArgs parseArgs(String content) {
+		ArrayList<Object> temp = new ArrayList<Object>();
+		String current = "";
+		boolean inFunction = false;
+		StyleFunction sFunc = null;
+		for (int i = 0; i < content.length(); i++) {
+			char c = content.charAt(i);
+			
+			if ( (c == ' ' || i+1 == content.length()) && !inFunction ) {
+				if ( i+1 == content.length() && !inFunction )
+					current += c;
+				
+				String t = current.trim();
+				current = "";
+				Object o = parseVal(t);
+				if ( o != null ) {
+					temp.add(o);
+				}
+			} else {
+				if ( c == '(' ) {
+					inFunction = true;
+					sFunc = new StyleFunction(current.trim());
+					current = "";
+					continue;
+				} else if ( c == ')' ) {
+					inFunction = false;
+					StyleVarArgs argFunc = parseArgs(current.trim().replace(" ", "").replace(",", " "));
+					if ( argFunc.size() > 0 ) {
+						sFunc.args = argFunc;
+						temp.add(sFunc);
+						sFunc = null;
+					}
+					current = "";
+					continue;
+				} else {
+					current = current + c;
+				}
+			}
+		}
+		
+		Object[] objs = temp.toArray(new Object[temp.size()]);
+		return new StyleVarArgs(objs);
+	}
 
 	/**
-	 * Try to parse value into a number. Returns true otherwise.
+	 * Try to parse string to a value (number, percent, string).
 	 * 
 	 * @param value
 	 * @return
@@ -205,7 +261,7 @@ public class Stylesheet {
 	 * @param value
 	 * @return
 	 */
-	private Object parsePercent(String value) {
+	private Percentage parsePercent(String value) {
 		if (!value.endsWith("%"))
 			return null;
 
@@ -232,6 +288,28 @@ public class Stylesheet {
 		}
 
 		return ret;
+	}
+	
+	class StyleFunction {
+		protected StyleVarArgs args;
+		private String name;
+		
+		public StyleFunction(String name) {
+			this.name = name;
+		}
+		
+		public String getName() {
+			return this.name;
+		}
+		
+		public StyleVarArgs getArgs() {
+			return this.args;
+		}
+		
+		@Override
+		public String toString() {
+			return name + "(" + args + ")";
+		}
 	}
 
 	class StyleData {
@@ -334,19 +412,42 @@ public class Stylesheet {
 	}
 }
 
+class StyleVarArgs {
+	private ArrayList<Object> values = new ArrayList<Object>();
+	
+	public StyleVarArgs(Object...objects) {
+		for (int i = 0; i < objects.length; i++) {
+			values.add(objects[i]);
+		}
+	}
+	
+	public int size() {
+		return values.size();
+	}
+	
+	public Object get(int index) {
+		return values.get(index);
+	}
+	
+	@Override
+	public String toString() {
+		return Arrays.toString(values.toArray(new Object[values.size()]));
+	}
+}
+
 abstract class StyleOperation {
 	public StyleOperation(String key) {
 		StyleOperations.operations.put(key, this);
 	}
 
-	public abstract void process(Node node, Object value);
+	public abstract void process(Node node, StyleVarArgs value);
 }
 
 class StyleOperationValue {
 	private StyleOperation operation;
-	private Object value;
+	private StyleVarArgs value;
 	
-	public StyleOperationValue(StyleOperation operation, Object value) {
+	public StyleOperationValue(StyleOperation operation, StyleVarArgs value) {
 		this.value = value;
 		this.operation = operation;
 	}

@@ -249,7 +249,7 @@ public abstract class Node implements Resizable {
 		registerToParent(node, parent.getParent());
 	}
 	
-	public void setStyle(String css) {
+	public void setStylesheet(String css) {
 		this.stylesheet = new Stylesheet(css);
 		this.stylesheet.compile();
 	}

@@ -30,8 +30,8 @@ public class CSSExample extends LWJGUIApplication {
 		styledPane.getChildren().add(label);
 		
 		// Apply some style!
-		pane.setStyle("stackpane { background-color:rgb(240,240,240) }");
-		styledPane.setStyle(""
+		pane.setStylesheet("stackpane { background-color:rgb(240,240,240) }");
+		styledPane.setStylesheet(""
 				+ ".TestStyle {"
 				+ "		background-color: #007bff;"
 				+ "		border-style: solid;"

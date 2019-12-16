@@ -2,8 +2,10 @@ package lwjgui.style;
 
 import java.util.HashMap;
 
+import lwjgui.geometry.Insets;
 import lwjgui.paint.Color;
 import lwjgui.scene.Node;
+import lwjgui.scene.Region;
 import lwjgui.style.Stylesheet.StyleFunction;
 
 public class StyleOperations {
@@ -171,6 +173,23 @@ public class StyleOperations {
 							getColor(value.get(4))
 					));
 				}
+			}
+		}
+	};
+	
+	public static StyleOperation PADDING = new StyleOperation("padding") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof Region) )
+				return;
+			
+			Region region = (Region)node;
+			if ( value.size() == 1 ) {
+				region.setPadding(new Insets( toNumber(value.get(0)) ));
+			} else if ( value.size() == 2 ) {
+				region.setPadding(new Insets( toNumber(value.get(0)), toNumber(value.get(1)) ));
+			} else if ( value.size() == 4 ) {
+				region.setPadding(new Insets( toNumber(value.get(0)), toNumber(value.get(1)), toNumber(value.get(2)), toNumber(value.get(3)) ));
 			}
 		}
 	};

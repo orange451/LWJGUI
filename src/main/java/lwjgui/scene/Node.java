@@ -45,6 +45,8 @@ public abstract class Node implements Resizable {
 	private String id;
 	
 	private Stylesheet stylesheet;
+	private String localStyle;
+	private Stylesheet localStylesheet;
 	
 	/*
 	 * Event Handlers
@@ -249,13 +251,47 @@ public abstract class Node implements Resizable {
 		registerToParent(node, parent.getParent());
 	}
 	
+	/**
+	 * Set the stylesheet used to style this node and all descendent nodes to this node.
+	 * @param css
+	 */
 	public void setStylesheet(String css) {
 		this.stylesheet = new Stylesheet(css);
 		this.stylesheet.compile();
 	}
 	
-	public Stylesheet getStyle() {
+	/**
+	 * Returns the stylesheet object used to style this node and all descendent nodes to this node.
+	 * @return
+	 */
+	public Stylesheet getStylesheet() {
 		return this.stylesheet;
+	}
+	
+	/**
+	 * Set the local style used to directly style this node when drawing.
+	 * @param localStyle
+	 */
+	public void setStyle(String localStyle) {
+		this.localStyle = localStyle;
+		this.localStylesheet = new Stylesheet("NODESTYLE { " + this.localStyle + " }");
+		this.localStylesheet.compile();
+	}
+	
+	/**
+	 * Returns the local style used to directly style this node when drawing.
+	 * @return
+	 */
+	public String getStyle() {
+		return this.localStyle;
+	}
+	
+	/**
+	 * Returns the local stylesheet used to directly style this node when drawing.
+	 * @return
+	 */
+	protected Stylesheet getStyleLocal() {
+		return this.localStylesheet;
 	}
 	
 	/**

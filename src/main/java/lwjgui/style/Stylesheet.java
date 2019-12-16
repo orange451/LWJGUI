@@ -27,6 +27,10 @@ public class Stylesheet {
 			applyStyling(node, StyleSelectorType.CLASS, claz);
 		}
 	}
+	
+	public void applyStyling(Node node, String forceElementType) {
+		applyStyling(node, StyleSelectorType.TAG, forceElementType);
+	}
 
 	private boolean applyStyling(Node node, StyleSelectorType type, String id) {
 		StyleSelector selector = idToStyleSelector.get(id);

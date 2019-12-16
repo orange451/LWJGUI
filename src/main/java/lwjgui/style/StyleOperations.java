@@ -115,7 +115,27 @@ public class StyleOperations {
 				return;
 			
 			StyleBorder t = (StyleBorder)node;
-			t.setBorderWidth((float)toNumber(value.get(0).get(0)));
+			float destBorder = (float)toNumber(value.get(0).get(0));
+			float sourceBorder = t.getBorderWidth();
+			
+			// Border Width transition
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			if ( destBorder == sourceBorder || transition == null ) {
+				t.setBorderWidth(destBorder);
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				Transition tran = new Transition(transition.getDurationMillis()) {
+					@Override
+					public void tick(double progress) {
+						t.setBorderWidth(tween(sourceBorder, destBorder, progress));
+					}
+				};
+				tran.play();
+				current.add(tran);
+			}
 		}
 	};
 	
@@ -294,12 +314,46 @@ public class StyleOperations {
 				return;
 			
 			Region region = (Region)node;
+			Insets dest = null;
+			Insets source = region.getPadding();
+			
+			// Get dest padding
 			if ( value.get(0).size() == 1 ) {
-				region.setPadding(new Insets( toNumber(value.get(0).get(0)) ));
+				dest = new Insets( toNumber(value.get(0).get(0)) );
 			} else if ( value.get(0).size() == 2 ) {
-				region.setPadding(new Insets( toNumber(value.get(0).get(0)), toNumber(value.get(0).get(1)) ));
+				dest = new Insets( toNumber(value.get(0).get(0)), toNumber(value.get(0).get(1)) );
 			} else if ( value.get(0).size() == 4 ) {
-				region.setPadding(new Insets( toNumber(value.get(0).get(0)), toNumber(value.get(0).get(1)), toNumber(value.get(0).get(2)), toNumber(value.get(0).get(3)) ));
+				dest = new Insets( toNumber(value.get(0).get(0)), toNumber(value.get(0).get(1)), toNumber(value.get(0).get(2)), toNumber(value.get(0).get(3)) );
+			}
+			
+			// NPE
+			if ( dest == null )
+				return;
+			
+			// Transition
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			if ( dest.equals(source) || transition == null ) {
+				region.setPadding(dest);
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				final Insets destF = dest;
+				
+				Transition tran = new Transition(transition.getDurationMillis()) {
+					@Override
+					public void tick(double progress) {
+						Insets t = new Insets( tween(source.getTop(), destF.getTop(), progress),
+								tween(source.getRight(), destF.getRight(), progress),
+								tween(source.getBottom(), destF.getBottom(), progress),
+								tween(source.getLeft(), destF.getLeft(), progress));
+						
+						region.setPadding(t);
+					}
+				};
+				tran.play();
+				current.add(tran);
 			}
 		}
 	};

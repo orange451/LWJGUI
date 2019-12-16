@@ -7,8 +7,9 @@ import lwjgui.scene.Node;
 
 public class StyleOperations {
 	protected static HashMap<String, StyleOperation> operations = new HashMap<>();
-	
+
 	private final static String AUTO = "auto";
+	private final static String NONE = "none";
 	
 	public static StyleOperation WIDTH = new StyleOperation("width") {
 		@Override
@@ -131,6 +132,19 @@ public class StyleOperations {
 			StyleBackground t = (StyleBackground)node;
 			Color color = getColor(value.toString());
 			t.setBackground(new BackgroundSolid(color));
+		}
+	};
+	
+	public static StyleOperation BOX_SHADOW = new StyleOperation("box-shadow") {
+		@Override
+		public void process(Node node, Object value) {
+			if ( !(node instanceof StyleBoxShadow) )
+				return;
+			
+			StyleBoxShadow t = (StyleBoxShadow)node;
+			
+			if ( value.equals(NONE) )
+				t.getBoxShadowList().clear();
 		}
 	};
 

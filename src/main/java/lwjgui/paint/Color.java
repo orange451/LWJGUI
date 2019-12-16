@@ -1,9 +1,6 @@
 package lwjgui.paint;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joml.Vector4f;
 import org.lwjgl.nanovg.NVGColor;
 
@@ -620,10 +617,12 @@ public class Color {
 	}
 
 	public static Color match(String string) {
+		String matchName = string.toLowerCase();
+		
 		Field[] declaredFields = Color.class.getDeclaredFields();
 		for (Field field : declaredFields) {
 		    if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
-		    	if ( field.getName().toLowerCase().contains(string.toLowerCase())) {
+		    	if ( field.getName().toLowerCase().replace("_", " ").equals(matchName)) {
 		    		try {
 						return (Color) field.get(null);
 					} catch (IllegalArgumentException e) {

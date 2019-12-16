@@ -77,15 +77,6 @@ public abstract class Pane extends FillableRegion implements StyleBorder,StyleBa
 	@Override
 	public void render(Context context) {
 		
-		// Add our sheet to the stack
-		if ( this.getStyle() != null )
-			context.getCurrentStyling().add(this.getStyle());
-		
-		// Apply styling!
-		for (int i = 0; i < context.getCurrentStyling().size(); i++) {
-			context.getCurrentStyling().get(i).applyStyling(this);
-		}
-		
 		// Draw drop shadows
 		for (int i = 0; i < getBoxShadowList().size(); i++) {
 			BoxShadow shadow = getBoxShadowList().get(i);
@@ -114,10 +105,6 @@ public abstract class Pane extends FillableRegion implements StyleBorder,StyleBa
 		
 		// Draw children
 		super.render(context);
-
-		// Remove our sheet from the stack
-		if ( this.getStyle() != null )
-			context.getCurrentStyling().remove(this.getStyle());
 	}
 	
 	/**

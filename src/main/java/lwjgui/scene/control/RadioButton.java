@@ -16,8 +16,6 @@ public class RadioButton extends ToggleButton {
 		super(name, group);
 		this.setPadding(Insets.EMPTY);
 		this.setAlignment(Pos.CENTER_LEFT);
-		
-		this.textOffset = size+4;
 	}
 	
 	public RadioButton(String name) {
@@ -49,9 +47,9 @@ public class RadioButton extends ToggleButton {
 	@Override
 	public void render(Context context) {
 		//this.graphicLabel.offset.x = size + spacing;
-		//this.graphicLabel.alignment = Pos.CENTER_LEFT;
-		
+		//this.graphicLabel.alignment = Pos.CENTER_LEFT;		
 		this.setBorderRadii(size/2f);
+		this.textOffset = size+4;
 		
 		double wid = this.getWidth();
 		this.forceWidth(size);

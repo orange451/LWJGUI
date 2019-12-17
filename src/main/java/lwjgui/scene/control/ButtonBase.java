@@ -216,9 +216,6 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 		// Render standard pane
 		BlockPaneRenderer.render(context, this);
 		
-		// Draw children
-		super.render(context);
-		
 		// Text color?
 		if ( isDisabled() ) {
 			this.setTextFill(Theme.current().getShadow());

@@ -1,9 +1,12 @@
 package lwjgui;
 
+import lwjgui.geometry.Orientation;
+import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Label;
+import lwjgui.scene.layout.FlowPane;
 import lwjgui.scene.layout.StackPane;
 
 public class CSSExample extends LWJGUIApplication {
@@ -19,16 +22,17 @@ public class CSSExample extends LWJGUIApplication {
 		// Create a simple root pane
 		StackPane pane = new StackPane();
 		
-		// Create pane to be styled! :)
-		StackPane styledPane = new StackPane();
-		styledPane.getClassList().add("bootstrap-button");
-		styledPane.getClassList().add("button-success");
-		pane.getChildren().add(styledPane);
-		
-		Label label = new Label("Click Me!");
-		label.setTextFill(Color.WHITE);
-		label.setMouseTransparent(true);
-		styledPane.getChildren().add(label);
+		FlowPane flow = new FlowPane();
+		flow.setOrientation(Orientation.HORIZONTAL);
+		flow.setAlignment(Pos.CENTER);
+		flow.setFillToParentWidth(true);
+		flow.setFillToParentHeight(true);
+		flow.setHgap(6);
+		flow.setVgap(6);
+		pane.getChildren().add(flow);
+
+		createButton(flow, "Click Me!");
+		createButton(flow, "Success!", "button-success");
 		
 		// Apply some style!
 		pane.setStylesheet(""
@@ -47,7 +51,7 @@ public class CSSExample extends LWJGUIApplication {
 				+ "		background-color: #0976ea;"
 				+ "}"
 				+ ""
-				+ ".bootstrap-button:focus {"
+				+ ".bootstrap-button:select {"
 				+ "		box-shadow: 0px 0px 0px 4px #007bff80;"
 				+ "		border-color: #007bff;"
 				+ "}"
@@ -68,7 +72,7 @@ public class CSSExample extends LWJGUIApplication {
 				+ "		border-color: #218838;"
 				+ "}"
 				+ ""
-				+ ".button-success:focus {"
+				+ ".button-success:select {"
 				+ "		box-shadow: 0px 0px 0px 4px #28a74580;"
 				+ "		border-color: #1e7e34;"
 				+ "}"
@@ -82,5 +86,26 @@ public class CSSExample extends LWJGUIApplication {
 		
 		// Make window visible
 		window.show();
+	}
+
+	private void createButton(FlowPane parent, String name, String... classes) {
+		// Create pane to be styled! :)
+		StackPane styledPane = new StackPane() {
+			{
+				this.setOnMousePressedInternal((event)->{
+					this.cached_context.setSelected(this); // Force context selection when it's clicked DOWN, not on release.
+				});
+			}
+		};
+		styledPane.getClassList().add("bootstrap-button");
+		for (int i = 0; i < classes.length; i++) {
+			styledPane.getClassList().add(classes[i]);
+		}
+		parent.getItems().add(styledPane);
+		
+		Label label = new Label(name);
+		label.setTextFill(Color.WHITE);
+		label.setMouseTransparent(true);
+		styledPane.getChildren().add(label);
 	}
 }

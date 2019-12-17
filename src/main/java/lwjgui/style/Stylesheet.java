@@ -553,6 +553,12 @@ enum PseudoClass {
 			return node.isSelected() || node.isClicked();
 		}
 	}),
+	SELECT("select", new DataCallback<Boolean, Node>() {
+		@Override
+		public Boolean callback(Node node) {
+			return node.isSelected();
+		}
+	}),
 	ACTIVE("active", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {

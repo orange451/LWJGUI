@@ -24,6 +24,7 @@ import lwjgui.geometry.Resizable;
 import lwjgui.geometry.VPos;
 import lwjgui.style.StyleTransition;
 import lwjgui.style.Stylesheet;
+import lwjgui.style.StylesheetCompileError;
 import lwjgui.util.Bounds;
 
 public abstract class Node implements Resizable {
@@ -259,8 +260,13 @@ public abstract class Node implements Resizable {
 	 * @param css
 	 */
 	public void setStylesheet(String css) {
-		this.stylesheet = new Stylesheet(css);
-		this.stylesheet.compile();
+		try {
+			Stylesheet style = new Stylesheet(css);
+			style.compile();
+			this.stylesheet = style;
+		} catch(StylesheetCompileError e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -277,8 +283,13 @@ public abstract class Node implements Resizable {
 	 */
 	public void setStyle(String localStyle) {
 		this.localStyle = localStyle;
-		this.localStylesheet = new Stylesheet("NODESTYLE { " + this.localStyle + " }");
-		this.localStylesheet.compile();
+		try {
+			Stylesheet local = new Stylesheet("NODESTYLE { " + this.localStyle + " }");
+			local.compile();
+			this.localStylesheet = local;
+		} catch(StylesheetCompileError e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

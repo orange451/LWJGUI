@@ -3,13 +3,10 @@ package lwjgui.style;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-
 import lwjgui.scene.Node;
 
 public class Stylesheet {
@@ -50,19 +47,20 @@ public class Stylesheet {
 			return false;
 		
 		// Start list of operations
-		Map<String, StyleOperationValue> operations = new HashMap<>();
+		Map<String, StyleOperationValue> declarations = new HashMap<>();
 		
 		// Apply the styling!
-		getStyling(node, data, "normal", operations);
-		if ( node.isHover() )
-			getStyling(node, data, "hover", operations);
-		if ( node.isSelected() )
-			getStyling(node, data, "focus", operations);
-		if ( node.isClicked() )
-			getStyling(node, data, "active", operations);
+		List<String> pseudoClasses = data.getPseudoClassOrder();
+		for (int i = 0; i < pseudoClasses.size(); i++) {
+			String pseudoClass = pseudoClasses.get(i);
+			
+			// Add this pseudoClasses declarations to the combined list
+			if ( isPseudoClassActive(node, pseudoClass) )
+				getStyling(data, pseudoClass, declarations);
+		}
 		
 		// Iterate over operations and apply
-		Iterator<Entry<String, StyleOperationValue>> iterator = operations.entrySet().iterator();
+		Iterator<Entry<String, StyleOperationValue>> iterator = declarations.entrySet().iterator();
 		while(iterator.hasNext()) {
 			Entry<String, StyleOperationValue> val = iterator.next();
 			val.getValue().process(node);
@@ -71,45 +69,75 @@ public class Stylesheet {
 		return true;
 	}
 	
-	private void getStyling(Node node, StyleData data, String methodType, Map<String, StyleOperationValue> operationSet) {
-		List<StyleOperationValue> operations = data.getStyleOperations(methodType);
-		if ( operations.size() <= 0 )
+	/**
+	 * Returns whether a pseudoClass is active.
+	 * @param node
+	 * @param pseudoClass
+	 * @return
+	 */
+	private boolean isPseudoClassActive(Node node, String pseudoClass) {
+		PseudoClass enumClass = PseudoClass.match(pseudoClass);
+		if ( enumClass == null )
+			return false;
+		
+		return enumClass.isActive(node);
+	}
+
+	/**
+	 * Adds a style data to the combined declarations. (Can combine multiple pseudo classes, but only keep the most recent entries).
+	 * @param data
+	 * @param methodType
+	 * @param combinedDeclarations
+	 */
+	private void getStyling(StyleData data, String methodType, Map<String, StyleOperationValue> combinedDeclarations) {
+		List<StyleOperationValue> declarations = data.getDeclarationData(methodType);
+		if ( declarations.size() <= 0 )
 			return;
 		
-		for (int i = 0; i < operations.size(); i++) {
-			StyleOperationValue op = operations.get(i);
-			operationSet.put(op.getName(), op);
+		for (int i = 0; i < declarations.size(); i++) {
+			StyleOperationValue op = declarations.get(i);
+			combinedDeclarations.put(op.getName(), op);
 		}
 	}
 
-	public void compile() {
-		StringBuilder currentSelector = new StringBuilder();
-		for (int i = 0; i < source.length(); i++) {
-			char c = source.charAt(i);
-
-			if (c == '{') {
-				List<StyleSelector> selectors = parseSelectors(currentSelector.toString());
-				currentSelector.setLength(0);
-				if (selectors == null)
-					continue;
-
-				StringBuilder content = new StringBuilder();
-				for (int j = i; j < source.length(); j++) {
-					char cc = source.charAt(j);
-
-					if (cc == '}') {
-						// Parse content
-						parseContent(selectors, content.toString());
-						i = j;
-						break;
-					} else {
-						content.append(cc);
+	/**
+	 * Compule Stylesheet
+	 */
+	public boolean compile() throws StylesheetCompileError {
+		String newSource = source.replaceAll("(?<=\\/\\*)(.*)(?=\\*\\/)", "");
+		try {
+			StringBuilder currentSelector = new StringBuilder();
+			for (int i = 0; i < newSource.length(); i++) {
+				char c = newSource.charAt(i);
+	
+				if (c == '{') {
+					List<StyleSelector> selectors = parseSelectors(currentSelector.toString());
+					currentSelector.setLength(0);
+					if (selectors == null)
+						continue;
+	
+					StringBuilder content = new StringBuilder();
+					for (int j = i; j < newSource.length(); j++) {
+						char cc = newSource.charAt(j);
+	
+						if (cc == '}') {
+							// Parse content
+							parseContent(selectors, content.toString());
+							i = j;
+							break;
+						} else {
+							content.append(cc);
+						}
 					}
+				} else {
+					// Read selector string
+					currentSelector.append(c);
 				}
-			} else {
-				// Read selector string
-				currentSelector.append(c);
 			}
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new StylesheetCompileError();
 		}
 	}
 
@@ -182,18 +210,17 @@ public class Stylesheet {
 				sData = new StyleData();
 				styleData.put(selector, sData);
 			}
-			
 
-			List<StyleOperationValue> operations = sData.getStyleOperations(selector.getModifier());
-			if ( operations == null )
-				return;
+			final StyleData sDataFinal = sData;
+
 			data.entrySet().forEach(entry -> {
 				System.out.println(selector.selector + " :: '" + entry.getKey() + "' = '" + entry.getValue() + "'");
 				StyleOperation op = StyleOperations.match(entry.getKey().toString());
 				
 				if ( op != null ) {
-					StyleOperationValue opValue = new StyleOperationValue(op, entry.getValue());
-					operations.add(opValue);
+					//StyleOperationValue opValue = new StyleOperationValue(op, entry.getValue());
+					//operations.add(opValue);
+					sDataFinal.addDeclarationData(selector.getModifier(), new StyleOperationValue(op, entry.getValue())); 
 				}
 			});
 		}
@@ -346,19 +373,31 @@ public class Stylesheet {
 		return ret;
 	}
 
+	/**
+	 * This class defines the order in which CSS pseudo classes are fired. It also contines the data (routine) of the pseudo class.
+	 * @author Andrew
+	 *
+	 */
 	class StyleData {
 
 		private HashMap<String, List<StyleOperationValue>> routines = new HashMap<>();
-		
-		public StyleData() {
-			this.routines.put("normal", new ArrayList<>());
-			this.routines.put("hover", new ArrayList<>());
-			this.routines.put("active", new ArrayList<>());
-			this.routines.put("focus", new ArrayList<>());
+		private List<String> routineOrder = new ArrayList<>();
+
+		public void addDeclarationData(String pseudoClass, StyleOperationValue styleOperationValue) {
+			if ( !this.routines.containsKey(pseudoClass) ) {
+				this.routines.put(pseudoClass, new ArrayList<>());
+				this.routineOrder.add(pseudoClass);
+			}
+			
+			this.routines.get(pseudoClass).add(styleOperationValue);
 		}
 		
-		public List<StyleOperationValue> getStyleOperations(String modifier) {
-			return routines.get(modifier);
+		public List<String> getPseudoClassOrder() {
+			return this.routineOrder;
+		}
+
+		public List<StyleOperationValue> getDeclarationData(String pseudoClass) {
+			return this.routines.get(pseudoClass);
 		}
 	}
 
@@ -443,6 +482,64 @@ public class Stylesheet {
 
 	enum StyleSelectorType {
 		TAG, CLASS;
+	}
+}
+
+abstract class DataCallback<T, E> {
+	public abstract T callback(E object);
+}
+
+/**
+ * Pseudo Class enum list. Used to check if a pseudo class is active or not.
+ * @author Andrew
+ *
+ */
+enum PseudoClass {
+	NORMAL("normal", new DataCallback<Boolean, Node>() {
+		@Override
+		public Boolean callback(Node node) {
+			return true;
+		}
+	}),
+	HOVER("hover", new DataCallback<Boolean, Node>() {
+		@Override
+		public Boolean callback(Node node) {
+			return node.isHover();
+		}
+	}),
+	FOCUS("focus", new DataCallback<Boolean, Node>() {
+		@Override
+		public Boolean callback(Node node) {
+			return node.isSelected();
+		}
+	}),
+	ACTIVE("active", new DataCallback<Boolean, Node>() {
+		@Override
+		public Boolean callback(Node node) {
+			return node.isClicked();
+		}
+	});
+	
+	private DataCallback<Boolean, Node> callback;
+	private String className;
+	
+	private PseudoClass(String name, DataCallback<Boolean, Node> callback) {
+		this.callback = callback;
+		this.className = name;
+	}
+	
+	public Boolean isActive(Node node) {
+		return this.callback.callback(node);
+	}
+	
+	public static PseudoClass match(String name) {
+		PseudoClass[] classes = PseudoClass.values();
+		for (int i = 0; i < classes.length; i++) {
+			if ( classes[i].className.equals(name) )
+				return classes[i];
+		}
+		
+		return null;
 	}
 }
 

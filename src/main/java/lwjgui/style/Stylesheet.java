@@ -104,7 +104,7 @@ public class Stylesheet {
 	 * Compule Stylesheet
 	 */
 	public boolean compile() throws StylesheetCompileError {
-		String newSource = source.replaceAll("(?<=\\/\\*)(.*)(?=\\*\\/)", "");
+		String newSource = source.replaceAll("[?<=\\/\\*](.*)[?=\\*\\/]", "");
 		try {
 			StringBuilder currentSelector = new StringBuilder();
 			for (int i = 0; i < newSource.length(); i++) {

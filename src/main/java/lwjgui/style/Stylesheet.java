@@ -90,37 +90,23 @@ public class Stylesheet {
 		
 		// Apply the styling!
 		if ( justPseudoClasses ) {
-			List<String> pseudoClasses = data.getPseudoClassOrder();
+			List<PseudoClass> pseudoClasses = data.getPseudoClassOrder();
 			for (int i = 0; i < pseudoClasses.size(); i++) {
-				String pseudoClass = pseudoClasses.get(i);
-				if ( pseudoClass.equals("normal") )
+				PseudoClass pseudoClass = pseudoClasses.get(i);
+				if ( pseudoClass == PseudoClass.NORMAL )
 					continue;
 				
 				// Add this pseudoClasses declarations to the combined list
-				if ( isPseudoClassActive(node, pseudoClass) )
+				if ( pseudoClass.isActive(node) )
 					computeStyling(data, pseudoClass, combinedDeclarations);
 			}
 		} else {
-			if ( isPseudoClassActive(node, PseudoClass.NORMAL.getName()) ) {
-				computeStyling(data, PseudoClass.NORMAL.getName(), combinedDeclarations);
+			if ( PseudoClass.NORMAL.isActive(node) ) {
+				computeStyling(data, PseudoClass.NORMAL, combinedDeclarations);
 			}
 		}
 		
 		return true;
-	}
-	
-	/**
-	 * Returns whether a pseudoClass is active.
-	 * @param node
-	 * @param pseudoClass
-	 * @return
-	 */
-	private boolean isPseudoClassActive(Node node, String pseudoClass) {
-		PseudoClass enumClass = PseudoClass.match(pseudoClass);
-		if ( enumClass == null )
-			return false;
-		
-		return enumClass.isActive(node);
 	}
 
 	/**
@@ -129,7 +115,7 @@ public class Stylesheet {
 	 * @param methodType
 	 * @param combinedDeclarations
 	 */
-	private void computeStyling(StyleData data, String methodType, Map<String, StyleOperationValue> combinedDeclarations) {
+	private void computeStyling(StyleData data, PseudoClass methodType, Map<String, StyleOperationValue> combinedDeclarations) {
 		List<StyleOperationValue> declarations = data.getDeclarationData(methodType);
 		if ( declarations.size() <= 0 )
 			return;
@@ -420,10 +406,10 @@ public class Stylesheet {
 	 */
 	class StyleData {
 
-		private HashMap<String, List<StyleOperationValue>> routines = new HashMap<>();
-		private List<String> routineOrder = new ArrayList<>();
+		private HashMap<PseudoClass, List<StyleOperationValue>> routines = new HashMap<>();
+		private List<PseudoClass> routineOrder = new ArrayList<>();
 
-		public void addDeclarationData(String pseudoClass, StyleOperationValue styleOperationValue) {
+		public void addDeclarationData(PseudoClass pseudoClass, StyleOperationValue styleOperationValue) {
 			if ( !this.routines.containsKey(pseudoClass) ) {
 				this.routines.put(pseudoClass, new ArrayList<>());
 				this.routineOrder.add(pseudoClass);
@@ -432,11 +418,11 @@ public class Stylesheet {
 			this.routines.get(pseudoClass).add(styleOperationValue);
 		}
 		
-		public List<String> getPseudoClassOrder() {
+		public List<PseudoClass> getPseudoClassOrder() {
 			return this.routineOrder;
 		}
 
-		public List<StyleOperationValue> getDeclarationData(String pseudoClass) {
+		public List<StyleOperationValue> getDeclarationData(PseudoClass pseudoClass) {
 			return this.routines.get(pseudoClass);
 		}
 	}
@@ -464,14 +450,14 @@ public class Stylesheet {
 	class StyleSelector {
 		private String selector;
 		private StyleSelectorType type;
-		private String modifier = "normal"; // Useful for :hover support
+		private PseudoClass modifier = PseudoClass.NORMAL; // Useful for :hover support
 
 		public StyleSelector(String selector) {
 			// Parse out event
 			if ( selector.contains(":") ) {
 				String[] t = selector.split(":", 2);
 				selector = t[0];
-				this.modifier = t[1];
+				this.modifier = PseudoClass.match(t[1]);
 			}
 			
 			// Parse out class
@@ -486,7 +472,7 @@ public class Stylesheet {
 			this.selector = selector;
 		}
 		
-		public String getModifier() {
+		public PseudoClass getModifier() {
 			return this.modifier;
 		}
 
@@ -513,7 +499,7 @@ public class Stylesheet {
 				return false;
 			
 			StyleSelector s = (StyleSelector)o;
-			if ( !s.selector.contentEquals(selector) )
+			if ( !s.selector.equals(selector) )
 				return false;
 			
 			return true;

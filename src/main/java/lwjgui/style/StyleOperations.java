@@ -8,6 +8,7 @@ import lwjgui.geometry.Insets;
 import lwjgui.paint.Color;
 import lwjgui.scene.Node;
 import lwjgui.scene.Region;
+import lwjgui.scene.layout.Gappable;
 import lwjgui.transition.FillTransition;
 import lwjgui.transition.Transition;
 
@@ -375,6 +376,44 @@ public class StyleOperations {
 				}
 				
 				styleTransition.setDuration(duration);
+			}
+		}
+	};
+	
+	public static StyleOperation GAP = new StyleOperation("gap") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof Gappable) )
+				return;
+			
+			Gappable t = (Gappable)node;
+			float dest1 = (float)toNumber(value.get(0).get(0));
+			float dest2 = dest1;
+			if ( value.get(0).size() > 1 )
+				dest2 = (float)toNumber(value.get(0).get(1));
+			float dest2F = dest2;
+			float source1 = t.getHgap();
+			float source2 = t.getVgap();
+			
+			// Transition
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			if ( (dest1 == source1 && dest2 == source2) || transition == null ) {
+				t.setHgap(dest1);
+				t.setVgap(dest2);
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				Transition tran = new Transition(transition.getDurationMillis()) {
+					@Override
+					public void tick(double progress) {
+						t.setHgap(tween(source1, dest1, progress));
+						t.setVgap(tween(source2, dest2F, progress));
+					}
+				};
+				tran.play();
+				current.add(tran);
 			}
 		}
 	};

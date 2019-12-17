@@ -9,15 +9,15 @@ import lwjgui.geometry.Pos;
 import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Node;
 
-public class FlowPane extends FillableRegion {
+public class FlowPane extends FillableRegion implements Gappable {
 	private Orientation orientation = Orientation.HORIZONTAL;
 	private ObservableList<Node> items = new ObservableList<Node>();
 	
 	private Vector2f lastSize = new Vector2f();
 
 	private DirectionalBox internalBox;
-	private float hgap = 4;
-	private float vgap = 4;
+	private float hgap = 0;
+	private float vgap = 0;
 	
 	public FlowPane() {
 		this(Orientation.HORIZONTAL);
@@ -41,20 +41,30 @@ public class FlowPane extends FillableRegion {
 		});
 	}
 	
+	@Override
 	public float getVgap() {
 		return this.vgap;
 	}
-	
+
+	@Override
 	public float getHgap() {
 		return this.hgap;
 	}
-	
+
+	@Override
 	public void setVgap(float spacing) {
+		if ( this.vgap == spacing )
+			return;
+		
 		this.vgap = spacing;
 		rebuild();
 	}
-	
+
+	@Override
 	public void setHgap(float spacing) {
+		if ( this.hgap == spacing )
+			return;
+		
 		this.hgap = spacing;
 		rebuild();
 	}

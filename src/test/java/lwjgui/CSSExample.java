@@ -27,8 +27,6 @@ public class CSSExample extends LWJGUIApplication {
 		flow.setAlignment(Pos.CENTER);
 		flow.setFillToParentWidth(true);
 		flow.setFillToParentHeight(true);
-		flow.setHgap(6);
-		flow.setVgap(6);
 		pane.getChildren().add(flow);
 
 		createButton(flow, "Click Me!");
@@ -36,6 +34,11 @@ public class CSSExample extends LWJGUIApplication {
 		
 		// Apply some style!
 		pane.setStylesheet(""
+				+ "flowpane {"
+				+ "		gap: 8px;"
+				+ "}"
+				+ ""
+				+ ""
 				+ ".bootstrap-button {"
 				+ "		background-color: #007bff;"
 				+ "		box-shadow: 0px 0px 0px 0px #007bff80;"

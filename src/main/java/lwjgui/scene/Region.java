@@ -38,6 +38,33 @@ public abstract class Region extends Parent {
 		//return new Vector2d(availableWidth, availableHeight);
 	//}
 	
+	@Override
+	protected void position(Node parent) {
+		if ( this.cached_context != null ) {
+			// Add our sheet to the stack
+			if ( this.getStylesheet() != null )
+				this.cached_context.getCurrentStyling().add(this.getStylesheet());
+			
+			// Apply styling!
+			for (int i = 0; i < cached_context.getCurrentStyling().size(); i++) {
+				cached_context.getCurrentStyling().get(i).applyStyling(this);
+			}
+			
+			// Apply our local style if it exists
+			if ( this.getStyleLocal() != null ) {
+				this.getStyleLocal().applyStyling(this, "NODESTYLE");
+			}
+		}
+		
+		super.position(parent);
+
+		// Remove our sheet from the stack
+		if ( this.cached_context != null ) {
+			if ( this.getStylesheet() != null )
+				cached_context.getCurrentStyling().remove(this.getStylesheet());
+		}
+	}
+	
 	/**
 	 * Set the padding insets of this node. All child nodes will be offset based on the insets.
 	 * @param value

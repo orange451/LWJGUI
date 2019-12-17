@@ -4,15 +4,13 @@ import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
-import lwjgui.geometry.HPos;
 import lwjgui.geometry.Pos;
-import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Node;
 import lwjgui.scene.Region;
 
-public class GridPane extends Pane {
+public class GridPane extends Pane implements Gappable {
 	private VBox internalVBox;
 
 	private Node[][] elements;
@@ -22,8 +20,8 @@ public class GridPane extends Pane {
 	private int maxX;
 	private int maxY;
 	
-	private int hgap;
-	private int vgap;
+	private float hgap;
+	private float vgap;
 	
 	private boolean modified;
 	private boolean empty = true;
@@ -102,7 +100,11 @@ public class GridPane extends Pane {
 	 * Sets the horizontal space between Nodes added to this pane.
 	 * @param gap
 	 */
-	public void setHgap(int gap) {
+	@Override
+	public void setHgap(float gap) {
+		if ( gap == this.hgap )
+			return;
+		
 		this.hgap = gap;
 		update();
 	}
@@ -111,16 +113,22 @@ public class GridPane extends Pane {
 	 * Sets the vertical space between Nodes added to this pane.
 	 * @param gap
 	 */
-	public void setVgap(int gap) {
+	@Override
+	public void setVgap(float gap) {
+		if ( gap == this.vgap )
+			return;
+		
 		this.vgap = gap;
 		update();
 	}
-	
-	public int getHgap() {
+
+	@Override
+	public float getHgap() {
 		return this.hgap;
 	}
-	
-	public int getVgap() {
+
+	@Override
+	public float getVgap() {
 		return this.vgap;
 	}
 	

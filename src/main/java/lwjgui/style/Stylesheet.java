@@ -18,23 +18,65 @@ public class Stylesheet {
 		this.source = css;
 	}
 	
+	/**
+	 * Apply generic styling to a node via its classes/tag
+	 * @param node
+	 */
 	public void applyStyling(Node node) {
-		// Apply styling for the DOM TAG
-		applyStyling(node, StyleSelectorType.TAG, node.getElementType());
+		// Start list of operations
+		Map<String, StyleOperationValue> declarations = new HashMap<>();
 		
-		// Apply styling for the class
-		ArrayList<String> classList = node.getClassList();
-		for (int i = 0; i < classList.size(); i++) {
-			String claz = classList.get(i);
-			applyStyling(node, StyleSelectorType.CLASS, claz);
+		// JUST FOR NORMAL SELECTOR STYLING FIRST
+		{
+			// Apply styling for the DOM TAG
+			computeStyling(node, StyleSelectorType.TAG, node.getElementType(), declarations, false);
+			
+			// Apply styling for the class
+			ArrayList<String> classList = node.getClassList();
+			for (int i = 0; i < classList.size(); i++) {
+				String claz = classList.get(i);
+				computeStyling(node, StyleSelectorType.CLASS, claz, declarations, false);
+			}
 		}
-	}
-	
-	public void applyStyling(Node node, String forceElementType) {
-		applyStyling(node, StyleSelectorType.TAG, forceElementType);
+		
+		// NEXT JUST FOR PSEUDO CLASSES
+		{
+			// Apply styling for the DOM TAG
+			computeStyling(node, StyleSelectorType.TAG, node.getElementType(), declarations, true);
+			
+			// Apply styling for the class
+			ArrayList<String> classList = node.getClassList();
+			for (int i = 0; i < classList.size(); i++) {
+				String claz = classList.get(i);
+				computeStyling(node, StyleSelectorType.CLASS, claz, declarations, true);
+			}
+		}
+		
+		applyStyling(node, declarations);
 	}
 
-	private boolean applyStyling(Node node, StyleSelectorType type, String id) {
+	/**
+	 * Apply styling to a node usined the specified element tag
+	 * @param node
+	 * @param forceElementType
+	 */
+	public void applyStyling(Node node, String forceElementType) {
+		Map<String, StyleOperationValue> declarations = new HashMap<>();
+		computeStyling(node, StyleSelectorType.TAG, forceElementType, declarations, false);
+		computeStyling(node, StyleSelectorType.TAG, forceElementType, declarations, true);
+		applyStyling( node, declarations );
+	}
+	
+	private void applyStyling(Node node, Map<String, StyleOperationValue> declarations) {
+		// Iterate over operations and apply
+		Iterator<Entry<String, StyleOperationValue>> iterator = declarations.entrySet().iterator();
+		while(iterator.hasNext()) {
+			Entry<String, StyleOperationValue> val = iterator.next();
+			val.getValue().process(node);
+		}
+	}
+
+	private boolean computeStyling(Node node, StyleSelectorType type, String id, Map<String, StyleOperationValue> combinedDeclarations, boolean justPseudoClasses) {
 		StyleSelector selector = idToStyleSelector.get(id);
 		if ( selector == null )
 			return false;
@@ -46,24 +88,22 @@ public class Stylesheet {
 		if ( data == null )
 			return false;
 		
-		// Start list of operations
-		Map<String, StyleOperationValue> declarations = new HashMap<>();
-		
 		// Apply the styling!
-		List<String> pseudoClasses = data.getPseudoClassOrder();
-		for (int i = 0; i < pseudoClasses.size(); i++) {
-			String pseudoClass = pseudoClasses.get(i);
-			
-			// Add this pseudoClasses declarations to the combined list
-			if ( isPseudoClassActive(node, pseudoClass) )
-				getStyling(data, pseudoClass, declarations);
-		}
-		
-		// Iterate over operations and apply
-		Iterator<Entry<String, StyleOperationValue>> iterator = declarations.entrySet().iterator();
-		while(iterator.hasNext()) {
-			Entry<String, StyleOperationValue> val = iterator.next();
-			val.getValue().process(node);
+		if ( justPseudoClasses ) {
+			List<String> pseudoClasses = data.getPseudoClassOrder();
+			for (int i = 0; i < pseudoClasses.size(); i++) {
+				String pseudoClass = pseudoClasses.get(i);
+				if ( pseudoClass.equals("normal") )
+					continue;
+				
+				// Add this pseudoClasses declarations to the combined list
+				if ( isPseudoClassActive(node, pseudoClass) )
+					computeStyling(data, pseudoClass, combinedDeclarations);
+			}
+		} else {
+			if ( isPseudoClassActive(node, PseudoClass.NORMAL.getName()) ) {
+				computeStyling(data, PseudoClass.NORMAL.getName(), combinedDeclarations);
+			}
 		}
 		
 		return true;
@@ -89,7 +129,7 @@ public class Stylesheet {
 	 * @param methodType
 	 * @param combinedDeclarations
 	 */
-	private void getStyling(StyleData data, String methodType, Map<String, StyleOperationValue> combinedDeclarations) {
+	private void computeStyling(StyleData data, String methodType, Map<String, StyleOperationValue> combinedDeclarations) {
 		List<StyleOperationValue> declarations = data.getDeclarationData(methodType);
 		if ( declarations.size() <= 0 )
 			return;
@@ -510,7 +550,7 @@ enum PseudoClass {
 	FOCUS("focus", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
-			return node.isSelected();
+			return node.isSelected() || node.isClicked();
 		}
 	}),
 	ACTIVE("active", new DataCallback<Boolean, Node>() {
@@ -528,6 +568,10 @@ enum PseudoClass {
 		this.className = name;
 	}
 	
+	public String getName() {
+		return this.className;
+	}
+
 	public Boolean isActive(Node node) {
 		return this.callback.callback(node);
 	}

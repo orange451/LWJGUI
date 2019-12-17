@@ -21,7 +21,8 @@ public class CSSExample extends LWJGUIApplication {
 		
 		// Create pane to be styled! :)
 		StackPane styledPane = new StackPane();
-		styledPane.getClassList().add("TestStyle");
+		styledPane.getClassList().add("bootstrap-button");
+		styledPane.getClassList().add("button-success");
 		pane.getChildren().add(styledPane);
 		
 		Label label = new Label("Click Me!");
@@ -31,28 +32,49 @@ public class CSSExample extends LWJGUIApplication {
 		
 		// Apply some style!
 		pane.setStylesheet(""
-				+ ".TestStyle {"
+				+ ".bootstrap-button {"
 				+ "		background-color: #007bff;"
+				+ "		box-shadow: 0px 0px 0px 0px #007bff80;"
 				+ "		border-style: solid;"
 				+ "		border-radius: 4px;"
 				+ "		border-color: #0865cc;"
 				+ "		border-width: 1px;"
 				+ "		padding: 6px 16px;"
-				+ "		box-shadow: 0px 0px 0px 0px #007bff80;"
 				+ "		transition: box-shadow 0.1s, background-color 0.1s, border-color 0.1s;"
 				+ "}"
 				+ ""
-				+ ".TestStyle:hover {"
-				+ "		background-color: #1e86f7;"
+				+ ".bootstrap-button:hover {"
+				+ "		background-color: #0976ea;"
 				+ "}"
 				+ ""
-				+ ".TestStyle:focus {"
+				+ ".bootstrap-button:focus {"
 				+ "		box-shadow: 0px 0px 0px 4px #007bff80;"
 				+ "		border-color: #007bff;"
 				+ "}"
 				+ ""
-				+ ".TestStyle:active {"
-				+ "		background-color: #0e6bd2;"
+				+ ".bootstrap-button:active {"
+				+ "		background-color: #0d6fd8;"
+				+ "}"
+				+ ""
+				+ ""
+				+ ".button-success {"
+				+ "		background-color: #28a745;"
+				+ "		border-color: #218838;"
+				+ "		box-shadow: 0px 0px 0px 0px #28a74580;"
+				+ "}"
+				+ ""
+				+ ".button-success:hover {"
+				+ "		background-color: #218838;"
+				+ "		border-color: #218838;"
+				+ "}"
+				+ ""
+				+ ".button-success:focus {"
+				+ "		box-shadow: 0px 0px 0px 4px #28a74580;"
+				+ "		border-color: #1e7e34;"
+				+ "}"
+				+ ""
+				+ ".button-success:active {"
+				+ "		background-color: #1e7e34;"
 				+ "}");
 		
 		// Create a new scene

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import lwjgui.scene.Node;
 
 public class Stylesheet {
@@ -98,11 +99,11 @@ public class Stylesheet {
 				
 				// Add this pseudoClasses declarations to the combined list
 				if ( pseudoClass.isActive(node) )
-					computeStyling(data, pseudoClass, combinedDeclarations);
+					addPseudoClassStyle(data, pseudoClass, combinedDeclarations);
 			}
 		} else {
 			if ( PseudoClass.NORMAL.isActive(node) ) {
-				computeStyling(data, PseudoClass.NORMAL, combinedDeclarations);
+				addPseudoClassStyle(data, PseudoClass.NORMAL, combinedDeclarations);
 			}
 		}
 		
@@ -115,8 +116,11 @@ public class Stylesheet {
 	 * @param methodType
 	 * @param combinedDeclarations
 	 */
-	private void computeStyling(StyleData data, PseudoClass methodType, Map<String, StyleOperationValue> combinedDeclarations) {
+	private void addPseudoClassStyle(StyleData data, PseudoClass methodType, Map<String, StyleOperationValue> combinedDeclarations) {
 		List<StyleOperationValue> declarations = data.getDeclarationData(methodType);
+		if ( declarations == null )
+			return;
+		
 		if ( declarations.size() <= 0 )
 			return;
 		
@@ -269,8 +273,10 @@ public class Stylesheet {
 		for (int i = 0; i < content.length(); i++) {
 			char c = content.charAt(i);
 			
+			boolean isLastChar = i+1 == content.length();
+			
 			if ( (c == ' ' || i+1 == content.length()) && !inFunction ) {
-				if ( i+1 == content.length() && !inFunction )
+				if ( isLastChar && !inFunction )
 					current += c;
 				
 				// Get the value from the param
@@ -283,7 +289,7 @@ public class Stylesheet {
 					temp.add(o);
 				
 				// If this is the last character, Add current params as an argument, and reset.
-				if ( i+1 == content.length() && !inFunction ) {
+				if ( isLastChar && !inFunction ) {
 					StyleParams params = new StyleParams(temp.toArray(new Object[temp.size()]));
 					if ( params.size() > 0 ) {
 						arguments.add(params);
@@ -305,6 +311,11 @@ public class Stylesheet {
 						sFunc = null;
 					}
 					current = "";
+					
+					if ( isLastChar ) {
+						arguments.add(new StyleParams(temp.toArray(new Object[temp.size()])));
+						temp.clear();
+					}
 					continue;
 				} else if ( c == ',' && !inFunction ) { // Add current params as an argument, and reset.
 					// Get the value from the param

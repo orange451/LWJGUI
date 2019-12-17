@@ -410,6 +410,9 @@ public class Stylesheet {
 		private List<PseudoClass> routineOrder = new ArrayList<>();
 
 		public void addDeclarationData(PseudoClass pseudoClass, StyleOperationValue styleOperationValue) {
+			if ( pseudoClass == null )
+				return;
+			
 			if ( !this.routines.containsKey(pseudoClass) ) {
 				this.routines.put(pseudoClass, new ArrayList<>());
 				this.routineOrder.add(pseudoClass);

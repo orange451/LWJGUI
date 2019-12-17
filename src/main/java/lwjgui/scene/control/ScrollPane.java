@@ -452,29 +452,20 @@ public class ScrollPane extends Pane {
 		public void render(Context context) {
 			Vector4d bd = getBounds();
 			double barThickness = thickness;
-			double x1 = bd.x;
+			double x1 = bd.x+1;
 			double y1 = bd.y+2;
-			double x2 = bd.x;
-			double y2 = bd.y+bd.w-barThickness-1;
+			double x2 = bd.x+barThickness;
+			double y2 = bd.y+bd.w-1;
 			double len = y2-y1;
 			if ( this.orientation.equals(Orientation.HORIZONTAL) ) {
 				x1 = bd.x+2;
-				y1 = bd.y;
-				x2 = bd.x+bd.z-barThickness-1;
-				y2 = bd.y;
+				y1 = bd.y+1;
+				x2 = bd.x+bd.z-1;
+				y2 = bd.y+barThickness;
 				len = x2-x1;
 			}
 			Color color = Theme.current().getControlOutline();
-			LWJGUIUtil.fillRoundRect(context, x1, y1, barThickness, barThickness, barThickness/2f, color);
-			LWJGUIUtil.fillRoundRect(context, x2, y2, barThickness, barThickness, barThickness/2f, color);
-			if ( len > 0 ) {
-				if ( this.orientation.equals(Orientation.VERTICAL) ) {
-					LWJGUIUtil.fillRect(context, x1, y1+barThickness/2f, barThickness, len, color);
-				} else {
-					LWJGUIUtil.fillRect(context, x1+barThickness/2f, y1, len, barThickness, color);
-				}
-			}
-
+			LWJGUIUtil.fillRoundRect(context, x1, y1, x2-x1, y2-y1, barThickness/2f, color);
 		}
 	}
 }

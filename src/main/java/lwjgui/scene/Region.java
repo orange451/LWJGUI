@@ -91,7 +91,6 @@ public abstract class Region extends Parent {
 	
 
 	public void render(Context context) {
-		//clip(context);
 		for (int i = 0; i < getChildren().size(); i++) {
 			// Clip to my bounds
 			clip(context);

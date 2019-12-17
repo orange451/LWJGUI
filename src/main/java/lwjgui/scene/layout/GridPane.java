@@ -410,7 +410,6 @@ public class GridPane extends Pane implements Gappable {
 		@Override
 		public void render(Context context) {
 			this.clip(context);
-			//LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA);
 		}
 	}
 

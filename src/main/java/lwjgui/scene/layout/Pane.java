@@ -1,6 +1,5 @@
 package lwjgui.scene.layout;
 
-import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.paint.Color;
 import lwjgui.scene.Node;
@@ -9,9 +8,6 @@ import lwjgui.style.BackgroundSolid;
 import lwjgui.style.BlockPaneRenderer;
 import lwjgui.style.BorderStyle;
 import lwjgui.style.BoxShadow;
-import lwjgui.style.StyleBackground;
-import lwjgui.style.StyleBorder;
-import lwjgui.style.StyleBoxShadow;
 import lwjgui.scene.Context;
 import lwjgui.scene.FillableRegion;
 

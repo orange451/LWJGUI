@@ -31,6 +31,7 @@ import lwjgui.scene.Node;
 import lwjgui.scene.layout.Pane;
 import lwjgui.style.Background;
 import lwjgui.style.BackgroundSolid;
+import lwjgui.style.BlockPaneRenderer;
 import lwjgui.style.BorderStyle;
 import lwjgui.style.BoxShadow;
 import lwjgui.style.StyleBackground;
@@ -41,7 +42,7 @@ import lwjgui.theme.Theme;
 /**
  * This class acts as the core controller for text input classes.
  */
-public abstract class TextInputControl extends Control implements StyleBorder,StyleBackground,StyleBoxShadow {
+public abstract class TextInputControl extends Control implements BlockPaneRenderer {
 	ArrayList<String> lines;
 	ArrayList<ArrayList<GlyphData>> glyphData;
 	ArrayList<String> linesDraw;
@@ -954,14 +955,6 @@ public abstract class TextInputControl extends Control implements StyleBorder,St
 	@Override
 	public void render(Context context) {
 		long vg = context.getNVG();
-		float x = (int)(getX()+this.getInnerBounds().getX());
-		float y = (int)(getY()+this.getInnerBounds().getY());
-		float w = (int)this.getInnerBounds().getWidth();
-		float h = (int)this.getInnerBounds().getHeight();
-		float rNW = this.getBorderRadii()[0];
-		float rNE = this.getBorderRadii()[1];
-		float rSE = this.getBorderRadii()[2];
-		float rSW = this.getBorderRadii()[3];
 
 		this.clip(context,8);
 		
@@ -983,61 +976,10 @@ public abstract class TextInputControl extends Control implements StyleBorder,St
 			this.getBoxShadowList().add(new BoxShadow(0, 0, 1.5f, 2, sel.alpha(0.2f), true));
 		}
 		
-		// Draw drop shadows
-		for (int i = 0; i < getBoxShadowList().size(); i++) {
-			BoxShadow shadow = getBoxShadowList().get(i);
-			if ( shadow.isInset() )
-				continue;
-			LWJGUIUtil.drawBoxShadow(context, shadow, this.getBorderRadii(), (int) getX(), (int) getY(), (int)getWidth(), (int)getHeight());
-		}
-		
-		// Draw border
-		if ( this.getBorderStyle() != BorderStyle.NONE && this.getBorderWidth() > 0 && this.getBorderColor() != null ) {
-			float xx = (int) this.getX();
-			float yy = (int) this.getY();
-			float bw = this.getBorderWidth();
-			float ww = (float) this.getWidth() + bw*2;
-			float hh = (float) this.getHeight() + bw*2;
-			
-			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgFillColor(context.getNVG(), getBorderColor().getNVG());
-
-			float b1 = Math.max((getBorderRadii()[0]-1) + bw*2, 0);
-			float b2 = Math.max((getBorderRadii()[1]-1) + bw*2, 0);
-			float b3 = Math.max((getBorderRadii()[2]-1) + bw*2, 0);
-			float b4 = Math.max((getBorderRadii()[3]-1) + bw*2, 0);
-			NanoVG.nvgRoundedRectVarying(context.getNVG(), xx-bw, yy-bw, ww, hh, b1, b2, b3, b4);
-			
-			if ( this.getBackground() == null ) {
-				NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CW);
-				NanoVG.nvgRoundedRectVarying(context.getNVG(), xx, yy, ww-bw*2, hh-bw*2, getBorderRadii()[0], getBorderRadii()[1], getBorderRadii()[2], getBorderRadii()[3]);
-				NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CCW);
-			}
-			
-			NanoVG.nvgFill(context.getNVG());
-			NanoVG.nnvgClosePath(context.getNVG());
-			
-		}
-		
-		// Draw background
-		if ( getBackground() != null ) {
-			double boundsX = getX();
-			double boundsY = getY();
-			double boundsW = getWidth();
-			double boundsH = getHeight();
-			getBackground().render(context, boundsX, boundsY, boundsW, boundsH, getBorderRadii());
-		}
-		
-		// Draw inset shadows
-		for (int i = 0; i < getBoxShadowList().size(); i++) {
-			BoxShadow shadow = getBoxShadowList().get(i);
-			if ( !shadow.isInset() )
-				continue;
-			LWJGUIUtil.drawBoxShadow(context, shadow, this.getBorderRadii(), (int) getX(), (int) getY(), (int)getWidth(), (int)getHeight());
-		}
+		// Render standard pane
+		BlockPaneRenderer.render(context, this);
 		
 		// Draw sub nodes
-		//this.internalScrollPane.render(context);
 		this.internalScrollPane.setBackground(null);
 		this.internalScrollPane.setBorderStyle(BorderStyle.NONE);
 		super.render(context);
@@ -1058,31 +1000,6 @@ public abstract class TextInputControl extends Control implements StyleBorder,St
 			NanoVG.nvgFillColor(vg, promptFill.getNVG());
 			NanoVG.nvgText(vg, xx, yy, prompt);
 		}
-		
-		// Dropshadow
-		/*if (!this.isDisabled()) {
-			NVGPaint bg = NanoVG.nvgLinearGradient(vg, x, y-5, x, y+4, Theme.current().getShadow().getNVG(), Color.TRANSPARENT.getNVG(), NVGPaint.create());
-			NanoVG.nvgBeginPath(vg);
-			NanoVG.nvgRoundedRectVarying(vg, x, y, w, h, rNW, rNE, rSE, rSW);
-			NanoVG.nvgFillPaint(vg, bg);
-			NanoVG.nvgFill(vg);
-		}*/
-		
-		/*if (isDescendentSelected() && isSelectionOutlineEnabled() && !this.isDisabled()) {
-			NanoVG.nvgTranslate(context.getNVG(), x, y);	
-				Color sel = context.isFocused() ? selectionFill : selectionPassiveFill;
-				Color col = new Color(sel.getRed(), sel.getGreen(), sel.getBlue(), 64);
-				NanoVG.nvgBeginPath(vg);
-					float inset = 1.33f;
-					w += 1;
-					h += 1;
-					NanoVG.nvgRoundedRectVarying(vg, inset, inset, w-inset*2-1,h-inset*2-1, (float) rNW-inset, (float) rNE-inset, (float) rSE-inset, (float) rSW-inset);
-					NanoVG.nvgStrokeColor(vg, col.getNVG());
-					NanoVG.nvgStrokeWidth(vg, inset*1.25f);
-					NanoVG.nvgStroke(vg);
-				NanoVG.nvgClosePath(vg);
-			NanoVG.nvgTranslate(context.getNVG(), -x, -y);
-		}*/
 	}
 	
 	class TextState {

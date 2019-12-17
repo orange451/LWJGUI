@@ -19,6 +19,7 @@ import lwjgui.scene.Context;
 import lwjgui.style.Background;
 import lwjgui.style.BackgroundLinearGradient;
 import lwjgui.style.BackgroundSolid;
+import lwjgui.style.BlockPaneRenderer;
 import lwjgui.style.BorderStyle;
 import lwjgui.style.BoxShadow;
 import lwjgui.style.ColorStop;
@@ -27,7 +28,7 @@ import lwjgui.style.StyleBorder;
 import lwjgui.style.StyleBoxShadow;
 import lwjgui.theme.Theme;
 
-public abstract class ButtonBase extends Labeled implements StyleBorder,StyleBackground,StyleBoxShadow {
+public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	protected EventHandler<ActionEvent> buttonEvent;
 	protected EventHandler<ActionEvent> buttonInternalEvent;
 	
@@ -178,7 +179,7 @@ public abstract class ButtonBase extends Labeled implements StyleBorder,StyleBac
 		
 		return cached_context.isHovered(this) && GLFW.glfwGetMouseButton(cached_context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
 	}
-
+	
 	@Override
 	public void render(Context context) {
 		clip(context, 0);
@@ -212,32 +213,11 @@ public abstract class ButtonBase extends Labeled implements StyleBorder,StyleBac
 			this.getBoxShadowList().add(new BoxShadow(0, 0, 1.5f, 2, sel.alpha(0.2f), true));
 		}
 		
+		// Render standard pane
+		BlockPaneRenderer.render(context, this);
 		
-		// Draw drop shadows
-		for (int i = 0; i < getBoxShadowList().size(); i++) {
-			BoxShadow shadow = getBoxShadowList().get(i);
-			if ( shadow.isInset() )
-				continue;
-			LWJGUIUtil.drawBoxShadow(context, shadow, this.getBorderRadii(), (int) getX(), (int) getY(), (int)getWidth(), (int)getHeight());
-		}
-		
-		// Draw border
-		if ( this.getBorderStyle() != BorderStyle.NONE && this.getBorderWidth() > 0 && this.getBorderColor() != null ) {
-			LWJGUIUtil.drawBorder(context, getX(), getY(), getWidth(), getHeight(), this.getBorderWidth(), this.getBackground(), this.getBorderColor(), this.getBorderRadii() );
-		}
-		
-		// Draw background
-		if ( getBackground() != null ) {
-			getBackground().render(context, getX(), getY(), getWidth(), getHeight(), getBorderRadii());
-		}
-		
-		// Draw inset shadows
-		for (int i = 0; i < getBoxShadowList().size(); i++) {
-			BoxShadow shadow = getBoxShadowList().get(i);
-			if ( !shadow.isInset() )
-				continue;
-			LWJGUIUtil.drawBoxShadow(context, shadow, this.getBorderRadii(), (int) getX(), (int) getY(), (int)getWidth(), (int)getHeight());
-		}
+		// Draw children
+		super.render(context);
 		
 		// Text color?
 		if ( isDisabled() ) {

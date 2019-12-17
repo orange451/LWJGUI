@@ -6,6 +6,7 @@ import lwjgui.paint.Color;
 import lwjgui.scene.Node;
 import lwjgui.style.Background;
 import lwjgui.style.BackgroundSolid;
+import lwjgui.style.BlockPaneRenderer;
 import lwjgui.style.BorderStyle;
 import lwjgui.style.BoxShadow;
 import lwjgui.style.StyleBackground;
@@ -14,7 +15,7 @@ import lwjgui.style.StyleBoxShadow;
 import lwjgui.scene.Context;
 import lwjgui.scene.FillableRegion;
 
-public abstract class Pane extends FillableRegion implements StyleBorder,StyleBackground,StyleBoxShadow {
+public abstract class Pane extends FillableRegion implements BlockPaneRenderer {
 	
 	private Background background;
 	private Color borderColor;
@@ -55,32 +56,8 @@ public abstract class Pane extends FillableRegion implements StyleBorder,StyleBa
 	
 	@Override
 	public void render(Context context) {
-		
-		// Draw drop shadows
-		for (int i = 0; i < getBoxShadowList().size(); i++) {
-			BoxShadow shadow = getBoxShadowList().get(i);
-			if ( shadow.isInset() )
-				continue;
-			LWJGUIUtil.drawBoxShadow(context, shadow, this.getBorderRadii(), (int) getX(), (int) getY(), (int)getWidth(), (int)getHeight());
-		}
-		
-		// Draw border
-		if ( this.getBorderStyle() != BorderStyle.NONE && this.getBorderWidth() > 0 && this.getBorderColor() != null ) {
-			LWJGUIUtil.drawBorder(context, getX(), getY(), getWidth(), getHeight(), this.getBorderWidth(), this.getBackground(), this.getBorderColor(), this.getBorderRadii() );
-		}
-		
-		// Draw background
-		if ( getBackground() != null ) {
-			getBackground().render(context, getX(), getY(), getWidth(), getHeight(), getBorderRadii());
-		}
-		
-		// Draw inset shadows
-		for (int i = 0; i < getBoxShadowList().size(); i++) {
-			BoxShadow shadow = getBoxShadowList().get(i);
-			if ( !shadow.isInset() )
-				continue;
-			LWJGUIUtil.drawBoxShadow(context, shadow, this.getBorderRadii(), (int) getX(), (int) getY(), (int)getWidth(), (int)getHeight());
-		}
+		// Render standard pane
+		BlockPaneRenderer.render(context, this);
 		
 		// Draw children
 		super.render(context);

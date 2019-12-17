@@ -69,7 +69,8 @@ public class BorderPane extends Pane {
 		}*/
 		updateChildren();
 	}
-	
+
+	@Override
 	public String getElementType() {
 		return "borderpane";
 	}

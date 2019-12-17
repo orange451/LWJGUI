@@ -11,7 +11,8 @@ public class StackPane extends Pane {
 	public boolean isResizeable() {
 		return false;
 	}
-	
+
+	@Override
 	public String getElementType() {
 		return "stackpane";
 	}

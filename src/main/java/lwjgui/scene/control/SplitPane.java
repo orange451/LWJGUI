@@ -71,7 +71,8 @@ public class SplitPane extends Control {
 
 		this.setOrientation(Orientation.VERTICAL);
 	}
-	
+
+	@Override
 	public String getElementType() {
 		return "splitpane";
 	}

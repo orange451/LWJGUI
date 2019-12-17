@@ -2,8 +2,9 @@ package lwjgui.scene;
 
 import lwjgui.geometry.Insets;
 import lwjgui.scene.layout.floating.FloatingPane;
+import lwjgui.style.CSSStyleable;
 
-public abstract class Region extends Parent {
+public abstract class Region extends Parent implements CSSStyleable {
 	protected Insets padding = Insets.EMPTY;
 	
 	/*@Override
@@ -40,6 +41,12 @@ public abstract class Region extends Parent {
 	
 	@Override
 	protected void position(Node parent) {
+		stylePush();
+		super.position(parent);
+		stylePop();
+	}
+	
+	public void stylePush() {
 		if ( this.cached_context != null ) {
 			// Add our sheet to the stack
 			if ( this.getStylesheet() != null )
@@ -55,9 +62,9 @@ public abstract class Region extends Parent {
 				this.getStyleLocal().applyStyling(this, "NODESTYLE");
 			}
 		}
-		
-		super.position(parent);
-
+	}
+	
+	public void stylePop() {
 		// Remove our sheet from the stack
 		if ( this.cached_context != null ) {
 			if ( this.getStylesheet() != null )

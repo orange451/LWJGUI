@@ -102,6 +102,7 @@ public class Tab {
 			refresh();
 		}
 
+		@Override
 		public String getElementType() {
 			return "tab";
 		}

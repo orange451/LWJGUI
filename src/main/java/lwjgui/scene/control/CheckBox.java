@@ -38,6 +38,7 @@ public class CheckBox extends ButtonBase {
 		});
 	}
 
+	@Override
 	public String getElementType() {
 		return "checkbox";
 	}

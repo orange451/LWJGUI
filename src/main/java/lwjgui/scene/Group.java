@@ -20,6 +20,7 @@ public class Group extends Parent {
 		super.resize();
 	}
 
+	@Override
 	public String getElementType() {
 		return "group";
 	}

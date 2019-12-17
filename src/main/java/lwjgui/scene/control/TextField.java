@@ -23,6 +23,7 @@ public class TextField extends TextInputControl {
 		super.setText(text.replace("\n", "").replace("\t", ""));
 	}
 
+	@Override
 	public String getElementType() {
 		return "textfield";
 	}

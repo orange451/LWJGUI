@@ -1186,7 +1186,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			
 			this.flag_clip = true;
 		}
-		
+
+		@Override
 		public String getElementType() {
 			return "textcontentpane";
 		}

@@ -53,7 +53,7 @@ public class MenuBar extends FillableRegion {
 		});
 	}
 	
-
+	@Override
 	public String getElementType() {
 		return "menubar";
 	}

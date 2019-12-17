@@ -33,6 +33,7 @@ public class SectorCircle extends Shape {
 		this.circlePoints = circlePoints;
 	}
 
+	@Override
 	public String getElementType() {
 		return "sectorcircle";
 	}

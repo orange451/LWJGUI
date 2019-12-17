@@ -18,6 +18,7 @@ public class Label extends Labeled {
 		this.setGraphic(graphic);
 	}
 
+	@Override
 	public String getElementType() {
 		return "label";
 	}

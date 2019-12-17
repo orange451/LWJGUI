@@ -78,6 +78,7 @@ public class OpenGLPane extends Pane {
 		}
 	}
 
+	@Override
 	public String getElementType() {
 		return "openglpane";
 	}

@@ -102,6 +102,7 @@ public class ToggleSwitch extends Labeled implements Toggle {
 					});
 				}
 
+				@Override
 				public String getElementType() {
 					return "toggletrack";
 				}
@@ -154,7 +155,8 @@ public class ToggleSwitch extends Labeled implements Toggle {
 			});
 			this.track.getChildren().add(button);
 		}
-		
+
+		@Override
 		public String getElementType() {
 			return "toggle";
 		}

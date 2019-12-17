@@ -3,7 +3,7 @@ package lwjgui.style;
 import lwjgui.LWJGUIUtil;
 import lwjgui.scene.Context;
 
-public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxShadow {
+public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxShadow,CSSStyleable {
 	
 	public double getX();
 	public double getY();
@@ -11,6 +11,8 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 	public double getHeight();
 	
 	public static void render(Context context, BlockPaneRenderer node) {
+		node.stylePush();
+		
 		// Draw drop shadows
 		for (int i = 0; i < node.getBoxShadowList().size(); i++) {
 			BoxShadow shadow = node.getBoxShadowList().get(i);
@@ -36,5 +38,7 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 				continue;
 			LWJGUIUtil.drawBoxShadow(context, shadow, node.getBorderRadii(), (int) node.getX(), (int) node.getY(), (int)node.getWidth(), (int)node.getHeight());
 		}
+		
+		node.stylePop();
 	}
 }

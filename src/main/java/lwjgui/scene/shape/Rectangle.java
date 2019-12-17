@@ -25,6 +25,7 @@ public class Rectangle extends Shape {
 		this(width, height, 0, Theme.current().getText());
 	}
 
+	@Override
 	public String getElementType() {
 		return "rectangle";
 	}

@@ -25,6 +25,7 @@ public class ProgressBar extends Control {
 		return this.progress;
 	}
 
+	@Override
 	public String getElementType() {
 		return "progressbar";
 	}

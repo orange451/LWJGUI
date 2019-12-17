@@ -53,6 +53,7 @@ public class HBox extends DirectionalBox {
 		return 0;//getHeight()-this.getInnerBounds().getHeight();
 	}
 
+	@Override
 	public String getElementType() {
 		return "hbox";
 	}

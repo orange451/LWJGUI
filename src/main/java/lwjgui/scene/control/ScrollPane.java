@@ -81,6 +81,7 @@ public class ScrollPane extends Pane {
 		});
 	}
 
+	@Override
 	public String getElementType() {
 		return "scrollpane";
 	}
@@ -359,7 +360,8 @@ public class ScrollPane extends Pane {
 			this.setBackgroundLegacy(null);
 			this.setAlignment(Pos.TOP_LEFT);
 		}
-		
+
+		@Override
 		public String getElementType() {
 			return "scrollcanvas";
 		}

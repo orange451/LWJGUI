@@ -81,6 +81,7 @@ public class TabPane extends Control {
 		});
 	}
 
+	@Override
 	public String getElementType() {
 		return "tabpane";
 	}

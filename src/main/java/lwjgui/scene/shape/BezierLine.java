@@ -14,6 +14,7 @@ public class BezierLine extends Shape {
 		return false;
 	}
 
+	@Override
 	public String getElementType() {
 		return "bezier";
 	}

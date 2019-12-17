@@ -25,7 +25,8 @@ public class Scene extends Node {
 		setRoot(root);
 		this.setPrefSize(prefWidth, prefHeight);
 	}
-	
+
+	@Override
 	public String getElementType() {
 		return "scene";
 	}

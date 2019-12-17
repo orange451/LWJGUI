@@ -54,6 +54,7 @@ public class ColorPicker extends ButtonBase {
 		this(Color.WHITE);
 	}
 
+	@Override
 	public String getElementType() {
 		return "colorpicker";
 	}

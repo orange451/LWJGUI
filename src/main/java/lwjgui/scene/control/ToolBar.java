@@ -42,6 +42,7 @@ public class ToolBar extends Control {
 		});
 	}
 
+	@Override
 	public String getElementType() {
 		return "toolbar";
 	}

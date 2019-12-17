@@ -18,6 +18,7 @@ public class Circle extends Shape {
 		this.setRadius(radius);
 	}
 
+	@Override
 	public String getElementType() {
 		return "circle";
 	}

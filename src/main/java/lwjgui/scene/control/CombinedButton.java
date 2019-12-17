@@ -34,6 +34,7 @@ public class CombinedButton extends Control {
 		}
 	}
 
+	@Override
 	public String getElementType() {
 		return "combinedbutton";
 	}

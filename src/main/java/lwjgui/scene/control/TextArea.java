@@ -27,6 +27,7 @@ public class TextArea extends TextInputControl {
 		this("");
 	}
 
+	@Override
 	public String getElementType() {
 		return "textarea";
 	}

@@ -55,6 +55,7 @@ public class Slider extends Control {
 		this.orientation = Orientation.HORIZONTAL;
 	}
 
+	@Override
 	public String getElementType() {
 		return "slider";
 	}
@@ -235,6 +236,7 @@ public class Slider extends Control {
 			});
 		}
 
+		@Override
 		public String getElementType() {
 			return "sliderthumb";
 		}

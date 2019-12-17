@@ -19,6 +19,7 @@ public class Button extends ButtonBase {
 		this.setGraphic(graphic);
 	}
 
+	@Override
 	public String getElementType() {
 		return "button";
 	}

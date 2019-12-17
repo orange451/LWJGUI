@@ -31,7 +31,8 @@ public class MenuItem extends Node {
 	public MenuItem(String string, Font font) {
 		this(string, font, null);
 	}
-	
+
+	@Override
 	public String getElementType() {
 		return "menuitem";
 	}

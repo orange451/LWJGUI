@@ -8,7 +8,6 @@ import lwjgui.geometry.Insets;
 import lwjgui.paint.Color;
 import lwjgui.scene.Node;
 import lwjgui.scene.Region;
-import lwjgui.style.Stylesheet.StyleFunction;
 import lwjgui.transition.FillTransition;
 import lwjgui.transition.Transition;
 

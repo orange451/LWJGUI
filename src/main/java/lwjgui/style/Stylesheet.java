@@ -345,28 +345,6 @@ public class Stylesheet {
 
 		return ret;
 	}
-	
-	class StyleFunction {
-		protected StyleVarArgs args;
-		private String name;
-		
-		public StyleFunction(String name) {
-			this.name = name;
-		}
-		
-		public String getName() {
-			return this.name;
-		}
-		
-		public StyleVarArgs getArgs() {
-			return this.args;
-		}
-		
-		@Override
-		public String toString() {
-			return name + "(" + args + ")";
-		}
-	}
 
 	class StyleData {
 
@@ -412,7 +390,7 @@ public class Stylesheet {
 		public StyleSelector(String selector) {
 			// Parse out event
 			if ( selector.contains(":") ) {
-				String[] t = selector.split(":");
+				String[] t = selector.split(":", 2);
 				selector = t[0];
 				this.modifier = t[1];
 			}
@@ -468,6 +446,42 @@ public class Stylesheet {
 	}
 }
 
+/**
+ * Class used to define a function name and which args were passed to it through user-supplied CSS.
+ * Can be an argument when checking StyleVarArgs in StyleOperations
+ * @author Andrew
+ *
+ */
+class StyleFunction {
+	protected StyleVarArgs args;
+	private String name;
+	
+	public StyleFunction(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public StyleVarArgs getArgs() {
+		return this.args;
+	}
+	
+	@Override
+	public String toString() {
+		return name + "(" + args + ")";
+	}
+}
+
+/**
+ * Class used to define each grouping of parameters that represent the values for a css property. Most properties will have 1 Var Arg with multiple params.<br>
+ * i.e.<br>
+ * padding: 16px 24px						<b>--> This has 1 Var Arg, with 2 params.<br></b>
+ * box-shadow: 0px 0px, 32px 32px 32px red	<b>--> This has 2 var args. The first has 2 params, the second has 4 params.</b>
+ * @author Andrew
+ *
+ */
 class StyleVarArgs {
 	private List<StyleParams> params = new ArrayList<>();
 	
@@ -501,6 +515,11 @@ class StyleVarArgs {
 	}
 }
 
+/**
+ * Class used to represent parameters in a argument.
+ * @author Andrew
+ *
+ */
 class StyleParams {
 	private List<Object> values = new ArrayList<Object>();
 	
@@ -524,6 +543,11 @@ class StyleParams {
 	}
 }
 
+/**
+ * This class maps a property to a style operation. It's implemented when giving java the ability to interface with CSS.
+ * @author Andrew
+ *
+ */
 abstract class StyleOperation {
 	private String name;
 	
@@ -544,6 +568,11 @@ abstract class StyleOperation {
 	public abstract void process(Node node, StyleVarArgs value);
 }
 
+/**
+ * This class maps a style operation and user-supplied CSS arguments. 
+ * @author Andrew
+ *
+ */
 class StyleOperationValue {
 	private StyleOperation operation;
 	private StyleVarArgs value;
@@ -564,30 +593,5 @@ class StyleOperationValue {
 	@Override
 	public String toString() {
 		return operation + " " + value;
-	}
-	
-	public int hashCode() {
-		return operation.getName().hashCode();
-	}
-	
-	public boolean equals(Object o) {
-		if ( o == null )
-			return false;
-		
-		if ( o == this )
-			return true;
-		
-		if ( o.getClass() != this.getClass() )
-			return false;
-		
-		StyleOperationValue other = (StyleOperationValue)o;
-		
-		if ( !other.operation.equals(this.operation) )
-			return false;
-		
-		if ( !other.value.equals(this.value) )
-			return false;
-		
-		return true;
 	}
 }

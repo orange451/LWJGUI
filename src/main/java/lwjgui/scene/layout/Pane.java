@@ -52,11 +52,16 @@ public abstract class Pane extends FillableRegion implements BlockPaneRenderer {
 	
 	@Override
 	public void render(Context context) {
-		// Render standard pane
-		BlockPaneRenderer.render(context, this);
-		
-		// Draw children
-		super.render(context);
+		// Apply CSS
+		this.stylePush();
+		{
+			// Render standard pane
+			BlockPaneRenderer.render(context, this);
+			
+			// Draw children
+			super.render(context);
+		}
+		this.stylePop();
 	}
 	
 	/**

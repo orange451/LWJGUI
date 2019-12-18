@@ -1,5 +1,6 @@
 package lwjgui.scene;
 
+import lwjgui.LWJGUI;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.layout.floating.FloatingPane;
 import lwjgui.style.CSSStyleable;
@@ -48,14 +49,14 @@ public abstract class Region extends Parent implements CSSStyleable {
 	
 	public void stylePush() {
 		if ( this.cached_context != null ) {
+			
 			// Add our sheet to the stack
 			if ( this.getStylesheet() != null )
 				this.cached_context.getCurrentStyling().add(this.getStylesheet());
 			
 			// Apply styling!
-			for (int i = 0; i < cached_context.getCurrentStyling().size(); i++) {
+			for (int i = 0; i < cached_context.getCurrentStyling().size(); i++)
 				cached_context.getCurrentStyling().get(i).applyStyling(this);
-			}
 			
 			// Apply our local style if it exists
 			if ( this.getStyleLocal() != null ) {

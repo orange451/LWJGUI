@@ -11,7 +11,6 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 	public double getHeight();
 	
 	public static void render(Context context, BlockPaneRenderer node) {
-		node.stylePush();
 		
 		// Draw drop shadows
 		for (int i = 0; i < node.getBoxShadowList().size(); i++) {
@@ -38,7 +37,5 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 				continue;
 			LWJGUIUtil.drawBoxShadow(context, shadow, node.getBorderRadii(), (int) node.getX(), (int) node.getY(), (int)node.getWidth(), (int)node.getHeight());
 		}
-		
-		node.stylePop();
 	}
 }

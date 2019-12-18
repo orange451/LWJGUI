@@ -976,13 +976,18 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			this.getBoxShadowList().add(new BoxShadow(0, 0, 1.5f, 2, sel.alpha(0.2f), true));
 		}
 		
-		// Render standard pane
-		BlockPaneRenderer.render(context, this);
-		
-		// Draw sub nodes
-		this.internalScrollPane.setBackground(null);
-		this.internalScrollPane.setBorderStyle(BorderStyle.NONE);
-		super.render(context);
+		// Apply CSS
+		this.stylePush();
+		{
+			// Render standard pane
+			BlockPaneRenderer.render(context, this);
+			
+			// Draw sub nodes
+			this.internalScrollPane.setBackground(null);
+			this.internalScrollPane.setBorderStyle(BorderStyle.NONE);
+			super.render(context);
+		}
+		this.stylePop();
 		
 		// Draw Prompt
 		if ( getLength() == 0 && prompt != null && prompt.length() > 0 ) {

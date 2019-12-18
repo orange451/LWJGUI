@@ -3,11 +3,6 @@ package lwjgui.scene.control;
 import java.awt.Point;
 
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.nanovg.NVGPaint;
-import org.lwjgl.nanovg.NanoVG;
-
-import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ActionEvent;
 import lwjgui.event.EventHandler;
@@ -23,9 +18,6 @@ import lwjgui.style.BlockPaneRenderer;
 import lwjgui.style.BorderStyle;
 import lwjgui.style.BoxShadow;
 import lwjgui.style.ColorStop;
-import lwjgui.style.StyleBackground;
-import lwjgui.style.StyleBorder;
-import lwjgui.style.StyleBoxShadow;
 import lwjgui.theme.Theme;
 
 public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
@@ -213,9 +205,6 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 			this.getBoxShadowList().add(new BoxShadow(0, 0, 1.5f, 2, sel.alpha(0.2f), true));
 		}
 		
-		// Render standard pane
-		BlockPaneRenderer.render(context, this);
-		
 		// Text color?
 		if ( isDisabled() ) {
 			this.setTextFill(Theme.current().getShadow());
@@ -223,10 +212,18 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 			this.setTextFill(Theme.current().getText());
 		}
 		
-		// Draw children
-		this.offset(textOffset, 0);
-		super.render(context);
-		this.offset(-textOffset, 0);
+		// Apply CSS
+		this.stylePush();
+		{
+			// Render standard pane
+			BlockPaneRenderer.render(context, this);
+			
+			// Draw children
+			this.offset(textOffset, 0);
+			super.render(context);
+			this.offset(-textOffset, 0);
+		}
+		this.stylePop();
 	}
 	
 	protected Point getDrawSize() {

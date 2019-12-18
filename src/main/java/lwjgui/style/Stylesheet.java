@@ -69,6 +69,9 @@ public class Stylesheet {
 	}
 	
 	private void applyStyling(Node node, Map<String, StyleOperationValue> declarations) {
+		if ( declarations.size() == 0 )
+			return;
+		
 		// Iterate over operations and apply
 		Iterator<Entry<String, StyleOperationValue>> iterator = declarations.entrySet().iterator();
 		while(iterator.hasNext()) {
@@ -500,7 +503,7 @@ public class Stylesheet {
 
 		@Override
 		public String toString() {
-			return getSelector();
+			return getSelector() + "["+type+"]";
 		}
 		
 		public int hashCode() {

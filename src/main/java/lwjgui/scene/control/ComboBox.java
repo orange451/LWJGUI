@@ -79,7 +79,7 @@ public class ComboBox<T> extends CombinedButton {
 					return;
 				
 				context.setMinWidth(getWidth());
-				context.show(getScene(), getX(), getY()+getHeight()+1);
+				context.show(getScene(), getX(), getY()+getHeight()-1);
 			}	
 		};
 		

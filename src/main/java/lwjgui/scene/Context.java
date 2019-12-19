@@ -44,6 +44,8 @@ public class Context {
 	protected int mouseButton;
 	protected boolean focused;
 	
+	protected Bounds clipBounds;
+	
 	private List<Stylesheet> currentSheets = new ArrayList<>();
 
 	public Context( long window ) {
@@ -423,5 +425,17 @@ public class Context {
 	 */
 	public int getMouseButton() {
 		return this.mouseButton;
+	}
+
+	public void setClipBounds(double x, double y, double width, double height) {
+		this.clipBounds = new Bounds(x, y, x+width, y+height);
+	}
+	
+	public void setClipBounds(Bounds bounds) {
+		this.clipBounds = bounds;
+	}
+	
+	public Bounds getClipBounds() {
+		return this.clipBounds;
 	}
 }

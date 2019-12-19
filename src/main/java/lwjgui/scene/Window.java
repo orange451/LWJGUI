@@ -507,6 +507,7 @@ public class Window {
 		// Do NVG frame
 		context.refresh();
 		NanoVG.nvgBeginFrame(context.getNVG(), (int)width, (int)height, ratio);
+		context.setClipBounds(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
 		scene.render(context);
 		
         NanoVG.nvgRestore(context.getNVG());

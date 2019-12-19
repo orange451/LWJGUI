@@ -1,5 +1,6 @@
 package lwjgui.style;
 
+import lwjgui.geometry.Insets;
 import lwjgui.paint.Color;
 
 public interface StyleBorder {
@@ -9,7 +10,8 @@ public interface StyleBorder {
 	public void setBorderStyle(BorderStyle style);
 	public void setBorderColor(Color color);
 	public void setBorderWidth(float width);
+	public void setBorder(Insets insets);
 	public BorderStyle getBorderStyle();
 	public Color getBorderColor();
-	public float getBorderWidth();
+	public Insets getBorder();
 }

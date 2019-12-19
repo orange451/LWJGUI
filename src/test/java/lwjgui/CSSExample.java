@@ -47,7 +47,7 @@ public class CSSExample extends LWJGUIApplication {
 				+ "		border-color: #0865cc;"
 				+ "		border-width: 1px;"
 				+ "		padding: 6px 16px;"
-				+ "		transition: box-shadow 0.1s, background-color 0.1s, border-color 0.1s;"
+				+ "		transition: box-shadow 75ms, background-color 0.1s, border-color 0.1s;"
 				+ "}"
 				+ ""
 				+ ".bootstrap-button:hover {"

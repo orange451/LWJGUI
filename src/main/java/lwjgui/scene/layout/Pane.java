@@ -16,7 +16,6 @@ public abstract class Pane extends FillableRegion implements BlockPaneRenderer {
 	private Background background;
 	private Color borderColor;
 	private float[] borderRadii;
-	private float borderWidth;
 	private BorderStyle borderStyle;
 	private ObservableList<BoxShadow> boxShadows = new ObservableList<>();
 	
@@ -29,11 +28,6 @@ public abstract class Pane extends FillableRegion implements BlockPaneRenderer {
 		this.setBorderRadii(0);
 		
 		this.flag_clip = false;
-	}
-
-	@Override
-	protected void position(Node parent) {
-		super.position(parent);
 	}
 
 	/**
@@ -125,16 +119,6 @@ public abstract class Pane extends FillableRegion implements BlockPaneRenderer {
 	@Override
 	public Color getBorderColor() {
 		return this.borderColor;
-	}
-
-	@Override
-	public void setBorderWidth(float width) {
-		this.borderWidth = width;
-	}
-
-	@Override
-	public float getBorderWidth() {
-		return this.borderWidth;
 	}
 
 	@Override

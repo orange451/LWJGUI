@@ -15,7 +15,7 @@ import lwjgui.theme.Theme;
 public class CheckBox extends ButtonBase {
 	private boolean checked;
 	
-	private int size = 16;
+	private int size = 18;
 	
 	private String checkmark = "\u2714";
 
@@ -69,9 +69,9 @@ public class CheckBox extends ButtonBase {
 		this.forceWidth(wid);
 
 		if ( checked ) {
-			float drawSize = size*1.33f;
+			float drawSize = size*1.2f;
 			double xx = getX()+size/2f;
-			double yy = getY()+drawSize/2f;
+			double yy = getY()+drawSize/2f+1;
 			LWJGUIUtil.drawText(checkmark, Font.DINGBAT, FontStyle.REGULAR, drawSize, Theme.current().getControl(), (int)xx, (int)yy+1, Pos.CENTER);
 			LWJGUIUtil.drawText(checkmark, Font.DINGBAT, FontStyle.REGULAR, drawSize, this.isDisabled()?Theme.current().getShadow():Theme.current().getText(), (int)xx, (int)yy, Pos.CENTER);
 		}

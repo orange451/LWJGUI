@@ -1,7 +1,9 @@
 package lwjgui.style;
 
 import lwjgui.LWJGUIUtil;
+import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
+import lwjgui.scene.Node;
 
 public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxShadow,CSSStyleable {
 	
@@ -21,13 +23,14 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 		}
 		
 		// Draw border
-		if ( node.getBorderStyle() != BorderStyle.NONE && node.getBorderWidth() > 0 && node.getBorderColor() != null ) {
-			LWJGUIUtil.drawBorder(context, node.getX(), node.getY(), node.getWidth(), node.getHeight(), node.getBorderWidth(), node.getBackground(), node.getBorderColor(), node.getBorderRadii() );
+		Insets border = node.getBorder();
+		if ( node.getBorderStyle() != BorderStyle.NONE && (border.getWidth() > 0 || border.getHeight() > 0) && node.getBorderColor() != null ) {
+			LWJGUIUtil.drawBorder(context, node.getX(), node.getY(), node.getWidth(), node.getHeight(), border, node.getBackground(), node.getBorderColor(), node.getBorderRadii() );
 		}
 		
 		// Draw background
 		if ( node.getBackground() != null ) {
-			node.getBackground().render(context, node.getX(), node.getY(), node.getWidth(), node.getHeight(), node.getBorderRadii());
+			node.getBackground().render(context, node.getX()+border.getLeft(), node.getY()+border.getTop(), node.getWidth()-border.getWidth(), node.getHeight()-border.getHeight(), node.getBorderRadii());
 		}
 		
 		// Draw inset shadows
@@ -35,7 +38,7 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 			BoxShadow shadow = node.getBoxShadowList().get(i);
 			if ( !shadow.isInset() )
 				continue;
-			LWJGUIUtil.drawBoxShadow(context, shadow, node.getBorderRadii(), (int) node.getX(), (int) node.getY(), (int)node.getWidth(), (int)node.getHeight());
+			LWJGUIUtil.drawBoxShadow(context, shadow, node.getBorderRadii(), (int) (node.getX()+border.getLeft()), (int) (node.getY()+border.getTop()), (int)(node.getWidth()-border.getWidth()), (int)(node.getHeight()-border.getHeight()));
 		}
 	}
 }

@@ -34,8 +34,6 @@ public class ControlExample extends LWJGUIApplication {
 		// Create background pane
 		StackPane background = new StackPane();
 		
-		background.setStylesheet("checkbox { background-color:green; } .test { background-color:orange; }");
-		
 		// Create a vbox to store examples vertically
 		VBox vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
@@ -158,12 +156,10 @@ public class ControlExample extends LWJGUIApplication {
 		CheckBox b = new CheckBox("Hello World");
 		b.setDisabled(true);
 		pane.getChildren().add(b);
-		b.setStyle("background-color:red");
 		pane.getChildren().add(new CheckBox("Testing"));
 		
 		// Toggle lockable button
 		CheckBox lock = new CheckBox("Click to lock button");
-		lock.getClassList().add("test");
 		lock.setOnAction((event)->{
 			lockableButton.setDisabled(lock.isChecked());
 		});

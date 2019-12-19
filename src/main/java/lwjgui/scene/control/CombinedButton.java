@@ -14,7 +14,7 @@ public class CombinedButton extends Control {
 		this.flag_clip = false;
 		
 		this.internal = new HBox();
-		this.internal.setSpacing(1f);
+		this.internal.setSpacing(-0.5f);
 		this.children.add(internal);
 		
 		this.buttons = new ObservableList<Button>();

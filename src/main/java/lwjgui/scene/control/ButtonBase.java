@@ -29,7 +29,6 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	private Background background;
 	private Color borderColor;
 	private float[] borderRadii;
-	private float borderWidth;
 	private BorderStyle borderStyle;
 	private ObservableList<BoxShadow> boxShadows = new ObservableList<>();
 	
@@ -137,16 +136,6 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	}
 
 	@Override
-	public void setBorderWidth(float width) {
-		this.borderWidth = width;
-	}
-
-	@Override
-	public float getBorderWidth() {
-		return this.borderWidth;
-	}
-
-	@Override
 	public ObservableList<BoxShadow> getBoxShadowList() {
 		return this.boxShadows;
 	}
@@ -201,7 +190,7 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 			if ( isDisabled() )
 				sel = Theme.current().getSelectionPassive();
 
-			this.getBoxShadowList().add(new BoxShadow(0, 0, 3, 1, sel));
+			this.getBoxShadowList().add(new BoxShadow(0, 0, 4, 0, sel.alpha(0.8f)));
 			this.getBoxShadowList().add(new BoxShadow(0, 0, 1.5f, 2, sel.alpha(0.2f), true));
 		}
 		

@@ -108,7 +108,7 @@ public class StyleOperations {
 		}
 	};
 	
-	public static StyleOperation BORDER_WIDTH = new StyleOperation("border-width") {
+	public static StyleOperation BORDER_LEFT = new StyleOperation("border-left") {
 		@Override
 		public void process(Node node, StyleVarArgs value) {
 			if ( !(node instanceof StyleBorder) )
@@ -116,12 +116,16 @@ public class StyleOperations {
 			
 			StyleBorder t = (StyleBorder)node;
 			float destBorder = (float)toNumber(value.get(0).get(0));
-			float sourceBorder = t.getBorderWidth();
+			float sourceBorder = (float) t.getBorder().getLeft();
 			
 			// Border Width transition
 			StyleTransition transition = node.getStyleTransition(this.getName());
 			if ( destBorder == sourceBorder || transition == null ) {
-				t.setBorderWidth(destBorder);
+				Insets currentBorder = t.getBorder();
+				t.setBorder(new Insets(currentBorder.getTop(),
+										currentBorder.getRight(),
+										currentBorder.getBottom(),
+										destBorder));
 			} else {
 				List<Transition> current = transition.getTransitions();
 				if ( current.size() > 0 )
@@ -130,7 +134,11 @@ public class StyleOperations {
 				Transition tran = new Transition(transition.getDurationMillis()) {
 					@Override
 					public void tick(double progress) {
-						t.setBorderWidth(tween(sourceBorder, destBorder, progress));
+						Insets currentBorder = t.getBorder();
+						t.setBorder(new Insets(currentBorder.getTop(),
+												currentBorder.getRight(),
+												currentBorder.getBottom(),
+												tween(sourceBorder, destBorder, progress)));
 					}
 				};
 				tran.play();

@@ -49,9 +49,9 @@ public abstract class CustomTextFieldBase extends TextField {
 		);
 		
 		if ( leftNode != null )
-			leftNode.setLocalPosition(this, this.internalScrollPane.getPadding().getLeft()/2-leftNode.getWidth()/2+1,this.getHeight()/2-leftNode.getHeight()/2);
+			leftNode.setLocalPosition(this, this.internalScrollPane.getPadding().getLeft()/2-leftNode.getWidth()/2+1,this.getInnerBounds().getHeight()/2-leftNode.getHeight()/2);
 		
 		if ( rightNode != null )
-			rightNode.setLocalPosition(this, this.getWidth()-this.internalScrollPane.getPadding().getRight(),this.getHeight()/2-rightNode.getHeight()/2);
+			rightNode.setLocalPosition(this, this.getWidth()-this.internalScrollPane.getPadding().getRight(),this.getInnerBounds().getHeight()/2f-rightNode.getHeight()/2f);
 	}
 }

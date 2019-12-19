@@ -480,8 +480,6 @@ public abstract class Node implements Resizable {
 	
 	protected void resize() {
 		
-		// Resize if smaller than pref size
-
 		// Size up to pref size
 		if ( size.x < this.getPrefWidth() )
 			size.x = this.getPrefWidth();
@@ -653,6 +651,7 @@ public abstract class Node implements Resizable {
 			par = par.parent;
 		}
 		
+		this.cached_context.setClipBounds(clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
 		NanoVG.nvgScissor(context.getNVG(), clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
 	}
 	

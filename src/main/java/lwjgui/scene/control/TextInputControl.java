@@ -54,7 +54,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	private Background background;
 	private Color borderColor;
 	private float[] borderRadii;
-	private float borderWidth;
 	private BorderStyle borderStyle;
 	private ObservableList<BoxShadow> boxShadows = new ObservableList<>();
 	
@@ -673,7 +672,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	protected void resize() {
 		this.setAlignment(Pos.TOP_LEFT);
 		
-		internalScrollPane.setPrefSize(getWidth()-1, getHeight()-1);
+		internalScrollPane.setPrefSize(this.getInnerBounds().getWidth(), this.getInnerBounds().getHeight());
 
 		int width = getMaxTextWidth();
 		this.internalRenderingPane.setMinSize(width, lines.size()*fontSize);
@@ -898,16 +897,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	}
 
 	@Override
-	public void setBorderWidth(float width) {
-		this.borderWidth = width;
-	}
-
-	@Override
-	public float getBorderWidth() {
-		return this.borderWidth;
-	}
-
-	@Override
 	public ObservableList<BoxShadow> getBoxShadowList() {
 		return this.boxShadows;
 	}
@@ -972,7 +961,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			if ( isDisabled() )
 				sel = Theme.current().getSelectionPassive();
 
-			this.getBoxShadowList().add(new BoxShadow(0, 0, 3, 1, sel));
+			this.getBoxShadowList().add(new BoxShadow(0, 0, 4, 0, sel.alpha(0.8f)));
 			this.getBoxShadowList().add(new BoxShadow(0, 0, 1.5f, 2, sel.alpha(0.2f), true));
 		}
 		

@@ -1,12 +1,12 @@
 package lwjgui.scene;
 
-import lwjgui.LWJGUI;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.layout.floating.FloatingPane;
 import lwjgui.style.CSSStyleable;
 
 public abstract class Region extends Parent implements CSSStyleable {
 	protected Insets padding = Insets.EMPTY;
+	protected Insets border = Insets.EMPTY;
 	
 	/*@Override
 	public Vector2d getAvailableSize() {
@@ -84,15 +84,43 @@ public abstract class Region extends Parent implements CSSStyleable {
      * @return Return the padding insets of this node.
      */
     public final Insets getPadding() { return padding; }
+    
+    /**
+     * Set the border insets of this node. All child nodes will be offset based on the insets.
+     * @param value
+     */
+    public final void setBorder(Insets value) { border = value; }
+    
+    /**
+     * 
+     * @return Return the padding insets of this node.
+     */
+    public final Insets getBorder() { return border; }
+
+    /**
+     * Convenience method to set the 4 borders based on 1 value.
+     * @param width
+     */
+	public void setBorderWidth(float width) {
+		this.setBorder(new Insets(width));
+	}
+	
+    /**
+     * Convenience method to set the 4 borders based on 2 values.
+     * @param width
+     */
+	public void setBorderWidth(float width, float height) {
+		this.setBorder(new Insets(height, width, height, width));
+	}
 	
 	@Override
 	public LayoutBounds getInnerBounds() {
 		LayoutBounds t = super.getInnerBounds();
 		
-		t.minX += (int)padding.getLeft();
-		t.minY += (int)padding.getTop();
-		t.maxX -= padding.getRight();
-		t.maxY -= padding.getBottom();
+		t.minX += (int)padding.getLeft()+(int)border.getLeft();
+		t.minY += (int)padding.getTop()+(int)border.getTop();
+		t.maxX -= padding.getRight()+border.getRight();
+		t.maxY -= padding.getBottom()+border.getBottom();
 		
 		return t;
 	}
@@ -111,23 +139,23 @@ public abstract class Region extends Parent implements CSSStyleable {
 		}
 	}
 	
-	protected boolean packToElementWidth() {
+	protected boolean packToDescendentElementWidth() {
 		return true;
 	}
 	
-	protected boolean packToElementHeight() {
+	protected boolean packToDescendentElementHeight() {
 		return true;
 	}
 	
 	@Override
 	protected void resize() {
 		// Fit this pane to the width of its elements.
-		float maxWidthInside = (float) (getMaxElementWidth()+getPadding().getWidth());
+		float maxWidthInside = (float) (getMaxElementWidth()+getPadding().getWidth()+getBorder().getWidth());
 		maxWidthInside = (float) Math.max(maxWidthInside, getPrefWidth());
 		size.x = maxWidthInside;
 		
 		// Fit this pane to the height of its elements.
-		float maxHeightInside = (float) (getMaxElementHeight()+getPadding().getHeight());
+		float maxHeightInside = (float) (getMaxElementHeight()+getPadding().getHeight()+getBorder().getHeight());
 		maxHeightInside = (float) Math.max(maxHeightInside, getPrefHeight());
 		size.y = maxHeightInside;
 	
@@ -145,7 +173,7 @@ public abstract class Region extends Parent implements CSSStyleable {
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			double childWid = child.getWidth();
-			if ( child instanceof Region && !((Region)child).packToElementWidth() ) {
+			if ( child instanceof Region && !((Region)child).packToDescendentElementWidth() ) {
 				childWid = 0;
 			}
 			if ( child instanceof FloatingPane ) {
@@ -168,7 +196,7 @@ public abstract class Region extends Parent implements CSSStyleable {
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
 			double temp = child.getHeight();
-			if ( child instanceof Region && !((Region)child).packToElementHeight() ) {
+			if ( child instanceof Region && !((Region)child).packToDescendentElementHeight() ) {
 				temp = 0;
 			}
 			if ( child instanceof FloatingPane ) {

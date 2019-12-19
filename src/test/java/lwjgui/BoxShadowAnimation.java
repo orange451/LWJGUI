@@ -77,7 +77,7 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			this.shadow = new BoxShadow(0, 8, 24, -4, shadowColor);
 			this.getBoxShadowList().add(shadow);
 
-			this.outline = new BoxShadow(0, 0, 0, 1, color.alpha(0.5f));
+			this.outline = new BoxShadow(0, 0, 0, 0, color.alpha(0.5f));
 			this.getBoxShadowList().add(outline);
 			
 			// Label

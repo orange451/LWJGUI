@@ -45,7 +45,8 @@ public abstract class FillableRegion extends Region {
 			if ( parent != null ) {
 				double ocupiedSize = 0;
 				if ( parent instanceof Region ) {
-					ocupiedSize = ((Region)parent).getMinimumPotentialWidth();
+					ocupiedSize += ((Region)parent).getMinimumPotentialWidth();
+					ocupiedSize += ((Region)parent).getBorder().getWidth();
 				}
 				double wid = parent.getInnerBounds().getWidth()-ocupiedSize;
 				
@@ -57,7 +58,8 @@ public abstract class FillableRegion extends Region {
 			if ( parent != null ) {
 				double ocupiedSize = 0;
 				if ( parent instanceof Region ) {
-					ocupiedSize = ((Region)parent).getMinimumPotentialHeight();
+					ocupiedSize += ((Region)parent).getMinimumPotentialHeight();
+					ocupiedSize += ((Region)parent).getBorder().getHeight();
 				}
 				double hei = parent.getInnerBounds().getHeight()-ocupiedSize;
 				
@@ -68,12 +70,12 @@ public abstract class FillableRegion extends Region {
 	}
 
 	@Override
-	protected boolean packToElementWidth() {
+	protected boolean packToDescendentElementWidth() {
 		return !this.isFillToParentWidth();
 	}
 	
 	@Override
-	protected boolean packToElementHeight() {
+	protected boolean packToDescendentElementHeight() {
 		return !this.isFillToParentHeight();
 	}
 }

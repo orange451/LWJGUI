@@ -122,9 +122,6 @@ public class ScrollPane extends Pane {
 			// Update scrollbars
 			vBar.update(viewportSize.y, content.getHeight()+this.padding.getHeight());
 			hBar.update(viewportSize.x, content.getWidth()+this.padding.getWidth());
-			
-			//
-			//internalScrollCanvas.calculateNodeBounds();
 		} else {
 			hBar.active = false;
 			vBar.active = false;
@@ -151,9 +148,11 @@ public class ScrollPane extends Pane {
 	
 	@Override
 	protected void position(Node parent) {
-		update();
 		
 		super.position(parent);
+
+		update();
+		content.updateChildren();
 	}
 
 	public void setVvalue(double value) {

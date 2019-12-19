@@ -25,7 +25,7 @@ public class ScrollPaneExample extends LWJGUIApplication {
 		
 		// Create a scrollpane
 		ScrollPane p = new ScrollPane();
-		p.setPrefSize(150, 150);
+		p.setPrefSize(200, 200);
 		pane.setCenter(p);
 		
 		// Fill it with elements,

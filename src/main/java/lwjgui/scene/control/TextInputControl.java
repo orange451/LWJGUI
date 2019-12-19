@@ -666,13 +666,16 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	@Override
 	protected void position(Node parent) {
 		super.position(parent);
+		
+		this.internalScrollPane.position(this);
+		this.internalScrollPane.setAbsolutePosition(getX()+this.getInnerBounds().getX(), getY()+this.getInnerBounds().getY());
+		this.internalScrollPane.setPrefSize(this.getInnerBounds().getWidth(), this.getInnerBounds().getHeight());
 	}
 	
 	@Override
 	protected void resize() {
 		this.setAlignment(Pos.TOP_LEFT);
-		
-		internalScrollPane.setPrefSize(this.getInnerBounds().getWidth(), this.getInnerBounds().getHeight());
+		this.internalScrollPane.setPrefSize(this.getInnerBounds().getWidth(), this.getInnerBounds().getHeight());
 
 		int width = getMaxTextWidth();
 		this.internalRenderingPane.setMinSize(width, lines.size()*fontSize);

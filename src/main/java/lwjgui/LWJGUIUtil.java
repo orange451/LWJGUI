@@ -572,11 +572,16 @@ public class LWJGUIUtil {
 		float b4 = Math.max((borderRadii[3]) + boundsBottomLeft, 0);
 		NanoVG.nvgRoundedRectVarying(context.getNVG(), xx, yy, ww, hh, b1, b2, b3, b4);
 		
-		/*if ( background == null ) {
+		if ( background == null ) {
+			xx += border.getLeft();
+			yy += border.getTop();
+			ww -= border.getWidth();
+			hh -= border.getHeight();
+			
 			NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CW);
-			NanoVG.nvgRoundedRectVarying(context.getNVG(), xx, yy, ww-w*2, hh-w*2, borderRadii[0], borderRadii[1], borderRadii[2], borderRadii[3]);
+			NanoVG.nvgRoundedRectVarying(context.getNVG(), xx, yy, ww, hh, borderRadii[0], borderRadii[1], borderRadii[2], borderRadii[3]);
 			NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CCW);
-		}*/
+		}
 		
 		NanoVG.nvgFill(context.getNVG());
 		NanoVG.nnvgClosePath(context.getNVG());

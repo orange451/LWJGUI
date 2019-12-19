@@ -2,11 +2,13 @@ package lwjgui.scene.control;
 
 import java.awt.Point;
 
+import org.joml.Vector2d;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
+import lwjgui.scene.Node;
 import lwjgui.theme.Theme;
 
 public class RadioButton extends ToggleButton {
@@ -33,10 +35,16 @@ public class RadioButton extends ToggleButton {
 	
 	@Override
 	protected void resize() {
-		//this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
 		this.setMinHeight(size);
-		this.setMinWidth(getTextWidth() + textOffset);
+		this.forceWidth(getTextWidth() + textOffset);
 		super.resize();
+	}
+	
+	@Override
+	protected void position(Node parent) {
+		resize();
+		super.position(parent);
+		resize();
 	}
 	
 	@Override

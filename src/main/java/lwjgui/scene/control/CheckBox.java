@@ -10,6 +10,7 @@ import lwjgui.font.FontStyle;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Context;
+import lwjgui.scene.Node;
 import lwjgui.theme.Theme;
 
 public class CheckBox extends ButtonBase {
@@ -47,9 +48,16 @@ public class CheckBox extends ButtonBase {
 	protected void resize() {
 		//this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
 		this.setMinHeight(size);
-		this.setMinWidth(getTextWidth() + textOffset);
+		this.forceWidth(getTextWidth() + textOffset);
 		
 		super.resize();
+	}
+	
+	@Override
+	protected void position(Node parent) {
+		resize();
+		super.position(parent);
+		resize();
 	}
 	
 	@Override

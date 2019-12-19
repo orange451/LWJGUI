@@ -224,22 +224,26 @@ public abstract class Node implements Resizable {
 	 * @param parent
 	 */
 	protected void position(Node parent) {
-		Node oldParent = this.parent;
-		this.parent = parent;
-
-		if ( oldParent != this.parent )
+		stylePush();
+		{
+			Node oldParent = this.parent;
+			this.parent = parent;
+	
+			if ( oldParent != this.parent )
+				computeAbsolutePosition();
+			
+			cached_context = LWJGUI.getCurrentContext();
+	
+			idToNode.clear();
+			descendents.clear();
+			
+			updateChildren();
+			resize();
 			computeAbsolutePosition();
-		
-		cached_context = LWJGUI.getCurrentContext();
-
-		idToNode.clear();
-		descendents.clear();
-		
-		updateChildren();
-		resize();
-		computeAbsolutePosition();
-		
-		registerToParent(this, this.getParent());
+			
+			registerToParent(this, this.getParent());
+		}
+		stylePop();
 	}
 	
 	private HashMap<String, Node> idToNode = new HashMap<>();
@@ -253,6 +257,38 @@ public abstract class Node implements Resizable {
 		parent.idToNode.put(node.getElementId(), node);
 		parent.descendents.add(node);
 		registerToParent(node, parent.getParent());
+	}
+	
+	/**
+	 * Apply our style to the current stack
+	 */
+	protected void stylePush() {
+		if ( this.cached_context != null ) {
+			
+			// Add our sheet to the stack
+			if ( this.getStylesheet() != null )
+				this.cached_context.getCurrentStyling().add(this.getStylesheet());
+			
+			// Apply styling!
+			for (int i = 0; i < cached_context.getCurrentStyling().size(); i++)
+				cached_context.getCurrentStyling().get(i).applyStyling(this);
+			
+			// Apply our local style if it exists
+			if ( this.getStyleLocal() != null ) {
+				this.getStyleLocal().applyStyling(this, "NODESTYLE");
+			}
+		}
+	}
+	
+	/**
+	 * Remove out style from the current stack
+	 */
+	protected void stylePop() {
+		// Remove our sheet from the stack
+		if ( this.cached_context != null ) {
+			if ( this.getStylesheet() != null )
+				cached_context.getCurrentStyling().remove(this.getStylesheet());
+		}
 	}
 	
 	/**

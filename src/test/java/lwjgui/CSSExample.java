@@ -96,7 +96,12 @@ public class CSSExample extends LWJGUIApplication {
 		StackPane styledPane = new StackPane() {
 			{
 				this.setOnMousePressedInternal((event)->{
-					//this.cached_context.setSelected(this); // Force context selection when it's clicked DOWN, not on release.
+					this.cached_context.setSelected(this); // Force context selection when it's clicked DOWN, not on release.
+					// This is just so the :focus pseudoclass looks nicer. Otherwise you can potentially see 2 buttons
+					// selected at one time.
+					
+					// Alternatively you can use the custom :select pseudoclass for a similar effect.
+					// :select Pseudo class is not valid CSS, but it's implemented in LWJGUI's CSS.
 				});
 			}
 		};

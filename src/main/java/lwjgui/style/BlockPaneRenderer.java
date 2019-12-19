@@ -5,7 +5,7 @@ import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 
-public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxShadow,CSSStyleable {
+public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxShadow {
 	
 	public double getX();
 	public double getY();

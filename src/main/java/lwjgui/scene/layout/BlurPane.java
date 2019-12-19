@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUI;
+import lwjgui.LWJGUIUtil;
 import lwjgui.gl.BlurShader;
 import lwjgui.gl.BlurShaderOld;
 import lwjgui.gl.OffscreenBuffer;
@@ -37,7 +38,11 @@ public class BlurPane extends StackPane {
 		resizeBuffer();
 		
 		this.setBackground(new BackgroundSolid(new Color(150,150,150,255)));
-		this.getBoxShadowList().add(new BoxShadow(4,4,16));
+	}
+	
+	@Override
+	public String getElementType() {
+		return "blurpane";
 	}
 
 	private void resizeBuffer() {
@@ -73,17 +78,20 @@ public class BlurPane extends StackPane {
 			NanoVG.nvgSave(context.getNVG());
 			NanoVG.nvgEndFrame(context.getNVG());
 			
-			// Blit
+			// Blit (Copy current FBO to BlurPane FBO)
 			blit(context);
 			
-			// Blur
+			// Blur (Blur the FBO)
 			blur(context);
 			
 			// Restore nanovg
 			NanoVG.nvgRestore(context.getNVG());
 			context.refresh(); // Restore glViewport
 
-			// Render FBO to screen
+			// Render children (Apply Styling)
+			super.render(context);
+
+			// Render FBO to screen (Draw our blurred image ontop)
 			long nanovg = context.getNVG();
 			float x = (int)this.getX();
 			float y = (int)this.getY();
@@ -92,14 +100,11 @@ public class BlurPane extends StackPane {
 			try (MemoryStack stack = stackPush()) {
 				NVGPaint imagePaint = NanoVG.nvgImagePattern(nanovg, x, y, w, h, 0, nanoImage, 1, NVGPaint.callocStack(stack));
 				NanoVG.nvgBeginPath(nanovg);
-				NanoVG.nvgRect(nanovg, x, y, w, h);
+				NanoVG.nvgRoundedRectVarying(context.getNVG(), (int)x, (int)y, (int)w, (int)h, (float)this.getBorderRadii()[0], (float)this.getBorderRadii()[1], (float)this.getBorderRadii()[2], (float)this.getBorderRadii()[3]);
 				NanoVG.nvgFillPaint(nanovg, imagePaint);
 				NanoVG.nvgFill(nanovg);
 			}
 		}
-
-		// Render children
-		super.render(context);
 	}
 	
 	@Override

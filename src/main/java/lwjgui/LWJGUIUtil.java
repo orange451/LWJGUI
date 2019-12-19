@@ -561,7 +561,7 @@ public class LWJGUIUtil {
 		
 		// Force scissor
 		Bounds bounds = context.getClipBounds();
-		//NanoVG.nvgScissor(context.getNVG(), (float)x, (float)y, (float)width, (float)height);
+		NanoVG.nvgScissor(context.getNVG(), (float)x, (float)y, (float)width, (float)height);
 		
 		NanoVG.nvgBeginPath(context.getNVG());
 		NanoVG.nvgFillColor(context.getNVG(), borderColor.getNVG());
@@ -587,6 +587,6 @@ public class LWJGUIUtil {
 		NanoVG.nnvgClosePath(context.getNVG());
 
 		// Reset scissor
-		//NanoVG.nvgScissor(context.getNVG(), (float)bounds.getX(), (float)bounds.getY(), (float)bounds.getWidth(), (float)bounds.getHeight());
+		NanoVG.nvgScissor(context.getNVG(), (float)bounds.getX(), (float)bounds.getY(), (float)bounds.getWidth(), (float)bounds.getHeight());
 	}
 }

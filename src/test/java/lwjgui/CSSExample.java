@@ -35,7 +35,7 @@ public class CSSExample extends LWJGUIApplication {
 		// Apply some style!
 		pane.setStylesheet(""
 				+ "flowpane {"
-				+ "		gap: 8px;"
+				+ "		gap: 6px;"
 				+ "}"
 				+ ""
 				+ ""
@@ -96,7 +96,7 @@ public class CSSExample extends LWJGUIApplication {
 		StackPane styledPane = new StackPane() {
 			{
 				this.setOnMousePressedInternal((event)->{
-					this.cached_context.setSelected(this); // Force context selection when it's clicked DOWN, not on release.
+					//this.cached_context.setSelected(this); // Force context selection when it's clicked DOWN, not on release.
 				});
 			}
 		};

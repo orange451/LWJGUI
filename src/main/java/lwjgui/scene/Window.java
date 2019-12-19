@@ -531,7 +531,7 @@ public class Window {
 		this.scene = scene;
 		
 		try {
-			final int s = 1024*1024;
+			final int s = 10000;
 			// Set scene size
 			scene.setMinSize(0, 0);
 			scene.setMaxSize(s, s);
@@ -554,9 +554,9 @@ public class Window {
 			}
 			
 			// Set window to match scene's size
-			double sw = Math.min(maxWid, scene.getPrefWidth());
-			double sh = Math.min(maxHei, scene.getPrefHeight());
-			if ( scene.getPrefHeight() != 0 && scene.getPrefWidth() != 0 ) {
+			double sw = maxWid;
+			double sh = maxHei;
+			if ( scene.getPrefHeight() > 1 && scene.getPrefWidth() > 1 ) {
 				sw = scene.getPrefWidth();
 				sh = scene.getPrefHeight();
 			}

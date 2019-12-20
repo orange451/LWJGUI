@@ -147,6 +147,162 @@ public class StyleOperations {
 		}
 	};
 	
+	public static StyleOperation BORDER_RIGHT = new StyleOperation("border-right") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof StyleBorder) )
+				return;
+			
+			StyleBorder t = (StyleBorder)node;
+			float destBorder = (float)toNumber(value.get(0).get(0));
+			float sourceBorder = (float) t.getBorder().getRight();
+			
+			// Border Width transition
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			if ( destBorder == sourceBorder || transition == null ) {
+				Insets currentBorder = t.getBorder();
+				t.setBorder(new Insets(currentBorder.getTop(),
+										destBorder,
+										currentBorder.getBottom(),
+										currentBorder.getLeft()));
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				Transition tran = new Transition(transition.getDurationMillis()) {
+					@Override
+					public void tick(double progress) {
+						Insets currentBorder = t.getBorder();
+						t.setBorder(new Insets(currentBorder.getTop(),
+												tween(sourceBorder, destBorder, progress),
+												currentBorder.getBottom(),
+												currentBorder.getLeft()));
+					}
+				};
+				tran.play();
+				current.add(tran);
+			}
+		}
+	};
+	
+	public static StyleOperation BORDER_TOP = new StyleOperation("border-top") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof StyleBorder) )
+				return;
+			
+			StyleBorder t = (StyleBorder)node;
+			float destBorder = (float)toNumber(value.get(0).get(0));
+			float sourceBorder = (float) t.getBorder().getTop();
+			
+			// Border Width transition
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			if ( destBorder == sourceBorder || transition == null ) {
+				Insets currentBorder = t.getBorder();
+				t.setBorder(new Insets(destBorder,
+										currentBorder.getRight(),
+										currentBorder.getBottom(),
+										currentBorder.getLeft()));
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				Transition tran = new Transition(transition.getDurationMillis()) {
+					@Override
+					public void tick(double progress) {
+						Insets currentBorder = t.getBorder();
+						t.setBorder(new Insets(tween(sourceBorder, destBorder, progress),
+												currentBorder.getRight(),
+												currentBorder.getBottom(),
+												currentBorder.getLeft()));
+					}
+				};
+				tran.play();
+				current.add(tran);
+			}
+		}
+	};
+	
+	public static StyleOperation BORDER_BOTTOM = new StyleOperation("border-bottom") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof StyleBorder) )
+				return;
+			
+			StyleBorder t = (StyleBorder)node;
+			float destBorder = (float)toNumber(value.get(0).get(0));
+			float sourceBorder = (float) t.getBorder().getBottom();
+			
+			// Border Width transition
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			if ( destBorder == sourceBorder || transition == null ) {
+				Insets currentBorder = t.getBorder();
+				t.setBorder(new Insets(currentBorder.getRight(),
+										currentBorder.getRight(),
+										destBorder,
+										currentBorder.getLeft()));
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				Transition tran = new Transition(transition.getDurationMillis()) {
+					@Override
+					public void tick(double progress) {
+						Insets currentBorder = t.getBorder();
+						t.setBorder(new Insets(currentBorder.getTop(),
+												currentBorder.getRight(),
+												tween(sourceBorder, destBorder, progress),
+												currentBorder.getLeft()));
+					}
+				};
+				tran.play();
+				current.add(tran);
+			}
+		}
+	};
+	
+	public static StyleOperation BORDER_WIDTH = new StyleOperation("border-width") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof StyleBorder) )
+				return;
+			
+			float border = (float)toNumber(value.get(0).get(0));
+			float borderLeft = border;
+			float borderRight = border;
+			float borderTop = border;
+			float borderBottom = border;
+			
+			if ( value.get(0).size() == 2 ) {
+				float borderV = (float)toNumber(value.get(0).get(0));
+				float borderH = (float)toNumber(value.get(0).get(1));
+
+				borderTop = borderV;
+				borderBottom = borderV;
+				borderLeft = borderH;
+				borderRight = borderH;
+			} else if ( value.get(0).size() == 3 ) {
+				borderTop = (float)toNumber(value.get(0).get(0));
+				borderRight = (float)toNumber(value.get(0).get(1));
+				borderLeft = (float)toNumber(value.get(0).get(1));
+				borderBottom = (float)toNumber(value.get(0).get(2));
+			} else if ( value.get(0).size() == 4 ) {
+				borderTop = (float)toNumber(value.get(0).get(0));
+				borderRight = (float)toNumber(value.get(0).get(1));
+				borderBottom = (float)toNumber(value.get(0).get(2));
+				borderLeft = (float)toNumber(value.get(0).get(3));
+			}
+			
+			BORDER_LEFT.process(node, new StyleVarArgs(new StyleParams(borderLeft)));
+			BORDER_RIGHT.process(node, new StyleVarArgs(new StyleParams(borderRight)));
+			BORDER_TOP.process(node, new StyleVarArgs(new StyleParams(borderTop)));
+			BORDER_BOTTOM.process(node, new StyleVarArgs(new StyleParams(borderBottom)));
+		}
+	};
+	
 	public static StyleOperation BORDER_COLOR = new StyleOperation("border-color") {
 		@Override
 		public void process(Node node, StyleVarArgs value) {
@@ -462,6 +618,9 @@ public class StyleOperations {
 	}
 
 	protected static float toNumber(Object value) {
+		if ( value instanceof Number )
+			return ((Number)value).floatValue();
+		
 		try {
 			return (float) Double.parseDouble(value.toString());
 		} catch(Exception e) {

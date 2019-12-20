@@ -3,7 +3,6 @@ package lwjgui.style;
 import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
-import lwjgui.scene.Node;
 
 public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxShadow {
 	

@@ -31,12 +31,8 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
-import org.lwjgl.opengl.GL33;
-
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.HPos;
@@ -561,7 +557,7 @@ public class LWJGUIUtil {
 		
 		// Force scissor
 		Bounds bounds = context.getClipBounds();
-		NanoVG.nvgScissor(context.getNVG(), (float)x, (float)y, (float)width, (float)height);
+		NanoVG.nvgScissor(context.getNVG(), (int)x, (int)y, (int)width, (int)height);
 		
 		NanoVG.nvgBeginPath(context.getNVG());
 		NanoVG.nvgFillColor(context.getNVG(), borderColor.getNVG());

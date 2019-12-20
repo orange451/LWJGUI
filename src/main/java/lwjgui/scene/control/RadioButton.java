@@ -35,6 +35,8 @@ public class RadioButton extends ToggleButton {
 	
 	@Override
 	protected void resize() {
+		this.cachedWidth = -1;
+		
 		this.setMinHeight(size);
 		this.forceWidth(getTextWidth() + textOffset);
 		super.resize();

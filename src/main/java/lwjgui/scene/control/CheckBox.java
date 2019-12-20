@@ -23,7 +23,7 @@ public class CheckBox extends ButtonBase {
 	public CheckBox(String name) {
 		super(name);
 		
-		this.setBorderRadii(2);
+		this.setBorderRadii(2.5f);
 
 		this.setAlignment(Pos.CENTER_LEFT);
 		
@@ -46,6 +46,8 @@ public class CheckBox extends ButtonBase {
 	
 	@Override
 	protected void resize() {
+		this.cachedWidth = -1;
+		
 		//this.setMinWidth(size + this.graphicLabel.holder.getWidth() + spacing);
 		this.setMinHeight(size);
 		this.forceWidth(getTextWidth() + textOffset);
@@ -78,7 +80,7 @@ public class CheckBox extends ButtonBase {
 
 		if ( checked ) {
 			float drawSize = size*1.2f;
-			double xx = getX()+size/2f;
+			double xx = getX()+size/2f+1;
 			double yy = getY()+drawSize/2f+1;
 			LWJGUIUtil.drawText(checkmark, Font.DINGBAT, FontStyle.REGULAR, drawSize, Theme.current().getControl(), (int)xx, (int)yy+1, Pos.CENTER);
 			LWJGUIUtil.drawText(checkmark, Font.DINGBAT, FontStyle.REGULAR, drawSize, this.isDisabled()?Theme.current().getShadow():Theme.current().getText(), (int)xx, (int)yy, Pos.CENTER);

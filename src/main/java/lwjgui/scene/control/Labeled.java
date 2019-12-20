@@ -24,8 +24,8 @@ public abstract class Labeled extends Control {
 	private ContentDisplay contentDisplay = ContentDisplay.LEFT;
 	private double contentGap = 4;
 
-	private double cachedHeight = -1;
-	private double cachedWidth = -1;
+	protected double cachedHeight = -1;
+	protected double cachedWidth = -1;
 	
 	private static final String ELIPSES = "\u2026";
 

@@ -273,6 +273,22 @@ public class StyleOperations {
 					BoxShadow sourceShadow = t.getBoxShadowList().get(i);
 					BoxShadow destShadow = shadows.get(i);
 					
+					// Position transition
+					if ( sourceShadow.getXOffset() != destShadow.getXOffset() || sourceShadow.getYOffset() != destShadow.getYOffset() ) {
+						float sx = sourceShadow.getXOffset();
+						float sy = sourceShadow.getYOffset();
+						
+						Transition tran = new Transition(transition.getDurationMillis()) {
+							@Override
+							public void tick(double progress) {
+								sourceShadow.setXOffset(tween(sx, destShadow.getXOffset(), progress));
+								sourceShadow.setYOffset(tween(sy, destShadow.getYOffset(), progress));
+							}
+						};
+						tran.play();
+						current.add(tran);
+					}
+					
 					// Blur transition
 					if ( sourceShadow.getBlurRadius() != destShadow.getBlurRadius() ) {
 						float a = sourceShadow.getBlurRadius();
@@ -302,7 +318,7 @@ public class StyleOperations {
 					}
 					
 					// Color transition
-					if ( sourceShadow.getSpread() != destShadow.getSpread() ) {
+					if ( !sourceShadow.getFromColor().equals(destShadow.getFromColor()) ) {
 						sourceShadow.getFromColor().immutable(false);
 						Transition tran = new FillTransition(transition.getDurationMillis(), new Color(sourceShadow.getFromColor()), destShadow.getFromColor(), sourceShadow.getFromColor());
 						tran.play();

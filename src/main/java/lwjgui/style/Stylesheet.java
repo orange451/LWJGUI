@@ -175,7 +175,7 @@ public class Stylesheet {
 	}
 
 	/**
-	 * Parse all content for a selector
+	 * Parse the declaration data for the selector.
 	 * @param selectors
 	 * @param content
 	 */
@@ -184,6 +184,7 @@ public class Stylesheet {
 
 		HashMap<Object, StyleVarArgs> data = new HashMap<>();
 
+		// Parse out declaration data
 		String currentKey = null;
 		StringBuilder t = new StringBuilder();
 		for (int i = 1; i < content.length(); i++) {
@@ -216,7 +217,7 @@ public class Stylesheet {
 			t.append(c);
 		}
 		
-		// In case there was an unfinished key...
+		// In case there was an unfinished declaration...
 		if ( t.length() > 0 && currentKey != null ) {
 			String currentVal = t.toString().trim();
 			StyleVarArgs val = parseArgs(currentVal);
@@ -227,9 +228,11 @@ public class Stylesheet {
 					data.put(currentKey, val);
 				}
 			}
+			currentKey = null;
 			t.setLength(0);
 		}
 		
+		// Iterate over all selectors and attach declaration data
 		for (int i = 0; i < selectors.size(); i++) {
 			StyleSelector selector = selectors.get(i);
 			StyleSelector key = idToStyleSelector.get(selector.selector);
@@ -251,9 +254,8 @@ public class Stylesheet {
 				StyleOperation op = StyleOperations.match(entry.getKey().toString());
 				
 				if ( op != null ) {
-					//StyleOperationValue opValue = new StyleOperationValue(op, entry.getValue());
-					//operations.add(opValue);
-					sDataFinal.addDeclarationData(selector.getModifier(), new StyleOperationValue(op, entry.getValue())); 
+					StyleOperationValue operation = new StyleOperationValue(op, entry.getValue());
+					sDataFinal.addDeclarationData(selector.getModifier(), operation); 
 				}
 			});
 		}

@@ -667,9 +667,10 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	protected void position(Node parent) {
 		super.position(parent);
 		
-		this.internalScrollPane.position(this);
+		//this.internalScrollPane.position(this);
 		this.internalScrollPane.setAbsolutePosition(getX()+this.getInnerBounds().getX(), getY()+this.getInnerBounds().getY());
-		this.internalScrollPane.setPrefSize(this.getInnerBounds().getWidth(), this.getInnerBounds().getHeight());
+		//this.internalScrollPane.setPrefSize(this.getInnerBounds().getWidth(), this.getInnerBounds().getHeight());
+		//this.internalScrollPane.updateChildren();
 	}
 	
 	@Override
@@ -681,12 +682,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		this.internalRenderingPane.setMinSize(width, lines.size()*fontSize);
 		
 		super.resize();
-		
-		/*int prefX = (int) (this.preferredColumnCount*(fontSize*(2/3f)));
-		int prefY = (int) ((this.preferredRowCount*fontSize)+this.internal.getPadding().getHeight()+1);
-		prefX = (int) Math.min(prefX, this.getMaxPotentialWidth());
-		prefY = (int) Math.min(prefY, this.getMaxPotentialHeight());
-		this.setPrefSize(prefX, prefY);*/
 		
 		//TODO: Move htis into an actual input callback
 		if ( this.isDescendentSelected() && editable && !this.isDisabled() ) {

@@ -380,10 +380,6 @@ public class LWJGUIUtil {
 	public static void drawText(String text, Font font, FontStyle style, double size, Color color, double x, double y, Pos alignment) {
 		Context vg = LWJGUI.getCurrentContext();
 		
-		float[] bounds = font.getTextBounds(vg, text, style, size, garbage);
-		float width = bounds[2]-bounds[0];
-		float height = bounds[3]-bounds[1];
-		
 		float xMult = 0;
 		float yMult = 0;
 		if ( alignment.getHpos().equals(HPos.CENTER))
@@ -394,6 +390,17 @@ public class LWJGUIUtil {
 			yMult = 0.5f;
 		if ( alignment.getVpos().equals(VPos.BOTTOM))
 			yMult = 1;
+		
+		float[] bounds = null;
+		if ( xMult != 0 || yMult != 0 )
+			bounds = font.getTextBounds(vg, text, style, size, garbage);
+		
+		float width = 0;
+		float height = 0;
+		if ( xMult != 0 )
+			width = bounds[2]-bounds[0];
+		if ( yMult != 0 )
+			height = bounds[3]-bounds[1];
 		
 		double xx = x - width*xMult;
 		double yy = y - height*yMult;

@@ -106,7 +106,7 @@ public class ScrollPane extends Pane {
 			int px = (int) (viewportSize.x-getPadding().getWidth()-1);
 			int py = (int) (viewportSize.y-getPadding().getHeight()-1);
 			
-			sizeInternal(Integer.MAX_VALUE, Integer.MAX_VALUE);
+			this.internalScrollCanvas.forceSize(Integer.MAX_VALUE,Integer.MAX_VALUE);
 			content.setPrefSize(px, py);
 			
 			children.add(internalScrollCanvas);
@@ -116,7 +116,7 @@ public class ScrollPane extends Pane {
 			internalScrollCanvas.setAbsolutePosition(this.getX()+1, this.getY()+1);
 			content.setAbsolutePosition(internalScrollCanvas.getX()+this.padding.getLeft()-hBar.pixel, internalScrollCanvas.getY()+this.padding.getTop()-vBar.pixel);
 			
-			sizeInternal(viewportSize.x-1, viewportSize.y-1);
+			this.internalScrollCanvas.forceSize(viewportSize.x-1, viewportSize.y-1);
 			this.internalScrollCanvas.setParent(this);
 			
 			// Update scrollbars
@@ -148,11 +148,17 @@ public class ScrollPane extends Pane {
 	
 	@Override
 	protected void position(Node parent) {
+
 		
 		super.position(parent);
 
 		update();
-		content.updateChildren();
+		//this.internalScrollCanvas.updateChildren();
+	}
+	
+	@Override
+	protected void resize() {
+		super.resize();
 	}
 
 	public void setVvalue(double value) {
@@ -161,12 +167,6 @@ public class ScrollPane extends Pane {
 	
 	public void setHvalue(double value) {
 		hBar.pixel = value*hBar.contentLen;
-	}
-	
-	private void sizeInternal(double x, double y) {
-		this.internalScrollCanvas.setMinSize(x, y);
-		this.internalScrollCanvas.setMaxSize(x, y);
-		this.internalScrollCanvas.setPrefSize(x, y);
 	}
 
 	public Color getSelectionFill() {

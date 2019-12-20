@@ -23,6 +23,9 @@ public abstract class Labeled extends Control {
 	
 	private ContentDisplay contentDisplay = ContentDisplay.LEFT;
 	private double contentGap = 4;
+
+	private double cachedHeight = -1;
+	private double cachedWidth = -1;
 	
 	private static final String ELIPSES = "\u2026";
 
@@ -37,6 +40,8 @@ public abstract class Labeled extends Control {
 	 */
 	public void setText(String text) {
 		this.text = text;
+		this.cachedHeight = -1;
+		this.cachedWidth = -1;
 	}
 
 	/**
@@ -45,6 +50,8 @@ public abstract class Labeled extends Control {
 	 */
 	public void setFont(Font font) {
 		this.font = font;
+		this.cachedHeight = -1;
+		this.cachedWidth = -1;
 	}
 
 	/**
@@ -56,6 +63,8 @@ public abstract class Labeled extends Control {
 			return;
 		
 		this.fontSize = size;
+		this.cachedHeight = -1;
+		this.cachedWidth = -1;
 	}
 
 	/**
@@ -67,6 +76,8 @@ public abstract class Labeled extends Control {
 			return;
 		
 		this.fontStyle = style;
+		this.cachedHeight = -1;
+		this.cachedWidth = -1;
 	}
 	
 	/**
@@ -94,6 +105,9 @@ public abstract class Labeled extends Control {
 		if ( graphic != null ) {
 			this.children.add(graphic);
 		}
+		
+		this.cachedHeight = -1;
+		this.cachedWidth = -1;
 	}
 	
 	/**
@@ -102,6 +116,8 @@ public abstract class Labeled extends Control {
 	 */
 	public void setGraphicTextGap( double gap ) {
 		this.contentGap = gap;
+		this.cachedHeight = -1;
+		this.cachedWidth = -1;
 	}
 	
 	/**
@@ -137,14 +153,15 @@ public abstract class Labeled extends Control {
 			double graphicWid = graphic == null ? 0 : (graphic.getWidth()+contentGap);
 			
 			// Get some text bounds
-			float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize, garbage);
-			double curWid = getTextWidth(text) + this.getPadding().getWidth();
+			double curWid = getTextWidthWithGraphic(text) + this.getPadding().getWidth();
 			
 			// Set initial size
 			size.x = Math.min( Math.max(curWid, size.x), getMaxWidth() );
 			
 			// If we're too large for the parent element...
 			if ( this.size.x > this.getAvailableSize().x ) {
+				// Get bounds for elipsis
+				float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize, garbage);
 				
 				// Add ellipse width to string width
 				float eWid = elipBnd[2]-elipBnd[0];
@@ -162,7 +179,7 @@ public abstract class Labeled extends Control {
 			}
 			
 			// Compute preferred height
-			this.size.y = Math.max(Math.max(this.getPrefHeight(), this.getHeight()), getTextHeight(useString)+getPadding().getHeight());
+			this.size.y = Math.max(Math.max(this.getPrefHeight(), this.getHeight()), getTextHeightWithGraphic(useString)+getPadding().getHeight());
 		}
 	}
 	
@@ -180,7 +197,7 @@ public abstract class Labeled extends Control {
 		double gHei = getGraphicHeightInternalUse();
 		
 		// Offset the label if there's a difference between its size and its text width
-		double textWidth = getTextWidth(useString);
+		double textWidth = getTextWidthWithGraphic(useString);
 		double widthDifference = getWidth()-(textWidth+getPadding().getWidth());
 		double xMult = 0;
 		if ( this.getAlignment().getHpos() == HPos.CENTER )
@@ -190,7 +207,7 @@ public abstract class Labeled extends Control {
 		absX += Math.abs(widthDifference)*xMult;
 		
 		// Offset the label if there's a difference between its size and its height
-		double textHeight = getTextHeight(useString);
+		double textHeight = getTextHeightWithGraphic(useString);
 		double heightDifference = getHeight()-(textHeight+getPadding().getHeight());
 		double ty = 0;
 		if ( this.getAlignment().getVpos() == VPos.CENTER )
@@ -264,7 +281,7 @@ public abstract class Labeled extends Control {
 	 * @return
 	 */
 	public double getTextWidth() {
-		return getTextWidth(text)-getGraphicWidthInternalUse();
+		return getTextWidthWithGraphic(text)-getGraphicWidthInternalUse();
 	}
 	
 	private float getGraphicWidthInternalUse() {
@@ -306,15 +323,23 @@ public abstract class Labeled extends Control {
 	}
 
 	private float[] garbage = new float[4];
-	private double getTextWidth(String string) {
+	private double getTextWidthWithGraphic(String string) {
+		if ( cachedWidth != -1 )
+			return cachedWidth;
+		
 		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize, garbage);
 		float gWid = getGraphicWidthInternalUse();
-		return bounds[2] - bounds[0] + gWid;
+		cachedWidth = bounds[2] - bounds[0] + gWid;
+		return cachedWidth;
 	}
 
-	private double getTextHeight(String string) {
+	private double getTextHeightWithGraphic(String string) {
+		if ( cachedHeight != -1 )
+			return cachedHeight;
+		
 		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize, garbage);
 		float gHei = getGraphicHeightInternalUse();
-		return bounds[3] - bounds[1] + gHei;
+		cachedHeight = bounds[3] - bounds[1] + gHei;
+		return cachedHeight;
 	}
 }

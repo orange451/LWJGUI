@@ -160,8 +160,6 @@ public abstract class Labeled extends Control {
 		if ( this.getParent() != null && (this.getParent().getWidth() != lastParentSize.x || this.getParent().getHeight() != lastParentSize.y) )
 			checkResize = true;
 		
-		checkResize = true;
-		
 		// Change label size if it's too large for its container (cut off text)
 		if (checkResize && cached_context != null) {
 			cachedWidth = -1;

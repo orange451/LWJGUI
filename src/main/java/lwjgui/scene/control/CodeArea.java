@@ -92,7 +92,7 @@ public class CodeArea extends TextArea {
 		public void position(Node parent) {
 			super.position(parent);
 			
-			this.setAbsolutePosition(CodeArea.this.getX(), CodeArea.this.getY()+2);
+			this.setAbsolutePosition(CodeArea.this.getX(), internalScrollPane.getContent().getY()+2);
 			this.updateChildren();
 		}
 		
@@ -121,10 +121,11 @@ public class CodeArea extends TextArea {
 		@Override
 		public void render( Context context ) {
 			// Draw line counter background
-			LWJGUIUtil.fillRect(context, getX(), CodeArea.this.getY(), getWidth(), CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getPane());
-			LWJGUIUtil.fillRect(context, getX()+getWidth(), CodeArea.this.getY(), 1, CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, CodeArea.this.getX(), CodeArea.this.getY(), getWidth(), CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getPane());
+			LWJGUIUtil.fillRect(context, CodeArea.this.getX()+getWidth(), CodeArea.this.getY(), 1, CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getSelectionPassive());
 			
 			this.position(this.getParent());
+
 			super.render(context);
 		}
 	}

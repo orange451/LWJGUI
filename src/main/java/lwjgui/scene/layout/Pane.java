@@ -107,6 +107,11 @@ public abstract class Pane extends FillableRegion implements BlockPaneRenderer {
 	}
 
 	@Override
+	public void setBorderRadii(float[] radius) {
+		this.setBorderRadii(radius[0], radius[1], radius[2], radius[3]);
+	}
+
+	@Override
 	public void setBorderRadii(float cornerTopLeft, float cornerTopRight, float cornerBottomRight, float cornerBottomLeft) {
 		this.borderRadii = new float[] {cornerTopLeft, cornerTopRight, cornerBottomRight, cornerBottomLeft};
 	}

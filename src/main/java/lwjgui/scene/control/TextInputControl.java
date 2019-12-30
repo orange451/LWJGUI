@@ -112,7 +112,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		undoStack = new StateStack<TextState>();
 		setText("");
 		saveState();
-		this.flag_clip = true;
+		this.flag_clip = false;
 		
 		setOnTextInputInternal( new EventHandler<TypeEvent>() {
 			@Override
@@ -137,6 +137,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		
 		shortcuts = new TextInputControlShortcuts();
 		setOnKeyPressedAndRepeatInternal( event -> {
+			if ( !this.isEditing() )
+				return;
 			shortcuts.process(this, event);
 		});
 		
@@ -668,7 +670,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		super.position(parent);
 		
 		//this.internalScrollPane.position(this);
-		this.internalScrollPane.setAbsolutePosition(getX()+this.getInnerBounds().getX(), getY()+this.getInnerBounds().getY());
+		//this.internalScrollPane.setAbsolutePosition(getX()+this.getInnerBounds().getX(), getY()+this.getInnerBounds().getY());
 		//this.internalScrollPane.setPrefSize(this.getInnerBounds().getWidth(), this.getInnerBounds().getHeight());
 		//this.internalScrollPane.updateChildren();
 	}
@@ -817,8 +819,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	}
 	
 	int getCaretAtMouse() {
-		double mx = cached_context.getMouseX()-internalScrollPane.getContent().getX();
-		double my = cached_context.getMouseY()-internalScrollPane.getContent().getY();
+		double mx = cached_context.getMouseX()-(internalScrollPane.getContent().getX()+internalScrollPane.getViewport().getInnerBounds().getX());
+		double my = cached_context.getMouseY()-(internalScrollPane.getContent().getY()+internalScrollPane.getViewport().getInnerBounds().getY());
 		
 		// Find row clicked
 		int row = (int) (my / (float)fontSize);
@@ -877,6 +879,11 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	@Override
 	public void setBorderRadii(float radius) {
 		this.setBorderRadii(radius, radius, radius, radius);
+	}
+
+	@Override
+	public void setBorderRadii(float[] radius) {
+		this.setBorderRadii(radius[0], radius[1], radius[2], radius[3]);
 	}
 
 	@Override
@@ -978,8 +985,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		
 		// Draw Prompt
 		if ( getLength() == 0 && prompt != null && prompt.length() > 0 ) {
-			int xx = (int) this.internalRenderingPane.getX();
-			int yy = (int) this.internalRenderingPane.getY();
+			int xx = (int) (this.internalRenderingPane.getX() + this.internalScrollPane.getViewport().getInnerBounds().getX());
+			int yy = (int) (this.internalRenderingPane.getY() + this.internalScrollPane.getViewport().getInnerBounds().getY());
 			
 			// Setup font
 			NanoVG.nvgFontSize(vg, fontSize);
@@ -1056,9 +1063,9 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			setFillToParentWidth(true);
 			setVbarPolicy(ScrollBarPolicy.NEVER);
 			setHbarPolicy(ScrollBarPolicy.NEVER);
-			setPadding(new Insets(3,4,4,3));
 			
-			this.flag_clip = false;
+			// Set padding of viewport
+			setInternalPadding(new Insets(3,4,4,3));
 
 			// Enter
 			getViewport().setOnMouseEntered(event -> {
@@ -1157,7 +1164,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		}
 
 		protected Pane getViewport() {
-			return internalScrollCanvas;
+			return internalCanvas;
 		}
 	}
 	
@@ -1172,11 +1179,10 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		public TextInputContentRenderer(TextInputControl textInputControl) {
 			this.textInputControl = textInputControl;
 			this.setMouseTransparent(true);
-			this.setBackgroundLegacy(null);
 			
 			this.setAlignment(Pos.TOP_LEFT);
 			
-			this.flag_clip = true;
+			this.flag_clip = false;
 		}
 
 		@Override
@@ -1187,6 +1193,9 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		private long lastTime;
 		@Override
 		public void render(Context context) {
+
+			double startX = this.getX() + internalScrollPane.getViewport().getInnerBounds().getX();
+			double startY = this.getY() + internalScrollPane.getViewport().getInnerBounds().getY();
 			
 			if (textInputControl.glyphData.size() == 0) {
 				textInputControl.setText(textInputControl.getText());
@@ -1221,14 +1230,14 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 					int height = this.textInputControl.fontSize;
 					int width = (int) (this.textInputControl.glyphData.get(i).get(right).x()-xx);
 
-					LWJGUIUtil.fillRect(context, getX() + xx, getY() + yy, width, height, this.textInputControl.selectionAltFill);
+					LWJGUIUtil.fillRect(context, startX + xx, startY + yy, width, height, this.textInputControl.selectionAltFill);
 				}
 			}
 			
 			// Draw text
 			for (int i = 0; i < this.textInputControl.linesDraw.size(); i++) {
-				int mx = (int)getX();
-				int my = (int)getY() + (this.textInputControl.fontSize*i);
+				int mx = (int)(startX);
+				int my = (int)(startY) + (this.textInputControl.fontSize*i);
 				
 				// Quick bounds check
 				if ( my < this.textInputControl.internalScrollPane.getY()-(this.textInputControl.fontSize*i))
@@ -1242,7 +1251,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 				// Setup font
 				this.textInputControl.bindFont();
 				
-				// Inefficient Draw. Thanks NanoVG refusing to implement \t
+				// Inefficient Draw. Thanks NanoVG refusing to implement \t Very cool
 				if ( this.textInputControl.glyphData.size() > 0 ) {
 					ArrayList<GlyphData> dat = this.textInputControl.glyphData.get(i);
 					if ( dat.size() > 0 ) {
@@ -1292,8 +1301,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			if ( this.textInputControl.editing ) {
 				int line = this.textInputControl.getRowFromCaret(this.textInputControl.caretPosition);
 				int index = this.textInputControl.getIndexFromCaret(this.textInputControl.caretPosition);
-				int cx = (int) (getX()-1);
-				int cy = (int) (getY() + (line * this.textInputControl.fontSize));
+				int cx = (int) (startX-1);
+				int cy = (int) (startY + (line * this.textInputControl.fontSize));
 				if ( this.textInputControl.glyphData.size() > 0 ) {
 					
 					// Check if caret goes past the line

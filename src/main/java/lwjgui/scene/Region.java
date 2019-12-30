@@ -83,10 +83,10 @@ public abstract class Region extends Parent  {
 	public LayoutBounds getInnerBounds() {
 		LayoutBounds t = super.getInnerBounds();
 		
-		t.minX += (int)padding.getLeft()+(int)border.getLeft();
-		t.minY += (int)padding.getTop()+(int)border.getTop();
-		t.maxX -= padding.getRight()+border.getRight();
-		t.maxY -= padding.getBottom()+border.getBottom();
+		t.minX += (int)(padding.getLeft()+border.getLeft());
+		t.minY += (int)(padding.getTop()+border.getTop());
+		t.maxX -= (padding.getRight()+border.getRight());
+		t.maxY -= (padding.getBottom()+border.getBottom());
 		
 		return t;
 	}

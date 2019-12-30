@@ -1,10 +1,13 @@
 package lwjgui;
 
 import lwjgui.geometry.Insets;
+import lwjgui.geometry.Pos;
+import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
+import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.layout.BorderPane;
 import lwjgui.scene.layout.VBox;
@@ -30,6 +33,7 @@ public class ScrollPaneExample extends LWJGUIApplication {
 		
 		// Fill it with elements,
 		VBox test = new VBox();
+		test.setAlignment(Pos.TOP_LEFT);
 		for (int i = 1; i < 30; i++) {
 			Label l = new Label("Test label " + i);
 			test.getChildren().add(l);

@@ -37,17 +37,14 @@ public class CodeArea extends TextArea {
 	
 	@Override
 	protected void position(Node parent) {
+		// Only update if the amount of lines has changed
+		lineCounter.update(this.getNumLines());
 		
 		// Normal positioning
 		super.position(parent);
 		
-		// Only update if the amount of lines has changed
-		lineCounter.update(this.getNumLines());
-		
-		// Position line counter
-		this.internalScrollPane.setPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
-		this.lineCounter.setAbsolutePosition(this.getX(), (internalScrollPane.getContent().getY()-internalScrollPane.getPadding().getTop()) + 4);
-		this.lineCounter.updateChildren();
+		// Update padding
+		this.internalScrollPane.setInternalPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
 	}
 	
 	@Override
@@ -88,7 +85,15 @@ public class CodeArea extends TextArea {
 			this.setAlignment(Pos.TOP_LEFT);
 			this.setBackgroundLegacy(null);
 			this.setPrefWidth(0);
-			this.flag_clip = true;
+			this.flag_clip = false;
+		}
+		
+		@Override
+		public void position(Node parent) {
+			super.position(parent);
+			
+			this.setAbsolutePosition(CodeArea.this.getX(), CodeArea.this.getY()+2);
+			this.updateChildren();
 		}
 		
 		public void update(int lines) {
@@ -116,11 +121,10 @@ public class CodeArea extends TextArea {
 		@Override
 		public void render( Context context ) {
 			// Draw line counter background
-			LWJGUIUtil.fillRect(context, getX()+1, CodeArea.this.getY()+1, getWidth(), CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getPane());
-			LWJGUIUtil.fillRect(context, getX()+getWidth(), CodeArea.this.getY()+1, 1, CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getSelectionPassive());
+			LWJGUIUtil.fillRect(context, getX(), CodeArea.this.getY(), getWidth(), CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getPane());
+			LWJGUIUtil.fillRect(context, getX()+getWidth(), CodeArea.this.getY(), 1, CodeArea.this.getInnerBounds().getHeight()-2, Theme.current().getSelectionPassive());
 			
-			NanoVG.nvgScissor(context.getNVG(), (int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
-			
+			this.position(this.getParent());
 			super.render(context);
 		}
 	}

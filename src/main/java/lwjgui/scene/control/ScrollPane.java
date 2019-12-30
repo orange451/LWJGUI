@@ -1,18 +1,22 @@
 package lwjgui.scene.control;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joml.Vector2d;
-import org.joml.Vector2i;
+import org.joml.Vector2f;
 import org.joml.Vector4d;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
+import lwjgui.geometry.Insets;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
-import lwjgui.scene.FillableRegion;
 import lwjgui.scene.Node;
 import lwjgui.scene.Window;
 import lwjgui.scene.layout.Pane;
@@ -20,50 +24,30 @@ import lwjgui.style.BorderStyle;
 import lwjgui.theme.Theme;
 
 public class ScrollPane extends Pane {
-	
+
 	private Node content;
-	protected ScrollCanvas internalScrollCanvas;
-	private Vector2i viewportSize;
-	
-	protected ScrollBar vBar;
-	protected ScrollBar hBar;
-	
+	protected ScrollPaneCanvas internalCanvas;
 	private double thickness = 7;
 	private double barPadding = 2;
 	private double scrollGestureSpeedMultiplier = 20;
 	
-	private ScrollBar holdingBar;
-	private ScrollBar hoveredBar;
+	protected ScrollBar vBar;
+	protected ScrollBar hBar;
+	private List<ScrollBar> scrollBars;
 	
-	private ObservableList<ScrollBar> scrollBars;
-	
-	/*
-	 * Customization
-	 */
-	
-	private Color selectionFill = Theme.current().getSelection();
-	private Color selectionPassiveFill = Theme.current().getBackgroundAlt();
-	private Color controlFill = Theme.current().getControl();
+	private Vector2f viewport = new Vector2f();
 	
 	public ScrollPane() {
-		this.setPrefSize(100, 100);
-		this.setAlignment(Pos.TOP_LEFT);
 		this.flag_clip = true;
-		this.viewportSize = new Vector2i();
-		
-		this.setBorderWidth(1);
-		this.setBorderColor(Theme.current().getControlOutline());
-		this.setBorderStyle(BorderStyle.SOLID);
-		
-		//this.setBackground(Theme.current().getPane());
+		this.internalCanvas = new ScrollPaneCanvas();
+		this.setPrefSize(150, 150);
 		
 		this.vBar = new ScrollBar(Orientation.VERTICAL);
 		this.hBar = new ScrollBar(Orientation.HORIZONTAL);
-		this.scrollBars = new ObservableList<ScrollBar>();
-		this.scrollBars.add(vBar);
-		this.scrollBars.add(hBar);
 		
-		this.internalScrollCanvas = new ScrollCanvas();
+		this.scrollBars = new ArrayList<ScrollBar>();
+		this.scrollBars.add(hBar);
+		this.scrollBars.add(vBar);
 		
 		this.setOnMouseScrollInternal( (event) -> {
 			if (isDescendentHovered()) {
@@ -76,134 +60,48 @@ public class ScrollPane extends Pane {
 				vBar.pixel = newvPixel;
 				hBar.pixel = newhPixel;
 				
-				update();
+				position(this.getParent());
 			}
 		});
-	}
-
-	@Override
-	public String getElementType() {
-		return "scrollpane";
-	}
-
-	@Override
-	public boolean isResizeable() {
-		return false;
+		
+		this.setBorderStyle(BorderStyle.SOLID);
+		this.setBorderWidth(1);
+		this.setBorderColor(Theme.current().getControlOutline());
 	}
 	
-	private void update() {
-		viewportSize.set((int)getWidth()-1,(int)getHeight()-1);
-		if ( vBar.active )
-			viewportSize.x -= (thickness+barPadding*2);
-		if ( hBar.active )
-			viewportSize.y -= (thickness+barPadding*2);
+	@Override
+	protected void position(Node node) {
+		super.position(node);
+		this.internalCanvas.position(this);
 		
-		if ( content != null ) {
-			
-			// Update internal content
-			this.internalScrollCanvas.setParent(null);
-			this.updateChildren();
-			int px = (int) (viewportSize.x-getPadding().getWidth()-1);
-			int py = (int) (viewportSize.y-getPadding().getHeight()-1);
-			
-			this.internalScrollCanvas.forceSize(Integer.MAX_VALUE,Integer.MAX_VALUE);
-			content.setPrefSize(px, py);
-			
-			children.add(internalScrollCanvas);
-			internalScrollCanvas.updateChildren();
-			children.remove(internalScrollCanvas);
-			
-			internalScrollCanvas.setAbsolutePosition(this.getX()+1, this.getY()+1);
-			content.setAbsolutePosition(internalScrollCanvas.getX()+this.padding.getLeft()-hBar.pixel, internalScrollCanvas.getY()+this.padding.getTop()-vBar.pixel);
-			
-			this.internalScrollCanvas.forceSize(viewportSize.x-1, viewportSize.y-1);
-			this.internalScrollCanvas.setParent(this);
-			
-			// Update scrollbars
-			vBar.update(viewportSize.y, content.getHeight()+this.padding.getHeight());
-			hBar.update(viewportSize.x, content.getWidth()+this.padding.getWidth());
-		} else {
-			hBar.active = false;
-			vBar.active = false;
-		}
+		this.viewport.set((float)this.getInnerBounds().getWidth(), (float)this.getInnerBounds().getHeight());
+		if ( hBar.active )
+			this.viewport.y -= (thickness+barPadding*2);
+		if ( vBar.active )
+			this.viewport.x -= (thickness+barPadding*2);
 		
 		updateBars();
-	}
-	
-	/**
-	 * Returns the width of the viewable region of the scroll pane.
-	 * @return
-	 */
-	public double getViewportWidth() {
-		return viewportSize.x;
-	}
-	
-	/**
-	 * Returns the height of the viewable region of the scroll pane.
-	 * @return
-	 */
-	public double getViewportHeight() {
-		return viewportSize.y;
-	}
-	
-	@Override
-	protected void position(Node parent) {
-
 		
-		super.position(parent);
+		// Update internal canvas
+		this.internalCanvas.forceSize(Integer.MAX_VALUE,Integer.MAX_VALUE);
+		this.internalCanvas.setParent(null);
+		this.internalCanvas.updateChildren();
+		this.internalCanvas.setParent(this);
+		internalCanvas.setAbsolutePosition(getX()+this.getInnerBounds().getX(), getY()+this.getInnerBounds().getY());
+		internalCanvas.forceSize(this.viewport.x, this.viewport.y);
 
-		update();
-		//this.internalScrollCanvas.updateChildren();
-	}
-	
-	@Override
-	protected void resize() {
-		super.resize();
-	}
-
-	public void setVvalue(double value) {
-		vBar.pixel = value*vBar.contentLen;
-	}
-	
-	public void setHvalue(double value) {
-		hBar.pixel = value*hBar.contentLen;
-	}
-
-	public Color getSelectionFill() {
-		return selectionFill;
-	}
-
-	public void setSelectionFill(Color selectionFill) {
-		this.selectionFill = selectionFill;
-	}
-
-	public Color getSelectionPassiveFill() {
-		return selectionPassiveFill;
-	}
-
-	public void setSelectionPassiveFill(Color selectionPassiveFill) {
-		this.selectionPassiveFill = selectionPassiveFill;
-	}
-
-	public Color getControlFill() {
-		return controlFill;
-	}
-
-	public void setControlFill(Color controlFill) {
-		this.controlFill = controlFill;
-	}
-
-	/**
-	 * Returns unmodifiable list of children.
-	 */
-	@Override
-	public ObservableList<Node> getChildren() {
-		return new ObservableList<Node>(internalScrollCanvas);
+		// Update scrollbars
+		if ( content != null ) {
+			hBar.update(viewport.x, content.getWidth()+internalCanvas.getPadding().getWidth());
+			vBar.update(viewport.y, content.getHeight()+internalCanvas.getPadding().getHeight());
+		}
 	}
 	
 	private boolean click = false;
 	private boolean released = true;
 	private Vector2d mouseGrabLocation = new Vector2d();
+	private ScrollBar holdingBar;
+	private ScrollBar hoveredBar;
 	private void updateBars() {
 		
 		// Get mouse coordinates
@@ -275,7 +173,15 @@ public class ScrollPane extends Pane {
 		
 		return null;
 	}
-
+	
+	public void setVvalue(double value) {
+		vBar.pixel = value*vBar.contentLen;
+	}
+	
+	public void setHvalue(double value) {
+		hBar.pixel = value*hBar.contentLen;
+	}
+	
 	public void setVbarPolicy( ScrollBarPolicy policy ) {
 		this.vBar.policy = policy;
 	}
@@ -297,67 +203,111 @@ public class ScrollPane extends Pane {
 	}
 	
 	@Override
-	public void render(Context context) {
-		super.render(context);
-		
-		hoveredBar = getBarUnderMouse();
-
-		clip(context, 0);
-
-		double svx = getX()+viewportSize.x;
-		double svy = getY()+1;
-		double svw = getWidth()-viewportSize.x-1;
-		double svh = getHeight()-2; //viewportSize.y-2
-
-		double shx = getX()+1;
-		double shy = getY()+viewportSize.y;
-		double shw = getWidth()-2;
-		double shh = getHeight()-viewportSize.y-1;
-		
-		// Vertical scrollbar track
-		if ( vBar.active ) {
-			LWJGUIUtil.fillRect(context, svx, svy, svw, svh, controlFill);
-		} 
-		
-		// Horizontal scrollbar track
-		if ( hBar.active ) {
-			LWJGUIUtil.fillRect(context, shx, shy, shw, shh, controlFill);
-		}
-		
-		// Vertical scrollbar track outline
-		if ( vBar.active ) {
-			LWJGUIUtil.fillRect(context, svx, svy, 1, svh-shh, selectionPassiveFill);
-		}
-		
-		// Horizontal scrollbar track outline
-		if ( hBar.active ) {
-			LWJGUIUtil.fillRect(context, shx, shy, shw-svw, 1, selectionPassiveFill);
-		}
-		
-		// Draw bars
-		for (int i = 0; i < scrollBars.size(); i++) {
-			ScrollBar b = scrollBars.get(i);
-			if ( b.active ) {
-				b.render(context);
-			}
-		}
+	public String getElementType() {
+		return "scrollpane";
 	}
 	
+	/**
+	 * Returns the width of the viewable region of the scroll pane.
+	 * @return
+	 */
+	public double getViewportWidth() {
+		return viewport.x;
+	}
+	
+	/**
+	 * Returns the height of the viewable region of the scroll pane.
+	 * @return
+	 */
+	public double getViewportHeight() {
+		return viewport.y;
+	}
+
 	public void setContent( Node content ) {
 		this.content = content;
-		this.internalScrollCanvas.getChildren().clear();
-		this.internalScrollCanvas.getChildren().add(content);
+		
+		this.internalCanvas.getChildren().clear();
+		this.internalCanvas.getChildren().add(content);
+	}
+	
+	/**
+	 * Returns unmodifiable list of children.
+	 */
+	@Override
+	public ObservableList<Node> getChildren() {
+		return new ObservableList<Node>(internalCanvas);
 	}
 	
 	public Node getContent() {
 		return this.content;
 	}
 	
-	class ScrollCanvas extends Pane {
-		ScrollCanvas() {
-			this.flag_clip = true;
-			this.setBackgroundLegacy(null);
+	public void setInternalPadding(Insets insets) {
+		this.internalCanvas.setPadding(insets);
+	}
+	
+	public Insets getInternalPadding() {
+		return this.internalCanvas.getPadding();
+	}
+	
+	@Override
+	public void render(Context context) {
+		// Position content relative to scrollbars
+		if ( content != null ) {
+			this.position(this.getParent()); // Calling position here means that for scroll panes, position gets called twice per frame...
+			content.setAbsolutePosition(this.getX(), this.getY());
+			content.offset(-hBar.pixel, -vBar.pixel);
+		}
+		
+		super.render(context);
+		
+		// Setup scissor
+		NanoVG.nvgScissor(context.getNVG(), (float)internalCanvas.getX(), (float)internalCanvas.getY(), (float)internalCanvas.getWidth(), (float)internalCanvas.getHeight());
+		hoveredBar = getBarUnderMouse();
+		
+		clip(context, 0);
+		
+		double svx = getX()+viewport.x;
+		double svy = getY()+1;
+		double svw = getWidth()-viewport.x-1;
+		double svh = getHeight()-2; //viewport.y-2
+
+		double shx = getX()+1;
+		double shy = getY()+viewport.y;
+		double shw = getWidth()-2;
+		double shh = getHeight()-viewport.y-1;
+		
+		// Vertical scrollbar track
+		if ( vBar.active ) {
+			LWJGUIUtil.fillRoundRect(context, svx, svy, svw, svh, 0, this.getBorderRadii()[1]-1, this.getBorderRadii()[2]-1, 0, Theme.current().getControl());
+		} 
+		
+		// Horizontal scrollbar track
+		if ( hBar.active ) {
+			LWJGUIUtil.fillRoundRect(context, shx, shy, shw, shh, 0, 0, this.getBorderRadii()[2]-1, this.getBorderRadii()[3]-1, Theme.current().getControl());
+		}
+		
+		// Vertical scrollbar track outline
+		if ( vBar.active ) {
+			LWJGUIUtil.fillRect(context, svx, svy, 1, svh-shh, Theme.current().getSelectionPassive());
+		}
+		
+		// Horizontal scrollbar track outline
+		if ( hBar.active ) {
+			LWJGUIUtil.fillRect(context, shx, shy, shw-svw, 1, Theme.current().getSelectionPassive());
+		}
+		
+		if ( hBar.active )
+			hBar.render(context);
+		
+		if ( vBar.active )
+			vBar.render(context);
+	}
+	
+	class ScrollPaneCanvas extends Pane {
+		ScrollPaneCanvas() {
 			this.setAlignment(Pos.TOP_LEFT);
+			this.setPadding(Insets.EMPTY);
 		}
 
 		@Override
@@ -370,12 +320,19 @@ public class ScrollPane extends Pane {
 		}
 		
 		@Override
+		public void position(Node parent) {
+			this.setBorderRadii(ScrollPane.this.getBorderRadii());
+			super.position(parent);
+		}
+		
+		@Override
 		public void render(Context context) {
-			ScrollCanvas.this.cached_context = ScrollPane.this.cached_context;
-			this.clip(context,-1);
+			ScrollPaneCanvas.this.cached_context = ScrollPane.this.cached_context;
+			this.clip(context, -16);
 			super.render(context);
 		}
 	}
+	
 	
 	public enum ScrollBarPolicy {
 		ALWAYS, AS_NEEDED, NEVER;
@@ -428,13 +385,13 @@ public class ScrollPane extends Pane {
 			if ( this.orientation.equals(Orientation.HORIZONTAL) ) {
 				return new Vector4d( 
 						(int)(getX()+pixelSpaceToScrollSpace(pixel)),
-						(int)(getY()+viewportSize.y+barPadding),
+						(int)(getY()+viewport.y+barPadding),
 						(int)Math.max(length,1),
 						(int)thickness
 						);
 			} else {
 				return new Vector4d( 
-						(int)(getX()+viewportSize.x+barPadding),
+						(int)(getX()+viewport.x+barPadding),
 						(int)(getY()+pixelSpaceToScrollSpace(pixel)),
 						(int)thickness,
 						(int)Math.max(length,1)
@@ -447,7 +404,7 @@ public class ScrollPane extends Pane {
 		}
 		
 		public double scrollSpaceToPixelSpace(double scroll) {
-			return (scroll/minScrollLen)*contentLen;
+			return (scroll/minScrollLen) * contentLen;
 		}
 		
 		public void render(Context context) {
@@ -457,13 +414,11 @@ public class ScrollPane extends Pane {
 			double y1 = bd.y+2;
 			double x2 = bd.x+barThickness;
 			double y2 = bd.y+bd.w-1;
-			double len = y2-y1;
 			if ( this.orientation.equals(Orientation.HORIZONTAL) ) {
 				x1 = bd.x+2;
 				y1 = bd.y+1;
 				x2 = bd.x+bd.z-1;
 				y2 = bd.y+barThickness;
-				len = x2-x1;
 			}
 			Color color = Theme.current().getControlOutline();
 			LWJGUIUtil.fillRoundRect(context, x1, y1, x2-x1, y2-y1, barThickness/2f, color);

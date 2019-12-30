@@ -11,6 +11,7 @@ import lwjgui.scene.control.CustomTextField;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.RadioButton;
 import lwjgui.scene.control.SegmentedButton;
+import lwjgui.scene.control.TextField;
 import lwjgui.scene.control.ToggleButton;
 import lwjgui.scene.control.ToggleGroup;
 import lwjgui.scene.control.ToggleSwitch;
@@ -81,6 +82,7 @@ public class ControlExample extends LWJGUIApplication {
 		temp.setSpacing(8);
 		vbox.getChildren().add(temp);
 		
+		// Create combo box
 		combo = new ComboBox<String>("");
 		combo.setPrefWidth(120);
 		combo.getItems().add("Visual Basic");
@@ -89,12 +91,16 @@ public class ControlExample extends LWJGUIApplication {
 		combo.getItems().add("Other");
 		temp.getChildren().add(combo);
 		
+		// Create custom text field
 		CustomTextField t = new CustomTextField();
+		t.setPrompt("Hello");
 		temp.getChildren().add(t);
 		
+		// Add X button
 		Label clearNode = new Label(new String(Character.toChars(0x2716)));
 		t.setRightNode(clearNode);
 		
+		// Make X button clear text
 		clearNode.setOnMouseClicked((event)->{
 			t.setText("");
 		});

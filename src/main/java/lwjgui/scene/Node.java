@@ -139,9 +139,24 @@ public abstract class Node implements Resizable {
 		}
 	}
 	
+	/**
+	 * Repositions the non public facing children
+	 */
 	public void updateChildren() {
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
+			if ( child != null ) {
+				child.position(this);
+			}
+		}
+	}
+	
+	/**
+	 * Repositions only the public facing children
+	 */
+	public void updateChildrenPublic() {
+		for (int i = 0; i < getChildren().size(); i++) {
+			Node child = getChildren().get(i);
 			if ( child != null ) {
 				child.position(this);
 			}
@@ -226,22 +241,28 @@ public abstract class Node implements Resizable {
 	protected void position(Node parent) {
 		stylePush();
 		{
+			// Check parent
 			Node oldParent = this.parent;
 			this.parent = parent;
 	
-			if ( oldParent != this.parent )
+			// Recompute absolute position on parent change
+			if ( oldParent != this.parent ) {
+				unregisterFromParent(this, this.parent);
 				computeAbsolutePosition();
+			}
 			
-			cached_context = LWJGUI.getCurrentContext();
-	
+			// Loosely register this node to the parent (used to index a node based on ID)
 			idToNode.clear();
 			descendents.clear();
+			registerToParent(this, this.getParent());
 			
+			// Cache current context
+			cached_context = LWJGUI.getCurrentContext();
+			
+			// Perform actual sizing/positioning
 			updateChildren();
 			resize();
 			computeAbsolutePosition();
-			
-			registerToParent(this, this.getParent());
 		}
 		stylePop();
 	}
@@ -257,6 +278,15 @@ public abstract class Node implements Resizable {
 		parent.idToNode.put(node.getElementId(), node);
 		parent.descendents.add(node);
 		registerToParent(node, parent.getParent());
+	}
+	
+	private void unregisterFromParent(Node node, Node parent) {
+		if ( parent == null )
+			return;
+		
+		parent.idToNode.remove(node.getElementId());
+		parent.descendents.remove(node);
+		unregisterFromParent(node, parent.getParent());
 	}
 	
 	/**
@@ -655,15 +685,16 @@ public abstract class Node implements Resizable {
 		LayoutBounds clipBoundsTemp = new LayoutBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
 		LayoutBounds tempBounds = LAYOUT_CACHE;
 		
-		Node par = this.parent;
+		Node par = this;
 		while ( par != null ) {
 			if ( par.flag_clip ) {
 				
 				// Update temp bounds
-				tempBounds.minX = (int)par.getX();
-				tempBounds.minY = (int)par.getY();
-				tempBounds.maxX = (int)Math.ceil(par.getX()+par.getWidth());
-				tempBounds.maxY = (int)Math.ceil(par.getY()+par.getHeight());
+				LayoutBounds inner = par.getInnerBounds();
+				tempBounds.minX = (int)(par.getX()+inner.getX());
+				tempBounds.minY = (int)(par.getY()+inner.getY());
+				tempBounds.maxX = (int)(par.getX()+inner.getWidth()+1);
+				tempBounds.maxY = (int)(par.getY()+inner.getHeight()+1);
 				
 				if ( par instanceof Region ) {
 					Insets pad = ((Region)par).getPadding();

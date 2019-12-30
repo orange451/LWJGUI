@@ -1,6 +1,10 @@
 package lwjgui.scene.control;
 
+import lwjgui.LWJGUIUtil;
+import lwjgui.collections.ObservableList;
 import lwjgui.geometry.Insets;
+import lwjgui.paint.Color;
+import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 
 public abstract class CustomTextFieldBase extends TextField {
@@ -9,19 +13,25 @@ public abstract class CustomTextFieldBase extends TextField {
 	private float padding = 4;
 	
 	protected void setLeftNode(Node node) {
-		if ( this.leftNode != null ) {
-			this.getChildren().remove(node);
-		}
 		this.leftNode = node;
-		this.getChildren().add(node);
 	}
 	
 	protected void setRightNode(Node node) {
-		if ( this.rightNode != null ) {
-			this.getChildren().remove(node);
-		}
 		this.rightNode = node;
-		this.getChildren().add(node);
+	}
+	
+	/**
+	 * Returns unmodifiable list of children
+	 */
+	@Override
+	protected ObservableList<Node> getChildren() {
+		ObservableList<Node> t = new ObservableList<>(super.getChildren());
+		if ( leftNode != null )
+			t.add(leftNode);
+		if ( rightNode != null )
+			t.add(rightNode);
+		
+		return t;
 	}
 	
 	protected Node getLeftNode() {
@@ -34,24 +44,32 @@ public abstract class CustomTextFieldBase extends TextField {
 	
 	@Override
 	protected void position(Node parent) {
+		this.updateChildrenPublic();
 		super.position(parent);
 
 		float rightRad = (this.getBorderRadii()[1] + this.getBorderRadii()[2]) / 2f;
 		float leftRad = (this.getBorderRadii()[0] + this.getBorderRadii()[3]) / 2f;
 		
-		this.internalScrollPane.setPadding(
+		this.internalScrollPane.setInternalPadding(
 			new Insets(
-				this.internalScrollPane.getPadding().getTop(),
+				this.internalScrollPane.getInternalPadding().getTop(),
 				rightNode != null ? rightNode.getWidth()+padding+rightRad/2-1:padding-1, 
-				this.internalScrollPane.getPadding().getBottom(),
+				this.internalScrollPane.getInternalPadding().getBottom(),
 				leftNode != null ? leftNode.getWidth()+padding+leftRad/2:padding
 			)
 		);
-		
-		if ( leftNode != null )
-			leftNode.setLocalPosition(this, this.internalScrollPane.getPadding().getLeft()/2-leftNode.getWidth()/2+1,this.getInnerBounds().getHeight()/2-leftNode.getHeight()/2);
+	}
+	
+	@Override
+	public void render(Context context) {
+		if ( leftNode != null ) {
+			leftNode.setLocalPosition(this, this.internalScrollPane.getInnerBounds().getX()+padding,this.internalScrollPane.getInnerBounds().getHeight()/2-leftNode.getHeight()/2+1);
+		}
 		
 		if ( rightNode != null )
-			rightNode.setLocalPosition(this, this.getWidth()-this.internalScrollPane.getPadding().getRight(),this.getInnerBounds().getHeight()/2f-rightNode.getHeight()/2f);
+			rightNode.setLocalPosition(this, this.internalScrollPane.getInnerBounds().getWidth()-rightNode.getWidth()-padding,this.internalScrollPane.getInnerBounds().getHeight()/2f-rightNode.getHeight()/2f+1);
+
+		
+		super.render(context);
 	}
 }

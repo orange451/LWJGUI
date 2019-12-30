@@ -284,7 +284,7 @@ public class TabPane extends Control {
 
 	static class TabPaneInternal extends VBox {
 		TabPaneInternal() {
-			this.flag_clip = true;
+			this.flag_clip = false;
 			this.setFillToParentHeight(true);
 			this.setFillToParentWidth(true);
 			this.setAlignment(Pos.TOP_LEFT);
@@ -314,7 +314,7 @@ public class TabPane extends Control {
 	
 	class TabPaneButtonBox extends HBox {
 		TabPaneButtonBox() {
-			this.flag_clip = true;
+			this.flag_clip = false;
 			this.setFillToParentWidth(true);
 			this.setSpacing(1);
 			this.setPadding(new Insets(6,4,0,4));

@@ -92,8 +92,8 @@ public class ScrollPane extends Pane {
 
 		// Update scrollbars
 		if ( content != null ) {
-			hBar.update(viewport.x, content.getWidth()+internalCanvas.getPadding().getWidth());
-			vBar.update(viewport.y, content.getHeight()+internalCanvas.getPadding().getHeight());
+			hBar.update(viewport.x-4, content.getWidth()+internalCanvas.getPadding().getWidth());
+			vBar.update(viewport.y-1, content.getHeight()+internalCanvas.getPadding().getHeight());
 		}
 	}
 	

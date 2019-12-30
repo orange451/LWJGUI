@@ -1,5 +1,6 @@
 package lwjgui.scene.control;
 
+import org.joml.Vector2f;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.collections.ObservableList;
@@ -141,25 +142,42 @@ public abstract class Labeled extends Control {
 		this.contentDisplay = display;
 	}
 	
+	private Node lastParent = null;
+	private Vector2f lastParentSize = new Vector2f();
+	
 	@Override
 	protected void resize() {
 		super.resize();
 		
+		// Dont check for resizing
+		boolean checkResize = false;
+		
+		// Check if our parent has changed
+		if ( this.getParent() != lastParent && this.getParent() != null )
+			checkResize = true;
+		
+		// Check if parent has changed size
+		if ( this.getParent() != null && (this.getParent().getWidth() != lastParentSize.x || this.getParent().getHeight() != lastParentSize.y) )
+			checkResize = true;
+		
+		checkResize = true;
+		
 		// Change label size if it's too large for its container (cut off text)
-		if (this.getParent() != null && cached_context != null) {
+		if (checkResize && cached_context != null) {
+			cachedWidth = -1;
 			useString = text;
 			
 			// Get max width of parent element
 			double graphicWid = graphic == null ? 0 : (graphic.getWidth()+contentGap);
 			
 			// Get some text bounds
-			double curWid = getTextWidthWithGraphic(text) + this.getPadding().getWidth();
+			double curWid = getTextWidthWithGraphic(text) + (this.getWidth()-this.getInnerBounds().getWidth());
 			
 			// Set initial size
 			size.x = Math.min( Math.max(curWid, size.x), getMaxWidth() );
 			
 			// If we're too large for the parent element...
-			if ( this.size.x > this.getAvailableSize().x ) {
+			if ( this.size.x >= this.getAvailableSize().x ) {
 				// Get bounds for elipsis
 				float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize, garbage);
 				
@@ -174,6 +192,7 @@ public abstract class Labeled extends Control {
 					useString = useString.substring(0, text.length()-remove)+ELIPSES;
 					float[] bounds = font.getTextBounds( cached_context, useString, fontStyle, fontSize, garbage);
 					curWid = (bounds[2]-bounds[0])+graphicWid;
+					cachedWidth = -1;
 				}
 				this.size.x = curWid;
 			}

@@ -253,8 +253,8 @@ public class ScrollPane extends Pane {
 	@Override
 	public void render(Context context) {
 		// Position content relative to scrollbars
-		if ( content != null ) {
-			this.position(this.getParent()); // Calling position here means that for scroll panes, position gets called twice per frame...
+		if ( content != null && this.getParent() != null ) {
+			this.getParent().updateChildren();
 			content.setAbsolutePosition(this.getX(), this.getY());
 			content.offset(-hBar.pixel, -vBar.pixel);
 		}

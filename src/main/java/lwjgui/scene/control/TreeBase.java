@@ -28,9 +28,15 @@ public abstract class TreeBase<E> extends StackPane {
 
 	protected TreeNode<E> getNode(TreeItem<E> item) {
 		for (int i = 0; i < nodes.size(); i++) {
-			if ( nodes.get(i).item.equals(item) ) {
+			if ( i >= nodes.size() )
+				continue;
+			
+			TreeNode<E> node = nodes.get(i);
+			if ( node == null )
+				continue;
+			
+			if ( item.equals(node.item) )
 				return nodes.get(i);
-			}
 		}
 		return null;
 	}

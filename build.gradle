@@ -1,7 +1,6 @@
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
-	id "net.nemerosa.versioning" version "2.8.2"
 	id "eclipse"
 	id "idea"
 	id "java"

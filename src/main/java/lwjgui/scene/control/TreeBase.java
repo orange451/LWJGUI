@@ -34,6 +34,10 @@ public abstract class TreeBase<E> extends StackPane {
 		}
 		return null;
 	}
+	
+	public boolean isExpanded() {
+		return true;
+	}
 
 	/**
 	 * 

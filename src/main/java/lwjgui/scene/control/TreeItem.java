@@ -32,6 +32,7 @@ public class TreeItem<E> extends TreeBase<E> {
 		this.opened = expanded;
 	}
 	
+	@Override
 	public boolean isExpanded() {
 		return this.opened;
 	}

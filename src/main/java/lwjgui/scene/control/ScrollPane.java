@@ -72,7 +72,7 @@ public class ScrollPane extends Pane {
 	@Override
 	protected void position(Node node) {
 		super.position(node);
-		this.internalCanvas.position(this);
+		//this.internalCanvas.position(this);
 		
 		this.viewport.set((float)this.getInnerBounds().getWidth(), (float)this.getInnerBounds().getHeight());
 		if ( hBar.active )

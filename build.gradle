@@ -1,0 +1,114 @@
+import org.gradle.internal.os.OperatingSystem
+
+plugins {
+	id "net.nemerosa.versioning" version "2.8.2"
+	id "eclipse"
+	id "idea"
+	id "java"
+	id "java-library"
+	id "java-library-distribution"
+	id "maven-publish"
+}
+
+sourceCompatibility = "8"
+project.ext.lwjglVersion = "3.2.3"
+project.ext.jomlVersion = "1.9.19"
+
+group = "org.lwjgui"
+version = "1.0.0-SNAPSHOT"
+
+switch (OperatingSystem.current()) {
+	case OperatingSystem.LINUX:
+		def osArch = System.getProperty("os.arch")
+		project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+			? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
+			: "natives-linux"
+		break
+	case OperatingSystem.MAC_OS:
+		project.ext.lwjglNatives = "natives-macos"
+		break
+	case OperatingSystem.WINDOWS:
+		project.ext.lwjglNatives = System.getProperty("os.arch").contains("64") ? "natives-windows" : "natives-windows-x86"
+		break
+}
+
+sourceSets {
+	main {
+		java.srcDir("${projectDir}/src/main/java/")
+		resources.srcDir("${projectDir}/src/main/resources/")
+	}
+
+	test {
+		java.srcDir("${projectDir}/src/test/java/")
+		resources.srcDir("${projectDir}/src/test/resources/")
+	}	
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// LWJGL dependencies
+	implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+	api "org.lwjgl:lwjgl"
+	api "org.lwjgl:lwjgl-glfw"
+	api "org.lwjgl:lwjgl-jemalloc"
+	api "org.lwjgl:lwjgl-nanovg"
+	api "org.lwjgl:lwjgl-opengl"
+	api "org.lwjgl:lwjgl-stb"
+	api "org.lwjgl:lwjgl-tinyfd"
+
+	if (project.hasProperty("AllNatives")) {
+		runtimeOnly "org.lwjgl:lwjgl::natives-linux"
+		runtimeOnly "org.lwjgl:lwjgl-glfw::natives-linux"
+		runtimeOnly "org.lwjgl:lwjgl-jemalloc::natives-linux"
+		runtimeOnly "org.lwjgl:lwjgl-nanovg::natives-linux"
+		runtimeOnly "org.lwjgl:lwjgl-opengl::natives-linux"
+		runtimeOnly "org.lwjgl:lwjgl-stb::natives-linux"
+		runtimeOnly "org.lwjgl:lwjgl-tinyfd::natives-linux"
+
+		runtimeOnly "org.lwjgl:lwjgl::natives-macos"
+		runtimeOnly "org.lwjgl:lwjgl-glfw::natives-macos"
+		runtimeOnly "org.lwjgl:lwjgl-jemalloc::natives-macos"
+		runtimeOnly "org.lwjgl:lwjgl-nanovg::natives-macos"
+		runtimeOnly "org.lwjgl:lwjgl-opengl::natives-macos"
+		runtimeOnly "org.lwjgl:lwjgl-stb::natives-macos"
+		runtimeOnly "org.lwjgl:lwjgl-tinyfd::natives-macos"
+
+		runtimeOnly "org.lwjgl:lwjgl::natives-windows"
+		runtimeOnly "org.lwjgl:lwjgl-glfw::natives-windows"
+		runtimeOnly "org.lwjgl:lwjgl-jemalloc::natives-windows"
+		runtimeOnly "org.lwjgl:lwjgl-nanovg::natives-windows"
+		runtimeOnly "org.lwjgl:lwjgl-opengl::natives-windows"
+		runtimeOnly "org.lwjgl:lwjgl-stb::natives-windows"
+		runtimeOnly "org.lwjgl:lwjgl-tinyfd::natives-windows"
+
+		runtimeOnly "org.lwjgl:lwjgl::natives-windows-x86"
+		runtimeOnly "org.lwjgl:lwjgl-glfw::natives-windows-x86"
+		runtimeOnly "org.lwjgl:lwjgl-jemalloc::natives-windows-x86"
+		runtimeOnly "org.lwjgl:lwjgl-nanovg::natives-windows-x86"
+		runtimeOnly "org.lwjgl:lwjgl-opengl::natives-windows-x86"
+		runtimeOnly "org.lwjgl:lwjgl-stb::natives-windows-x86"
+		runtimeOnly "org.lwjgl:lwjgl-tinyfd::natives-windows-x86"
+	} else {
+		runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+		runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+		runtimeOnly "org.lwjgl:lwjgl-jemalloc::$lwjglNatives"
+		runtimeOnly "org.lwjgl:lwjgl-nanovg::$lwjglNatives"
+		runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+		runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+		runtimeOnly "org.lwjgl:lwjgl-tinyfd::$lwjglNatives"
+	}
+
+	api "org.joml:joml:${jomlVersion}"
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+	}
+}

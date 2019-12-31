@@ -113,8 +113,21 @@ public class TreeView<E> extends TreeBase<E> {
 		
 		ObservableList<TreeNode<E>> itm = root.nodes;
 		for (int i = 0; i < itm.size(); i++) {
-			TreeItem<E> child = itm.get(i).getItem();
+			if ( i >= itm.size() )
+				continue;
+			
+			TreeNode<E> nde = itm.get(i);
+			if ( nde == null )
+				continue;
+			
+			TreeItem<E> child = nde.getItem();
+			if ( child == null )
+				continue;
+			
 			TreeNode<E> node = root.getNode(child);
+			if ( node == null )
+				continue;
+			
 			node.root = this;
 			node.setPrefWidth(TreeView.this.getWidth());
 			node.setInset(indent*indentWidth);

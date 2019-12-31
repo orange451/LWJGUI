@@ -980,6 +980,9 @@ public abstract class Node implements Resizable {
 	 * @param width
 	 */
 	public void setPrefWidth( double width ) {
+		if ( this.prefsize == null )
+			return;
+		
 		this.prefsize.x = width;
 		if (this.getMinWidth() > 0) {
 			width = Math.max(layoutBounds.minX, Math.min(layoutBounds.maxX, width));
@@ -994,6 +997,9 @@ public abstract class Node implements Resizable {
 	 * @param width
 	 */
 	public void setPrefHeight( double height ) {
+		if ( this.prefsize == null )
+			return;
+		
 		this.prefsize.y = height;
 		if ( this.getMinHeight() > 0 ) {
 			height = Math.max(layoutBounds.minY, Math.min(layoutBounds.maxY, height));

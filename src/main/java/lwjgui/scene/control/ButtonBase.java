@@ -150,12 +150,6 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 		return false;
 	}
 	
-	/*
-	@Override
-	public Vector2d getAvailableSize() {
-		return new Vector2d(getMaxWidth(),getMaxHeight());
-	}*/
-	
 	protected boolean isPressed() {
 		if ( cached_context == null )
 			return false;

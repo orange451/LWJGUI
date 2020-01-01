@@ -245,16 +245,19 @@ public abstract class Node implements Resizable {
 			Node oldParent = this.parent;
 			this.parent = parent;
 	
-			// Recompute absolute position on parent change
-			if (  oldParent != null && oldParent != this.parent ) {
-				unregisterFromParent(this, this.parent);
-				computeAbsolutePosition();
+			// If parents change...
+			if ( oldParent != this.parent ) {
+				// Recompute absolute position on parent change
+				if ( oldParent != null ) {
+					unregisterFromParent(this, oldParent);
+					computeAbsolutePosition();
+				}
+				
+				registerToParent(this, this.getParent());
 			}
 			
-			// Loosely register this node to the parent (used to index a node based on ID)
-			idToNode.clear();
-			descendents.clear();
-			registerToParent(this, this.getParent());
+			// Register our element ID
+			registerElementIDToParent(this, this.parent);
 			
 			// Cache current context
 			cached_context = LWJGUI.getCurrentContext();
@@ -275,9 +278,18 @@ public abstract class Node implements Resizable {
 		if ( parent == null )
 			return;
 		
-		parent.idToNode.put(node.getElementId(), node);
 		parent.descendents.add(node);
 		registerToParent(node, parent.getParent());
+	}
+	
+	private void registerElementIDToParent(Node node, Node parent) {
+		if ( parent == null )
+			return;
+		
+		if ( node.getElementId() != null && node.getElementId().length() > 0 )
+			parent.idToNode.put(node.getElementId(), node);
+		
+		registerElementIDToParent(node, parent.getParent());
 	}
 	
 	private void unregisterFromParent(Node node, Node parent) {
@@ -460,8 +472,6 @@ public abstract class Node implements Resizable {
 	 * @param id
 	 */
 	public void setElementId(String id) {
-		if ( id == null )
-			id = "";
 		this.id = id;
 	}
 	

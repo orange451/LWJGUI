@@ -246,7 +246,7 @@ public abstract class Node implements Resizable {
 			this.parent = parent;
 	
 			// Recompute absolute position on parent change
-			if ( oldParent != this.parent ) {
+			if (  oldParent != null && oldParent != this.parent ) {
 				unregisterFromParent(this, this.parent);
 				computeAbsolutePosition();
 			}

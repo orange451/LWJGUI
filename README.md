@@ -21,7 +21,7 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 - HBox / VBox
 
 # Screenshots
-![Modena](http://magaimg.net/img/7gkq.png)
+![Modena](https://i.imgur.com/JFA3Soi.png)
 ![PicControlExample](https://i.imgur.com/asB7t7e.png)
 ![SyntaxHighlight](https://i.imgur.com/gyyBPnI.png)
 ![PicOpenGL](https://i.imgur.com/4yKwk1L.png)

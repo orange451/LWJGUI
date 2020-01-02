@@ -22,13 +22,13 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 
 # Screenshots
 ![Modena](http://magaimg.net/img/7gkq.png)
-![PicControlExample](http://magaimg.net/img/9lb8.png)
-![SyntaxHighlight](http://magaimg.net/img/9lb5.png)
-![PicOpenGL](http://magaimg.net/img/7utn.png)
+![PicControlExample](https://i.imgur.com/asB7t7e.png)
+![SyntaxHighlight](https://i.imgur.com/gyyBPnI.png)
+![PicOpenGL](https://i.imgur.com/4yKwk1L.png)
 ![ScrollSplitPane](https://i.imgur.com/EKVvWdP.png)
-![Gears](http://magaimg.net/img/7ux5.png)
-![TextArea](http://magaimg.net/img/9lb6.png)
-![TreeView](http://magaimg.net/img/a20c.png)
+![Gears](https://i.imgur.com/kRY0Oyo.png)
+![TreeView](https://i.imgur.com/sjwIDHX.png)
+![TextArea](https://i.imgur.com/muyyMN7.png)
 ![IDE](http://magaimg.net/img/7upi.png)
 
 # Required Libraries

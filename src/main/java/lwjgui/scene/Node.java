@@ -692,6 +692,10 @@ public abstract class Node implements Resizable {
 	 * @param padding
 	 */
 	protected void clip( Context context, int padding ) {
+		Context TEMP_CACHE = this.cached_context;
+		if ( TEMP_CACHE == null )
+			return;
+		
 		LayoutBounds clipBoundsTemp = new LayoutBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
 		LayoutBounds tempBounds = LAYOUT_CACHE;
 		
@@ -728,7 +732,7 @@ public abstract class Node implements Resizable {
 			par = par.parent;
 		}
 		
-		this.cached_context.setClipBounds(clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
+		TEMP_CACHE.setClipBounds(clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
 		NanoVG.nvgScissor(context.getNVG(), clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
 	}
 	

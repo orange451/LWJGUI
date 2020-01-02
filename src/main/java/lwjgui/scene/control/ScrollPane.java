@@ -95,6 +95,12 @@ public class ScrollPane extends Pane {
 			hBar.update(viewport.x, content.getWidth()+(internalCanvas.getWidth()-internalCanvas.getInnerBounds().getWidth()));
 			vBar.update(viewport.y, content.getHeight()+(internalCanvas.getHeight()-internalCanvas.getInnerBounds().getHeight()));
 		}
+		
+		// Position content relative to scrollbars
+		if ( content != null && this.getParent() != null ) {
+			content.setAbsolutePosition(this.getX()-hBar.pixel, this.getY()-vBar.pixel);
+			content.updateChildren();
+		}
 	}
 	
 	private boolean click = false;
@@ -252,12 +258,9 @@ public class ScrollPane extends Pane {
 	
 	@Override
 	public void render(Context context) {
-		// Position content relative to scrollbars
-		if ( content != null && this.getParent() != null ) {
-			this.getParent().updateChildren();
-			content.setAbsolutePosition(this.getX(), this.getY());
-			content.offset(-hBar.pixel, -vBar.pixel);
-		}
+
+		if ( content != null )
+			content.updateChildren();
 		
 		super.render(context);
 		

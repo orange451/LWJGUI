@@ -668,7 +668,7 @@ public class Color {
 		Field[] declaredFields = Color.class.getDeclaredFields();
 		for (Field field : declaredFields) {
 		    if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
-		    	if ( field.getName().toLowerCase().replace("_", " ").equals(matchName)) {
+		    	if ( field.getName().toLowerCase().replace("_", "").equals(matchName)) {
 		    		try {
 						return (Color) field.get(null);
 					} catch (IllegalArgumentException e) {

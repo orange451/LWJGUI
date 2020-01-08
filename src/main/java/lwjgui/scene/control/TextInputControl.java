@@ -94,7 +94,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	private Color selectionFill = Theme.current().getSelection();
 	private Color selectionPassiveFill = Theme.current().getSelectionPassive();
 	Color selectionAltFill = Theme.current().getSelectionAlt();
-	private Color controlOutlineFill = Theme.current().getControlOutline();
 	private Color promptFill = Theme.current().getText().alpha(0.4f);
 	
 	protected TextInputControlShortcuts shortcuts;
@@ -387,14 +386,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 
 	public void setSelectionAltFill(Color selectionAltFill) {
 		this.selectionAltFill = selectionAltFill;
-	}
-
-	public Color getControlOutlineFill() {
-		return controlOutlineFill;
-	}
-
-	public void setControlOutlineFill(Color controlOutlineFill) {
-		this.controlOutlineFill = controlOutlineFill;
 	}
 
 	public void setOnSelected( EventHandler<Event> event ) {
@@ -963,7 +954,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		// SETUP OUTLINE
 		this.setBorderStyle(BorderStyle.SOLID);
 		this.setBorderWidth(1);
-		Color outlineColor = (this.isDescendentSelected()&&!this.isDisabled())? selectionFill : controlOutlineFill;
+		Color outlineColor = (this.isDescendentSelected()&&!this.isDisabled())? selectionFill : this.getBorderColor();
 		this.setBorderColor(outlineColor);
 		
 		// SETUP SELECTION GRAPHIC

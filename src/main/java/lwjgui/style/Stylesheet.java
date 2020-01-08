@@ -32,6 +32,9 @@ public class Stylesheet {
 			// Apply styling for the DOM TAG
 			computeStyling(node, StyleSelectorType.TAG, node.getElementType(), declarations, false);
 			
+			// Apply styling for the ID
+			computeStyling(node, StyleSelectorType.ID, node.getElementType(), declarations, false);
+			
 			// Apply styling for the class
 			ArrayList<String> classList = node.getClassList();
 			for (int i = 0; i < classList.size(); i++) {
@@ -44,6 +47,9 @@ public class Stylesheet {
 		{
 			// Apply styling for the DOM TAG
 			computeStyling(node, StyleSelectorType.TAG, node.getElementType(), declarations, true);
+			
+			// Apply styling for the ID
+			computeStyling(node, StyleSelectorType.ID, node.getElementType(), declarations, true);
 			
 			// Apply styling for the class
 			ArrayList<String> classList = node.getClassList();
@@ -483,6 +489,9 @@ public class Stylesheet {
 			if ( selector.startsWith(".") ) {
 				selector = selector.substring(1);
 				type = StyleSelectorType.CLASS;
+			} else if ( selector.startsWith("#") ) {
+				selector = selector.substring(1);
+				type = StyleSelectorType.ID;
 			} else {
 				type = StyleSelectorType.TAG;
 			}
@@ -526,7 +535,7 @@ public class Stylesheet {
 	}
 
 	enum StyleSelectorType {
-		TAG, CLASS;
+		TAG, CLASS, ID;
 	}
 }
 

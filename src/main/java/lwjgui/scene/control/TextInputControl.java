@@ -665,6 +665,14 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		return this.editing;
 	}
 	
+	public double getViewportWidth() {
+		return this.internalScrollPane.getViewportWidth();
+	}
+	
+	public double getViewportHeight() {
+		return this.internalScrollPane.getViewportHeight();
+	}
+	
 	@Override
 	protected void position(Node parent) {
 		super.position(parent);

@@ -33,7 +33,7 @@ public class Stylesheet {
 			computeStyling(node, StyleSelectorType.TAG, node.getElementType(), declarations, false);
 			
 			// Apply styling for the ID
-			computeStyling(node, StyleSelectorType.ID, node.getElementType(), declarations, false);
+			computeStyling(node, StyleSelectorType.ID, node.getElementId(), declarations, false);
 			
 			// Apply styling for the class
 			ArrayList<String> classList = node.getClassList();
@@ -49,7 +49,7 @@ public class Stylesheet {
 			computeStyling(node, StyleSelectorType.TAG, node.getElementType(), declarations, true);
 			
 			// Apply styling for the ID
-			computeStyling(node, StyleSelectorType.ID, node.getElementType(), declarations, true);
+			computeStyling(node, StyleSelectorType.ID, node.getElementId(), declarations, true);
 			
 			// Apply styling for the class
 			ArrayList<String> classList = node.getClassList();
@@ -87,6 +87,9 @@ public class Stylesheet {
 	}
 
 	private boolean computeStyling(Node node, StyleSelectorType type, String id, Map<String, StyleOperationValue> combinedDeclarations, boolean justPseudoClasses) {
+		if ( id == null || id.length() == 0 )
+			return false;
+		
 		StyleSelector selector = idToStyleSelector.get(id);
 		if ( selector == null )
 			return false;

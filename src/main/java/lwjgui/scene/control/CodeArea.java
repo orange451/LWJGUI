@@ -44,7 +44,8 @@ public class CodeArea extends TextArea {
 		super.position(parent);
 		
 		// Update padding
-		this.internalScrollPane.setInternalPadding(new Insets(internalScrollPane.getPadding().getTop(), internalScrollPane.getPadding().getRight(), internalScrollPane.getPadding().getBottom(), lineCounter.getWidth()+2));
+		//this.internalScrollPane.setInternalPadding(new Insets(internalScrollPane.getInternalPadding().getTop(), internalScrollPane.getInternalPadding().getRight(), internalScrollPane.getInternalPadding().getBottom(), lineCounter.getWidth()+2));
+		this.internalScrollPane.setInternalPadding(new Insets(internalScrollPane.getInternalPadding().getTop(), internalScrollPane.getInternalPadding().getRight(), internalScrollPane.getInternalPadding().getBottom(), lineCounter.getWidth()+2));
 	}
 	
 	@Override

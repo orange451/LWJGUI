@@ -1,13 +1,11 @@
 package lwjgui.scene.control;
 
-import java.awt.font.TextHitInfo;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGGlyphPosition;
-import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.LWJGUI;
@@ -34,9 +32,6 @@ import lwjgui.style.BackgroundSolid;
 import lwjgui.style.BlockPaneRenderer;
 import lwjgui.style.BorderStyle;
 import lwjgui.style.BoxShadow;
-import lwjgui.style.StyleBackground;
-import lwjgui.style.StyleBorder;
-import lwjgui.style.StyleBoxShadow;
 import lwjgui.theme.Theme;
 
 /**
@@ -818,8 +813,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	}
 	
 	int getCaretAtMouse() {
-		double mx = cached_context.getMouseX()-(internalScrollPane.getContent().getX()+internalScrollPane.getViewport().getInnerBounds().getX());
-		double my = cached_context.getMouseY()-(internalScrollPane.getContent().getY()+internalScrollPane.getViewport().getInnerBounds().getY());
+		double mx = cached_context.getMouseX()-(internalScrollPane.getContent().getX());
+		double my = cached_context.getMouseY()-(internalScrollPane.getContent().getY());
 		
 		// Find row clicked
 		int row = (int) (my / (float)fontSize);
@@ -954,7 +949,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		// SETUP OUTLINE
 		this.setBorderStyle(BorderStyle.SOLID);
 		this.setBorderWidth(1);
-		Color outlineColor = (this.isDescendentSelected()&&!this.isDisabled())? selectionFill : this.getBorderColor();
+		Color outlineColor = (this.isDescendentSelected()&&!this.isDisabled())? selectionFill : Theme.current().getControlOutline();
 		this.setBorderColor(outlineColor);
 		
 		// SETUP SELECTION GRAPHIC
@@ -984,8 +979,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		
 		// Draw Prompt
 		if ( getLength() == 0 && prompt != null && prompt.length() > 0 ) {
-			int xx = (int) (this.internalRenderingPane.getX() + this.internalScrollPane.getViewport().getInnerBounds().getX());
-			int yy = (int) (this.internalRenderingPane.getY() + this.internalScrollPane.getViewport().getInnerBounds().getY());
+			int xx = (int) (this.internalRenderingPane.getX());
+			int yy = (int) (this.internalRenderingPane.getY());
 			
 			// Setup font
 			NanoVG.nvgFontSize(vg, fontSize);
@@ -1064,7 +1059,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			setHbarPolicy(ScrollBarPolicy.NEVER);
 			
 			// Set padding of viewport
-			setInternalPadding(new Insets(3,4,4,3));
+			this.internalCanvas.setPadding(new Insets(3,4,4,3));
 
 			// Enter
 			getViewport().setOnMouseEntered(event -> {
@@ -1193,8 +1188,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		@Override
 		public void render(Context context) {
 
-			double startX = this.getX() + internalScrollPane.getViewport().getInnerBounds().getX();
-			double startY = this.getY() + internalScrollPane.getViewport().getInnerBounds().getY();
+			double startX = this.getX();// + internalScrollPane.getViewport().getInnerBounds().getX();
+			double startY = this.getY();// + internalScrollPane.getViewport().getInnerBounds().getY();
 			
 			if (textInputControl.glyphData.size() == 0) {
 				textInputControl.setText(textInputControl.getText());

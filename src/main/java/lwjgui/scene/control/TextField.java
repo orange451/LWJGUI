@@ -1,5 +1,7 @@
 package lwjgui.scene.control;
 
+import lwjgui.geometry.Insets;
+
 public class TextField extends TextInputControl {
 	public TextField() {
 		this("");
@@ -11,6 +13,8 @@ public class TextField extends TextInputControl {
 		this.setText(text);
 		this.setPrefWidth(120);
 		this.setBorderRadii(3);
+		
+		this.internalScrollPane.setInternalPadding(new Insets(2,0,0,2));
 	}
 	
 	@Override

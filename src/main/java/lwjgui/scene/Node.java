@@ -112,7 +112,7 @@ public abstract class Node implements Resizable {
 	public Node() {
 		children.setAddCallback((element) -> {
 			if (!element.initialized)
-				element._init();
+				element.init();
 		});
 		children.setRemoveCallback((element) -> {
 			if (element.initialized)
@@ -120,19 +120,17 @@ public abstract class Node implements Resizable {
 		});
 	}
 
-	protected void _init() {
-		// System.out.println("Init - " + getClass().getSimpleName());
+	protected void init() {
 		initialized = true;
 		for (int i = 0; i < children.size(); i++) {
 			Node c = children.get(i);
 			if (!c.initialized)
-				c._init();
+				c.init();
 		}
 	}
 
 	public void dispose() {
 		initialized = false;
-		// System.out.println("Dispose - " + getClass().getSimpleName());
 		for (int i = 0; i < children.size(); i++) {
 			Node c = children.get(i);
 			if (c.initialized)

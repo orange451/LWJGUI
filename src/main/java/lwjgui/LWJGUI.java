@@ -19,7 +19,7 @@ import lwjgui.scene.layout.StackPane;
 
 public class LWJGUI {
 	private static HashMap<Long, Window> windows = new HashMap<Long, Window>();
-	private static Queue<Runnable> runnables = new ConcurrentLinkedQueue<>();
+	private static Queue<Task<?>> tasks = new ConcurrentLinkedQueue<>();
 	protected static Context currentContext;
 	
 	/**
@@ -54,6 +54,10 @@ public class LWJGUI {
 		currentContext = context;
 		
 		return wind;
+	}
+
+	public static void init() {
+
 	}
 
 	/**
@@ -111,8 +115,8 @@ public class LWJGUI {
 		}
 		
 		// Execute Runnables
-		while (!runnables.isEmpty())
-			runnables.poll().run();
+		while (!tasks.isEmpty())
+			tasks.poll().callI();
 
 		GLFW.glfwMakeContextCurrent(currentContext);
 	}
@@ -142,9 +146,20 @@ public class LWJGUI {
 	 * @param runnable
 	 */
 	public static void runLater(Runnable runnable) {
-		synchronized(runnables) {
-			runnables.add(runnable);
-		}
+		submitTask(new Task<Void>() {
+			@Override
+			protected Void call() {
+				runnable.run();
+				return null;
+			}
+		});
+	}
+
+	public static <T> Task<T> submitTask(Task<T> t) {
+		if (t == null)
+			return null;
+		tasks.add(t);
+		return t;
 	}
 
 	/**

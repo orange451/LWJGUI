@@ -36,7 +36,6 @@ import lwjgui.event.Event;
 import lwjgui.event.EventHelper;
 import lwjgui.font.Font;
 import lwjgui.scene.control.PopupWindow;
-import lwjgui.scene.image.ImageCaching;
 import lwjgui.style.Stylesheet;
 import lwjgui.util.Bounds;
 
@@ -66,8 +65,6 @@ public class Context {
 
 	private List<ByteBuffer> fontBuffers = new ArrayList<>();
 
-	private ImageCaching imageCaching;
-
 	public Context( long window ) {
 		windowHandle = window;
 
@@ -88,13 +85,10 @@ public class Context {
 		loadFont(Font.SEGOE, true);
 		loadFont(Font.DINGBAT, true);
 
-		imageCaching = new ImageCaching();
-
 		isCore = LWJGUIApplication.ModernOpenGL;
 	}
 
 	public void dispose() {
-		imageCaching.dispose();
 		if (this.isModernOpenGL()) {
 			NanoVGGL3.nvgDelete(nvgContext);
 		} else {
@@ -103,10 +97,6 @@ public class Context {
 		for (ByteBuffer buf : fontBuffers) {
 			MemoryUtil.memFree(buf);
 		}
-	}
-
-	public void update() {
-		imageCaching.update();
 	}
 
 	/**
@@ -482,10 +472,6 @@ public class Context {
 	
 	public Bounds getClipBounds() {
 		return this.clipBounds;
-	}
-
-	public ImageCaching getImageCaching() {
-		return imageCaching;
 	}
 
 	public void loadFont(Font font, boolean loadFallbacks) {

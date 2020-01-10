@@ -162,8 +162,6 @@ public class Window {
         NanoVG.nvgRestore(context.getNVG());
 		NanoVG.nvgEndFrame(context.getNVG());
 
-		context.update();
-
 		if ( autoDraw ) {
 			GLFW.glfwSwapBuffers(context.getWindowHandle());
 		}

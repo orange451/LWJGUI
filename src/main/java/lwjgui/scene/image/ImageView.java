@@ -12,21 +12,14 @@ import lwjgui.scene.FillableRegion;
 public class ImageView extends FillableRegion {
 	private Image image;
 	private boolean stretchToFit = true;
-	
+
 	public ImageView() {
 		this.setPrefSize(100, 100);
 	}
-	
+
 	public ImageView(Image image) {
 		this();
-		this.image = image;
-	}
-	
-	@Override
-	protected void init() {
-		super.init();
-		if (image != null)
-			image.init();
+		setImage(image);
 	}
 
 	@Override
@@ -35,7 +28,7 @@ public class ImageView extends FillableRegion {
 		if (image != null)
 			image.dispose();
 	}
-	
+
 	public void setMaintainAspectRatio(boolean maintain) {
 		this.stretchToFit = !maintain;
 	}
@@ -51,15 +44,15 @@ public class ImageView extends FillableRegion {
 
 	@Override
 	public void render(Context context) {
-		
-		if ( image == null )
+
+		if (image == null)
 			return;
-		
-		if ( !image.isLoaded() )
+
+		if (!image.isLoaded())
 			return;
-		
+
 		int img = image.getImage();
-		
+
 		long vg = context.getNVG();
 		int x = (int) this.getX();
 		int y = (int) this.getY();
@@ -69,19 +62,19 @@ public class ImageView extends FillableRegion {
 		int yy = y;
 		int ww = w;
 		int hh = h;
-		if ( !stretchToFit ) {
-			double wid = getWidth()+(image.getWidth()-(image.getWidth()/image.getHeight()*image.getWidth()));
-			double hei = getHeight()+(image.getHeight()-(image.getWidth()/image.getHeight()*image.getHeight()));
-			double ratio = wid/hei;
+		if (!stretchToFit) {
+			double wid = getWidth() + (image.getWidth() - (image.getWidth() / image.getHeight() * image.getWidth()));
+			double hei = getHeight() + (image.getHeight() - (image.getWidth() / image.getHeight() * image.getHeight()));
+			double ratio = wid / hei;
 			xx = x;
-			yy = y - (int)((w-h)/2);
+			yy = y - (int) ((w - h) / 2);
 			ww = w;
-			hh = (int) (h*ratio);
-			if ( ratio < 1 ) {
-				ratio = 1.0/ratio;
-				xx = x - (int)((h-w)/2);
+			hh = (int) (h * ratio);
+			if (ratio < 1) {
+				ratio = 1.0 / ratio;
+				xx = x - (int) ((h - w) / 2);
 				yy = y;
-				ww = (int) (w*ratio);
+				ww = (int) (w * ratio);
 				hh = h;
 			}
 		}
@@ -93,11 +86,10 @@ public class ImageView extends FillableRegion {
 			NanoVG.nvgFill(vg);
 		}
 	}
-	
+
 	public void setImage(Image image) {
 		if (this.image != null)
 			this.image.dispose();
-		image.init();
 		this.image = image;
 	}
 

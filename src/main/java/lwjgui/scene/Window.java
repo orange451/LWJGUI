@@ -430,6 +430,42 @@ public class Window {
 		GLFW.glfwSetWindowAttrib(getContext().getWindowHandle(), GLFW.GLFW_RESIZABLE, resizable?GLFW.GLFW_TRUE:GLFW.GLFW_FALSE);
 	}
 
+	public WindowSizeCallback getWindowSizeCallback() {
+		return windowSizeCallback;
+	}
+
+	public WindowCloseCallback getWindowCloseCallback() {
+		return windowCloseCallback;
+	}
+
+	public WindowFocusCallback getWindowFocusCallback() {
+		return windowFocusCallback;
+	}
+
+	public WindowIconifyCallback getWindowIconifyCallback() {
+		return windowIconifyCallback;
+	}
+
+	public KeyCallback getKeyCallback() {
+		return keyCallback;
+	}
+
+	public CharCallback getCharCallback() {
+		return charCallback;
+	}
+
+	public MouseButtonCallback getMouseButtonCallback() {
+		return mouseButtonCallback;
+	}
+
+	public CursorPosCallback getCursorPosCallback() {
+		return cursorPosCallback;
+	}
+
+	public ScrollCallback getScrollCallback() {
+		return scrollCallback;
+	}
+
 	private void closeCallback(long window) {
 		/*
 		 * Call window event listeners

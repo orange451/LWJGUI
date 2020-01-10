@@ -3,6 +3,7 @@ package lwjgui;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.control.Label;
 import lwjgui.scene.image.Image;
 import lwjgui.scene.image.ImageView;
 import lwjgui.scene.layout.StackPane;
@@ -26,10 +27,14 @@ public class ImageExample extends LWJGUIApplication {
 		
 		// Create a viewable pane for that image
 		ImageView view = new ImageView();
-		view.setPrefSize(128, 128);
+		view.setPrefSize(18, 18);
 		view.setImage(img);
 		view.setMaintainAspectRatio(true);
-		pane.getChildren().add(view);
+		//pane.getChildren().add(view);
+		
+		Label l = new Label("Hello World");
+		l.setGraphic(view);
+		pane.getChildren().add(l);
 		
 		// Set the scene
 		window.setScene(new Scene(pane));

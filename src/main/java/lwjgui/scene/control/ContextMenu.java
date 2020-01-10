@@ -58,10 +58,18 @@ public class ContextMenu extends PopupWindow {
 	}
 	
 	private void recalculate() {
-		// Fill the internal box with our items
-		internalBox.getChildren().clear();
+		// Remove items from internal that are no longer in context menu
+		for (int i = 0; i< internalBox.getChildren().size(); i++) {
+			if ( !this.items.contains( (MenuItem) internalBox.getChildren().get(i) ) ) {
+				internalBox.getChildren().remove(i--);
+			}
+		}
+		
+		// Add items from context menu that are not yet in internal
 		for (int i = 0; i < items.size(); i++) {
-			internalBox.getChildren().add(items.get(i));
+			if ( !internalBox.getChildren().contains(items.get(i)) ) {
+				internalBox.getChildren().add(items.get(i));
+			}
 		}
 	}
 	

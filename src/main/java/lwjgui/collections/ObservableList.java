@@ -80,6 +80,10 @@ public class ObservableList<E> {
 				e.onEvent(element);
 		}
 	}
+	
+	public void remove(int index) {
+		this.remove(this.get(index));
+	}
 
 	public int size() {
 		return internal.size();

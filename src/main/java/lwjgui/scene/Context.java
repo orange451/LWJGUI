@@ -36,6 +36,7 @@ import lwjgui.event.Event;
 import lwjgui.event.EventHelper;
 import lwjgui.font.Font;
 import lwjgui.scene.control.PopupWindow;
+import lwjgui.scene.image.Image;
 import lwjgui.style.Stylesheet;
 import lwjgui.util.Bounds;
 
@@ -64,6 +65,8 @@ public class Context {
 	private List<Stylesheet> currentSheets = new ArrayList<>();
 
 	private List<ByteBuffer> fontBuffers = new ArrayList<>();
+	
+	private List<Image> loadedImages = new ArrayList<>();
 
 	public Context( long window ) {
 		windowHandle = window;
@@ -97,6 +100,13 @@ public class Context {
 		for (ByteBuffer buf : fontBuffers) {
 			MemoryUtil.memFree(buf);
 		}
+		for (Image image : loadedImages) {
+			image.dispose();
+		}
+		
+		fontBuffers.clear();
+		loadedImages.clear();
+		currentSheets.clear();
 	}
 
 	/**
@@ -553,5 +563,9 @@ public class Context {
 		buffer.put((byte) 0);
 		buffer.flip();
 		return buffer;
+	}
+
+	public void loadImage(Image image) {
+		loadedImages.add(image);
 	}
 }

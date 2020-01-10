@@ -26,7 +26,7 @@ public class Image {
 	}
 
 	public Image() {
-
+		//
 	}
 
 	protected int getImage() {
@@ -60,6 +60,8 @@ public class Image {
 		NanoVG.nvgImageSize(nvg, image, w, h);
 		width = w[0];
 		height = h[0];
+		
+		context.loadImage(this);
 
 		loaded = true;
 		return image;
@@ -78,7 +80,12 @@ public class Image {
 	}
 
 	public void dispose() {
-		Context context = LWJGUI.getCurrentContext();
-		NanoVG.nvgDeleteImage(context.getNVG(), image);
+		if ( loaded ) {
+			loaded = false;
+			Context context = LWJGUI.getCurrentContext();
+			NanoVG.nvgDeleteImage(context.getNVG(), image);
+		}
+		
+		image = -1;
 	}
 }

@@ -25,8 +25,6 @@ public class ImageView extends FillableRegion {
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (image != null)
-			image.dispose();
 	}
 
 	public void setMaintainAspectRatio(boolean maintain) {
@@ -88,7 +86,7 @@ public class ImageView extends FillableRegion {
 	}
 
 	public void setImage(Image image) {
-		if (this.image != null)
+		if (this.image != null && image != this.image)
 			this.image.dispose();
 		this.image = image;
 	}

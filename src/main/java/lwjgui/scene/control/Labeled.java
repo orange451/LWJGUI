@@ -99,6 +99,9 @@ public abstract class Labeled extends Control {
 	 * @param graphic
 	 */
 	public void setGraphic( Node graphic ) {
+		if ( graphic == this.graphic )
+			return;
+		
 		if ( this.graphic != null )
 			this.children.remove(this.graphic);
 		

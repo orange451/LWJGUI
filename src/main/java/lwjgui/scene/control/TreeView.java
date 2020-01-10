@@ -22,6 +22,8 @@ public class TreeView<E> extends TreeBase<E> {
 	protected EventHandler<CallbackEvent<TreeItem<E>>> onSelectItemEvent;
 	protected EventHandler<CallbackEvent<TreeItem<E>>> onDeselectItemEvent;
 	
+	protected boolean needsRefresh = true;
+	
 	public TreeView() {
 		this.internalBox = new VBox();
 		this.children.add(internalBox);
@@ -70,12 +72,17 @@ public class TreeView<E> extends TreeBase<E> {
 			// Enter key
 			if ( key == GLFW.GLFW_KEY_ENTER ) {
 				visibleItems.get(index).setExpanded(!visibleItems.get(index).isExpanded());
+				needsRefresh = true;
 			}
 		});
 	}
 	
 	@Override
 	protected void position(Node parent) {
+		for (int i = 0; i < items.size(); i++) {
+			items.get(i).setTree(this);
+		}
+		
 		this.internalBox.setPrefWidth(0);
 		for (int i = 0; i < visibleItems.size(); i++) {
 			TreeItem<E> item = visibleItems.get(i);
@@ -86,9 +93,12 @@ public class TreeView<E> extends TreeBase<E> {
 		}
 
 		// Refresh visible Item list
-		visibleItems.clear();
-		internalBox.getChildren().clear();
-		addChildren(0, this);
+		if ( needsRefresh ) {
+			needsRefresh = false;
+			visibleItems.clear();
+			internalBox.getChildren().clear();
+			addChildren(0, this);
+		}
 		
 		// Deselect if not selected
 		if ( !this.isDescendentSelected() )

@@ -10,6 +10,7 @@ public class TreeItem<E> extends TreeBase<E> {
 	private E root;
 	private boolean opened;
 	protected TreeItemLabel label;
+	private TreeView<E> parentView;
 
 	protected ContextMenu context;
 	
@@ -31,6 +32,10 @@ public class TreeItem<E> extends TreeBase<E> {
 	
 	public void setExpanded(boolean expanded) {
 		this.opened = expanded;
+		
+		if ( this.parentView != null ) {
+			this.parentView.needsRefresh = true;
+		}
 	}
 	
 	@Override
@@ -58,6 +63,13 @@ public class TreeItem<E> extends TreeBase<E> {
 	protected void position(Node parent) {
 		super.position(parent);
 		label.setText(root.toString());
+	}
+
+	protected void setTree(TreeView<E> treeView) {
+		this.parentView = treeView;
+		for (int i = 0; i < this.items.size(); i++) {
+			this.items.get(i).setTree(treeView);
+		}
 	}
 }
 

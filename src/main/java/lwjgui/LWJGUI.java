@@ -21,6 +21,35 @@ public class LWJGUI {
 	private static HashMap<Long, Window> windows = new HashMap<Long, Window>();
 	private static Queue<Task<?>> tasks = new ConcurrentLinkedQueue<>();
 	protected static Context currentContext;
+
+	/**
+	 * Initializes a managed LWJGUI window. The window contains a Scene class.<br>
+	 * Rendering components can be added to the scene. However, to set initial
+	 * rendering, the scene's root node must first be set.
+	 * @return Returns a LWJGUI Window that contains a rendering Context and a Scene.
+	 */
+	public static Window initialize() {
+		return initialize(true);
+	}
+
+	/**
+	 * Initializes a managed LWJGUI window. The window contains a Scene class.<br>
+	 * Rendering components can be added to the scene. However, to set initial
+	 * rendering, the scene's root node must first be set.
+	 * @param modernOpenGL
+	 * @return Returns a LWJGUI Window that contains a rendering Context and a Scene.
+	 */
+	public static Window initialize(boolean modernOpenGL) {
+		//Create a standard opengl 3.2 window.
+		long windowID;
+		if ( modernOpenGL )
+			windowID = LWJGUIUtil.createOpenGLCoreWindow("Window", 100, 100, true, false);
+		else
+			windowID = LWJGUIUtil.createOpenGLDepricatedWindow("Window", 100, 100, true, false);
+		
+		//Initialize LWJGUI for this window ID.
+		return initialize(windowID, false);
+	}
 	
 	/**
 	 * Initializes a LWJGUI window from a GLFW window handle. The window contains a Scene class.<br>
@@ -30,7 +59,7 @@ public class LWJGUI {
 	 * @return Returns a LWJGUI Window that contains a rendering Context and a Scene.
 	 */
 	public static Window initialize(long window) {
-		return initialize(window, false);
+		return initialize(window, true);
 	}
 
 	/**
@@ -41,7 +70,7 @@ public class LWJGUI {
 	 * @param external Set true if window object's creation/destruction is managed outside of LWJGUI
 	 * @return Returns a LWJGUI Window that contains a rendering Context and a Scene.
 	 */
-	public static Window initialize(long window, boolean external) {
+	private static Window initialize(long window, boolean external) {
 		if ( windows.containsKey(window) ) {
 			System.err.println("Failed to initialize this LWJGUI Window. Already initialized.");
 			return null;
@@ -85,15 +114,19 @@ public class LWJGUI {
 			Entry<Long, Window> e = it.next();
 			long context = e.getKey();
 			Window window = e.getValue();
+			
+			// Ignore closed windows
+			if ( window.isShowing() ) {
 
-			// Set context
-			GLFW.glfwMakeContextCurrent(context);
-
-			// Render window
-			try {
-				window.render();
-			} catch (Exception ex) {
-				ex.printStackTrace();
+				// Set context
+				GLFW.glfwMakeContextCurrent(context);
+	
+				// Render window
+				try {
+					window.render();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 
 			// Close window
@@ -106,6 +139,9 @@ public class LWJGUI {
 		for (int i = 0; i < windowsToClose.size(); i++) {
 			long handle = windowsToClose.get(i);
 			Window win = windows.remove(handle);
+			if ( win == null )
+				continue;
+			
 			GLFW.glfwMakeContextCurrent(handle);
 			win.dispose();
 			if (!win.isExternalWindow()) {
@@ -118,7 +154,8 @@ public class LWJGUI {
 		while (!tasks.isEmpty())
 			tasks.poll().callI();
 
-		GLFW.glfwMakeContextCurrent(currentContext);
+		// TODO we may need this?? But right now it's crashing on window close!
+		//GLFW.glfwMakeContextCurrent(currentContext);
 	}
 
 	public static void dispose() {

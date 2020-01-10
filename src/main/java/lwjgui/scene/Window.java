@@ -58,6 +58,8 @@ public class Window {
 	private CursorPosCallback cursorPosCallback;
 	private ScrollCallback scrollCallback;
 	private WindowIconifyCallback windowIconifyCallback;
+	
+	protected boolean open;
 
 	public Window(final Context context, Scene scene, boolean external) {
 		this(context, scene);
@@ -108,6 +110,8 @@ public class Window {
 			iconified = iconify;
 		});
 		
+		open = GLFW.glfwGetWindowAttrib(context.getWindowHandle(), GLFW.GLFW_ICONIFIED)==GLFW.GLFW_FALSE
+				&& GLFW.glfwGetWindowAttrib(context.getWindowHandle(), GLFW.GLFW_VISIBLE)==GLFW.GLFW_TRUE;
 	}
 	
 	/**
@@ -213,18 +217,49 @@ public class Window {
 	}
 	
 	public void dispose() {
+		//close();
 		scene.dispose();
 		context.dispose();
 		//GL.setCapabilities(null);
 	}
 
 	/**
+	 * Closes the window
+	 */
+	public void close() {
+		if ( !open )
+			return;
+		
+		open = false;
+		GLFW.glfwSetWindowShouldClose(getContext().getWindowHandle(), true);
+	}
+	
+	/**
+	 * Iconify (minimise) the window.
+	 */
+	public void iconify() {
+		GLFW.glfwIconifyWindow(getContext().getWindowHandle());
+	}
+
+	/**
 	 * Attempts to show this Window by setting visibility to true
 	 */
 	public void show() {
+		if ( open )
+			return;
+		
+		open = true;
 		glfwShowWindow(context.getWindowHandle());
 		//focus();
 		focusHack();
+	}
+	
+	/**
+	 * Returns whether the current window is open on the screen.
+	 * @return
+	 */
+	public boolean isShowing() {
+		return this.open;
 	}
 	
 	public void setScene(Scene scene) {
@@ -774,6 +809,5 @@ public class Window {
 			EventHelper.fireEvent(t.mouseScrollEvent, new ScrollEvent(x,y));
 		}
 	}
-
 
 }

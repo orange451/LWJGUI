@@ -49,16 +49,12 @@ public class PopupWindowExample extends LWJGUIApplication {
 	
 	protected static void popup(String popup) {
 		// Create a popup window
-		long pWin = LWJGUIUtil.createOpenGLCoreWindow(popup, 250, 150, false, true);
-		Window newWindow = LWJGUI.initialize(pWin);
+		Window newWindow = LWJGUI.initialize();
 		newWindow.setCanUserClose(false); // Prevent user from xing out of window
-		newWindow.show();
-		Scene scene = newWindow.getScene();
 		
 		// Create root pane
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(4,4,4,4));
-		scene.setRoot(root);
 		
 		// Create a label
 		Label l = new Label("Congratulations, You've won!");
@@ -68,8 +64,12 @@ public class PopupWindowExample extends LWJGUIApplication {
 		Button b = new Button("Claim prize");
 		root.setBottom(b);
 		b.setOnAction((event)-> {
-			GLFW.glfwSetWindowShouldClose(pWin, true);
+			newWindow.close();
 		});
+		
+		// Display window
+		newWindow.setScene(new Scene(root, 250, 75));
+		newWindow.show();
 	}
 
 	@Override

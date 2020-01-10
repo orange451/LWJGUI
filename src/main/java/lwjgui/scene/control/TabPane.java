@@ -219,6 +219,9 @@ public class TabPane extends Control {
 			button.pressed = currentTab.equals(tab);
 		}
 		
+		if (currentTab == null)
+			return;
+
 		if ( canDrag && currentTab.dragging ) {
 			isDragging = true;
 			// Get the tab index we're dragging to

@@ -84,13 +84,13 @@ public class LWJGUIDialog {
 	 */
 	public static File showOpenFileDialog(String title, File defaultPath, String filterDescription, String acceptedFileExtension, String... additionalAcceptedFileExtensions){
 
-		MemoryStack.stackPush();
+		MemoryStack stack = MemoryStack.stackPush();
 
-		PointerBuffer filters = MemoryStack.stackMallocPointer(1 + additionalAcceptedFileExtensions.length);
+		PointerBuffer filters = stack.mallocPointer(1 + additionalAcceptedFileExtensions.length);
 
-        filters.put(MemoryStack.stackUTF8("*." + acceptedFileExtension));
+        filters.put(stack.UTF8("*." + acceptedFileExtension));
         for(int i = 0; i < additionalAcceptedFileExtensions.length; i++){
-        	filters.put(MemoryStack.stackUTF8("*." + additionalAcceptedFileExtensions[i]));
+			filters.put(stack.UTF8("*." + additionalAcceptedFileExtensions[i]));
         }
 
         filters.flip();
@@ -103,7 +103,7 @@ public class LWJGUIDialog {
         
         String result = TinyFileDialogs.tinyfd_openFileDialog(title, defaultString, filters, filterDescription, false);
 
-		MemoryStack.stackPop();
+		stack.pop();
 
 		return result != null ? new File(result) : null; 
 	}
@@ -121,11 +121,11 @@ public class LWJGUIDialog {
 	 */
 	public static File showSaveFileDialog(String title, File defaultPath, String filterDescription, String fileExtension, boolean forceExtension){
 
-		MemoryStack.stackPush();
+		MemoryStack stack = MemoryStack.stackPush();
 
-		PointerBuffer filters = MemoryStack.stackMallocPointer(1);
+		PointerBuffer filters = stack.mallocPointer(1);
 
-        filters.put(MemoryStack.stackUTF8("*." + fileExtension)).flip();
+        filters.put(stack.UTF8("*." + fileExtension)).flip();
         
         defaultPath = defaultPath.getAbsoluteFile();
         String defaultString = defaultPath.getAbsolutePath();
@@ -137,7 +137,7 @@ public class LWJGUIDialog {
         
         String result = TinyFileDialogs.tinyfd_saveFileDialog(title, defaultString, filters, filterDescription);
 
-        MemoryStack.stackPop();
+        stack.pop();
 
         if(result == null){
         	return null;

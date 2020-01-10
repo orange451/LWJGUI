@@ -4,6 +4,7 @@ import lwjgui.font.Font;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.HBox;
+import lwjgui.scene.layout.Pane;
 
 public class TreeItem<E> extends TreeBase<E> {
 	private E root;
@@ -60,7 +61,7 @@ public class TreeItem<E> extends TreeBase<E> {
 	}
 }
 
-class TreeItemLabel extends HBox {
+class TreeItemLabel extends Pane {
 	protected Label label;
 	private Node graphic;
 	
@@ -71,29 +72,27 @@ class TreeItemLabel extends HBox {
 		this.label.setFontSize(16);
 		this.label.setPrefHeight(23);
 		this.label.setAlignment(Pos.CENTER_LEFT);
-		this.setSpacing(4);
 		this.setMouseTransparent(true);
 		this.setBackgroundLegacy(null);
 		setText(text);
+		
+		this.getChildren().add(this.label);
 	}
 	
 	public void setText(String text) {
+		if ( text == null )
+			return;
+		
+		if ( text.equals(this.label.getText()) )
+			return;
+		
 		this.label.setText(text);
-		update();
 	}
 	
 	public void setGraphic(Node node) {
 		this.graphic = node;
-		update();
-	}
-	
-	private void update() {
-		this.getChildren().clear();
-		if ( graphic != null ) {
-			this.getChildren().add(graphic);
-			this.graphic.setPrefSize(16, 16);
-		}
-		this.getChildren().add(label);
+		this.graphic.setPrefSize(16, 16);
+		this.label.setGraphic(node);
 	}
 	
 	@Override
@@ -102,5 +101,10 @@ class TreeItemLabel extends HBox {
 		if ( graphic != null ) {
 			graphic.offset(0, 1);
 		}
+	}
+
+	@Override
+	public String getElementType() {
+		return null;
 	}
 }

@@ -57,6 +57,19 @@ public class OpenGLPane extends Pane {
 		this.setBackground(new BackgroundSolid(Theme.current().getPane()));
 	}
 	
+	@Override
+	public void init() {
+		super.init();
+		internalContext = new OpenGLPaneContext(-1);
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		internalContext.dispose();
+		buffer.cleanup();
+	}
+	
 	private void resizeBuffer() {
 		if ( buffer == null ) {
 			buffer = new OffscreenBuffer((int)oldSize.x, (int)oldSize.y);
@@ -65,10 +78,6 @@ public class OpenGLPane extends Pane {
 		}
 		if ( this.cached_context == null ) {
 			return;
-		}
-		
-		if ( internalContext == null ) {
-			internalContext = new OpenGLPaneContext(-1);
 		}
 		
 		if ( this.cached_context.isModernOpenGL() ) {

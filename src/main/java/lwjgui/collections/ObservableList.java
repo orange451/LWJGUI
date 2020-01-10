@@ -1,13 +1,15 @@
 package lwjgui.collections;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lwjgui.event.ElementCallback;
 
 public class ObservableList<E> {
-	private ArrayList<E> internal;
-	private ElementCallback<E> addCallback;
-	private ElementCallback<E> removeCallback;
+	private List<E> internal;
+	
+	private List<ElementCallback<E>> addCallbacks; 
+	private List<ElementCallback<E>> removeCallbacks;
 
 	public ObservableList(ObservableList<E> array) {
 		this();
@@ -26,15 +28,17 @@ public class ObservableList<E> {
 	}
 
 	public ObservableList() {
-		this.internal = new ArrayList<E>();
+		this.internal = new ArrayList<>();
+		this.addCallbacks = new ArrayList<>();
+		this.removeCallbacks = new ArrayList<>();
 	}
 
 	public void setAddCallback( ElementCallback<E> e ) {
-		this.addCallback = e;
+		this.addCallbacks.add(e);
 	}
-	
+
 	public void setRemoveCallback( ElementCallback<E> e ) {
-		this.removeCallback = e;
+		this.removeCallbacks.add(e);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,8 +57,9 @@ public class ObservableList<E> {
 		
 		internal.add(index, element);
 
-		if (addCallback != null) {
-			addCallback.onEvent(element);
+		if (!addCallbacks.isEmpty()) {
+			for (ElementCallback<E> e : addCallbacks)
+				e.onEvent(element);
 		}
 	}
 	
@@ -70,8 +75,9 @@ public class ObservableList<E> {
 	}
 	
 	public void remove(E element) {
-		if (internal.remove(element) && removeCallback != null) {
-			removeCallback.onEvent(element);
+		if (internal.remove(element) && !removeCallbacks.isEmpty()) {
+			for (ElementCallback<E> e : removeCallbacks)
+				e.onEvent(element);
 		}
 	}
 

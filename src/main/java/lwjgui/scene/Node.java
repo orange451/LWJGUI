@@ -30,7 +30,7 @@ import lwjgui.util.Bounds;
 public abstract class Node implements Resizable {
 	
 	protected Node parent;
-	protected ObservableList<Node> children = new ObservableList<Node>();
+	protected ObservableList<Node> children = new ObservableList<>();
 	
 	/*
 	 * Positioning settings
@@ -51,7 +51,9 @@ public abstract class Node implements Resizable {
 	private String localStyle;
 	private Stylesheet localStylesheet;
 	private Map<String, StyleTransition> styleTransitions = new HashMap<>();
-	
+
+	private boolean initialized;
+
 	/*
 	 * Event Handlers
 	 */
@@ -107,6 +109,37 @@ public abstract class Node implements Resizable {
 	
 	protected Context cached_context;
 	
+	public Node() {
+		children.setAddCallback((element) -> {
+			if (!element.initialized)
+				element.init();
+		});
+		children.setRemoveCallback((element) -> {
+			if (element.initialized)
+				element.dispose();
+		});
+	}
+
+	public void init() {
+		// System.out.println("Init - " + getClass().getSimpleName());
+		initialized = true;
+		for (int i = 0; i < children.size(); i++) {
+			Node c = children.get(i);
+			if (!c.initialized)
+				c.init();
+		}
+	}
+
+	public void dispose() {
+		initialized = false;
+		// System.out.println("Dispose - " + getClass().getSimpleName());
+		for (int i = 0; i < children.size(); i++) {
+			Node c = children.get(i);
+			if (c.initialized)
+				c.dispose();
+		}
+	}
+
 	public void setLocalPosition(Node parent, double x, double y) {
 		//double changex = x-this.getX();
 		//double changey = y-this.getY();

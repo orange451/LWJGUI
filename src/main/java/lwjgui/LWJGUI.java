@@ -2,14 +2,16 @@ package lwjgui;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 
+import lwjgui.font.Font;
 import lwjgui.scene.Context;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
@@ -17,7 +19,7 @@ import lwjgui.scene.layout.StackPane;
 
 public class LWJGUI {
 	private static HashMap<Long, Window> windows = new HashMap<Long, Window>();
-	private static List<Runnable> runnables = Collections.synchronizedList(new ArrayList<Runnable>());
+	private static Queue<Runnable> runnables = new ConcurrentLinkedQueue<>();
 	protected static Context currentContext;
 	
 	/**
@@ -62,61 +64,73 @@ public class LWJGUI {
 	 * at the start of a render-pass.
 	 */
 	public static void render() {
+		render(true);
+	}
+
+	public static void render(boolean pollEvents) {
 		// poll events to callbacks
-		glfwPollEvents();
-		
+		if (pollEvents)
+			glfwPollEvents();
 		long currentContext = GLFW.glfwGetCurrentContext();
 		
 		// Render all windows
 		ArrayList<Long> windowsToClose = new ArrayList<Long>();
 		Iterator<Entry<Long, Window>> it = windows.entrySet().iterator();
-		synchronized(windows) {
-			while ( it.hasNext() ) {
-				// Get window information
-				Entry<Long, Window> e = it.next();
-				long context = e.getKey();
-				Window window = e.getValue();
-				
-				// Set context
-				GLFW.glfwMakeContextCurrent(context);
-				
-				// Close window
-				if ( GLFW.glfwWindowShouldClose(context) ) {
-					windowsToClose.add(context);
-				}
-				
-				// Render window
-				try {
-					window.render();
-				}catch(Exception ex) {
-					ex.printStackTrace();
-				}
+		while (it.hasNext()) {
+			// Get window information
+			Entry<Long, Window> e = it.next();
+			long context = e.getKey();
+			Window window = e.getValue();
+
+			// Set context
+			GLFW.glfwMakeContextCurrent(context);
+
+			// Render window
+			try {
+				window.render();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			// Close window
+			if (GLFW.glfwWindowShouldClose(context)) {
+				windowsToClose.add(context);
 			}
 		}
-		
-		// Reset context to how it was before LWJGUI started rendering
-		GLFW.glfwMakeContextCurrent(currentContext);
-		
+
 		// Close all windows that need to close
 		for (int i = 0; i < windowsToClose.size(); i++) {
-			if (!windows.remove(windowsToClose.get(i)).isExternalWindow())
-				GLFW.glfwDestroyWindow(windowsToClose.get(i));
-		}
-		
-		// Get list of runnables
-		List<Runnable> newRunnable = new ArrayList<Runnable>();
-		synchronized(runnables) {
-			while(runnables.size()>0) { 
-				newRunnable.add(runnables.get(0));
-				runnables.remove(0);
+			long handle = windowsToClose.get(i);
+			Window win = windows.remove(handle);
+			GLFW.glfwMakeContextCurrent(handle);
+			win.dispose();
+			if (!win.isExternalWindow()) {
+				Callbacks.glfwFreeCallbacks(handle);
+				GLFW.glfwDestroyWindow(handle);
 			}
 		}
 		
 		// Execute Runnables
-		for (int i = 0; i < newRunnable.size(); i++) {
-			newRunnable.get(i).run();
+		while (!runnables.isEmpty())
+			runnables.poll().run();
+
+		GLFW.glfwMakeContextCurrent(currentContext);
+	}
+
+	public static void dispose() {
+		Iterator<Entry<Long, Window>> it = windows.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<Long, Window> e = it.next();
+			long handle = e.getKey();
+			Window win = e.getValue();
+			GLFW.glfwMakeContextCurrent(handle);
+			win.dispose();
+			if (!win.isExternalWindow()) {
+				Callbacks.glfwFreeCallbacks(handle);
+				GLFW.glfwDestroyWindow(handle);
+			}
 		}
-		newRunnable.clear();
+		Font.dispose();
 	}
 
 	public static Window getWindowFromContext(long context) {

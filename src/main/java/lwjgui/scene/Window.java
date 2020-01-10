@@ -120,7 +120,7 @@ public class Window {
 			System.err.println("Error rendering window. Incorrect GLFW context");
 			return;
 		}
-		LWJGUI.setCurrentContext(getContext());
+		LWJGUI.setCurrentContext(context);
 		
 		// Clear screen
 		if ( isWindowAutoClear() ) {
@@ -161,12 +161,20 @@ public class Window {
 		
         NanoVG.nvgRestore(context.getNVG());
 		NanoVG.nvgEndFrame(context.getNVG());
-		
+
+		context.update();
+
 		if ( autoDraw ) {
 			GLFW.glfwSwapBuffers(context.getWindowHandle());
 		}
 	}
 	
+	public void dispose() {
+		scene.dispose();
+		context.dispose();
+		//GL.setCapabilities(null);
+	}
+
 	/**
 	 * Attempts to show this Window by setting visibility to true
 	 */

@@ -1,24 +1,12 @@
 package lwjgui.font;
 
-import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryUtil;
 
-import lwjgui.LWJGUI;
 import lwjgui.scene.Context;
-import lwjgui.scene.Window;
 
 public class Font {
 	public static Font SANS = new Font("lwjgui/scene/layout/", "Roboto-Regular.ttf", "Roboto-Bold.ttf", "Roboto-Italic.ttf", "Roboto-Light.ttf");
@@ -28,20 +16,28 @@ public class Font {
 	public static Font SEGOE = new Font("lwjgui/scene/layout/", "selawk.ttf", "selawkb.ttf", null, "selawkl.ttf");
 	public static Font DINGBAT = new Font("lwjgui/scene/layout/", "ErlerDingbats.ttf");
 
-	private static ByteBuffer fallbackSansEmoji;
-	private static ByteBuffer fallbackRegularEmoji;
-	private static ByteBuffer fallbackArial;
-	private static ByteBuffer fallbackEntypo;
+	public static ByteBuffer fallbackSansEmoji;
+	public static ByteBuffer fallbackRegularEmoji;
+	public static ByteBuffer fallbackArial;
+	public static ByteBuffer fallbackEntypo;
 	
 	static {
 		try {
-			fallbackSansEmoji		= resourceToByteBuffer("lwjgui/scene/layout/OpenSansEmoji.ttf");
-			fallbackRegularEmoji	= resourceToByteBuffer("lwjgui/scene/layout/NotoEmoji-Regular.ttf");
-			fallbackArial			= resourceToByteBuffer("lwjgui/scene/layout/Arial-Unicode.ttf");
-			fallbackEntypo			= resourceToByteBuffer("lwjgui/scene/layout/entypo.ttf");
-		}catch(Exception e) {
-			//
+			fallbackSansEmoji = Context.ioResourceToByteBuffer("lwjgui/scene/layout/OpenSansEmoji.ttf", 1024 * 1024);
+			fallbackRegularEmoji = Context.ioResourceToByteBuffer("lwjgui/scene/layout/NotoEmoji-Regular.ttf",
+					1024 * 1024);
+			fallbackArial = Context.ioResourceToByteBuffer("lwjgui/scene/layout/Arial-Unicode.ttf", 1024 * 1024);
+			fallbackEntypo = Context.ioResourceToByteBuffer("lwjgui/scene/layout/entypo.ttf", 1024 * 1024);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
+
+	public static void dispose() {
+		MemoryUtil.memFree(fallbackSansEmoji);
+		MemoryUtil.memFree(fallbackRegularEmoji);
+		MemoryUtil.memFree(fallbackArial);
+		MemoryUtil.memFree(fallbackEntypo);
 	}
 	
 	private String fontPath;
@@ -49,11 +45,6 @@ public class Font {
 	private String fontNameBold;
 	private String fontNameLight;
 	private String fontNameItalic;
-	private HashMap<Long,String> fontDataRegular = new HashMap<Long,String>();
-	private HashMap<Long,String> fontDataBold = new HashMap<Long,String>();
-	private HashMap<Long,String> fontDataLight = new HashMap<Long,String>();
-	private HashMap<Long,String> fontDataItalic = new HashMap<Long,String>();
-	private ArrayList<ByteBuffer> bufs = new ArrayList<ByteBuffer>();
 	
 	/**
 	 * Creates a new font with the given settings.
@@ -83,115 +74,27 @@ public class Font {
 		this.fontNameRegular = regularFileName;
 	}
 
-	/**
-	 * Manually triggers the loading of this Font's ttf files (where normally they're loaded only when they're needed)
-	 * 
-	 * @param loadFallbacks - if true, default fallback fonts that come with LWJGUI will be set to the font.
-	 * @return this Font object
-	 */
-	public Font load(boolean loadFallbacks) {
-		loadFont(fontPath, fontNameRegular, fontDataRegular, loadFallbacks);
-		loadFont(fontPath, fontNameBold, fontDataBold, loadFallbacks);
-		loadFont(fontPath, fontNameLight, fontDataLight, loadFallbacks);
-		loadFont(fontPath, fontNameItalic, fontDataItalic, loadFallbacks);
-		return this;
-	}
-	
-	private static InputStream inputStream(String path) throws IOException {
-		InputStream stream;
-		File file = new File(path);
-		if (file.exists() && file.isFile()) {
-			stream = new FileInputStream(file);
-		} else {
-			stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-		}
-		return stream;
-	}
-	
-	private static byte[] toByteArray(InputStream stream) {
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
-		int nRead;
-		byte[] data = new byte[16384];
-
-		try {
-			while ((nRead = stream.read(data, 0, data.length)) != -1) {
-				buffer.write(data, 0, nRead);
-			}
-			buffer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return buffer.toByteArray();
+	public String getFontPath() {
+		return fontPath;
 	}
 
-	/**
-	 * Loads the resource via ByteBuffer
-	 * @param path
-	 * @return
-	 * @throws IOException
-	 */
-	public static ByteBuffer resourceToByteBuffer(String path) throws IOException {
-		ByteBuffer data = null;
-		InputStream stream = inputStream(path);
-		if (stream == null) {
-			throw new FileNotFoundException(path);
-		}
-		byte[] bytes = toByteArray(stream);
-		data = BufferUtils.createByteBuffer(bytes.length).put(bytes);
-		data.flip();
-		return data;
+	public String getFontNameRegular() {
+		return fontNameRegular;
 	}
 
-	/**
-	 * Loads a given Font
-	 * @param fontPath
-	 * @param loadName
-	 * @param suffix
-	 * @param map
-	 */
-	private void loadFont(String fontPath, String loadName, HashMap<Long, String> map, boolean loadFallbacks) {
-		if (loadName == null) {
-			return;
-		}
-		
-		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
-		Context context = window.getContext();
-		long vg = context.getNVG();
-		int fontCallback;
-		
-		try {
-			String path = fontPath + loadName;
-			
-			// Create normal font
-			ByteBuffer buf = resourceToByteBuffer(path);
-			fontCallback = nvgCreateFontMem(vg, loadName, buf, 0);
-			map.put(vg, loadName);
-			bufs.add(buf);
-			
-			// Fallback emoji fonts
-			if (loadFallbacks) {
-				addFallback(vg, fontCallback, "sansemoji", fallbackSansEmoji);
-				addFallback(vg, fontCallback, "regularemoji", fallbackRegularEmoji);
-				addFallback(vg, fontCallback, "arial", fallbackArial);
-				addFallback(vg, fontCallback, "entypo", fallbackEntypo);
-			}
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	public String getFontNameBold() {
+		return fontNameBold;
+	}
 
-    private void addFallback(long vg, int fontCallback, String name, ByteBuffer fontData) {
-        NanoVG.nvgAddFallbackFontId(vg, fontCallback, nvgCreateFontMem(vg, name, fontData, 0));
-        bufs.add(fontData);
-    }
+	public String getFontNameLight() {
+		return fontNameLight;
+	}
+
+	public String getFontNameItalic() {
+		return fontNameItalic;
+	}
 
 	public String getFont() {
-		for (int i = 0; i < bufs.size(); i++) {
-			bufs.get(i);
-		}
 		return getFont(FontStyle.REGULAR);
 	}
 
@@ -202,32 +105,21 @@ public class Font {
 	 * @return
 	 */
 	public String getFont(FontStyle style) {
-		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
-		if ( window == null )
-			return null;
-		
-		Context context = window.getContext();
-		long vg = context.getNVG();
+		String using = fontNameRegular;
 
-		HashMap<Long,String> using = fontDataRegular;
-		
-		if (fontDataRegular.get(vg) == null) {
-			load(true);
-		}
-
-		if ( style == FontStyle.BOLD && fontDataBold.get(vg) != null ) {
-			using = fontDataBold;
+		if ( style == FontStyle.BOLD ) {
+			using = fontNameBold;
 		}
 		
-		if ( style == FontStyle.LIGHT && fontDataLight.get(vg) != null ) {
-			using = fontDataLight;
+		if ( style == FontStyle.LIGHT) {
+			using = fontNameLight;
 		}
 		
-		if ( style == FontStyle.ITALIC && fontDataItalic.get(vg) != null ) {
-			using = fontDataItalic;
+		if ( style == FontStyle.ITALIC) {
+			using = fontNameItalic;
 		}
 		
-		return using.get(vg);
+		return using;
 	}
 	
 	public float[] getTextBounds(Context context, String string, FontStyle style, double size, float[] bounds) {		

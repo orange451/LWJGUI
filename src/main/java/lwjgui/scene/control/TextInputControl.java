@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGGlyphPosition;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
@@ -216,22 +217,23 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			ArrayList<GlyphData> glyphEntry = new ArrayList<GlyphData>();
 			bindFont();
 			
-			org.lwjgl.nanovg.NVGGlyphPosition.Buffer positions;
-			if (drawLine.length() > 0) {
-				positions = NVGGlyphPosition.malloc(drawLine.length());
-			} else {
-				positions = NVGGlyphPosition.malloc(1);
+			try (MemoryStack stack = MemoryStack.stackPush()) {
+				NVGGlyphPosition.Buffer positions;
+				if (drawLine.length() > 0) {
+					positions = NVGGlyphPosition.mallocStack(drawLine.length(), stack);
+				} else {
+					positions = NVGGlyphPosition.mallocStack(1, stack);
+				}
+
+				// Create glyph data for each character in the line
+				NanoVG.nvgTextGlyphPositions(cached_context.getNVG(), 0, 0, drawLine, positions);
+				int j = 0;
+				while (j < drawLine.length()) {
+					GlyphData currentGlyph = fixGlyph(positions.get(), drawLine.substring(j, j + 1));
+					glyphEntry.add(currentGlyph);
+					j++;
+				}
 			}
-			
-			// Create glyph data for each character in the line
-			NanoVG.nvgTextGlyphPositions(cached_context.getNVG(), 0, 0, drawLine, positions);
-			int j = 0;
-			while (j < drawLine.length()) {
-				GlyphData currentGlyph = fixGlyph(positions.get(), drawLine.substring(j, j+1));
-				glyphEntry.add(currentGlyph);
-				j++;
-			}
-			positions.free();
 			
 			// Add blank glyph to end of line
 			GlyphData last = glyphEntry.size()== 0 ? new GlyphData(0,0,"") : glyphEntry.get(glyphEntry.size()-1);

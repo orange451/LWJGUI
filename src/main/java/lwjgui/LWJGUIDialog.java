@@ -83,7 +83,9 @@ public class LWJGUIDialog {
 	 * @return the selected file
 	 */
 	public static File showOpenFileDialog(String title, File defaultPath, String filterDescription, String acceptedFileExtension, String... additionalAcceptedFileExtensions){
-		
+
+		MemoryStack.stackPush();
+
 		PointerBuffer filters = MemoryStack.stackMallocPointer(1 + additionalAcceptedFileExtensions.length);
 
         filters.put(MemoryStack.stackUTF8("*." + acceptedFileExtension));
@@ -100,7 +102,9 @@ public class LWJGUIDialog {
         }
         
         String result = TinyFileDialogs.tinyfd_openFileDialog(title, defaultString, filters, filterDescription, false);
-		
+
+		MemoryStack.stackPop();
+
 		return result != null ? new File(result) : null; 
 	}
 
@@ -116,7 +120,9 @@ public class LWJGUIDialog {
 	 * @return the selected file
 	 */
 	public static File showSaveFileDialog(String title, File defaultPath, String filterDescription, String fileExtension, boolean forceExtension){
-		
+
+		MemoryStack.stackPush();
+
 		PointerBuffer filters = MemoryStack.stackMallocPointer(1);
 
         filters.put(MemoryStack.stackUTF8("*." + fileExtension)).flip();
@@ -130,7 +136,9 @@ public class LWJGUIDialog {
         //System.out.println(defaultString + " : exists: " + new File(defaultString).exists());
         
         String result = TinyFileDialogs.tinyfd_saveFileDialog(title, defaultString, filters, filterDescription);
-        
+
+        MemoryStack.stackPop();
+
         if(result == null){
         	return null;
         }
@@ -138,6 +146,7 @@ public class LWJGUIDialog {
         if(forceExtension && !result.endsWith("." + fileExtension)){
         	result += "." + fileExtension;
         }
+
         return new File(result);
 	}
 }

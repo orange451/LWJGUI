@@ -65,7 +65,7 @@ public class LWJGUIUtil {
 		}
 	}
 	
-	private static long createOpenGLWindow(String name, int width, int height, boolean resizable, boolean ontop, boolean modernOpenGL) {
+	private static long createOpenGLWindow(String name, int width, int height, boolean resizable, boolean ontop, boolean modernOpenGL, boolean vsync) {
 		// Configure GLFW
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
@@ -83,7 +83,7 @@ public class LWJGUIUtil {
 
 		// Finalize window
 		glfwMakeContextCurrent(window);
-		glfwSwapInterval(0);
+		glfwSwapInterval(vsync ? 1 : 0);
 
 		// Get the resolution of the primary monitor
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
@@ -108,7 +108,44 @@ public class LWJGUIUtil {
 	 * On Windows OS there is not a difference between old and new OpenGL contexts, graphics drivers 
 	 * allow for the mixing of these two.<br><br>
 	 * On Mac OS there is a difference between old and new OpenGL contexts. If you wish to use modern 
-	 * OpenGL commands, they must be done on a OpenGL 3.2 Core context. If you wish to use depricated 
+	 * OpenGL commands, they must be done on a OpenGL 3.2 Core context. If you wish to use deprecated 
+	 * OpenGL commands, they must be done on a OpenGL 2.0 Non Core context.
+	 * @param name
+	 * @param width
+	 * @param height
+	 * @param resizable
+	 * @param ontop
+	 * @return GLFW Window Handle
+	 */
+	public static long createOpenGLCoreWindow(String name, int width, int height, boolean resizable, boolean ontop, boolean vsync) {
+		return createOpenGLWindow( name, width, height, resizable, ontop, true, vsync );
+	}
+	
+	/**
+	 * Creates a standard OpenGL 2.0 window with NON Core profile.<br>
+	 * On Windows OS there is not a difference between old and new OpenGL contexts, graphics drivers 
+	 * allow for the mixing of these two.<br><br>
+	 * On Mac OS there is a difference between old and new OpenGL contexts. If you wish to use modern 
+	 * OpenGL commands, they must be done on a OpenGL 3.2 Core context. If you wish to use deprecated 
+	 * OpenGL commands, they must be done on a OpenGL 2.0 Non Core context.
+	 * @param name
+	 * @param width
+	 * @param height
+	 * @param resizable
+	 * @param ontop
+	 * @return GLFW Window Handle
+	 */
+	public static long createOpenGLDeprecatedWindow(String name, int width, int height, boolean resizable, boolean ontop, boolean vsync) {
+		return createOpenGLWindow( name, width, height, resizable, ontop, false, vsync );
+	}
+
+	
+	/**
+	 * Creates a standard OpenGL 3.2 window with a Core Profile.
+	 * On Windows OS there is not a difference between old and new OpenGL contexts, graphics drivers 
+	 * allow for the mixing of these two.<br><br>
+	 * On Mac OS there is a difference between old and new OpenGL contexts. If you wish to use modern 
+	 * OpenGL commands, they must be done on a OpenGL 3.2 Core context. If you wish to use deprecated 
 	 * OpenGL commands, they must be done on a OpenGL 2.0 Non Core context.
 	 * @param name
 	 * @param width
@@ -118,7 +155,7 @@ public class LWJGUIUtil {
 	 * @return GLFW Window Handle
 	 */
 	public static long createOpenGLCoreWindow(String name, int width, int height, boolean resizable, boolean ontop) {
-		return createOpenGLWindow( name, width, height, resizable, ontop, true );
+		return createOpenGLWindow( name, width, height, resizable, ontop, true , true );
 	}
 	
 	/**
@@ -126,7 +163,7 @@ public class LWJGUIUtil {
 	 * On Windows OS there is not a difference between old and new OpenGL contexts, graphics drivers 
 	 * allow for the mixing of these two.<br><br>
 	 * On Mac OS there is a difference between old and new OpenGL contexts. If you wish to use modern 
-	 * OpenGL commands, they must be done on a OpenGL 3.2 Core context. If you wish to use depricated 
+	 * OpenGL commands, they must be done on a OpenGL 3.2 Core context. If you wish to use deprecated 
 	 * OpenGL commands, they must be done on a OpenGL 2.0 Non Core context.
 	 * @param name
 	 * @param width
@@ -136,7 +173,7 @@ public class LWJGUIUtil {
 	 * @return GLFW Window Handle
 	 */
 	public static long createOpenGLDepricatedWindow(String name, int width, int height, boolean resizable, boolean ontop) {
-		return createOpenGLWindow( name, width, height, resizable, ontop, false );
+		return createOpenGLWindow( name, width, height, resizable, ontop, false , true );
 	}
 
 	/**

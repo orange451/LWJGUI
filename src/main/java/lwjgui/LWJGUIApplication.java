@@ -86,11 +86,11 @@ public abstract class LWJGUIApplication {
 		
 		//Run the program
 		program.loop(window);
-				
+
+		program.dispose();
+
 		//Stop GLFW after the window closes.
 		glfwTerminate();
-		
-		System.exit(0);
 	}
 	
 	private void loop(Window window) {
@@ -103,7 +103,11 @@ public abstract class LWJGUIApplication {
 			LWJGUI.render();
 		}
 	}
-	
+
+	private void dispose() {
+		LWJGUI.dispose();
+	}
+
 	/**
 	 * Called after the basic GLFW/LWJGUI initialization is completed and before the program loop is started.
 	 * 

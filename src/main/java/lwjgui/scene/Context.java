@@ -5,22 +5,38 @@ import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeLimits;
+import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
+import static org.lwjgl.system.MemoryUtil.memAlloc;
+import static org.lwjgl.system.MemoryUtil.memRealloc;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL2;
 import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.system.MemoryUtil;
 
 import lwjgui.LWJGUI;
 import lwjgui.LWJGUIApplication;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.Event;
 import lwjgui.event.EventHelper;
+import lwjgui.font.Font;
 import lwjgui.scene.control.PopupWindow;
+import lwjgui.scene.image.ImageCaching;
 import lwjgui.style.Stylesheet;
 import lwjgui.util.Bounds;
 
@@ -48,6 +64,10 @@ public class Context {
 	
 	private List<Stylesheet> currentSheets = new ArrayList<>();
 
+	private List<ByteBuffer> fontBuffers = new ArrayList<>();
+
+	private ImageCaching imageCaching;
+
 	public Context( long window ) {
 		windowHandle = window;
 
@@ -61,7 +81,32 @@ public class Context {
 			nvgContext = NanoVGGL2.nvgCreate(flags);
 		}
 		
+		loadFont(Font.SANS, true);
+		loadFont(Font.COURIER, true);
+		loadFont(Font.CONSOLAS, true);
+		loadFont(Font.ARIAL, true);
+		loadFont(Font.SEGOE, true);
+		loadFont(Font.DINGBAT, true);
+
+		imageCaching = new ImageCaching();
+
 		isCore = LWJGUIApplication.ModernOpenGL;
+	}
+
+	public void dispose() {
+		imageCaching.dispose();
+		if (this.isModernOpenGL()) {
+			NanoVGGL3.nvgDelete(nvgContext);
+		} else {
+			NanoVGGL2.nvgDelete(nvgContext);
+		}
+		for (ByteBuffer buf : fontBuffers) {
+			MemoryUtil.memFree(buf);
+		}
+	}
+
+	public void update() {
+		imageCaching.update();
 	}
 
 	/**
@@ -437,5 +482,90 @@ public class Context {
 	
 	public Bounds getClipBounds() {
 		return this.clipBounds;
+	}
+
+	public ImageCaching getImageCaching() {
+		return imageCaching;
+	}
+
+	public void loadFont(Font font, boolean loadFallbacks) {
+		loadFont(font.getFontPath(), font.getFontNameRegular(), loadFallbacks);
+		loadFont(font.getFontPath(), font.getFontNameBold(), loadFallbacks);
+		loadFont(font.getFontPath(), font.getFontNameLight(), loadFallbacks);
+		loadFont(font.getFontPath(), font.getFontNameItalic(), loadFallbacks);
+	}
+
+	/**
+	 * Loads a given Font
+	 * @param fontPath
+	 * @param loadName
+	 * @param suffix
+	 * @param map
+	 */
+	public void loadFont(String fontPath, String loadName, boolean loadFallbacks) {
+		if (loadName == null) {
+			return;
+		}
+		int fontCallback;
+		
+		try {
+			String path = fontPath + loadName;
+			
+			// Create normal font
+			ByteBuffer buf = ioResourceToByteBuffer(path, 1024 * 1024);
+			fontCallback = nvgCreateFontMem(nvgContext, loadName, buf, 0);
+			fontBuffers.add(buf);
+			
+			// Fallback emoji fonts
+			if (loadFallbacks) {
+				addFallback(fontCallback, "sansemoji", Font.fallbackSansEmoji);
+				addFallback(fontCallback, "regularemoji", Font.fallbackRegularEmoji);
+				addFallback(fontCallback, "arial", Font.fallbackArial);
+				addFallback(fontCallback, "entypo", Font.fallbackEntypo);
+			}
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addFallback(int fontCallback, String name, ByteBuffer fontData) {
+        NanoVG.nvgAddFallbackFontId(nvgContext, fontCallback, nvgCreateFontMem(nvgContext, name, fontData, 0));
+    }
+    
+	public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
+		ByteBuffer buffer;
+
+		File file = new File(resource);
+		if (file.isFile()) {
+			try (FileInputStream fis = new FileInputStream(file)) {
+				try (FileChannel fc = fis.getChannel()) {
+					buffer = memAlloc((int) fc.size() + 1);
+					while (fc.read(buffer) != -1)
+						;
+				}
+			}
+		} else {
+			int size = 0;
+			buffer = memAlloc(bufferSize);
+			try (InputStream source = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource)) {
+				if (source == null)
+					throw new FileNotFoundException(resource);
+				try (ReadableByteChannel rbc = Channels.newChannel(source)) {
+					while (true) {
+						int bytes = rbc.read(buffer);
+						if (bytes == -1)
+							break;
+						size += bytes;
+						if (!buffer.hasRemaining())
+							buffer = memRealloc(buffer, size * 2);
+					}
+				}
+			}
+			buffer = memRealloc(buffer, size + 1);
+		}
+		buffer.put((byte) 0);
+		buffer.flip();
+		return buffer;
 	}
 }

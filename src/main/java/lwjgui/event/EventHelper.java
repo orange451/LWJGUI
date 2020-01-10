@@ -8,8 +8,7 @@ public class EventHelper {
 	 * @param event - the event
 	 * @return - true if the event is consumed
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static boolean fireEvent(EventHandler eventHandler, Event event) {
+	public static <T extends Event> boolean fireEvent(EventHandler<T> eventHandler, T event) {
 		if ( eventHandler == null )
 			return false;
 		eventHandler.handle(event);

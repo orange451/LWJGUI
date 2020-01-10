@@ -1,6 +1,15 @@
 package lwjgui.scene;
 
 import lwjgui.LWJGUI;
+import lwjgui.callbacks.Callbacks.CharCallback;
+import lwjgui.callbacks.Callbacks.CursorPosCallback;
+import lwjgui.callbacks.Callbacks.KeyCallback;
+import lwjgui.callbacks.Callbacks.MouseButtonCallback;
+import lwjgui.callbacks.Callbacks.ScrollCallback;
+import lwjgui.callbacks.Callbacks.WindowCloseCallback;
+import lwjgui.callbacks.Callbacks.WindowFocusCallback;
+import lwjgui.callbacks.Callbacks.WindowIconifyCallback;
+import lwjgui.callbacks.Callbacks.WindowSizeCallback;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.*;
 import lwjgui.event.listener.*;
@@ -27,7 +36,6 @@ import static org.lwjgl.opengl.GL11.*;
 public class Window {
 	private Context context;
 	private Scene scene;
-	private boolean canUserClose = true;
 	protected boolean windowResizing;
 	private Renderer renderCallback;
 	private boolean autoDraw = true;
@@ -36,8 +44,20 @@ public class Window {
 
 	private int lastWidth;
 	private int lastHeight;
-	
+
+	private boolean iconified;
+
 	private HashMap<EventListenerType, ArrayList<EventListener>> eventListeners = new HashMap<>();
+
+	private WindowSizeCallback windowSizeCallback;
+	private WindowCloseCallback windowCloseCallback;
+	private WindowFocusCallback windowFocusCallback;
+	private KeyCallback keyCallback;
+	private CharCallback charCallback;
+	private MouseButtonCallback mouseButtonCallback;
+	private CursorPosCallback cursorPosCallback;
+	private ScrollCallback scrollCallback;
+	private WindowIconifyCallback windowIconifyCallback;
 
 	public Window(final Context context, Scene scene, boolean external) {
 		this(context, scene);
@@ -47,23 +67,47 @@ public class Window {
 	public Window(final Context context, Scene scene) {
 		this.context = context;
 		this.scene = scene;
+		
+		long handle = context.getWindowHandle();
 
-		CursorPosCallback cursorPosCallback = new CursorPosCallback();
-		cursorPosCallback.previous = GLFW.glfwSetCursorPosCallback(context.getWindowHandle(), cursorPosCallback);
-		CharCallback charCallback = new CharCallback();
-		charCallback.previous = GLFW.glfwSetCharCallback(context.getWindowHandle(), charCallback);
-		KeyCallback keyCallback = new KeyCallback();
-		keyCallback.previous = GLFW.glfwSetKeyCallback(context.getWindowHandle(), keyCallback);
-		MouseButtonCallback mouseButtonCallback = new MouseButtonCallback();
-		mouseButtonCallback.previous = GLFW.glfwSetMouseButtonCallback(context.getWindowHandle(), mouseButtonCallback);
-		WindowFocusCallback windowFocusCallback = new WindowFocusCallback();
-		windowFocusCallback.previous = GLFW.glfwSetWindowFocusCallback(context.getWindowHandle(), windowFocusCallback);
-		WindowCloseCallback windowCloseCallback = new WindowCloseCallback();
-		windowCloseCallback.previous = GLFW.glfwSetWindowCloseCallback(context.getWindowHandle(), windowCloseCallback);
-		WindowSizeCallback windowSizeCallback = new WindowSizeCallback();
-		windowSizeCallback.previous = GLFW.glfwSetWindowSizeCallback(context.getWindowHandle(), windowSizeCallback);
-		ScrollCallback scrollCallback = new ScrollCallback();
-		scrollCallback.previous = GLFW.glfwSetScrollCallback(context.getWindowHandle(), scrollCallback);
+		cursorPosCallback = new CursorPosCallback();
+		cursorPosCallback.addCallback(GLFW.glfwSetCursorPosCallback(handle, cursorPosCallback));
+		cursorPosCallback.addCallback(this::cursorPosCallback);
+
+		charCallback = new CharCallback();
+		charCallback.addCallback(GLFW.glfwSetCharCallback(handle, charCallback));
+		charCallback.addCallback(this::charCallback);
+
+		keyCallback = new KeyCallback();
+		keyCallback.addCallback(GLFW.glfwSetKeyCallback(handle, keyCallback));
+		keyCallback.addCallback(this::keyCallback);
+
+		mouseButtonCallback = new MouseButtonCallback();
+		mouseButtonCallback.addCallback(GLFW.glfwSetMouseButtonCallback(handle, mouseButtonCallback));
+		mouseButtonCallback.addCallback(this::mouseButtonCallback);
+
+		windowFocusCallback = new WindowFocusCallback();
+		windowFocusCallback.addCallback(GLFW.glfwSetWindowFocusCallback(handle, windowFocusCallback));
+		windowFocusCallback.addCallback(this::focusCallback);
+
+		windowCloseCallback = new WindowCloseCallback();
+		windowCloseCallback.addCallback(GLFW.glfwSetWindowCloseCallback(handle, windowCloseCallback));
+		windowCloseCallback.addCallback(this::closeCallback);
+
+		windowSizeCallback = new WindowSizeCallback();
+		windowSizeCallback.addCallback(GLFW.glfwSetWindowSizeCallback(handle, windowSizeCallback));
+		windowSizeCallback.addCallback(this::sizeCallback);
+
+		scrollCallback = new ScrollCallback();
+		scrollCallback.addCallback(GLFW.glfwSetScrollCallback(handle, scrollCallback));
+		scrollCallback.addCallback(this::scrollCallback);
+
+		windowIconifyCallback = new WindowIconifyCallback();
+		windowIconifyCallback.addCallback(GLFW.glfwSetWindowIconifyCallback(handle, windowIconifyCallback));
+		windowIconifyCallback.addCallback((window, iconify) -> {
+			iconified = iconify;
+		});
+		
 	}
 	
 	/**
@@ -121,46 +165,47 @@ public class Window {
 			return;
 		}
 		LWJGUI.setCurrentContext(context);
+		if(!iconified) {		
+			// Clear screen
+			if ( isWindowAutoClear() ) {
+				Color c = Theme.current().getPane();
+				glClearColor(c.getRed()/255f, c.getGreen()/255f, c.getBlue()/255f,1);
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+			}
+			
+			// Update context
+			context.updateContext();
+			int width = context.getWidth();
+			int height = context.getHeight();
+			int ratio = context.getPixelRatio();
+			
+			// Use resize height if resizing
+			if ( this.windowResizing ) {
+				context.setContextSize( lastWidth, lastHeight );
+				width = lastWidth;
+				height = lastHeight;
+			}
+			
+			// Set correct sizes
+			scene.setMinSize(width, height);
+			scene.setPrefSize(width, height);
+			scene.setMaxSize(width, height);
 		
-		// Clear screen
-		if ( isWindowAutoClear() ) {
-			Color c = Theme.current().getPane();
-			glClearColor(c.getRed()/255f, c.getGreen()/255f, c.getBlue()/255f,1);
-			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+			// Begin rendering prepass
+			context.refresh();
+			if ( this.renderCallback != null ) {
+				this.renderCallback.render(context);
+			}
+			
+			// Do NVG frame
+			context.refresh();
+			NanoVG.nvgBeginFrame(context.getNVG(), (int)width, (int)height, ratio);
+			context.setClipBounds(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
+			scene.render(context);
+			
+		    NanoVG.nvgRestore(context.getNVG());
+			NanoVG.nvgEndFrame(context.getNVG());
 		}
-		
-		// Update context
-		context.updateContext();
-		int width = context.getWidth();
-		int height = context.getHeight();
-		int ratio = context.getPixelRatio();
-		
-		// Use resize height if resizing
-		if ( this.windowResizing ) {
-			context.setContextSize( lastWidth, lastHeight );
-			width = lastWidth;
-			height = lastHeight;
-		}
-		
-		// Set correct sizes
-		scene.setMinSize(width, height);
-		scene.setPrefSize(width, height);
-		scene.setMaxSize(width, height);
-
-		// Begin rendering prepass
-		context.refresh();
-		if ( this.renderCallback != null ) {
-			this.renderCallback.render(context);
-		}
-		
-		// Do NVG frame
-		context.refresh();
-		NanoVG.nvgBeginFrame(context.getNVG(), (int)width, (int)height, ratio);
-		context.setClipBounds(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
-		scene.render(context);
-		
-        NanoVG.nvgRestore(context.getNVG());
-		NanoVG.nvgEndFrame(context.getNVG());
 
 		if ( autoDraw ) {
 			GLFW.glfwSwapBuffers(context.getWindowHandle());
@@ -245,7 +290,7 @@ public class Window {
 	 * @param close
 	 */
 	public void setCanUserClose(boolean close) {
-		this.canUserClose = close;
+		GLFW.glfwSetWindowShouldClose(context.getWindowHandle(), close);
 	}
 
 	/**
@@ -385,388 +430,314 @@ public class Window {
 		GLFW.glfwSetWindowAttrib(getContext().getWindowHandle(), GLFW.GLFW_RESIZABLE, resizable?GLFW.GLFW_TRUE:GLFW.GLFW_FALSE);
 	}
 
-	private class CursorPosCallback implements GLFWCursorPosCallbackI {
+	private void closeCallback(long window) {
+		/*
+		 * Call window event listeners
+		 */
+		ArrayList<EventListener> listeners = getEventListenersForType(WINDOW_CLOSE_LISTENER);
 
-		private GLFWCursorPosCallbackI previous;
-
-		@Override
-		public void invoke(long window, double x, double y) {
-			if (previous != null) {
-				previous.invoke(window, x, y);
-			}
-			/*
-			 * Call window event listeners
-			 */
-			ArrayList<EventListener> listeners = getEventListenersForType(CURSOR_POS_LISTENER);
-
-			for (int i = 0; i < listeners.size(); i++) {
-				((CursorPositionListener) listeners.get(i)).invoke(window, x, y);
-			}
-
-			/*
-			 * Call scene node listeners
-			 */
-			Node selected = context.getSelected();
-			if ( selected == null ) return;
-
-			if (selected.mousePressed) {
-				selected.mouseDragged = true;
-				if (selected.mouseDraggedEvent != null) {
-					EventHelper.fireEvent(selected.mouseDraggedEvent, new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
-				}
-
-				if (selected.mouseDraggedEventInternal != null) {
-					EventHelper.fireEvent(selected.mouseDraggedEventInternal, new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
-				}
-			}
+		for (int i = 0; i < listeners.size(); i++) {
+			((WindowCloseListener) listeners.get(i)).invoke(window);
 		}
 	}
 
-	private class CharCallback implements GLFWCharCallbackI {
+	private void sizeCallback(long window, int width, int height) {
+		/*
+		 * Call window event listeners
+		 */
+		ArrayList<EventListener> listeners = getEventListenersForType(WINDOW_SIZE_LISTENER);
 
-		private GLFWCharCallbackI previous;
-
-		@Override
-		public void invoke(long window, int codepoint) {
-			if (previous != null) {
-				previous.invoke(window, codepoint);
-			}
-			notifyTextInput(scene, new TypeEvent(codepoint));
-
-			ObservableList<PopupWindow> popups = scene.getPopups();
-			for (int i = 0; i < popups.size(); i++) {
-				Node root = popups.get(i);
-				notifyTextInput(root, new TypeEvent(codepoint));
-			}
+		for (int i = 0; i < listeners.size(); i++) {
+			((WindowSizeListener) listeners.get(i)).invoke(window, width, height);
 		}
 
-		private void notifyTextInput(Node root, TypeEvent event) {
-			boolean consumed = false;
+		/*
+		 * Update context
+		 */
 
-			if ( root == null )
+		windowResizing = true;
+		lastWidth = width;
+		lastHeight = height;
+
+		// TODO: Fix resize deleting all assets
+		//render();
+
+		windowResizing = false;
+	}
+
+	private void focusCallback(long window, boolean focus) {
+		/*
+		 * Call window event listeners
+		 */
+		ArrayList<EventListener> listeners = getEventListenersForType(MOUSE_WHEEL_LISTENER);
+
+		for (int i = 0; i < listeners.size(); i++) {
+			((WindowFocusListener) listeners.get(i)).invoke(window, focus);
+		}
+
+		/*
+		 * Update context
+		 */
+
+		context.focused = focus;
+
+	}
+
+	private void keyCallback(long handle, int key, int scancode, int action, int mods) {
+		boolean isCtrlDown = (mods & GLFW.GLFW_MOD_CONTROL) == GLFW.GLFW_MOD_CONTROL
+				|| (mods & GLFW.GLFW_MOD_SUPER) == GLFW.GLFW_MOD_SUPER;
+		boolean isAltDown = (mods & GLFW.GLFW_MOD_ALT) == GLFW.GLFW_MOD_ALT;
+		boolean isShiftDown = (mods & GLFW.GLFW_MOD_SHIFT) == GLFW.GLFW_MOD_SHIFT;
+
+		/*
+		 * Call window event listeners
+		 */
+		ArrayList<EventListener> listeners = getEventListenersForType(KEY_LISTENER);
+
+		for (int i = 0; i < listeners.size(); i++) {
+			((KeyListener) listeners.get(i)).invoke(handle, key, scancode, action, mods, isCtrlDown, isAltDown,
+					isShiftDown);
+		}
+
+		/*
+		 * Call scene node listeners
+		 */
+
+		notifyKeyInput(scene, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+
+		ObservableList<PopupWindow> popups = scene.getPopups();
+		for (int i = 0; i < popups.size(); i++) {
+			Node root = popups.get(i);
+			notifyKeyInput(root, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+		}
+	}
+
+	private void notifyKeyInput(Node root, int key, int scancode, int action, int mods, boolean isCtrlDown,
+			boolean isAltDown, boolean isShiftDown) {
+		if (root == null)
+			return;
+
+		ObservableList<Node> children = root.getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			notifyKeyInput(children.get(i), key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+		}
+
+		KeyEvent event = new KeyEvent(key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+
+		/*
+		 * Key pressed
+		 */
+
+		if (event.action == GLFW.GLFW_PRESS) {
+			if (root.keyPressedEventInternal != null && EventHelper.fireEvent(root.keyPressedEventInternal, event)) {
 				return;
-
-			if (root.textInputEventInternal != null && EventHelper.fireEvent(root.textInputEventInternal, event)) {
-				consumed = true;
 			}
 
-			if (root.textInputEvent != null && EventHelper.fireEvent(root.textInputEvent, event)) {
-				consumed = true;
-			}
-
-			if (consumed) return;
-
-			ObservableList<Node> children = root.getChildren();
-			for (int i = 0; i < children.size(); i++) {
-				notifyTextInput(children.get(i), event);
-			}
-		}
-	}
-
-	private class KeyCallback implements GLFWKeyCallbackI {
-
-		private GLFWKeyCallbackI previous;
-
-		@Override
-		public void invoke(long handle, int key, int scancode, int action, int mods) {
-			if (previous != null) {
-				previous.invoke(handle, key, scancode, action, mods);
-			}
-
-			boolean isCtrlDown = (mods & GLFW.GLFW_MOD_CONTROL) == GLFW.GLFW_MOD_CONTROL || (mods & GLFW.GLFW_MOD_SUPER) == GLFW.GLFW_MOD_SUPER;
-			boolean isAltDown = (mods & GLFW.GLFW_MOD_ALT) == GLFW.GLFW_MOD_ALT;
-			boolean isShiftDown = (mods & GLFW.GLFW_MOD_SHIFT) == GLFW.GLFW_MOD_SHIFT;
-
-			/*
-			 * Call window event listeners
-			 */
-			ArrayList<EventListener> listeners = getEventListenersForType(KEY_LISTENER);
-
-			for (int i = 0; i < listeners.size(); i++) {
-				((KeyListener) listeners.get(i)).invoke(handle, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
-			}
-
-			/*
-			 * Call scene node listeners
-			 */
-
-			notifyKeyInput(scene, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
-
-			ObservableList<PopupWindow> popups = scene.getPopups();
-			for (int i = 0; i < popups.size(); i++) {
-				Node root = popups.get(i);
-				notifyKeyInput(root, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
-			}
-		}
-
-		private void notifyKeyInput(Node root, int key, int scancode, int action, int mods, boolean isCtrlDown, boolean isAltDown, boolean isShiftDown) {
-			if ( root == null )
+			if (root.keyPressedEvent != null && EventHelper.fireEvent(root.keyPressedEvent, event)) {
 				return;
-
-			ObservableList<Node> children = root.getChildren();
-			for (int i = 0; i < children.size(); i++) {
-				notifyKeyInput(children.get(i), key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
-			}
-
-			KeyEvent event = new KeyEvent(key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
-
-			/*
-			 * Key pressed
-			 */
-
-			if (event.action == GLFW.GLFW_PRESS) {
-				if (root.keyPressedEventInternal != null && EventHelper.fireEvent(root.keyPressedEventInternal, event)) {
-					return;
-				}
-
-				if (root.keyPressedEvent != null && EventHelper.fireEvent(root.keyPressedEvent, event)) {
-					return;
-				}
-			}
-
-			/*
-			 * Key repeat (e.g. holding backspace to "spam" it)
-			 */
-
-			if (event.action == GLFW.GLFW_REPEAT) {
-				if (root.keyRepeatEventInternal != null && EventHelper.fireEvent(root.keyRepeatEventInternal, event)) {
-					return;
-				}
-
-				if (root.keyRepeatEvent != null && EventHelper.fireEvent(root.keyRepeatEvent, event)) {
-					return;
-				}
-			}
-
-			/*
-			 * Key released
-			 */
-
-			if (event.action == GLFW.GLFW_RELEASE) {
-				if (root.keyReleasedEventInternal != null && EventHelper.fireEvent(root.keyReleasedEventInternal, event)) {
-					return;
-				}
-
-				if (root.keyReleasedEvent != null && EventHelper.fireEvent(root.keyReleasedEvent, event)) {
-					return;
-				}
 			}
 		}
-	}
 
-	private class MouseButtonCallback implements GLFWMouseButtonCallbackI {
+		/*
+		 * Key repeat (e.g. holding backspace to "spam" it)
+		 */
 
-		private GLFWMouseButtonCallbackI previous;
-
-		@Override
-		public void invoke(long window, int button, int downup, int modifier) {
-			if (previous != null) {
-				previous.invoke(window, button, downup, modifier);
-			}
-			/*
-			 * Call window event listeners
-			 */
-			ArrayList<EventListener> listeners = getEventListenersForType(MOUSE_BUTTON_LISTENER);
-
-			for (int i = 0; i < listeners.size(); i++) {
-				((MouseButtonListener) listeners.get(i)).invoke(window, button, downup, modifier);
-			}
-
-			/*
-			 * Call scene node/etc listeners
-			 */
-
-			if ( downup == 1 ) { // Press
-				if ( !context.hoveringOverPopup && context.getPopups().size() > 0 ) {
-					context.closePopups();
-					return;
-				}
-
-				Node hovered = context.getHovered();
-				if ( hovered != null ) {
-					hovered.onMousePressed(context.getMouseX(), context.getMouseY(), button);
-				}
-			} else { // Release
-				Node lastPressed = context.getLastPressed();
-
-				Node hovered = context.getHovered();
-				if ( hovered != null && hovered.mousePressed ) {
-					boolean consumed = hovered.onMouseReleased(context.getMouseX(), context.getMouseY(), button);
-
-					// If not consumed, set selected
-					if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT && !consumed) {
-						context.setSelected(hovered);
-					}
-
-					double x = context.getMouseX();
-					double y = context.getMouseY();
-					if ( hovered.mouseDragged )
-						EventHelper.fireEvent(hovered.getMouseDraggedEndEvent(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
-					if ( hovered.mouseDragged )
-						EventHelper.fireEvent(hovered.getMouseDraggedEndEventInternal(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
-					hovered.mouseDragged = false;
-				}
-
-				// If we released on a different node than the one we clicked on...
-				if ( lastPressed != null && lastPressed != hovered ) {
-					lastPressed.mousePressed = false;
-
-					double x = context.getMouseX();
-					double y = context.getMouseY();
-
-					if ( lastPressed.mouseDragged ) {
-						EventHelper.fireEvent(lastPressed.getMouseDraggedEndEvent(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
-					}
-
-					if ( lastPressed.mouseDragged ) {
-						EventHelper.fireEvent(lastPressed.getMouseDraggedEndEventInternal(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
-					}
-
-					lastPressed.mouseDragged = false;
-				}
-			}
-		}
-	}
-
-	private class WindowFocusCallback implements GLFWWindowFocusCallbackI {
-
-		private GLFWWindowFocusCallbackI previous;
-
-		@Override
-		public void invoke(long window, boolean focus) {
-			if (previous != null) {
-				previous.invoke(window, focus);
-			}
-			/*
-			 * Call window event listeners
-			 */
-			ArrayList<EventListener> listeners = getEventListenersForType(MOUSE_WHEEL_LISTENER);
-
-			for (int i = 0; i < listeners.size(); i++) {
-				((WindowFocusListener) listeners.get(i)).invoke(window, focus);
-			}
-
-			/*
-			 * Update context
-			 */
-
-			context.focused = focus;
-
-		}
-	}
-
-	private class WindowCloseCallback implements GLFWWindowCloseCallbackI {
-
-		private GLFWWindowCloseCallbackI previous;
-
-		@Override
-		public void invoke(long window) {
-			if (previous != null) {
-				previous.invoke(window);
-			}
-			/*
-			 * Call window event listeners
-			 */
-			ArrayList<EventListener> listeners = getEventListenersForType(WINDOW_CLOSE_LISTENER);
-
-			for (int i = 0; i < listeners.size(); i++) {
-				((WindowCloseListener) listeners.get(i)).invoke(window);
-			}
-
-			/*
-			 * Close the program
-			 */
-
-			GLFW.glfwSetWindowShouldClose(context.getWindowHandle(), canUserClose);
-		}
-	}
-
-	private class WindowSizeCallback implements GLFWWindowSizeCallbackI {
-
-		private GLFWWindowSizeCallbackI previous;
-
-		@Override
-		public void invoke(long window, int width, int height) {
-			if (previous != null) {
-				previous.invoke(window, width, height);
-			}
-			/*
-			 * Call window event listeners
-			 */
-			ArrayList<EventListener> listeners = getEventListenersForType(WINDOW_SIZE_LISTENER);
-
-			for (int i = 0; i < listeners.size(); i++) {
-				((WindowSizeListener) listeners.get(i)).invoke(window, width, height);
-			}
-
-			/*
-			 * Update context
-			 */
-
-			windowResizing = true;
-			lastWidth = width;
-			lastHeight = height;
-
-			// Double buffer the rendering
-			for (int i = 1; i < 2; i++)
-				render();
-
-			windowResizing = false;
-		}
-	}
-
-	private class ScrollCallback implements GLFWScrollCallbackI {
-
-		private GLFWScrollCallbackI previous;
-
-		@Override
-		public void invoke(long window, double dx, double dy) {
-			if (previous != null) {
-				previous.invoke(window, dx, dy);
-			}
-			/*
-			 * Call window event listeners
-			 */
-			ArrayList<EventListener> listeners = getEventListenersForType(MOUSE_WHEEL_LISTENER);
-
-			//System.out.println(dy);
-
-			// Scale scrolling down
-			if ( dx != 1 && dx != -1 && dy != -1 && dy != 1 ) {
-				if ( Math.abs(dx) < 1 || Math.abs(dy) < 1 ) {
-					dx = Math.signum(dx) * (dx*dx);
-					dy = Math.signum(dy) * (dy*dy);
-				} else {
-					dx = (dx-1) * 0.5 + 1;
-					dy = (dy-1) * 0.5 + 1;
-				}
-			}
-
-			for (int i = 0; i < listeners.size(); i++) {
-				((MouseWheelListener) listeners.get(i)).invoke(window, dx, dy);
-			}
-
-			/*
-			 * Call scene node listeners
-			 */
-
-			notifyScroll(scene, dx, dy);
-		}
-
-		private void notifyScroll(Node t, double x, double y) {
-			if ( t == null )
+		if (event.action == GLFW.GLFW_REPEAT) {
+			if (root.keyRepeatEventInternal != null && EventHelper.fireEvent(root.keyRepeatEventInternal, event)) {
 				return;
+			}
 
-			ObservableList<Node> children = t.getChildren();
-			for (int i = 0; i < children.size(); i++) {
-				notifyScroll(children.get(i), x, y);
+			if (root.keyRepeatEvent != null && EventHelper.fireEvent(root.keyRepeatEvent, event)) {
+				return;
 			}
-			if ( t.mouseScrollEventInternal != null ) {
-				EventHelper.fireEvent(t.mouseScrollEventInternal, new ScrollEvent(x,y));
+		}
+
+		/*
+		 * Key released
+		 */
+
+		if (event.action == GLFW.GLFW_RELEASE) {
+			if (root.keyReleasedEventInternal != null && EventHelper.fireEvent(root.keyReleasedEventInternal, event)) {
+				return;
 			}
-			if ( t.mouseScrollEvent != null ) {
-				EventHelper.fireEvent(t.mouseScrollEvent, new ScrollEvent(x,y));
+
+			if (root.keyReleasedEvent != null && EventHelper.fireEvent(root.keyReleasedEvent, event)) {
+				return;
 			}
 		}
 	}
+
+	private void charCallback(long window, int codepoint) {
+		notifyTextInput(scene, new TypeEvent(codepoint));
+
+		ObservableList<PopupWindow> popups = scene.getPopups();
+		for (int i = 0; i < popups.size(); i++) {
+			Node root = popups.get(i);
+			notifyTextInput(root, new TypeEvent(codepoint));
+		}
+	}
+
+	private void notifyTextInput(Node root, TypeEvent event) {
+		boolean consumed = false;
+
+		if (root == null)
+			return;
+
+		if (root.textInputEventInternal != null && EventHelper.fireEvent(root.textInputEventInternal, event)) {
+			consumed = true;
+		}
+
+		if (root.textInputEvent != null && EventHelper.fireEvent(root.textInputEvent, event)) {
+			consumed = true;
+		}
+
+		if (consumed)
+			return;
+
+		ObservableList<Node> children = root.getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			notifyTextInput(children.get(i), event);
+		}
+	}
+	
+	private void mouseButtonCallback(long window, int button, int downup, int modifier) {
+		/*
+		 * Call window event listeners
+		 */
+		ArrayList<EventListener> listeners = getEventListenersForType(MOUSE_BUTTON_LISTENER);
+
+		for (int i = 0; i < listeners.size(); i++) {
+			((MouseButtonListener) listeners.get(i)).invoke(window, button, downup, modifier);
+		}
+
+		/*
+		 * Call scene node/etc listeners
+		 */
+
+		if ( downup == 1 ) { // Press
+			if ( !context.hoveringOverPopup && context.getPopups().size() > 0 ) {
+				context.closePopups();
+				return;
+			}
+
+			Node hovered = context.getHovered();
+			if ( hovered != null ) {
+				hovered.onMousePressed(context.getMouseX(), context.getMouseY(), button);
+			}
+		} else { // Release
+			Node lastPressed = context.getLastPressed();
+
+			Node hovered = context.getHovered();
+			if ( hovered != null && hovered.mousePressed ) {
+				boolean consumed = hovered.onMouseReleased(context.getMouseX(), context.getMouseY(), button);
+
+				// If not consumed, set selected
+				if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT && !consumed) {
+					context.setSelected(hovered);
+				}
+
+				double x = context.getMouseX();
+				double y = context.getMouseY();
+				if ( hovered.mouseDragged )
+					EventHelper.fireEvent(hovered.getMouseDraggedEndEvent(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
+				if ( hovered.mouseDragged )
+					EventHelper.fireEvent(hovered.getMouseDraggedEndEventInternal(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
+				hovered.mouseDragged = false;
+			}
+
+			// If we released on a different node than the one we clicked on...
+			if ( lastPressed != null && lastPressed != hovered ) {
+				lastPressed.mousePressed = false;
+
+				double x = context.getMouseX();
+				double y = context.getMouseY();
+
+				if ( lastPressed.mouseDragged ) {
+					EventHelper.fireEvent(lastPressed.getMouseDraggedEndEvent(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
+				}
+
+				if ( lastPressed.mouseDragged ) {
+					EventHelper.fireEvent(lastPressed.getMouseDraggedEndEventInternal(), new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
+				}
+
+				lastPressed.mouseDragged = false;
+			}
+		}
+	}
+	
+	public void cursorPosCallback(long window, double x, double y) {
+		/*
+		 * Call window event listeners
+		 */
+		ArrayList<EventListener> listeners = getEventListenersForType(CURSOR_POS_LISTENER);
+
+		for (int i = 0; i < listeners.size(); i++) {
+			((CursorPositionListener) listeners.get(i)).invoke(window, x, y);
+		}
+
+		/*
+		 * Call scene node listeners
+		 */
+		Node selected = context.getSelected();
+		if ( selected == null ) return;
+
+		if (selected.mousePressed) {
+			selected.mouseDragged = true;
+			if (selected.mouseDraggedEvent != null) {
+				EventHelper.fireEvent(selected.mouseDraggedEvent, new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
+			}
+
+			if (selected.mouseDraggedEventInternal != null) {
+				EventHelper.fireEvent(selected.mouseDraggedEventInternal, new MouseEvent(x, y, GLFW.GLFW_MOUSE_BUTTON_LEFT));
+			}
+		}
+	}
+	
+	public void scrollCallback(long window, double dx, double dy) {
+		/*
+		 * Call window event listeners
+		 */
+		ArrayList<EventListener> listeners = getEventListenersForType(MOUSE_WHEEL_LISTENER);
+
+		//System.out.println(dy);
+
+		// Scale scrolling down
+		if ( dx != 1 && dx != -1 && dy != -1 && dy != 1 ) {
+			if ( Math.abs(dx) < 1 || Math.abs(dy) < 1 ) {
+				dx = Math.signum(dx) * (dx*dx);
+				dy = Math.signum(dy) * (dy*dy);
+			} else {
+				dx = (dx-1) * 0.5 + 1;
+				dy = (dy-1) * 0.5 + 1;
+			}
+		}
+
+		for (int i = 0; i < listeners.size(); i++) {
+			((MouseWheelListener) listeners.get(i)).invoke(window, dx, dy);
+		}
+
+		/*
+		 * Call scene node listeners
+		 */
+
+		notifyScroll(scene, dx, dy);
+	}
+
+	private void notifyScroll(Node t, double x, double y) {
+		if ( t == null )
+			return;
+
+		ObservableList<Node> children = t.getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			notifyScroll(children.get(i), x, y);
+		}
+		if ( t.mouseScrollEventInternal != null ) {
+			EventHelper.fireEvent(t.mouseScrollEventInternal, new ScrollEvent(x,y));
+		}
+		if ( t.mouseScrollEvent != null ) {
+			EventHelper.fireEvent(t.mouseScrollEvent, new ScrollEvent(x,y));
+		}
+	}
+
+
 }

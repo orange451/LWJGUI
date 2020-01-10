@@ -23,8 +23,8 @@ public class ImageView extends FillableRegion {
 	}
 	
 	@Override
-	public void init() {
-		super.init();
+	protected void _init() {
+		super._init();
 		if (image != null)
 			image.init();
 	}

@@ -58,8 +58,8 @@ public class OpenGLPane extends Pane {
 	}
 	
 	@Override
-	public void init() {
-		super.init();
+	protected void _init() {
+		super._init();
 		internalContext = new OpenGLPaneContext(-1);
 	}
 	

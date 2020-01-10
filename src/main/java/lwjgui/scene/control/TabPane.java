@@ -168,6 +168,8 @@ public class TabPane extends Control {
 		if ( !tabs.contains(tab) ) {
 			throw new RuntimeException("Tab does not exist within tab pane");
 		}
+		if (tab.equals(currentTab))
+			return;
 		boolean stored = false;
 		if ( currentTab != null ) {
 			Node selected = cached_context.getSelected();

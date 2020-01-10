@@ -61,6 +61,7 @@ public class OpenGLPane extends Pane {
 	protected void init() {
 		super.init();
 		internalContext = new OpenGLPaneContext(-1);
+		buffer = new OffscreenBuffer((int)oldSize.x, (int)oldSize.y);
 	}
 	
 	@Override
@@ -71,15 +72,10 @@ public class OpenGLPane extends Pane {
 	}
 	
 	private void resizeBuffer() {
-		if ( buffer == null ) {
-			buffer = new OffscreenBuffer((int)oldSize.x, (int)oldSize.y);
-		} else {
-			buffer.resize((int)oldSize.x, (int)oldSize.y);
-		}
+		buffer.resize((int) oldSize.x, (int) oldSize.y);
 		if ( this.cached_context == null ) {
 			return;
 		}
-		
 		if ( this.cached_context.isModernOpenGL() ) {
 			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.cached_context.getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
 		} else {

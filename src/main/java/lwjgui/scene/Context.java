@@ -66,7 +66,7 @@ public class Context {
 
 	private List<ByteBuffer> fontBuffers = new ArrayList<>();
 	
-	private List<Image> loadedImages = new ArrayList<>();
+	private static List<Image> loadedImages = new ArrayList<>();
 
 	public Context( long window ) {
 		windowHandle = window;
@@ -99,9 +99,6 @@ public class Context {
 		}
 		for (ByteBuffer buf : fontBuffers) {
 			MemoryUtil.memFree(buf);
-		}
-		for (Image image : loadedImages) {
-			image.dispose();
 		}
 		
 		fontBuffers.clear();
@@ -571,5 +568,9 @@ public class Context {
 
 	public void loadImage(Image image) {
 		loadedImages.add(image);
+	}
+	
+	public static List<Image> loadedImages() {
+		return loadedImages;
 	}
 }

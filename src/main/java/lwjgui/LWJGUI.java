@@ -15,6 +15,7 @@ import lwjgui.font.Font;
 import lwjgui.scene.Context;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.image.Image;
 import lwjgui.scene.layout.StackPane;
 
 public class LWJGUI {
@@ -172,6 +173,10 @@ public class LWJGUI {
 			}
 		}
 		Font.dispose();
+		
+		for (Image image : Context.loadedImages()) {
+			image.dispose();
+		}
 	}
 
 	public static Window getWindowFromContext(long context) {

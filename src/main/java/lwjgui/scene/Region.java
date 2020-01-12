@@ -93,6 +93,9 @@ public abstract class Region extends Parent  {
 	
 
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		for (int i = 0; i < getChildren().size(); i++) {
 			// Clip to my bounds
 			clip(context);
@@ -101,6 +104,10 @@ public abstract class Region extends Parent  {
 			Node child = getChildren().get(i);
 			if ( child == null )
 				continue;
+			
+			if ( !child.isVisible() )
+				continue;
+			
 			child.render(context);
 		}
 	}

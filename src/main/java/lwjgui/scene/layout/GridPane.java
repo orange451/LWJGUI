@@ -410,6 +410,9 @@ public class GridPane extends Pane implements Gappable {
 
 		@Override
 		public void render(Context context) {
+			if ( !isVisible() )
+				return;
+			
 			this.clip(context);
 		}
 	}

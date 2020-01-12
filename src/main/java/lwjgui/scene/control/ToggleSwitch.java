@@ -109,6 +109,9 @@ public class ToggleSwitch extends Labeled implements Toggle {
 				
 				@Override
 				public void render(Context context) {
+					if ( !isVisible() )
+						return;
+					
 					super.render(context);
 					
 					if ( ToggleSwitch.this.getPrefWidth() > 50 ) {
@@ -179,6 +182,9 @@ public class ToggleSwitch extends Labeled implements Toggle {
 		
 		@Override
 		public void render(Context context) {
+			if ( !isVisible() )
+				return;
+			
 			this.position(this.getParent());
 			
 			super.render(context);

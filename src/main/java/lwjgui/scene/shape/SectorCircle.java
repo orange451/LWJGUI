@@ -58,6 +58,9 @@ public class SectorCircle extends Shape {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		clip(context);
 		
 		float x = (float) getX();

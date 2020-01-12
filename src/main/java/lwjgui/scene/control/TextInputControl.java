@@ -944,6 +944,9 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		long vg = context.getNVG();
 
 		this.clip(context,8);
@@ -1189,7 +1192,9 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		private long lastTime;
 		@Override
 		public void render(Context context) {
-
+			if ( !isVisible() )
+				return;
+			
 			double startX = this.getX();// + internalScrollPane.getViewport().getInnerBounds().getX();
 			double startY = this.getY();// + internalScrollPane.getViewport().getInnerBounds().getY();
 			

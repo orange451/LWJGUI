@@ -209,6 +209,9 @@ public class TabPane extends Control {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		// Render internal pane
 		this.clip(context);
 		internal.render(context);
@@ -297,6 +300,9 @@ public class TabPane extends Control {
 		
 		@Override
 		public void render(Context context) {
+			if ( !isVisible() )
+				return;
+			
 			// Render children
 			super.render(context);
 			
@@ -336,6 +342,9 @@ public class TabPane extends Control {
 
 		@Override
 		public void render(Context context) {
+			if ( !isVisible() )
+				return;
+			
 			LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Theme.current().getBackgroundAlt());
 			LWJGUIUtil.fillRect(context, getX(), getY()+getHeight()-1, getWidth(), 1, Theme.current().getControlOutline());
 			for (int i = 0; i < children.size(); i++) {

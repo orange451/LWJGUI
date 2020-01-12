@@ -53,6 +53,7 @@ public abstract class Node implements Resizable {
 	private Map<String, StyleTransition> styleTransitions = new HashMap<>();
 
 	private boolean initialized;
+	private boolean visible = true;
 
 	/*
 	 * Event Handlers
@@ -1172,6 +1173,14 @@ public abstract class Node implements Resizable {
 		public double getY() {
 			return minY;
 		}
+	}
+	
+	public boolean isVisible() {
+		return this.visible;
+	}
+	
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 	
 	public abstract String getElementType();

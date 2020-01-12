@@ -110,6 +110,9 @@ public class MenuBar extends FillableRegion {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		clip(context);
 		long vg = context.getNVG();
 		

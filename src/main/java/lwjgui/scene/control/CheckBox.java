@@ -73,6 +73,9 @@ public class CheckBox extends ButtonBase {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		double wid = this.getWidth();
 		this.forceWidth(size);
 		super.render(context);

@@ -73,6 +73,9 @@ public abstract class PopupWindow extends FloatingPane {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		this.position(this.getScene());
 		
 		super.render(context);

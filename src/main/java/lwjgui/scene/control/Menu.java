@@ -68,6 +68,9 @@ public class Menu extends MenuItem {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		super.render(context);
 	}
 

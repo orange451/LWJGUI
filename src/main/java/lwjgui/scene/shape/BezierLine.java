@@ -73,6 +73,9 @@ public class BezierLine extends Shape {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		long vg = context.getNVG();
 		
 		float sx = (float) getX();

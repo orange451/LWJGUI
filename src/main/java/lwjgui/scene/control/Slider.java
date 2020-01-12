@@ -151,6 +151,9 @@ public class Slider extends Control {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		long vg = context.getNVG();
 		float x, y, w, h, r;
 		
@@ -266,6 +269,9 @@ public class Slider extends Control {
 		
 		@Override
 		public void render(Context context) {
+			if ( !isVisible() )
+				return;
+			
 			if ( orientation == HORIZONTAL ) {
 				pos = Slider.this.getX();
 				len = Slider.this.getWidth();

@@ -205,6 +205,9 @@ public abstract class Labeled extends Control {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		//LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA);
 		
 		// get Absolute position

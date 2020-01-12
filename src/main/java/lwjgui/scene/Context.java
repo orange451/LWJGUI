@@ -234,6 +234,10 @@ public class Context {
 		// Ignore if unclickable
 		if ( root.isMouseTransparent() )
 			return parent;
+		
+		// Ignore if not visible
+		if ( !root.isVisible() )
+			return parent;
 
 		Bounds rootBounds = root.getNodeBounds();
 		

@@ -42,6 +42,8 @@ public class ImageView extends FillableRegion {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
 
 		if (image == null)
 			return;

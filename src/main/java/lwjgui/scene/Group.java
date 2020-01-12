@@ -41,6 +41,9 @@ public class Group extends Parent {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		for (int i = 0; i < getChildren().size(); i++) {
 			// Clip to my bounds
 			clip(context);

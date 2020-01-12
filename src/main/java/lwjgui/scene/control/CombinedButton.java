@@ -83,6 +83,9 @@ public class CombinedButton extends Control {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		internal.render(context);
 	}
 

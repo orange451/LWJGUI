@@ -62,6 +62,9 @@ public abstract class CustomTextFieldBase extends TextField {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		if ( leftNode != null ) {
 			leftNode.setLocalPosition(this, this.internalScrollPane.getInnerBounds().getX()+padding,this.internalScrollPane.getInnerBounds().getHeight()/2-leftNode.getHeight()/2+1);
 		}

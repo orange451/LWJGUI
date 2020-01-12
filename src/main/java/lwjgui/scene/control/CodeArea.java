@@ -50,6 +50,9 @@ public class CodeArea extends TextArea {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		lineCounter.render(context);
 		super.render(context);
 	}

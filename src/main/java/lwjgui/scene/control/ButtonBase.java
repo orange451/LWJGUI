@@ -162,6 +162,9 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		clip(context, 0);
 		
 		// SETUP BUTTON COLOR

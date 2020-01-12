@@ -53,6 +53,9 @@ public class Rectangle extends Shape {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		clip(context);
 		
 		long vg = context.getNVG();

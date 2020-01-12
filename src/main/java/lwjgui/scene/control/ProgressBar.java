@@ -32,6 +32,9 @@ public class ProgressBar extends Control {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		long vg = context.getNVG();
 		float x = (float) (getX()+this.getInnerBounds().getX());
 		float y = (float) (getY()+this.getInnerBounds().getY());

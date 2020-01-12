@@ -56,6 +56,9 @@ public class RadioButton extends ToggleButton {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		//this.graphicLabel.offset.x = size + spacing;
 		//this.graphicLabel.alignment = Pos.CENTER_LEFT;		
 		this.setBorderRadii(size/2f);

@@ -46,6 +46,9 @@ public abstract class Pane extends FillableRegion implements BlockPaneRenderer {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		// Apply CSS
 		this.stylePush();
 		{

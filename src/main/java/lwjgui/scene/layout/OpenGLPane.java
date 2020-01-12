@@ -122,6 +122,9 @@ public class OpenGLPane extends Pane {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		// Check for resize
 		Vector2i newDims = new Vector2i((int)getWidth(),(int)getHeight());
 		if ( !newDims.equals(oldSize) || nanoImage == -1 ) {

@@ -66,6 +66,9 @@ public class BlurPane extends StackPane {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		// Check for resize
 		Vector2i newDims = new Vector2i((int)getWidth(),(int)getHeight());
 		if ( !newDims.equals(oldSize) || nanoImage == -1 ) {
@@ -179,6 +182,9 @@ public class BlurPane extends StackPane {
 		
 		@Override
 		public void render(Context context, int x, int y, int w, int h) {
+			if ( !isVisible() )
+				return;
+			
 			if ( this.quad == null || quadDirty ) {
 				if ( this.quad != null ) {
 					this.quad.cleanup();

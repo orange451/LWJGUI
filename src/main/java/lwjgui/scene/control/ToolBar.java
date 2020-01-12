@@ -105,6 +105,9 @@ public class ToolBar extends Control {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		clip(context);
 		long vg = context.getNVG();
 		

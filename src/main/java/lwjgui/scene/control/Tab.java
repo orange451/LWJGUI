@@ -226,6 +226,9 @@ public class Tab {
 		
 		@Override
 		public void render(Context context) {
+			if ( !isVisible() )
+				return;
+			
 			long vg = context.getNVG();
 			int x = (int) this.getX();
 			int y = (int) this.getY();

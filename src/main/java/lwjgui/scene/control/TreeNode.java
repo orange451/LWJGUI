@@ -175,6 +175,9 @@ public class TreeNode<E> extends HBox {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		super.render(context);
 		
 		if ( root == null )

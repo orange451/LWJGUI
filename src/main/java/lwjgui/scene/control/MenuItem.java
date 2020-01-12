@@ -92,6 +92,9 @@ public class MenuItem extends Node {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		// Outline
 		if ( isSelected() ) {
 			if ( this.parent.getParent() instanceof ContextMenu ) {

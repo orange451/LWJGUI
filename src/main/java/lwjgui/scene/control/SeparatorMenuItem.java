@@ -38,6 +38,9 @@ public class SeparatorMenuItem extends MenuItem {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		for (int i = 0; i < this.children.size(); i++) {
 			this.children.get(i).render(context);
 		}

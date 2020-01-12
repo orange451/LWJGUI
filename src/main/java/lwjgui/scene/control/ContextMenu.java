@@ -104,6 +104,9 @@ public class ContextMenu extends PopupWindow {
 
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		// Position the menu
 		this.setAlignment(Pos.TOP_LEFT);
 		this.position(getParent());

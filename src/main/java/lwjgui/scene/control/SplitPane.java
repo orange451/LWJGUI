@@ -376,6 +376,9 @@ public class SplitPane extends Control {
 	
 	@Override
 	public void render(Context context) {
+		if ( !isVisible() )
+			return;
+		
 		long vg = context.getNVG();
 
 		for (int i = 0; i < children.size(); i++) {

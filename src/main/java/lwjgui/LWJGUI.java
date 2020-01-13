@@ -15,7 +15,6 @@ import lwjgui.font.Font;
 import lwjgui.scene.Context;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
-import lwjgui.scene.image.Image;
 import lwjgui.scene.layout.StackPane;
 
 public class LWJGUI {
@@ -156,7 +155,7 @@ public class LWJGUI {
 			tasks.poll().callI();
 
 		// TODO we may need this?? But right now it's crashing on window close!
-		//GLFW.glfwMakeContextCurrent(currentContext);
+		GLFW.glfwMakeContextCurrent(currentContext);
 	}
 
 	public static void dispose() {
@@ -173,10 +172,6 @@ public class LWJGUI {
 			}
 		}
 		Font.dispose();
-		
-		for (Image image : Context.loadedImages()) {
-			image.dispose();
-		}
 	}
 
 	public static Window getWindowFromContext(long context) {

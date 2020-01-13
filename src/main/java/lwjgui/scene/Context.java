@@ -66,7 +66,7 @@ public class Context {
 
 	private List<ByteBuffer> fontBuffers = new ArrayList<>();
 	
-	private static List<Image> loadedImages = new ArrayList<>();
+	private List<Image> loadedImages = new ArrayList<>();
 
 	public Context( long window ) {
 		windowHandle = window;
@@ -92,18 +92,20 @@ public class Context {
 	}
 
 	public void dispose() {
+		for (ByteBuffer buf : fontBuffers) {
+			MemoryUtil.memFree(buf);
+		}
+		for (Image image : loadedImages) {
+			image.dispose();
+		}
+		fontBuffers.clear();
+		loadedImages.clear();
+		currentSheets.clear();
 		if (this.isModernOpenGL()) {
 			NanoVGGL3.nvgDelete(nvgContext);
 		} else {
 			NanoVGGL2.nvgDelete(nvgContext);
 		}
-		for (ByteBuffer buf : fontBuffers) {
-			MemoryUtil.memFree(buf);
-		}
-		
-		fontBuffers.clear();
-		loadedImages.clear();
-		currentSheets.clear();
 	}
 
 	/**
@@ -570,7 +572,4 @@ public class Context {
 		loadedImages.add(image);
 	}
 	
-	public static List<Image> loadedImages() {
-		return loadedImages;
-	}
 }

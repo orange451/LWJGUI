@@ -40,7 +40,7 @@ public class Window {
 	private Renderer renderCallback;
 	private boolean autoDraw = true;
 	private boolean autoClear = true;
-	private boolean external;
+	private boolean managed;
 
 	private int lastWidth;
 	private int lastHeight;
@@ -61,9 +61,9 @@ public class Window {
 	
 	protected boolean open;
 
-	public Window(final Context context, Scene scene, boolean external) {
+	public Window(final Context context, Scene scene, boolean managed) {
 		this(context, scene);
-		this.external = external;
+		this.managed = managed;
 	}
 
 	public Window(final Context context, Scene scene) {
@@ -159,8 +159,15 @@ public class Window {
 		return this.autoClear;
 	}
 
-	public boolean isExternalWindow() {
-		return this.external;
+	/**
+	 * Returns whether the window is managed by LWJGUI. 
+	 * A Managed LWJGUI window will automatically handle resource deallocation and window closing.
+	 * Managed windows are created by using {@link LWJGUI#initialize()} and {@link LWJGUI#initialize(boolean)}.<br>
+	 * Using {@link LWJGUI#initialize(long)} will create an unmanaged window.
+	 * @return
+	 */
+	public boolean isManaged() {
+		return this.managed;
 	}
 	
 	public void render() {

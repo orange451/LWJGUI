@@ -49,7 +49,7 @@ public class LWJGUI {
 			windowID = LWJGUIUtil.createOpenGLDepricatedWindow("Window", 100, 100, true, false);
 		
 		//Initialize LWJGUI for this window ID.
-		return initialize(windowID, false);
+		return initialize(windowID, true);
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class LWJGUI {
 	 * @return Returns a LWJGUI Window that contains a rendering Context and a Scene.
 	 */
 	public static Window initialize(long window) {
-		return initialize(window, true);
+		return initialize(window, false);
 	}
 
 	/**
@@ -68,17 +68,17 @@ public class LWJGUI {
 	 * Rendering components can be added to the scene. However, to set initial
 	 * rendering, the scene's root node must first be set.
 	 * @param window
-	 * @param external Set true if window object's creation/destruction is managed outside of LWJGUI
+	 * @param managed Set false if window object's creation/destruction is managed outside of LWJGUI
 	 * @return Returns a LWJGUI Window that contains a rendering Context and a Scene.
 	 */
-	private static Window initialize(long window, boolean external) {
+	private static Window initialize(long window, boolean managed) {
 		if ( windows.containsKey(window) ) {
 			System.err.println("Failed to initialize this LWJGUI Window. Already initialized.");
 			return null;
 		}
 		Context context = new Context(window);
 		Scene scene = new Scene(new StackPane());
-		Window wind = new Window(context, scene, external);
+		Window wind = new Window(context, scene, managed);
 		windows.put(window, wind);
 		
 		currentContext = context;
@@ -145,7 +145,7 @@ public class LWJGUI {
 			
 			GLFW.glfwMakeContextCurrent(handle);
 			win.dispose();
-			if (!win.isExternalWindow()) {
+			if (win.isManaged()) {
 				Callbacks.glfwFreeCallbacks(handle);
 				GLFW.glfwDestroyWindow(handle);
 			}
@@ -167,7 +167,7 @@ public class LWJGUI {
 			Window win = e.getValue();
 			GLFW.glfwMakeContextCurrent(handle);
 			win.dispose();
-			if (!win.isExternalWindow()) {
+			if (win.isManaged()) {
 				Callbacks.glfwFreeCallbacks(handle);
 				GLFW.glfwDestroyWindow(handle);
 			}

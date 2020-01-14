@@ -234,9 +234,6 @@ public class LWJGUIUtil {
 	public static void fillRoundRect(Context context, double x, double y, double width, double height, double radiusTopLeft, double radiusTopRight, double radiusBottomRight, double radiusBottomLeft, Color color) {
 		if ( context == null )
 			return;
-		
-		if ( color == null )
-			return;
 
 		NanoVG.nvgBeginPath(context.getNVG());
 		NanoVG.nvgRoundedRectVarying(context.getNVG(), (int)x, (int)y, (int)width, (int)height, (float)radiusTopLeft, (float)radiusTopRight, (float)radiusBottomRight, (float)radiusBottomLeft);

@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
 import lwjgui.gl.BlurShader;
 import lwjgui.gl.BlurShaderOld;
 import lwjgui.gl.OffscreenBuffer;
@@ -23,7 +22,6 @@ import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.style.Background;
 import lwjgui.style.BackgroundSolid;
-import lwjgui.style.BoxShadow;
 
 public class BlurPane extends StackPane {
 	private Vector2i oldSize = new Vector2i(1,1);

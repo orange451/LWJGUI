@@ -42,7 +42,7 @@ public class ContextMenu extends PopupWindow {
 		
 		// Style
 		float r = 2;
-		this.getBoxShadowList().add(new BoxShadow(4,5,12,-2));
+		this.getBoxShadowList().add(new BoxShadow(4,5,18,-2));
 		this.setBorderColor(Theme.current().getControlOutline());
 		this.setBackgroundLegacy(Theme.current().getPane());
 		this.setBorderWidth(1);

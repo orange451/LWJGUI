@@ -9,7 +9,6 @@ import lwjgui.scene.control.Button;
 import lwjgui.scene.control.PasswordField;
 import lwjgui.scene.control.TextArea;
 import lwjgui.scene.control.TextField;
-import lwjgui.scene.layout.BorderPane;
 import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.scene.layout.VBox;

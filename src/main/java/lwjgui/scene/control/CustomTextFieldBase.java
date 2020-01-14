@@ -1,9 +1,7 @@
 package lwjgui.scene.control;
 
-import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.geometry.Insets;
-import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 

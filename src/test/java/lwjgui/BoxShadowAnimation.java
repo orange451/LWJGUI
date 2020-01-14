@@ -57,7 +57,6 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 	
 	static class BootStrapButton extends Pane {
 		private Label label;
-		private boolean selected;
 		private boolean hovered;
 		private BoxShadow outline;
 		private BoxShadow shadow;
@@ -90,8 +89,6 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			this.getChildren().add(label);
 			
 			this.setOnSelectedEventInternal((event)->{
-				selected = true;
-				
 				Transition t = new Transition(75) {
 					@Override
 					public void tick(double progress) {
@@ -102,8 +99,6 @@ public class BoxShadowAnimation extends LWJGUIApplication {
 			});
 			
 			this.setOnDeselectedEventInternal((event)->{
-				selected = false;
-				
 				Transition t = new Transition(75) {
 					@Override
 					public void tick(double progress) {

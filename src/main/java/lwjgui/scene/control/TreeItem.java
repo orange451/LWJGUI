@@ -3,7 +3,6 @@ package lwjgui.scene.control;
 import lwjgui.font.Font;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
-import lwjgui.scene.layout.HBox;
 import lwjgui.scene.layout.Pane;
 
 public class TreeItem<E> extends TreeBase<E> {

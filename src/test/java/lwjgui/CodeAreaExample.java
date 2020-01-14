@@ -4,7 +4,6 @@ import lwjgui.geometry.Insets;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.CodeArea;
-import lwjgui.scene.layout.BorderPane;
 import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.StackPane;
 

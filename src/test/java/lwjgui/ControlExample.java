@@ -1,7 +1,6 @@
 package lwjgui;
 
 import lwjgui.geometry.Pos;
-import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
@@ -11,7 +10,6 @@ import lwjgui.scene.control.CustomTextField;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.RadioButton;
 import lwjgui.scene.control.SegmentedButton;
-import lwjgui.scene.control.TextField;
 import lwjgui.scene.control.ToggleButton;
 import lwjgui.scene.control.ToggleGroup;
 import lwjgui.scene.control.ToggleSwitch;

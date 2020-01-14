@@ -1,9 +1,6 @@
 package lwjgui;
 
-import org.lwjgl.glfw.GLFW;
-
 import lwjgui.LWJGUI;
-import lwjgui.LWJGUIUtil;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;

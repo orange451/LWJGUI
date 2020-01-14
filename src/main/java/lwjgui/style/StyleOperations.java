@@ -15,6 +15,7 @@ import lwjgui.transition.Transition;
 public class StyleOperations {
 	protected static HashMap<String, StyleOperation> operations = new HashMap<>();
 
+	@SuppressWarnings("unused")
 	private final static String AUTO = "auto";
 	private final static String NONE = "none";
 	

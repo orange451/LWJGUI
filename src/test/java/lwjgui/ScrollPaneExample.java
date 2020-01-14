@@ -2,12 +2,10 @@ package lwjgui;
 
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
-import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
-import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.layout.BorderPane;
 import lwjgui.scene.layout.VBox;

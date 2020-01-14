@@ -175,6 +175,11 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	}
 	
 	public void setText(String text) {
+		
+		boolean changed = true;
+		if ( this.source != null && this.source.equals(text) )
+			changed = false;
+		
 		int oldCaret = caretPosition;
 		
 		if ( lines == null ) {
@@ -205,7 +210,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		setCaretPosition(oldCaret);
 		
 		// Fire on text change event
-		if ( onTextChange != null ) {
+		if ( onTextChange != null && changed ) {
 			EventHelper.fireEvent(onTextChange, new Event());
 		}
 	}
@@ -946,8 +951,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	public void render(Context context) {
 		if ( !isVisible() )
 			return;
-		
-		long vg = context.getNVG();
 
 		this.clip(context,8);
 		
@@ -982,6 +985,10 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		}
 		this.stylePop();
 		
+		if ( context == null )
+			return;
+		
+		long vg = context.getNVG();
 		// Draw Prompt
 		if ( getLength() == 0 && prompt != null && prompt.length() > 0 ) {
 			int xx = (int) (this.internalRenderingPane.getX());
@@ -1246,7 +1253,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 				if ( my > this.textInputControl.internalScrollPane.getY()+this.textInputControl.internalScrollPane.getHeight())
 					continue;
 				
-				long vg = context.getNVG();
 				String text = this.textInputControl.linesDraw.get(i);
 				
 				// Setup font
@@ -1285,6 +1291,9 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 										color = highlight.getMetaData().getColor();
 									}
 								}
+								if ( context == null )
+									continue;
+								long vg = context.getNVG();
 								
 								NanoVG.nvgBeginPath(vg);
 								NanoVG.nvgFontBlur(vg,0);

@@ -162,6 +162,9 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	
 	@Override
 	public void render(Context context) {
+		if ( context == null )
+			return;
+		
 		if ( !isVisible() )
 			return;
 		

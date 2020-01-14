@@ -264,7 +264,8 @@ public class ScrollPane extends Pane {
 		super.render(context);
 		
 		// Setup scissor
-		NanoVG.nvgScissor(context.getNVG(), (float)internalCanvas.getX(), (float)internalCanvas.getY(), (float)internalCanvas.getWidth(), (float)internalCanvas.getHeight());
+		if ( context != null )
+			NanoVG.nvgScissor(context.getNVG(), (float)internalCanvas.getX(), (float)internalCanvas.getY(), (float)internalCanvas.getWidth(), (float)internalCanvas.getHeight());
 		hoveredBar = getBarUnderMouse();
 		
 		clip(context, 0);

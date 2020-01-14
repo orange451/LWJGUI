@@ -43,6 +43,9 @@ public class Circle extends Shape {
 
 	@Override
 	public void render(Context context) {
+		if ( context == null )
+			return;
+		
 		if ( !isVisible() )
 			return;
 		

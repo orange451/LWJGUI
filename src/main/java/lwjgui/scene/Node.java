@@ -22,6 +22,11 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.geometry.Resizable;
 import lwjgui.geometry.VPos;
+import lwjgui.paint.Color;
+import lwjgui.scene.layout.Pane;
+import lwjgui.scene.layout.StackPane;
+import lwjgui.scene.layout.floating.FloatingPane;
+import lwjgui.scene.shape.Rectangle;
 import lwjgui.style.StyleTransition;
 import lwjgui.style.Stylesheet;
 import lwjgui.style.StylesheetCompileError;
@@ -257,8 +262,8 @@ public abstract class Node implements Resizable {
 			float topLeftX = (float) (parent.getX() + bounds.minX);
 			float topLeftY = (float) (parent.getY() + bounds.minY);
 
-			double offsetX = (bounds.getWidth()-size.x)*xMult;
-			double offsetY = (bounds.getHeight()-size.y)*yMult;
+			double offsetX = (bounds.getWidth()-this.getWidth())*xMult;
+			double offsetY = (bounds.getHeight()-this.getHeight())*yMult;
 
 			absolutePosition.x = topLeftX + offsetX;
 			absolutePosition.y = topLeftY + offsetY;
@@ -724,6 +729,9 @@ public abstract class Node implements Resizable {
 	 * @param padding
 	 */
 	protected void clip( Context context, int padding ) {
+		if ( context == null )
+			return;
+		
 		Context TEMP_CACHE = this.cached_context;
 		if ( TEMP_CACHE == null )
 			return;

@@ -53,7 +53,6 @@ public class ImageView extends FillableRegion {
 
 		int img = image.getImage();
 
-		long vg = context.getNVG();
 		int x = (int) this.getX();
 		int y = (int) this.getY();
 		int w = (int) this.getWidth();
@@ -79,6 +78,9 @@ public class ImageView extends FillableRegion {
 			}
 		}
 		try (MemoryStack stack = stackPush()) {
+			if ( context == null )
+				return;
+			long vg = context.getNVG();
 			NVGPaint imagePaint = NanoVG.nvgImagePattern(vg, xx, yy, ww, hh, 0, img, 1, NVGPaint.callocStack(stack));
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgRect(vg, x, y, w, h);

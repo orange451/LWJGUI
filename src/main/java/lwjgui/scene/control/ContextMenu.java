@@ -120,7 +120,7 @@ public class ContextMenu extends PopupWindow {
 		
 		// If the mouse is ontop of me, then set the mouse entered flag to true
 		// This is used to autohide the menu when the mouse leaves (if flag set)
-		if ( context.isHovered(this) ) {
+		if ( context != null && context.isHovered(this) ) {
 			this.mouseEntered = true;
 		}
 		

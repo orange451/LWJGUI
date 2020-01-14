@@ -186,6 +186,9 @@ public class LWJGUIUtil {
 	 * @param color
 	 */
 	public static void fillRect(Context context, double x, double y, double width, double height, Color color) {
+		if ( context == null )
+			return;
+		
 		if ( color == null )
 			return;
 
@@ -206,6 +209,9 @@ public class LWJGUIUtil {
 	 * @param color
 	 */
 	public static void fillRoundRect(Context context, double x, double y, double width, double height, double radius, Color color) {
+		if ( context == null )
+			return;
+		
 		if ( color == null )
 			return;
 
@@ -226,6 +232,9 @@ public class LWJGUIUtil {
 	 * @param color
 	 */
 	public static void fillRoundRect(Context context, double x, double y, double width, double height, double radiusTopLeft, double radiusTopRight, double radiusBottomRight, double radiusBottomLeft, Color color) {
+		if ( context == null )
+			return;
+		
 		if ( color == null )
 			return;
 
@@ -247,6 +256,9 @@ public class LWJGUIUtil {
 	 * @param color
 	 */
 	public static void outlineRect(Context context, double x, double y, double w, double h, Color color) {
+		if ( context == null )
+			return;
+		
 		if ( color == null )
 			return;
 
@@ -492,6 +504,9 @@ public class LWJGUIUtil {
 	}
 
 	public static void drawBoxShadow(Context context, BoxShadow boxShadow, float[] cornerRadii, double x, double y, double width, double height) {
+		if ( context == null )
+			return;
+		
 		float xx = (float)x - boxShadow.getSpread() + boxShadow.getXOffset();
 		float yy = (float)y - boxShadow.getSpread() + boxShadow.getYOffset();
 		float ww = (float)width + boxShadow.getSpread()*2;
@@ -581,6 +596,9 @@ public class LWJGUIUtil {
 	}	
 
 	public static void drawBorder(Context context, double x, double y, double width, double height, Insets border, Background background, Color borderColor, float[] borderRadii) {
+		if ( context == null )
+			return;
+		
 		float xx = (int) x;
 		float yy = (int) y;
 		float ww = (int) width;

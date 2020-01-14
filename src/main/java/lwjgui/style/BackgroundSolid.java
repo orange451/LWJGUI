@@ -16,6 +16,9 @@ public class BackgroundSolid extends Background {
 
 	@Override
 	public void render(Context context, double x, double y, double width, double height, float[] cornerRadii) {
+		if ( context == null )
+			return;
+		
 		if ( color == null )
 			return;
 		

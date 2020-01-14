@@ -211,7 +211,6 @@ public abstract class Labeled extends Control {
 		//LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA);
 		
 		// get Absolute position
-		long vg = context.getNVG();
 		int absX = (int)(getX() + this.padding.getLeft());
 		int absY = (int)(getY() + this.getPadding().getTop());// + (this.getInnerBounds().getHeight()/2f-textHeight/2f));
 
@@ -270,6 +269,10 @@ public abstract class Labeled extends Control {
 			graphic.updateChildren();
 			graphic.render(context);
 		}
+		
+		if ( context == null )
+			return;
+		long vg = context.getNVG();
 
 		// Setup font
 		NanoVG.nvgFontSize(vg, fontSize);

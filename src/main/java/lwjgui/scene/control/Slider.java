@@ -153,6 +153,16 @@ public class Slider extends Control {
 	public void render(Context context) {
 		if ( !isVisible() )
 			return;
+
+		drawTrack(context);
+		
+		thumb.setDisabled(this.isDisabled());
+		thumb.render(context);
+	}
+	
+	protected void drawTrack(Context context) {
+		if ( context == null )
+			return;
 		
 		long vg = context.getNVG();
 		float x, y, w, h, r;
@@ -175,7 +185,7 @@ public class Slider extends Control {
 			
 			trackLength = (float) ( h - thumb.getHeight() );
 		}
-
+		
 		// Background
 		{
 			Color c1 = Theme.current().getPaneAlt();
@@ -200,9 +210,6 @@ public class Slider extends Control {
 			NanoVG.nvgStroke(vg);
 			NanoVG.nvgClosePath(vg);
 		}
-		
-		thumb.setDisabled(this.isDisabled());
-		thumb.render(context);
 	}
 	
 	private double tween(double min, double max, double ratio) {
@@ -220,9 +227,7 @@ public class Slider extends Control {
 		public Thumb() {
 			super("");
 			
-			this.setMinSize(size, size);
-			this.setMaxSize(size, size);
-			this.setPrefSize(size, size);
+			this.forceSize(size, size);
 			this.setPadding(Insets.EMPTY);
 			this.setBorderRadii(size/2f);
 			
@@ -265,6 +270,7 @@ public class Slider extends Control {
 		@Override
 		public void position(Node parent) {
 			super.position(parent);
+			this.forceSize(size, size);
 		}
 		
 		@Override
@@ -289,7 +295,6 @@ public class Slider extends Control {
 				else
 					mousePos = context.getMouseY();
 				
-				//double t = Math.min( max, Math.max( min, mouseSpaceToTrackSpace(mousePos-bOff) ) );
 				double t = mouseSpaceToTrackSpace(mousePos-bOff);
 				setValue(t);
 			}

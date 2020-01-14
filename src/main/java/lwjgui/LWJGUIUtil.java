@@ -500,7 +500,7 @@ public class LWJGUIUtil {
 		}
 	}
 
-	public static void drawBoxShadow(Context context, BoxShadow boxShadow, float[] cornerRadii, double x, double y, double width, double height) {
+	public static void drawBoxShadow(Context context, BoxShadow boxShadow, float[] cornerRadii, float borderWidth, double x, double y, double width, double height) {
 		if ( context == null )
 			return;
 		
@@ -516,16 +516,17 @@ public class LWJGUIUtil {
 			hh -= boxShadow.getSpread() * 4;
 		}
 		
+		// Compute the average corner radius
 		float averageCorner = 0;
 		if ( cornerRadii != null ) {
-			for (int i = 0; i < cornerRadii.length; i++) {
+			for (int i = 0; i < cornerRadii.length; i++)
 				averageCorner += cornerRadii[i];
-			}
 			averageCorner /= (float)cornerRadii.length;
 		}
 		
+		// Compute feather (f) and radius (r)
 		float f = boxShadow.getBlurRadius();
-		float r = averageCorner + boxShadow.getSpread();
+		float r = averageCorner + boxShadow.getSpread() + (borderWidth*0.5f);
 		if ( boxShadow.isInset() )
 			r = averageCorner - boxShadow.getSpread();
 		

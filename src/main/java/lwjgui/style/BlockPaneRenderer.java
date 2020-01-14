@@ -18,7 +18,7 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 			BoxShadow shadow = node.getBoxShadowList().get(i);
 			if ( shadow.isInset() )
 				continue;
-			LWJGUIUtil.drawBoxShadow(context, shadow, node.getBorderRadii(), (int) node.getX(), (int) node.getY(), (int)node.getWidth(), (int)node.getHeight());
+			LWJGUIUtil.drawBoxShadow(context, shadow, node.getBorderRadii(), node.getBorderWidth(), (int) node.getX(), (int) node.getY(), (int)node.getWidth(), (int)node.getHeight());
 		}
 		
 		// Draw border
@@ -37,7 +37,7 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 			BoxShadow shadow = node.getBoxShadowList().get(i);
 			if ( !shadow.isInset() )
 				continue;
-			LWJGUIUtil.drawBoxShadow(context, shadow, node.getBorderRadii(), (int) (node.getX()+border.getLeft()), (int) (node.getY()+border.getTop()), (int)(node.getWidth()-border.getWidth()), (int)(node.getHeight()-border.getHeight()));
+			LWJGUIUtil.drawBoxShadow(context, shadow, node.getBorderRadii(), node.getBorderWidth(), (int) (node.getX()+border.getLeft()), (int) (node.getY()+border.getTop()), (int)(node.getWidth()-border.getWidth()), (int)(node.getHeight()-border.getHeight()));
 		}
 	}
 }

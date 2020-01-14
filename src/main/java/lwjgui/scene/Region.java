@@ -71,6 +71,14 @@ public abstract class Region extends Parent  {
 		this.setBorder(new Insets(width));
 	}
 	
+	/**
+	 * Returns the average of the 4 border widths.
+	 * @return
+	 */
+	public float getBorderWidth() {
+		return (float) (this.getBorder().getLeft() + this.getBorder().getRight() + this.getBorder().getTop() + this.getBorder().getBottom())/4f;
+	}
+	
     /**
      * Convenience method to set the 4 borders based on 2 values.
      * @param width

@@ -39,7 +39,7 @@ public class BackgroundNVGImage extends Background {
 		
 		try (MemoryStack stack = stackPush()) {
 			long vg = context.getNVG();
-			NVGPaint imagePaint = NanoVG.nvgImagePattern(vg,  (int) x, (int) y, (int) width, (int) height, 0, nvgImage, 1, NVGPaint.callocStack(stack));
+			NVGPaint imagePaint = NanoVG.nvgImagePattern(vg,  (int) x, (int) y, (int) width, (int) height, 0, getNVGImage(), 1, NVGPaint.callocStack(stack));
 			NanoVG.nvgFillPaint(vg, imagePaint);
 			LWJGUIUtil.fillRoundRect(context, (int) x, (int) y, width, height, cornerRadii[0], cornerRadii[1], cornerRadii[2], cornerRadii[3], null);
 		}

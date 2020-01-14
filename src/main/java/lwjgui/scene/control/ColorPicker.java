@@ -496,6 +496,7 @@ public class ColorPicker extends ButtonBase {
 			}
 
 			setHue(internalHSV[0]);
+			setAlpha(this.internalAlpha);
 			this.getBoxShadowList().add(new BoxShadow(4, 10, 22, 0, Theme.current().getShadow()));
 		}
 

@@ -242,7 +242,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			
 			// Add blank glyph to end of line
 			GlyphData last = glyphEntry.size()== 0 ? new GlyphData(0,0,"") : glyphEntry.get(glyphEntry.size()-1);
-			glyphEntry.add(new GlyphData( last.x()+last.width, 1, "" ));
+			glyphEntry.add(new GlyphData( last.x()+last.width(), 1, "" ));
 			
 			// Hack to fix spacing of special characters
 			for (int i = 0; i < glyphEntry.size()-1; i++) {
@@ -707,10 +707,10 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	}
 	
 	private int getMaxTextWidth() {
-		int width = 0;
+		float width = 0;
 		for (int i = 0; i < linesDraw.size(); i++) {
 			String str = linesDraw.get(i);
-			int len = 0;
+			float len = 0;
 			if ( glyphData.size() > 0 ) {
 				for (int j = 0; j < str.length(); j++) {
 					GlyphData d = glyphData.get(i).get(j);
@@ -731,7 +731,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			}
 		}
 		
-		return width;
+		return (int) width;
 	}
 	
 	protected void bindFont() {
@@ -782,13 +782,13 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		int row = getRowFromCaret( caret );
 		int offset = getIndexFromCaret( caret );
 		
-		int temp = 0;
+		float temp = 0;
 		for (int i = 0; i < offset; i++) {
 			GlyphData g = glyphData.get(row).get(i);
 			temp += g.width();
 		}
 		
-		return temp;
+		return (int) temp;
 	}
 	
 	int getCaretFromPixelOffset( int row, int pixelX ) {
@@ -804,7 +804,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			GlyphData dat = glyphLine.get(i);
 			if ( dat.character().equals("\n"))
 				break;
-			if ( dat.x()+dat.width/2-3 > pixelX )
+			if ( dat.x()+dat.width()/2 > pixelX )
 				break;
 			index++;
 		}
@@ -1262,7 +1262,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 				if ( this.textInputControl.glyphData.size() > 0 ) {
 					ArrayList<GlyphData> dat = this.textInputControl.glyphData.get(i);
 					if ( dat.size() > 0 ) {
-						float x = 0;
 						
 						for (int j = 0; j < text.length(); j++) {
 							boolean draw = true;
@@ -1275,9 +1274,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 									draw = false;
 							}
 							GlyphData g = dat.get(j);
-							
-							// Get current x offset
-							x = g.x();
 							
 							if ( draw ) {
 								final int currentPosition = textInputControl.getCaretFromRowLine(i, j);
@@ -1298,16 +1294,27 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 								long vg = context.getNVG();
 								
 								// Fill a background behind the letter if necessary.
-								if ( background != null )
-									LWJGUIUtil.fillRect(context, mx+x, my, Math.ceil(g.width), this.textInputControl.fontSize, background);
+								if ( background != null ) {
+									float wid = g.width();
+									if ( j < text.length() - 1 ) {
+										GlyphData nextGlyph = dat.get(j+1);
+										wid = nextGlyph.x()-g.x();
+									}
+									
+									// NVG Background
+									NanoVG.nvgBeginPath(context.getNVG());
+									NanoVG.nvgRect(context.getNVG(), mx+g.x(), my, wid, (int)this.textInputControl.fontSize);
+									NanoVG.nvgFillColor(context.getNVG(), background.getNVG());
+									NanoVG.nvgFill(context.getNVG());
+									NanoVG.nvgClosePath(context.getNVG());
+								}
 								
+								// Draw character
 								NanoVG.nvgBeginPath(vg);
 								NanoVG.nvgFontBlur(vg,0);
 								NanoVG.nvgFillColor(vg, color.getNVG());
-								NanoVG.nvgText(vg, mx+x, my, c);
+								NanoVG.nvgText(vg, mx+g.x(), my, c);
 							}
-							
-							//x += g.width();
 						}
 					}
 				}

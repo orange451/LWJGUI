@@ -286,6 +286,18 @@ public class Color {
         }
         return 0xff000000 | (r << 16) | (g << 8) | (b << 0);
     }
+    
+    /**
+     * Creates a new color based on the supplied HSV.
+     * @param hue
+     * @param saturation
+     * @param vibrance/brightness
+     * @return
+     */
+	public static Color fromHSB(float hue, float saturation, float brightness) {
+		return new Color(0xff000000 | Color.HSBtoRGB(hue, saturation, brightness));
+	}
+
 
 	/**
 	 * Sets whether or not this Color is immutable. Immutable Colors cannot be
@@ -787,5 +799,4 @@ public class Color {
 		
 		return null;
 	}
-
 }

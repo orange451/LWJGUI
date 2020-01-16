@@ -1283,17 +1283,23 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 								final int currentPosition = textInputControl.getCaretFromRowLine(i, j);
 								TextHighlighter highlight = textInputControl.getHighlighting(currentPosition);
 								Color color = textInputControl.fontFill;
+								Color background = null;
 								if ( highlight == null ) {
 									textInputControl.bindFont();
 								} else {
 									textInputControl.bindFont(highlight.getMetaData());
-									if ( highlight.getMetaData().getColor() != null ) {
+									if ( highlight.getMetaData().getColor() != null )
 										color = highlight.getMetaData().getColor();
-									}
+									
+									background = highlight.getMetaData().getBackground();
 								}
 								if ( context == null )
 									continue;
 								long vg = context.getNVG();
+								
+								// Fill a background behind the letter if necessary.
+								if ( background != null )
+									LWJGUIUtil.fillRect(context, mx+x, my, Math.ceil(g.width), this.textInputControl.fontSize, background);
 								
 								NanoVG.nvgBeginPath(vg);
 								NanoVG.nvgFontBlur(vg,0);

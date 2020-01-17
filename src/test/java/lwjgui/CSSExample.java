@@ -36,7 +36,7 @@ public class CSSExample extends LWJGUIApplication {
 		ComboBox<String> testBox = new ComboBox<>();
 		testBox.getItems().add("Hello1");
 		testBox.getItems().add("Hello2");
-		testBox.setStylesheet(".list-cell { font-size:24pt; } button{ font-size:24pt; }");
+		testBox.setStylesheet(".list-cell { font-size:24pt; } combobox{ font-size:24pt; }");
 		testBox.setValue(testBox.getItems().get(0));
 		flow.getItems().add(testBox);
 		

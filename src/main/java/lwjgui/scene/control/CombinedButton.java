@@ -63,6 +63,7 @@ public class CombinedButton extends Control {
 		for (int i = 0; i < buttons.size(); i++) {
 			Button b = buttons.get(i);
 			b.setDisabled(this.isDisabled());
+			b.setStylesheet(this.getStylesheet());
 			
 			boolean first = false;
 			boolean last = false;

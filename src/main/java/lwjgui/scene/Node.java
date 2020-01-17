@@ -380,6 +380,14 @@ public abstract class Node implements Resizable {
 	}
 	
 	/**
+	 * Set the stylesheet used to style this node and all descendent nodes to this node.
+	 * @param css
+	 */
+	public void setStylesheet(Stylesheet css) {
+		this.stylesheet = css;
+	}
+	
+	/**
 	 * Returns the stylesheet object used to style this node and all descendent nodes to this node.
 	 * @return
 	 */

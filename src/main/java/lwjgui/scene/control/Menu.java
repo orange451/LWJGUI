@@ -77,6 +77,7 @@ public class Menu extends MenuItem {
 	public void open() {
 		((MenuBar)(getParent().getParent())).isOpen = true;
 		((MenuBar)(getParent().getParent())).currentMenu = Menu.this;
+		context.setStylesheet(this.getStylesheet());
 		context.show(Menu.this.getScene(), getX(), getY()+getHeight());
 	}
 

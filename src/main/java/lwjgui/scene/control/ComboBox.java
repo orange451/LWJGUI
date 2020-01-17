@@ -78,7 +78,7 @@ public class ComboBox<T> extends CombinedButton {
 				if ( context.isOpen() )
 					return;
 				
-				context.setStylesheet(ComboBox.this.getStylesheet().getSource());
+				context.setStylesheet(ComboBox.this.getStylesheet());
 				context.setMinWidth(getWidth());
 				context.show(getScene(), getX(), getY()+getHeight()-1);
 			}	

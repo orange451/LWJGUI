@@ -30,8 +30,8 @@ public class CSSExample extends LWJGUIApplication {
 		flow.setFillToParentHeight(true);
 		pane.getChildren().add(flow);
 
-		//createButton(flow, "Click Me!");
-		//createButton(flow, "Success!", "button-success");
+		createButton(flow, "Click Me!");
+		createButton(flow, "Success!", "button-success");
 		
 		ComboBox<String> testBox = new ComboBox<>();
 		testBox.getItems().add("Hello1");

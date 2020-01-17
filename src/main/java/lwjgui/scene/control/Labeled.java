@@ -349,7 +349,8 @@ public abstract class Labeled extends Control {
 	 * @return
 	 */
 	public Color getTextFill() {
-		Stylesheet.findAndApplyStyle(this.cached_context.getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE);
+		if ( this.cached_context != null )
+			Stylesheet.findAndApplyStyle(this.cached_context.getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE);
 		
 		return this.textColor;
 	}

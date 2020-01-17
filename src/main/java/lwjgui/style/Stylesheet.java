@@ -377,7 +377,7 @@ public class Stylesheet {
 	 * @return
 	 */
 	private Number parseNumber(String value) {
-		if (!value.endsWith("px"))
+		if (!value.endsWith("px") && !value.endsWith("pt"))
 			return null;
 		
 		value = value.substring(0,value.length()-2);
@@ -539,6 +539,41 @@ public class Stylesheet {
 
 	enum StyleSelectorType {
 		TAG, CLASS, ID;
+	}
+
+	/**
+	 * Check all listed styles (in reverse order) and check if any parent node styles in the stylesheets contain the specified style operation.
+	 * @param currentStyling
+	 * @param fONT_SIZE
+	 */
+	public static void findAndApplyStyle(List<Stylesheet> sheets, Node applyNode, Node parentNode, StyleOperation operation) {
+		if ( parentNode == null )
+			return;
+		
+		Map<String, StyleOperationValue> declarations = new HashMap<>();
+		
+		for (int i = 0; i<sheets.size(); i++) {
+			Stylesheet sheet = sheets.get(i);
+			
+			// Apply styling for the DOM TAG
+			sheet.computeStyling(parentNode, StyleSelectorType.TAG, parentNode.getElementType(), declarations, false);
+			
+			// Apply styling for the ID
+			sheet.computeStyling(parentNode, StyleSelectorType.ID, parentNode.getElementId(), declarations, false);
+			
+			// Apply styling for the class
+			ArrayList<String> classList = parentNode.getClassList();
+			for (int j = 0; j < classList.size(); j++) {
+				String claz = classList.get(j);
+				sheet.computeStyling(parentNode, StyleSelectorType.CLASS, claz, declarations, false);
+			}
+		}
+		
+		// Apply style, otherwise check parent (recursive?)
+		if ( declarations.containsKey(operation.getName()) )
+			declarations.get(operation.getName()).process(applyNode);
+		else
+			findAndApplyStyle(sheets, applyNode, parentNode.getParent(), operation);
 	}
 }
 

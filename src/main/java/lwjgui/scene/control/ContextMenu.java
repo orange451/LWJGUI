@@ -49,6 +49,9 @@ public class ContextMenu extends PopupWindow {
 		this.setBorderStyle(BorderStyle.SOLID);
 		this.setBorderRadii(r);
 		this.setPadding(new Insets(r,0,r,0));
+		
+		// Default list-view class
+		this.getClassList().add("list-view");
 	}
 
 	@Override

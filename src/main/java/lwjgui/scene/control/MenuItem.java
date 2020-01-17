@@ -54,6 +54,10 @@ public class MenuItem extends Node {
 				((ContextMenu)getParent().getParent()).close();
 			}
 		});
+
+		
+		// Default list-view class
+		this.getClassList().add("list-cell");
 	}
 	
 	protected void setContent(String string, Font font, Node graphic) {

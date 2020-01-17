@@ -34,7 +34,7 @@ public class GenericShader {
 		this(
 				GenericShader.class.getResource("vertex.glsl"),
 				GenericShader.class.getResource("fragment.glsl")
-				);
+			);
 	}
 
 	public GenericShader(URL vertexShader, URL fragmentShader) {
@@ -107,6 +107,9 @@ public class GenericShader {
 	}
 
 	protected static int compileShader(URL url, boolean isVertex) {
+		if ( url == null )
+			return -1;
+		
 		try (InputStream in = url.openStream();
 				InputStreamReader isr = new InputStreamReader(in);
 				BufferedReader br = new BufferedReader(isr)) {

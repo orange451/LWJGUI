@@ -1,5 +1,7 @@
 package lwjgui.scene.control;
 
+import java.util.List;
+
 import org.joml.Vector2f;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -11,6 +13,8 @@ import lwjgui.geometry.VPos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.style.StyleOperations;
+import lwjgui.style.Stylesheet;
 import lwjgui.theme.Theme;
 
 public abstract class Labeled extends Control {
@@ -282,7 +286,7 @@ public abstract class Labeled extends Control {
 		// Draw
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgFontBlur(vg,0);
-		NanoVG.nvgFillColor(vg, isDisabled()?Theme.current().getShadow().getNVG():textColor.getNVG());
+		NanoVG.nvgFillColor(vg, isDisabled()?Theme.current().getShadow().getNVG():this.getTextFill().getNVG());
 		NanoVG.nvgText(vg, absX, absY, useString);
 	}
 
@@ -345,6 +349,8 @@ public abstract class Labeled extends Control {
 	 * @return
 	 */
 	public Color getTextFill() {
+		Stylesheet.findAndApplyStyle(this.cached_context.getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE);
+		
 		return this.textColor;
 	}
 

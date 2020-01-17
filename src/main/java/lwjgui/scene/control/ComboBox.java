@@ -86,6 +86,12 @@ public class ComboBox<T> extends CombinedButton {
 		arrow.setOnAction(onClick);
 		main.setOnAction(onClick);
 	}
+
+
+	@Override
+	public String getElementType() {
+		return "combobox";
+	}
 	
 	public void setValue(T string) {
 		this.value = string;

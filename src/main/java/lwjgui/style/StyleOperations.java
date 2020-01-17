@@ -8,6 +8,7 @@ import lwjgui.geometry.Insets;
 import lwjgui.paint.Color;
 import lwjgui.scene.Node;
 import lwjgui.scene.Region;
+import lwjgui.scene.control.Labeled;
 import lwjgui.scene.layout.Gappable;
 import lwjgui.transition.FillTransition;
 import lwjgui.transition.Transition;
@@ -593,6 +594,38 @@ public class StyleOperations {
 						t.setVgap(tween(source2, dest2F, progress));
 					}
 				};
+				tran.play();
+				current.add(tran);
+			}
+		}
+	};
+	
+	public static StyleOperation FONT_SIZE = new StyleOperation("font-size") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof Labeled) )
+				return;
+			
+			Labeled t = (Labeled)node;
+			float destSize = (float)toNumber(value.get(0).get(0));
+			float sourceSize = (float) t.getFontSize();
+			
+			// Font size transition
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			if ( destSize == sourceSize || transition == null ) {
+				t.setFontSize(destSize);
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				Transition tran = new Transition(transition.getDurationMillis()) {
+					@Override
+					public void tick(double progress) {
+						t.setFontSize(tween(sourceSize, destSize, progress));
+					}
+				};
+				
 				tran.play();
 				current.add(tran);
 			}

@@ -556,7 +556,7 @@ public class Stylesheet {
 		
 		Map<String, StyleOperationValue> declarations = new HashMap<>();
 		
-		System.out.println("Searching node " + parentNode + "("+parentNode.getClassList()+") / for operation: " + operation.getName() + " \t\t" + applyNode + "\t" + parentNode.getParent());
+		//System.out.println("Searching node " + parentNode + "("+parentNode.getClassList()+") / for operation: " + operation.getName() + " \t\t" + applyNode + "\t" + parentNode.getParent());
 		
 		for (int i = 0; i<sheets.size(); i++) {
 			Stylesheet sheet = sheets.get(i);
@@ -575,7 +575,7 @@ public class Stylesheet {
 			}
 		}
 		
-		System.out.println(declarations);
+		//System.out.println(declarations);
 		
 		// Apply style, otherwise check parent (recursive?)
 		if ( declarations.containsKey(operation.getName()) )

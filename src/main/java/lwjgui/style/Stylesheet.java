@@ -19,6 +19,10 @@ public class Stylesheet {
 		this.source = css;
 	}
 	
+	public String getSource() {
+		return this.source;
+	}
+	
 	/**
 	 * Apply generic styling to a node via its classes/tag
 	 * @param node
@@ -552,6 +556,8 @@ public class Stylesheet {
 		
 		Map<String, StyleOperationValue> declarations = new HashMap<>();
 		
+		System.out.println("Searching node " + parentNode + "("+parentNode.getClassList()+") / for operation: " + operation.getName() + " \t\t" + applyNode + "\t" + parentNode.getParent());
+		
 		for (int i = 0; i<sheets.size(); i++) {
 			Stylesheet sheet = sheets.get(i);
 			
@@ -568,6 +574,8 @@ public class Stylesheet {
 				sheet.computeStyling(parentNode, StyleSelectorType.CLASS, claz, declarations, false);
 			}
 		}
+		
+		System.out.println(declarations);
 		
 		// Apply style, otherwise check parent (recursive?)
 		if ( declarations.containsKey(operation.getName()) )

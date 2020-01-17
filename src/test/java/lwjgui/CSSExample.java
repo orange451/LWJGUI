@@ -5,6 +5,7 @@ import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.control.ComboBox;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.FlowPane;
 import lwjgui.scene.layout.StackPane;
@@ -29,8 +30,15 @@ public class CSSExample extends LWJGUIApplication {
 		flow.setFillToParentHeight(true);
 		pane.getChildren().add(flow);
 
-		createButton(flow, "Click Me!");
-		createButton(flow, "Success!", "button-success");
+		//createButton(flow, "Click Me!");
+		//createButton(flow, "Success!", "button-success");
+		
+		ComboBox<String> testBox = new ComboBox<>();
+		testBox.getItems().add("Hello1");
+		testBox.getItems().add("Hello2");
+		testBox.setStylesheet(".list-cell { font-size:24pt; } button{ font-size:24pt; }");
+		testBox.setValue(testBox.getItems().get(0));
+		flow.getItems().add(testBox);
 		
 		// Apply some style!
 		pane.setStylesheet(""

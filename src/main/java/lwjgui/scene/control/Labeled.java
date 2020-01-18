@@ -157,6 +157,10 @@ public abstract class Labeled extends Control {
 	protected void resize() {
 		super.resize();
 		
+		// Get some font CSS from ancestors!
+		if ( this.cached_context != null )
+			Stylesheet.findAndApplyStyle(this.cached_context.getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE, StyleOperations.FONT_COLOR);
+		
 		// Dont check for resizing
 		boolean checkResize = false;
 		
@@ -212,10 +216,6 @@ public abstract class Labeled extends Control {
 	public void render(Context context) {
 		if ( !isVisible() )
 			return;
-		
-		// Get some font CSS from ancestors!
-		if ( this.cached_context != null )
-			Stylesheet.findAndApplyStyle(this.cached_context.getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE, StyleOperations.FONT_COLOR);
 		
 		
 		//LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA);

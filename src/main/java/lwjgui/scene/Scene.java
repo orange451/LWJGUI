@@ -72,12 +72,12 @@ public class Scene extends Node {
 		TransitionManager.tick();
 		
 		// Reset stylesheet stack
+		this.cached_context = context;
 		context.getCurrentStyling().clear();
 
 		// Stretch to match screen
 		root.setPrefSize(getWidth(), getHeight());
-		root.setMinSize(getWidth(), getHeight());
-		root.setMaxSize(getWidth(), getHeight());
+		root.forceSize(getWidth(), getHeight());
 		
 		//Root fills the entire screen if it's a FillableRegion
 		if ( root instanceof FillableRegion ) {
@@ -96,11 +96,15 @@ public class Scene extends Node {
 		root.render(context);
 		
 		// Render popups
-		clip(context);
-		for (int i = 0; i < popups.size(); i++) {
-			PopupWindow p = popups.get(i);
-			p.render(context);
+		stylePush();
+		{
+			clip(context);
+			for (int i = 0; i < popups.size(); i++) {
+				PopupWindow p = popups.get(i);
+				p.render(context);
+			}
 		}
+		stylePop();
 	}
 
 	public void showPopup(PopupWindow popup) {

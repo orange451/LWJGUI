@@ -557,6 +557,7 @@ public class Stylesheet {
 		if ( operations == null || operations.length == 0 )
 			return;
 		
+		// System.out.println("("+sheets.size()+") Searching node " + parentNode + "("+parentNode.getClassList()+") / for operation: " + Arrays.toString(operations) + " \t\t" + applyNode + "\t" + parentNode.getParent());
 		Map<String, StyleOperationValue> declarations = new HashMap<>();
 		
 		for (int i = 0; i<sheets.size(); i++) {

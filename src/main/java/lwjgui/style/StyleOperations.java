@@ -631,6 +631,37 @@ public class StyleOperations {
 			}
 		}
 	};
+	
+	public static StyleOperation FONT_COLOR = new StyleOperation("color") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof Labeled) )
+				return;
+			
+			Labeled t = (Labeled)node;
+			Color destColor = getColor(value.get(0).get(0));
+			Color sourceColor = t.getTextFill();
+			
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			if ( transition == null || sourceColor == null ) {
+				t.setTextFill(destColor);
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				Color fillColor = new Color(sourceColor);
+				
+				// Color transition
+				FillTransition tran = new FillTransition(transition.getDurationMillis(), sourceColor, destColor, fillColor);
+				tran.play();
+				current.add(tran);
+
+				// Apply fill color
+				t.setTextFill(fillColor);
+			}
+		}
+	};
 
 	public static StyleOperation match(String key) {
 		return operations.get(key);

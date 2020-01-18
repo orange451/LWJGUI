@@ -13,6 +13,7 @@ import lwjgui.geometry.VPos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.style.StyleOperation;
 import lwjgui.style.StyleOperations;
 import lwjgui.style.Stylesheet;
 import lwjgui.theme.Theme;
@@ -212,6 +213,11 @@ public abstract class Labeled extends Control {
 		if ( !isVisible() )
 			return;
 		
+		// Get some font CSS from ancestors!
+		if ( this.cached_context != null )
+			Stylesheet.findAndApplyStyle(this.cached_context.getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE, StyleOperations.FONT_COLOR);
+		
+		
 		//LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA);
 		
 		// get Absolute position
@@ -349,9 +355,6 @@ public abstract class Labeled extends Control {
 	 * @return
 	 */
 	public Color getTextFill() {
-		if ( this.cached_context != null )
-			Stylesheet.findAndApplyStyle(this.cached_context.getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE);
-		
 		return this.textColor;
 	}
 

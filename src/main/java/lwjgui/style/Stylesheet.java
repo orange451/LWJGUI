@@ -550,13 +550,14 @@ public class Stylesheet {
 	 * @param currentStyling
 	 * @param fONT_SIZE
 	 */
-	public static void findAndApplyStyle(List<Stylesheet> sheets, Node applyNode, Node parentNode, StyleOperation operation) {
+	public static void findAndApplyStyle(List<Stylesheet> sheets, Node applyNode, Node parentNode, StyleOperation... operations) {
 		if ( parentNode == null )
 			return;
 		
-		Map<String, StyleOperationValue> declarations = new HashMap<>();
+		if ( operations == null || operations.length == 0 )
+			return;
 		
-		//System.out.println("Searching node " + parentNode + "("+parentNode.getClassList()+") / for operation: " + operation.getName() + " \t\t" + applyNode + "\t" + parentNode.getParent());
+		Map<String, StyleOperationValue> declarations = new HashMap<>();
 		
 		for (int i = 0; i<sheets.size(); i++) {
 			Stylesheet sheet = sheets.get(i);
@@ -574,14 +575,27 @@ public class Stylesheet {
 				sheet.computeStyling(parentNode, StyleSelectorType.CLASS, claz, declarations, false);
 			}
 		}
-		
-		//System.out.println(declarations);
-		
+
 		// Apply style, otherwise check parent (recursive?)
-		if ( declarations.containsKey(operation.getName()) )
-			declarations.get(operation.getName()).process(applyNode);
-		else
-			findAndApplyStyle(sheets, applyNode, parentNode.getParent(), operation);
+		int t = operations.length;
+		for (int i = 0; i < operations.length; i++) {
+			if ( declarations.containsKey(operations[i].getName()) ) {
+				declarations.get(operations[i].getName()).process(applyNode);
+				t--;
+				operations[i] = null;
+			}
+		}
+		
+		// Continue if we still have operations to find!
+		if ( t > 0 ) {
+			int a = 0;
+			StyleOperation[] ops = new StyleOperation[t];
+			for (int i = 0; i < operations.length; i++) {
+				if ( operations[i] != null )
+					ops[a++] = operations[i];
+			}
+			findAndApplyStyle(sheets, applyNode, parentNode.getParent(), ops);
+		}
 	}
 }
 
@@ -683,58 +697,5 @@ class StyleParams {
 	@Override
 	public String toString() {
 		return Arrays.toString(values.toArray(new Object[values.size()]));
-	}
-}
-
-/**
- * This class maps a property to a style operation. It's implemented when giving java the ability to interface with CSS.
- * @author Andrew
- *
- */
-abstract class StyleOperation {
-	private String name;
-	
-	public StyleOperation(String key) {
-		this.name = key;
-		StyleOperations.operations.put(key, this);
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	@Override
-	public String toString() {
-		return name;
-	}
-
-	public abstract void process(Node node, StyleVarArgs value);
-}
-
-/**
- * This class maps a style operation and user-supplied CSS arguments. 
- * @author Andrew
- *
- */
-class StyleOperationValue {
-	private StyleOperation operation;
-	private StyleVarArgs value;
-	
-	public StyleOperationValue(StyleOperation operation, StyleVarArgs value) {
-		this.value = value;
-		this.operation = operation;
-	}
-	
-	public String getName() {
-		return this.operation.getName();
-	}
-
-	public void process(Node node) {
-		operation.process(node, value);
-	}
-	
-	@Override
-	public String toString() {
-		return operation + " " + value;
 	}
 }

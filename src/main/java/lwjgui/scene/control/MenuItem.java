@@ -79,14 +79,24 @@ public class MenuItem extends Node {
 	}
 	
 	@Override
+	protected void position(Node parent) {
+		if ( internalLabel != null && this.cached_context != null ) {
+			this.setMinSize(internalLabel.getWidth(), getPrefHeight());
+
+			if ( this.internalLabel instanceof Labeled ) {
+				((Labeled) this.internalLabel).setTextFill(isSelected()?Theme.current().getTextAlt():Theme.current().getText());
+			}
+		}
+		
+		super.position(parent);
+		
+	}
+	
+	@Override
 	protected void resize() {
 		this.setAlignment(Pos.CENTER_LEFT);
 		super.resize();
 		this.updateChildren();
-		
-		if ( internalLabel != null ) {
-			this.setMinSize(internalLabel.getWidth(), getPrefHeight());
-		}
 	}
 	
 	@Override
@@ -116,9 +126,6 @@ public class MenuItem extends Node {
 		
 		// Render text on menu item
 		if ( this.internalLabel != null ) {
-			if ( this.internalLabel instanceof Labeled ) {
-				((Labeled) this.internalLabel).setTextFill(isSelected()?Theme.current().getTextAlt():Theme.current().getText());
-			}
 			this.internalLabel.render(context);
 		}
 	}

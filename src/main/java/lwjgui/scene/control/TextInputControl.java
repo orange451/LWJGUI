@@ -668,12 +668,33 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	
 	@Override
 	protected void position(Node parent) {
+		defaultStyle();
 		super.position(parent);
 		
 		//this.internalScrollPane.position(this);
 		//this.internalScrollPane.setAbsolutePosition(getX()+this.getInnerBounds().getX(), getY()+this.getInnerBounds().getY());
 		//this.internalScrollPane.setPrefSize(this.getInnerBounds().getWidth(), this.getInnerBounds().getHeight());
 		//this.internalScrollPane.updateChildren();
+	}
+	
+	private void defaultStyle() {
+		// SETUP OUTLINE
+		this.setBorderStyle(BorderStyle.SOLID);
+		this.setBorderWidth(1);
+		Color outlineColor = (this.isDescendentSelected()&&!this.isDisabled())? selectionFill : Theme.current().getControlOutline();
+		this.setBorderColor(outlineColor);
+		
+		// SETUP SELECTION GRAPHIC
+		this.getBoxShadowList().clear();
+		this.getBoxShadowList().add(new BoxShadow( 0, 2, 8, -3, Theme.current().getShadow(), true ));
+		if (isDescendentSelected() && !this.isDisabled()) {
+			Color sel = Theme.current().getSelection();
+			if ( isDisabled() )
+				sel = Theme.current().getSelectionPassive();
+
+			this.getBoxShadowList().add(new BoxShadow(0, 0, 4, 0, sel.alpha(0.8f)));
+			this.getBoxShadowList().add(new BoxShadow(0, 0, 1.5f, 2, sel.alpha(0.2f), true));
+		}
 	}
 	
 	@Override
@@ -953,24 +974,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			return;
 
 		this.clip(context,8);
-		
-		// SETUP OUTLINE
-		this.setBorderStyle(BorderStyle.SOLID);
-		this.setBorderWidth(1);
-		Color outlineColor = (this.isDescendentSelected()&&!this.isDisabled())? selectionFill : Theme.current().getControlOutline();
-		this.setBorderColor(outlineColor);
-		
-		// SETUP SELECTION GRAPHIC
-		this.getBoxShadowList().clear();
-		this.getBoxShadowList().add(new BoxShadow( 0, 2, 8, -3, Theme.current().getShadow(), true ));
-		if (isDescendentSelected() && !this.isDisabled()) {
-			Color sel = Theme.current().getSelection();
-			if ( isDisabled() )
-				sel = Theme.current().getSelectionPassive();
-
-			this.getBoxShadowList().add(new BoxShadow(0, 0, 4, 0, sel.alpha(0.8f)));
-			this.getBoxShadowList().add(new BoxShadow(0, 0, 1.5f, 2, sel.alpha(0.2f), true));
-		}
 		
 		// Apply CSS
 		this.stylePush();

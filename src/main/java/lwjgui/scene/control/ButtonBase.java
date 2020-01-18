@@ -11,6 +11,7 @@ import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
+import lwjgui.scene.Node;
 import lwjgui.style.Background;
 import lwjgui.style.BackgroundLinearGradient;
 import lwjgui.style.BackgroundSolid;
@@ -161,14 +162,23 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	}
 	
 	@Override
-	public void render(Context context) {
+	protected void position(Node parent) {
+		defaultStyle();
+		super.position(parent);
+	}
+	
+	private void defaultStyle() {
+		Context context = this.cached_context;
 		if ( context == null )
 			return;
 		
-		if ( !isVisible() )
-			return;
+		// Text color?
+		if ( isDisabled() ) {
+			this.setTextFill(Theme.current().getShadow());
+		} else {
+			this.setTextFill(Theme.current().getText());
+		}
 		
-		clip(context, 0);
 		
 		// SETUP BUTTON COLOR
 		Color buttonColor = isPressed()?Theme.current().getControlOutline():((context.isHovered(this)&&!isDisabled())?Theme.current().getControlHover():Theme.current().getControl());
@@ -198,13 +208,17 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 			this.getBoxShadowList().add(new BoxShadow(0, 0, 4, 0, sel.alpha(0.8f)));
 			this.getBoxShadowList().add(new BoxShadow(0, 0, 1.5f, 2, sel.alpha(0.2f), true));
 		}
+	}
+	
+	@Override
+	public void render(Context context) {
+		if ( context == null )
+			return;
 		
-		// Text color?
-		if ( isDisabled() ) {
-			this.setTextFill(Theme.current().getShadow());
-		} else {
-			this.setTextFill(Theme.current().getText());
-		}
+		if ( !isVisible() )
+			return;
+		
+		clip(context, 0);
 		
 		// Apply CSS
 		this.stylePush();

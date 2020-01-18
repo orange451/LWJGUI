@@ -96,7 +96,8 @@ public class CSSExample extends LWJGUIApplication {
 		// Create a new scene
 		window.setScene(new Scene(pane, WIDTH, HEIGHT));
 		
-		window.getScene().setStylesheet(".list-cell { font-size:24pt; } combobox{ font-size:24pt; }");
+		// Test CSS to change dropdown font
+		window.getScene().setStylesheet(".list-cell { font-size:24pt; color:white; } combobox{ font-size:24pt; color:green; }");
 		
 		// Make window visible
 		window.show();

@@ -30,8 +30,8 @@ public class CSSExample extends LWJGUIApplication {
 		flow.setFillToParentHeight(true);
 		pane.getChildren().add(flow);
 
-		//createButton(flow, "Click Me!");
-		//createButton(flow, "Success!", "button-success");
+		createButton(flow, "Click Me!");
+		createButton(flow, "Success!", "button-success");
 		
 		ComboBox<String> testBox = new ComboBox<>();
 		testBox.getItems().add("Hello1");
@@ -40,7 +40,7 @@ public class CSSExample extends LWJGUIApplication {
 		flow.getItems().add(testBox);
 		
 		// Apply some style!
-		/*pane.setStylesheet(""
+		pane.setStylesheet(""
 				+ "flowpane {"
 				+ "		gap: 8px;"
 				+ "}"
@@ -91,7 +91,7 @@ public class CSSExample extends LWJGUIApplication {
 				+ ""
 				+ ".button-success:active {"
 				+ "		background-color: #1e7e34;"
-				+ "}");*/
+				+ "}");
 		
 		// Create a new scene
 		window.setScene(new Scene(pane, WIDTH, HEIGHT));

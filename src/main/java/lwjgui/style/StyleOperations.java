@@ -703,6 +703,8 @@ public class StyleOperations {
 	}
 
 	protected static Color getColor(Object arg) {
+		if ( arg == null )
+			return Color.WHITE;
 
 		// Color by function
 		if ( arg instanceof StyleFunction ) {

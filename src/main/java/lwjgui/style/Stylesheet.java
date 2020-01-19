@@ -670,6 +670,8 @@ class StyleVarArgs {
 	}
 	
 	public StyleParams get(int index) {
+		if ( index >= params.size() || index < 0 )
+			return null;
 		return params.get(index);
 	}
 	

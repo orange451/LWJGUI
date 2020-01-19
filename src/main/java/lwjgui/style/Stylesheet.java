@@ -12,6 +12,7 @@ import lwjgui.scene.Node;
 
 public class Stylesheet {
 	private String source;
+	private boolean compiled;
 	private HashMap<String, StyleSelector> idToStyleSelector = new HashMap<>();
 	private HashMap<StyleSelector, StyleData> styleData = new HashMap<>();
 
@@ -146,6 +147,10 @@ public class Stylesheet {
 		}
 	}
 
+	public boolean isCompiled() {
+		return this.compiled;
+	}
+
 	/**
 	 * Compule Stylesheet
 	 */
@@ -180,6 +185,7 @@ public class Stylesheet {
 					currentSelector.append(c);
 				}
 			}
+			this.compiled = true;
 			return true;
 		} catch(Exception e) {
 			e.printStackTrace();

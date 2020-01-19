@@ -384,6 +384,15 @@ public abstract class Node implements Resizable {
 	 * @param css
 	 */
 	public void setStylesheet(Stylesheet css) {
+		if ( css != null ) {
+			try {
+				if ( !css.isCompiled() )
+					css.compile();
+				this.stylesheet = css;
+			} catch(StylesheetCompileError e) {
+				e.printStackTrace();
+			}
+		}
 		this.stylesheet = css;
 	}
 	

@@ -571,15 +571,17 @@ public class Stylesheet {
 			
 			// Apply styling for the DOM TAG
 			sheet.computeStyling(parentNode, StyleSelectorType.TAG, parentNode.getElementType(), declarations, false);
-			
-			// Apply styling for the ID
 			sheet.computeStyling(parentNode, StyleSelectorType.ID, parentNode.getElementId(), declarations, false);
+			
+			sheet.computeStyling(parentNode, StyleSelectorType.TAG, parentNode.getElementType(), declarations, true);
+			sheet.computeStyling(parentNode, StyleSelectorType.ID, parentNode.getElementId(), declarations, true);
 			
 			// Apply styling for the class
 			ArrayList<String> classList = parentNode.getClassList();
 			for (int j = 0; j < classList.size(); j++) {
 				String claz = classList.get(j);
 				sheet.computeStyling(parentNode, StyleSelectorType.CLASS, claz, declarations, false);
+				sheet.computeStyling(parentNode, StyleSelectorType.CLASS, claz, declarations, true);
 			}
 		}
 

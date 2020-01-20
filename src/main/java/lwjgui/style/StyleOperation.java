@@ -46,6 +46,8 @@ class StyleOperationValue {
 	}
 
 	public void process(Node node) {
+		if ( value.size() <= 0 )
+			return;
 		operation.process(node, value);
 	}
 	

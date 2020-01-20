@@ -79,6 +79,7 @@ public class Stylesheet {
 		computeStyling(node, StyleSelectorType.TAG, forceElementType, declarations, false);
 		computeStyling(node, StyleSelectorType.TAG, forceElementType, declarations, true);
 		applyStyling( node, declarations );
+		declarations.clear();
 	}
 	
 	private void applyStyling(Node node, Map<String, StyleOperationValue> declarations) {

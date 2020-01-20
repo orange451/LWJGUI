@@ -23,6 +23,7 @@ import lwjgui.font.FontMetaData;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.glfw.input.MouseHandler;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Cursor;
@@ -42,7 +43,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	ArrayList<String> lines;
 	ArrayList<ArrayList<GlyphData>> glyphData;
 	ArrayList<String> linesDraw;
-	private String source;
+	private String source = "";
 	int caretPosition;
 	protected boolean editing = false;
 	protected boolean editable = true;
@@ -104,6 +105,14 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		 */
 		this.internalRenderingPane = new TextInputContentRenderer(this);
 		
+		/*
+		 * Scroll Pane setup
+		 */
+		
+		internalScrollPane = new TextInputControl.TextInputScrollPane();
+		internalScrollPane.setContent(internalRenderingPane);
+		children.add(internalScrollPane);
+		
 		undoStack = new StateStack<TextState>();
 		setText("");
 		saveState();
@@ -136,15 +145,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 				return;
 			shortcuts.process(this, event);
 		});
-		
-		
-		/*
-		 * Scroll Pane setup
-		 */
-		
-		internalScrollPane = new TextInputControl.TextInputScrollPane();
-		internalScrollPane.setContent(internalRenderingPane);
-		children.add(internalScrollPane);
 	}
 	
 	protected void saveState() {
@@ -175,6 +175,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	}
 	
 	public void setText(String text) {
+		if (text == null)
+			return;
 		
 		boolean changed = true;
 		if ( this.source != null && this.source.equals(text) )
@@ -192,22 +194,23 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			this.glyphData.clear();
 		}
 		this.caretPosition = 0;
-		
-		String trail = "[!$*]T!R@A#I$L%I^N&G[!$*]"; // Naive fix to allow trailing blank lines to still be parsed
-		text = text.replace("\r", "");
-		this.source = text;
-		
-		String temp = text + trail; // Add tail
-		String[] split = temp.split("\n");
-		for (int i = 0; i < split.length; i++) {
-			String tt = split[i];
-			tt = tt.replace(trail, ""); // Remove tail
-			if ( i < split.length -1 ) {
-				tt += "\n";
+		if (!text.isEmpty()) {
+			String trail = "[!$*]T!R@A#I$L%I^N&G[!$*]"; // Naive fix to allow trailing blank lines to still be parsed
+			text = text.replace("\r", "");
+			this.source = text;
+
+			String temp = text + trail; // Add tail
+			String[] split = temp.split("\n");
+			for (int i = 0; i < split.length; i++) {
+				String tt = split[i];
+				tt = tt.replace(trail, ""); // Remove tail
+				if (i < split.length - 1) {
+					tt += "\n";
+				}
+				addRow(tt);
 			}
-			addRow(tt);
+			setCaretPosition(oldCaret);
 		}
-		setCaretPosition(oldCaret);
 		
 		// Fire on text change event
 		if ( onTextChange != null && changed ) {
@@ -218,26 +221,24 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	private void addRow(String originalText) {
 		String drawLine = originalText;
 		
-		if ( cached_context != null ) {
-			ArrayList<GlyphData> glyphEntry = new ArrayList<GlyphData>();
-			bindFont();
-			
-			try (MemoryStack stack = MemoryStack.stackPush()) {
-				NVGGlyphPosition.Buffer positions;
-				if (drawLine.length() > 0) {
-					positions = NVGGlyphPosition.mallocStack(drawLine.length(), stack);
-				} else {
-					positions = NVGGlyphPosition.mallocStack(1, stack);
-				}
+		ArrayList<GlyphData> glyphEntry = new ArrayList<GlyphData>();
+		bindFont();
+		
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			NVGGlyphPosition.Buffer positions;
+			if (drawLine.length() > 0) {
+				positions = NVGGlyphPosition.mallocStack(drawLine.length(), stack);
+			} else {
+				positions = NVGGlyphPosition.mallocStack(1, stack);
+			}
 
-				// Create glyph data for each character in the line
-				NanoVG.nvgTextGlyphPositions(cached_context.getNVG(), 0, 0, drawLine, positions);
-				int j = 0;
-				while (j < drawLine.length()) {
-					GlyphData currentGlyph = fixGlyph(positions.get(), drawLine.substring(j, j + 1));
-					glyphEntry.add(currentGlyph);
-					j++;
-				}
+			// Create glyph data for each character in the line
+			NanoVG.nvgTextGlyphPositions(window.getContext().getNVG(), 0, 0, drawLine, positions);
+			int j = 0;
+			while (j < drawLine.length()) {
+				GlyphData currentGlyph = fixGlyph(positions.get(), drawLine.substring(j, j + 1));
+				glyphEntry.add(currentGlyph);
+				j++;
 			}
 			
 			// Add blank glyph to end of line
@@ -258,25 +259,24 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 					}
 				}
 			}
-			
-			// Word Wrap not yet properly implemented properly. Will be rewritten.
-			int vWid = (int) (this.internalScrollPane.getViewport().getWidth() - 20);
-			int maxWidth = (int) (wordWrap?vWid:Integer.MAX_VALUE);
-			int index = 0;
-			while ( index < originalText.length() ) {
-				GlyphData entry = glyphEntry.get(index);
-				
-				if ( entry.x()+entry.width() >= maxWidth ) {
-					addRow(originalText.substring(0, index-1));
-					addRow(originalText.substring(index-1,originalText.length()));
-					return;
-				}
-				
-				index++;
+		}
+		
+		// Word Wrap not yet properly implemented properly. Will be rewritten.
+		/*int vWid = (int) (this.internalScrollPane.getViewport().getWidth() - 20);
+		int maxWidth = (int) (wordWrap?vWid:Integer.MAX_VALUE);
+		int index = 0;
+		while ( index < originalText.length() ) {
+			GlyphData entry = glyphEntry.get(index);
+			if ( entry.x()+entry.width() >= maxWidth ) {
+				addRow(originalText.substring(0, index-1));
+				addRow(originalText.substring(index-1,originalText.length()));
+				return;
 			}
 			
-			glyphData.add(glyphEntry);
-		}
+			index++;
+		}*/
+		
+		glyphData.add(glyphEntry);
 		
 		// Get decorated line
 		if ( this.textParser != null )
@@ -430,7 +430,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		String text = getSelectedText();
 		
 		LWJGUI.runLater(() -> {
-			GLFW.glfwSetClipboardString(cached_context.getWindowHandle(), text);
+			GLFW.glfwSetClipboardString(window.getID(), text);
 		});
 	}
 	
@@ -444,7 +444,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		saveState();
 		deleteSelection();
 		LWJGUI.runLater(()-> {
-			String str = GLFW.glfwGetClipboardString(cached_context.getWindowHandle());
+			String str = GLFW.glfwGetClipboardString(window.getID());
 			insertText(caretPosition, str);
 			caretPosition += str.length();
 		});
@@ -756,24 +756,18 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	}
 	
 	protected void bindFont() {
-		if ( cached_context == null )
-			return;
-		
-		long vg = cached_context.getNVG();
+		long vg = window.getContext().getNVG();
 		NanoVG.nvgFontSize(vg, fontSize);
 		NanoVG.nvgFontFace(vg, font.getFont(style));
 		NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
 	}
 	
 	protected void bindFont(FontMetaData data) {
-		if ( cached_context == null )
-			return;
-		
 		double fs = data.getSize()==null?fontSize:data.getSize().doubleValue();
 		Font f = data.getFont()==null?font:data.getFont();
 		FontStyle fst = data.getStyle()==null?style:data.getStyle();
 		
-		long vg = cached_context.getNVG();
+		long vg =  window.getContext().getNVG();
 		NanoVG.nvgFontSize(vg, (float)fs);
 		NanoVG.nvgFontFace(vg, f.getFont(fst));
 		NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
@@ -813,6 +807,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	}
 	
 	int getCaretFromPixelOffset( int row, int pixelX ) {
+		if (linesDraw.size() == 0)
+			return 0;
 		String line = linesDraw.get(row);
 		
 		if ( line.length() == 0 )
@@ -841,8 +837,9 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	}
 	
 	int getCaretAtMouse() {
-		double mx = cached_context.getMouseX()-(internalScrollPane.getContent().getX());
-		double my = cached_context.getMouseY()-(internalScrollPane.getContent().getY());
+		MouseHandler mh = window.getMouseHandler();
+		double mx = mh.getX()-(internalScrollPane.getContent().getX());
+		double my = mh.getY()-(internalScrollPane.getContent().getY());
 		
 		// Find row clicked
 		int row = (int) (my / (float)fontSize);
@@ -991,6 +988,11 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		if ( context == null )
 			return;
 		
+		if (source == null)
+			return;
+		if (source.isEmpty())
+			return;
+		
 		long vg = context.getNVG();
 		// Draw Prompt
 		if ( getLength() == 0 && prompt != null && prompt.length() > 0 ) {
@@ -1088,23 +1090,16 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			
 			// Clicked
 			getViewport().setOnMousePressed(event -> {
-				if (cached_context == null) {
-					return;
-				}
-				
 				long clickTime = System.currentTimeMillis();
 
 				if ( event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT && clickTime - lastClickTime > DOUBLE_CLICK_SPEED ) {
-					LWJGUI.runLater(()-> {
-						cached_context.setSelected(getViewport());
-					});
+					window.getContext().setSelected(getViewport());
 					
 					//Sets caret position at mouse
 					setCaretPosition(getCaretAtMouse());
 					selectionEndPosition = caretPosition;
 					
-					int state = GLFW.glfwGetKey(cached_context.getWindowHandle(), GLFW.GLFW_KEY_LEFT_SHIFT);
-					if ( state != GLFW.GLFW_PRESS ) {
+					if ( window.getKeyboardHandler().isShiftPressed() ) {
 						selectionStartPosition = caretPosition;
 					}
 				} else if ( event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT && clickTime - lastClickTime <= DOUBLE_CLICK_SPEED ) {

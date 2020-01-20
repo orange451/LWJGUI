@@ -27,15 +27,15 @@ public class DraggablePane extends StickyPane {
 	
 	protected void select(MouseEvent e) {
 		anchor.set(e.mouseX - this.getX(), e.mouseY - this.getY());
-		cached_context.setSelected(this);
+		window.getContext().setSelected(this);
 	}
 
 	@Override
 	public void position(Node parent) {
 		super.position(parent);
 		
-		if (!isDragInputDown() && cached_context.isSelected(this)) {
-			cached_context.setSelected(null);
+		if (!isDragInputDown() && window.getContext().isSelected(this)) {
+			window.getContext().setSelected(null);
 		}
 	}
 	
@@ -45,7 +45,7 @@ public class DraggablePane extends StickyPane {
 	 * @return true if dragging
 	 */
 	protected boolean isDragInputDown() {		
-		return (GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
+		return window.getMouseHandler().isButtonPressed(0);
 	}
 
 	protected void drag(MouseEvent e) {

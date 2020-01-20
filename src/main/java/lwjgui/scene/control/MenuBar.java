@@ -95,7 +95,7 @@ public class MenuBar extends FillableRegion {
 				if (!currentMenu.isOpen() ) {
 					currentMenu = null;
 				} else {
-					Node hover = this.cached_context.getHovered();//LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext()).getContext().getHovered();
+					Node hover = this.window.getContext().getHovered();
 					if ( hover instanceof Menu ) {
 						Menu menu = (Menu) hover;
 						if ( items.contains(menu) ) {

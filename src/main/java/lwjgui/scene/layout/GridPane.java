@@ -51,7 +51,7 @@ public class GridPane extends Pane implements Gappable {
 				return;
 			
 			if ( event.key == GLFW.GLFW_KEY_TAB ) {
-				Node selected = LWJGUI.getCurrentContext().getSelected();
+				Node selected = window.getContext().getSelected();
 				int col = getColumn(selected);
 				int row = getRow(selected);
 				
@@ -67,7 +67,7 @@ public class GridPane extends Pane implements Gappable {
 				
 				// If we found a node, select it
 				if ( e != null ) {
-					LWJGUI.getCurrentContext().setSelected(e);
+					window.getContext().setSelected(e);
 				}
 			}
 		});

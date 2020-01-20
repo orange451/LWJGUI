@@ -57,7 +57,7 @@ public class ControlExample extends LWJGUIApplication {
 		
 		{
 			// Checkboxes
-			displayCheckboxes(hbox);		
+			displayCheckboxes(hbox, window);		
 			
 			// Redio Buttons
 			displayRadioButtons(hbox);
@@ -152,7 +152,7 @@ public class ControlExample extends LWJGUIApplication {
 		g.selectToggle(g.getToggles().get(2));
 	}
 
-	private static void displayCheckboxes(Pane parent) {
+	private static void displayCheckboxes(Pane parent, Window window) {
 		// Create a vertical box to hold checkboxes
 		VBox pane = exampleBox("Check boxes:");
 		parent.getChildren().add(pane);
@@ -172,6 +172,6 @@ public class ControlExample extends LWJGUIApplication {
 		
 		// Make the first checkbox selected visually and checked
 		b.setChecked(true);
-		LWJGUI.getCurrentContext().setSelected(b);
+		window.getContext().setSelected(b);
 	}
 }

@@ -114,7 +114,7 @@ public class Tab {
 				{
 					this.setOnMousePressedInternal((event)->{
 						TabButton.this.onMousePressed(event.getMouseX(), event.getMouseY(), event.getButton());
-						cached_context.setSelected(TabButton.this);
+						window.getContext().setSelected(TabButton.this);
 					});
 					
 					this.setOnMouseReleasedInternal((event)->{
@@ -172,7 +172,7 @@ public class Tab {
 					tabPane.select(Tab.this);
 				}
 				event.consume();
-				cached_context.setSelected(Tab.this.button);
+				window.getContext().setSelected(Tab.this.button);
 			});
 			
 			// On Release
@@ -197,23 +197,20 @@ public class Tab {
 		}
 
 		protected boolean isPressed() {
-			if ( cached_context == null )
-				return false;
-			
-			if ( cached_context.isSelected(x) || cached_context.isHovered(x) )
+			Context context = window.getContext();
+			if ( context.isSelected(x) || context.isHovered(x) )
 				return false;
 			
 			if ( tabPane.getSelected().equals(Tab.this) )
 				return false;
 			
-			return (this.isDescendentHovered() && GLFW.glfwGetMouseButton(cached_context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
+			return this.isDescendentHovered() && window.getMouseHandler().isButtonPressed(0);
 		}
 		
 		protected boolean isHovered() {
-			if ( cached_context == null )
-				return false;
+			Context context = window.getContext();
 			
-			if ( cached_context.isSelected(x) )
+			if ( context.isSelected(x) )
 				return false;
 			
 			return this.isDescendentHovered();
@@ -260,7 +257,7 @@ public class Tab {
 			}
 			
 			// Change color of X button
-			boolean xpressed = context.isHovered(this.x) && GLFW.glfwGetMouseButton(context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
+			boolean xpressed = context.isHovered(this.x) && window.getMouseHandler().isButtonPressed(0);
 			Color c = Theme.current().getControlOutline();
 			if ( context.isHovered(this.x) )
 				c = Theme.current().getText();

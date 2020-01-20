@@ -24,6 +24,7 @@ public class TextField extends TextInputControl {
 	
 	@Override
 	public void setText(String text) {
+		if(text != null)
 		super.setText(text.replace("\n", "").replace("\t", ""));
 	}
 

@@ -105,21 +105,18 @@ public class Font {
 	 * @return
 	 */
 	public String getFont(FontStyle style) {
-		String using = fontNameRegular;
+		switch (style) {
+		case BOLD:
+			return fontNameBold;
+		case ITALIC:
+			return fontNameItalic;
+		case LIGHT:
+			return fontNameLight;
+		case REGULAR:
+			return fontNameRegular;
+		}
 
-		if ( style == FontStyle.BOLD ) {
-			using = fontNameBold;
-		}
-		
-		if ( style == FontStyle.LIGHT) {
-			using = fontNameLight;
-		}
-		
-		if ( style == FontStyle.ITALIC) {
-			using = fontNameItalic;
-		}
-		
-		return using;
+		return fontNameRegular;
 	}
 	
 	public float[] getTextBounds(Context context, String string, FontStyle style, double size, float[] bounds) {		

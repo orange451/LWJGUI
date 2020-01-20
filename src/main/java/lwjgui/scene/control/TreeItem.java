@@ -104,6 +104,8 @@ class TreeItemLabel extends Pane {
 	}
 	
 	public void setGraphic(Node node) {
+		if (node == null)
+			return;
 		this.graphic = node;
 		this.graphic.setPrefSize(16, 16);
 		this.label.setGraphic(node);

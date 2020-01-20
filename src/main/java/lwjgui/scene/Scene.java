@@ -1,7 +1,5 @@
 package lwjgui.scene;
 
-import org.lwjgl.glfw.GLFW;
-
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.control.PopupWindow;
 import lwjgui.transition.TransitionManager;
@@ -72,7 +70,6 @@ public class Scene extends Node {
 		TransitionManager.tick();
 		
 		// Reset stylesheet stack
-		this.cached_context = context;
 		context.getCurrentStyling().clear();
 
 		// Stretch to match screen
@@ -121,7 +118,7 @@ public class Scene extends Node {
 
 	private Cursor lastCursor = Cursor.NORMAL;
 	public void setCursor(Cursor cursor) {
-		GLFW.glfwSetCursor(cached_context.getWindowHandle(), cursor.getCursor(cached_context.getWindowHandle()));
+		//GLFW.glfwSetCursor(cached_context.getWindowHandle(), cursor.getCursor(cached_context.getWindowHandle()));
 		lastCursor = cursor;
 	}
 

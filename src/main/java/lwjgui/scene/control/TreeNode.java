@@ -8,6 +8,8 @@ import lwjgui.event.EventHandler;
 import lwjgui.event.MouseEvent;
 import lwjgui.font.Font;
 import lwjgui.geometry.Pos;
+import lwjgui.glfw.input.KeyboardHandler;
+import lwjgui.glfw.input.MouseHandler;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
@@ -81,13 +83,10 @@ public class TreeNode<E> extends HBox {
 			
 			@Override
 			public void handle(MouseEvent event) {
-				long handle = cached_context.getWindowHandle();
-				boolean isCtrlDown = GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_LEFT_CONTROL) == GLFW.GLFW_PRESS
-								|| GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_RIGHT_CONTROL) == GLFW.GLFW_PRESS
-								|| GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_LEFT_SUPER) == GLFW.GLFW_PRESS
-								|| GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_RIGHT_SUPER) == GLFW.GLFW_PRESS;
-				boolean isShiftDown = GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS
-								|| GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_RIGHT_SHIFT) == GLFW.GLFW_PRESS;
+				KeyboardHandler kh = window.getKeyboardHandler();
+				MouseHandler mh = window.getMouseHandler();
+				boolean isCtrlDown = kh.isCtrlPressed();
+				boolean isShiftDown = kh.isShiftPressed();
 				boolean isLeftDown = event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT;
 				boolean isRightDown = event.button == GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 				
@@ -138,7 +137,7 @@ public class TreeNode<E> extends HBox {
 						context.show(getScene(), getX(), getY()+getHeight());
 					}
 				}
-				cached_context.setSelected(TreeNode.this);
+				window.getContext().setSelected(TreeNode.this);
 			}
 			
 		});
@@ -185,7 +184,7 @@ public class TreeNode<E> extends HBox {
 		
 		// Set appropriate background color
 		boolean selected = root.isItemSelected(item);
-		boolean active = context.isFocused();
+		boolean active = window.isFocused();
 		Color color = selected?(active?Theme.current().getSelection():Theme.current().getSelectionPassive()):null;
 		this.setBackground(new BackgroundSolid(color));
 		

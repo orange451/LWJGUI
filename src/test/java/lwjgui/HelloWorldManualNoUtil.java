@@ -9,9 +9,9 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
-import lwjgui.LWJGUI;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.WindowManager;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
 
@@ -43,7 +43,7 @@ public class HelloWorldManualNoUtil {
 		GL.createCapabilities();
 		
 		// Initialize LWJGUI for this window
-		Window window = LWJGUI.initialize(handle);
+		Window window = WindowManager.generateWindow(handle);
 		window.setWindowAutoDraw(false); // Turn off automatic buffer swapping, we want to do it ourself!
 		
 		// Add some components
@@ -60,7 +60,7 @@ public class HelloWorldManualNoUtil {
 			GLFW.glfwMakeContextCurrent(handle);
 			
 			// Poll inputs
-			glfwPollEvents();
+			WindowManager.update();
 			
 			// Render UI
 			window.render();

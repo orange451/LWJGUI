@@ -32,7 +32,7 @@ public class Image {
 	protected int getImage() {
 		if (loaded)
 			return image;
-		Context context = LWJGUI.getCurrentContext();
+		Context context = LWJGUI.getThreadWindow().getContext();
 		if (context == null)
 			return -1;
 
@@ -82,7 +82,7 @@ public class Image {
 	public void dispose() {
 		if ( loaded ) {
 			loaded = false;
-			Context context = LWJGUI.getCurrentContext();
+			Context context = LWJGUI.getThreadWindow().getContext();
 			NanoVG.nvgDeleteImage(context.getNVG(), image);
 		}
 		

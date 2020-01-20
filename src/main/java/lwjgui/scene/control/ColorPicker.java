@@ -45,7 +45,7 @@ public class ColorPicker extends ButtonBase {
 			context.setAutoHide(false);
 
 			context.position(getScene());
-			context.render(null);
+			//context.render(null);
 
 			double desiredX = getX() + getWidth() / 2 - context.getWidth() / 2;
 			double desiredY = getY() + getHeight() + 2;
@@ -352,7 +352,7 @@ public class ColorPicker extends ButtonBase {
 			internalLayout.getChildren().add(colorPane);
 			
 			colorPane.setOnMousePressed((event)->{
-				this.cached_context.setSelected(colorPane);
+				this.window.getContext().setSelected(colorPane);
 				dragColorPicker(event.getMouseX(), event.getMouseY(), colorPane.getWidth(), colorPane.getHeight());
 			});
 			

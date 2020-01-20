@@ -158,8 +158,7 @@ public abstract class Labeled extends Control {
 		super.resize();
 		
 		// Get some font CSS from ancestors!
-		if ( this.cached_context != null )
-			Stylesheet.findAndApplyStyle(this.cached_context.getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE, StyleOperations.FONT_COLOR);
+		Stylesheet.findAndApplyStyle(this.window.getContext().getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE, StyleOperations.FONT_COLOR);
 		
 		// Dont check for resizing
 		boolean checkResize = false;
@@ -173,7 +172,7 @@ public abstract class Labeled extends Control {
 			checkResize = true;
 		
 		// Change label size if it's too large for its container (cut off text)
-		if (checkResize && cached_context != null) {
+		if (checkResize) {
 			cachedWidth = -1;
 			useString = text;
 			
@@ -189,7 +188,7 @@ public abstract class Labeled extends Control {
 			// If we're too large for the parent element...
 			if ( this.size.x >= this.getAvailableSize().x ) {
 				// Get bounds for elipsis
-				float[] elipBnd = font.getTextBounds( cached_context, ELIPSES, fontStyle, fontSize, garbage);
+				float[] elipBnd = font.getTextBounds( window.getContext(), ELIPSES, fontStyle, fontSize, garbage);
 				
 				// Add ellipse width to string width
 				float eWid = elipBnd[2]-elipBnd[0];
@@ -200,7 +199,7 @@ public abstract class Labeled extends Control {
 				while ( (curWid > this.getAvailableSize().x) && (remove < text.length()) ) {
 					remove++;
 					useString = useString.substring(0, text.length()-remove)+ELIPSES;
-					float[] bounds = font.getTextBounds( cached_context, useString, fontStyle, fontSize, garbage);
+					float[] bounds = font.getTextBounds( window.getContext(), useString, fontStyle, fontSize, garbage);
 					curWid = (bounds[2]-bounds[0])+graphicWid;
 					cachedWidth = -1;
 				}
@@ -216,7 +215,6 @@ public abstract class Labeled extends Control {
 	public void render(Context context) {
 		if ( !isVisible() )
 			return;
-		
 		
 		//LWJGUIUtil.fillRect(context, getX(), getY(), getWidth(), getHeight(), Color.AQUA);
 		
@@ -363,7 +361,7 @@ public abstract class Labeled extends Control {
 		if ( cachedWidth != -1 )
 			return cachedWidth;
 		
-		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize, garbage);
+		float[] bounds = font.getTextBounds(this.window.getContext(), string, fontStyle, fontSize, garbage);
 		float gWid = getGraphicWidthInternalUse();
 		cachedWidth = bounds[2] - bounds[0] + gWid;
 		return cachedWidth;
@@ -373,7 +371,7 @@ public abstract class Labeled extends Control {
 		if ( cachedHeight != -1 )
 			return cachedHeight;
 		
-		float[] bounds = font.getTextBounds(this.cached_context, string, fontStyle, fontSize, garbage);
+		float[] bounds = font.getTextBounds(this.window.getContext(), string, fontStyle, fontSize, garbage);
 		float gHei = getGraphicHeightInternalUse();
 		cachedHeight = bounds[3] - bounds[1] + gHei;
 		return cachedHeight;

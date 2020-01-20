@@ -65,7 +65,7 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 		// If the button is selected, and enter is pressed. Fire the click event
 		this.setOnKeyPressedInternal( (event) -> {
 			if ( event.getKey() == GLFW.GLFW_KEY_ENTER ) {
-				if ( this.cached_context.isSelected(this) ) {
+				if ( this.window.getContext().isSelected(this) ) {
 					EventHelper.fireEvent(buttonInternalEvent, new ActionEvent());
 					EventHelper.fireEvent(buttonEvent, new ActionEvent());
 				}
@@ -152,13 +152,9 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	}
 	
 	protected boolean isPressed() {
-		if ( cached_context == null )
-			return false;
-		
 		if ( isDisabled() )
 			return false;
-		
-		return cached_context.isHovered(this) && GLFW.glfwGetMouseButton(cached_context.getWindowHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
+		return window.getContext().isHovered(this) && window.getMouseHandler().isButtonPressed(0);
 	}
 	
 	@Override
@@ -168,9 +164,7 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	}
 	
 	private void defaultStyle() {
-		Context context = this.cached_context;
-		if ( context == null )
-			return;
+		Context context = this.window.getContext();
 		
 		// Text color?
 		if ( isDisabled() ) {
@@ -185,7 +179,7 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 		this.setBackground(new BackgroundLinearGradient(90, new ColorStop(buttonColor, 0), new ColorStop(Theme.current().getControlOutline(), 3)));
 		
 		// SETUP BUTTON OUTLINE
-		Color outlineColor = (context.isSelected(this)&&context.isFocused()&&!isDisabled())?Theme.current().getSelection():Theme.current().getControlOutline();
+		Color outlineColor = (context.isSelected(this)&&window.isFocused()&&!isDisabled())?Theme.current().getSelection():Theme.current().getControlOutline();
 		this.setBorderColor(outlineColor);
 		
 		// Weird inset outline???
@@ -200,7 +194,7 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 		}
 		
 		// SETUP SELECTION GRAPHIC
-		if ( context.isSelected(this) && context.isFocused() ) {
+		if ( context.isSelected(this) && window.isFocused() ) {
 			Color sel = Theme.current().getSelection();
 			if ( isDisabled() )
 				sel = Theme.current().getSelectionPassive();

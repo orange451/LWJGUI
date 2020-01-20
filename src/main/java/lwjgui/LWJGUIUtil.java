@@ -175,7 +175,7 @@ public class LWJGUIUtil {
 	public static long createOpenGLDepricatedWindow(String name, int width, int height, boolean resizable, boolean ontop) {
 		return createOpenGLWindow( name, width, height, resizable, ontop, false , true );
 	}
-
+	
 	/**
 	 * Fills a NanoVG rectangle at a given x/y with a given width/height and a specified color.
 	 * @param context
@@ -423,8 +423,7 @@ public class LWJGUIUtil {
 	 * Draws a NanoVG string at a given location.
 	 */
 	private static float[] garbage = new float[4];
-	public static void drawText(String text, Font font, FontStyle style, double size, Color color, double x, double y, Pos alignment) {
-		Context vg = LWJGUI.getCurrentContext();
+	public static void drawText(Context vg, String text, Font font, FontStyle style, double size, Color color, double x, double y, Pos alignment) {
 		
 		float xMult = 0;
 		float yMult = 0;
@@ -555,7 +554,7 @@ public class LWJGUIUtil {
 					
 					// Flip the y :shrug:
 					//yy -= boxShadow.getYOffset() * 2;
-					yy = context.getHeight() - yy - hh;
+					yy = LWJGUI.getThreadWindow().getHeight() - yy - hh;
 					
 					// Enable blending
 					GL32.glBlendFunc(GL32.GL_SRC_ALPHA, GL32.GL_ONE_MINUS_SRC_ALPHA);
@@ -566,7 +565,7 @@ public class LWJGUIUtil {
 					
 		            // Apply uniforms
 					GL20.glUniform4f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "box"), xx, yy, xx+ww, yy+hh );
-					GL20.glUniform2f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "window"), context.getWidth(), context.getHeight());
+					GL20.glUniform2f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "window"), LWJGUI.getThreadWindow().getWidth(), LWJGUI.getThreadWindow().getHeight());
 					GL20.glUniform1f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "sigma"), f/2f);
 					GL20.glUniform1f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "corner"), Math.max(f/2, r));
 					GL20.glUniform4f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "boxColor"),

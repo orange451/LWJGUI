@@ -56,7 +56,7 @@ public class ContextMenu extends PopupWindow {
 
 	@Override
 	public void show(Scene scene, double absoluteX, double absoluteY) {
-		this.returnNode = LWJGUI.getCurrentContext().getSelected();
+		this.returnNode = window.getContext().getSelected();
 		super.show(scene, absoluteX, absoluteY);
 	}
 	
@@ -92,12 +92,10 @@ public class ContextMenu extends PopupWindow {
 		
 		super.close();
 		
-		LWJGUI.runLater(()->{
-			if ( this.returnNode != null ) {
-				LWJGUI.getCurrentContext().setSelected(returnNode);
-				this.returnNode = null;
-			}
-		});
+		if (this.returnNode != null) {
+			this.window.getContext().setSelected(returnNode);
+			this.returnNode = null;
+		}
 	}
 
 	@Override

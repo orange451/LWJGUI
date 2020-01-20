@@ -17,11 +17,11 @@ import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
+import lwjgui.glfw.input.MouseHandler;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Cursor;
 import lwjgui.scene.Node;
-import lwjgui.scene.Window;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.theme.Theme;
 
@@ -102,22 +102,20 @@ public class SplitPane extends Control {
 			return;
 		}
 
-		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
-		Context context = window.getContext();
-		double mx = context.getMouseX();
-		double my = context.getMouseY();
+		MouseHandler mh = window.getMouseHandler();
+		double mx = mh.getX();
+		double my = mh.getY();
 
 		grabbedDivider = hovered;
 		mouseGrabLocation.set(mx, my);
 	}
 
 	private Divider getDividerUnderMouse() {
-		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
-		Context context = window.getContext();
-		double mx = context.getMouseX();
-		double my = context.getMouseY();
+		MouseHandler mh = window.getMouseHandler();
+		double mx = mh.getX();
+		double my = mh.getY();
 		
-		Node hoveredNode = context.getHovered();
+		Node hoveredNode = window.getContext().getHovered();
 		if ( hoveredNode != null && hoveredNode != this && !hoveredNode.isDescendentOf(this) )
 			return null;
 
@@ -163,10 +161,9 @@ public class SplitPane extends Control {
 		}
 
 		// Get mouse coordinates
-		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
-		Context context = window.getContext();
-		double mx = context.getMouseX() - mouseGrabLocation.x;
-		double my = context.getMouseY() - mouseGrabLocation.y;
+		MouseHandler mh = window.getMouseHandler();
+		double mx = mh.getX() - mouseGrabLocation.x;
+		double my = mh.getY() - mouseGrabLocation.y;
 
 		// If we're holding onto a divider
 		double pChange = pixelSpaceToDividerSpace(mx);
@@ -177,7 +174,7 @@ public class SplitPane extends Control {
 		
 		// Update new mouse location
 		Vector4d bounds = this.getDividerBounds(grabbedDivider);
-		if ( context.getMouseX() > bounds.x && context.getMouseX() < bounds.x + bounds.z && context.getMouseY() > bounds.y && context.getMouseY() < bounds.y + bounds.w )
+		if ( mh.getX() > bounds.x && mh.getX() < bounds.x + bounds.z && mh.getY() > bounds.y && mh.getY() < bounds.y + bounds.w )
 			mouseGrabLocation.add(mx, my);
 
 		for (int i = 0; i < 4; i++) {

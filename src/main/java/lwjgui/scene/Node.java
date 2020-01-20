@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.joml.Vector2d;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.LWJGUI;
@@ -108,9 +107,12 @@ public abstract class Node implements Resizable {
 	protected boolean mousePressed = false;
 	protected boolean mouseDragged = false;
 	
-	protected Context cached_context;
+	protected Window window;
 	
 	public Node() {
+		window = LWJGUI.getThreadWindow();
+		if (window == null)
+			System.out.println(window);
 		children.setAddCallback((element) -> {
 			if (!element.initialized)
 				element.init();
@@ -136,6 +138,13 @@ public abstract class Node implements Resizable {
 			Node c = children.get(i);
 			if (c.initialized)
 				c.dispose();
+		}
+	}
+
+	public void setWindow(Window window) {
+		this.window = window;
+		for (int i = 0; i < children.size(); i++) {
+			children.get(i).setWindow(window);
 		}
 	}
 
@@ -291,9 +300,6 @@ public abstract class Node implements Resizable {
 			// Register our element ID
 			registerElementIDToParent(this, this.parent);
 			
-			// Cache current context
-			cached_context = LWJGUI.getCurrentContext();
-			
 			// Perform actual sizing/positioning
 			updateChildren();
 			resize();
@@ -337,15 +343,16 @@ public abstract class Node implements Resizable {
 	 * Apply our style to the current stack
 	 */
 	protected void stylePush() {
-		if ( this.cached_context != null ) {
+		Context context = window.getContext();
+		if ( context != null ) {
 			
 			// Add our sheet to the stack
 			if ( this.getStylesheet() != null )
-				this.cached_context.getCurrentStyling().add(this.getStylesheet());
+				context.getCurrentStyling().add(this.getStylesheet());
 			
 			// Apply styling!
-			for (int i = 0; i < cached_context.getCurrentStyling().size(); i++)
-				cached_context.getCurrentStyling().get(i).applyStyling(this);
+			for (int i = 0; i < context.getCurrentStyling().size(); i++)
+				context.getCurrentStyling().get(i).applyStyling(this);
 			
 			// Apply our local style if it exists
 			if ( this.getStyleLocal() != null ) {
@@ -358,10 +365,11 @@ public abstract class Node implements Resizable {
 	 * Remove out style from the current stack
 	 */
 	protected void stylePop() {
+		Context context = window.getContext();
 		// Remove our sheet from the stack
-		if ( this.cached_context != null ) {
+		if ( context != null ) {
 			if ( this.getStylesheet() != null )
-				cached_context.getCurrentStyling().remove(this.getStylesheet());
+				context.getCurrentStyling().remove(this.getStylesheet());
 		}
 	}
 	
@@ -744,10 +752,6 @@ public abstract class Node implements Resizable {
 		if ( context == null )
 			return;
 		
-		Context TEMP_CACHE = this.cached_context;
-		if ( TEMP_CACHE == null )
-			return;
-		
 		LayoutBounds clipBoundsTemp = new LayoutBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
 		LayoutBounds tempBounds = LAYOUT_CACHE;
 		
@@ -784,15 +788,16 @@ public abstract class Node implements Resizable {
 			par = par.parent;
 		}
 		
-		TEMP_CACHE.setClipBounds(clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
+		//TEMP_CACHE.setClipBounds(clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
 		NanoVG.nvgScissor(context.getNVG(), clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
 	}
 	
 	public boolean isDescendentSelected() {
-		if ( cached_context == null ) {
+		Context context = window.getContext();
+		if ( context == null ) {
 			return false;
 		}
-		Node selected = cached_context.getSelected();
+		Node selected = context.getSelected();
 		if ( selected == null )
 			return false;
 		
@@ -811,7 +816,6 @@ public abstract class Node implements Resizable {
 	}
 	
 	public boolean isDescendentHovered() {
-		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
 		Context context = window.getContext();
 		Node hovered = context.getHovered();
 		if ( hovered == null ) {
@@ -1208,8 +1212,9 @@ public abstract class Node implements Resizable {
 	protected void onMousePressed(double mouseX, double mouseY, int button) {
 		mousePressed = true;
 		
-		if ( cached_context != null ) {
-			cached_context.setLastPressed(this);
+		Context context = window.getContext();
+		if ( context != null ) {
+			context.setLastPressed(this);
 		}
 		
 		MouseEvent event = new MouseEvent(mouseX, mouseY, button);
@@ -1549,7 +1554,7 @@ public abstract class Node implements Resizable {
 	 * @return
 	 */
 	public boolean isHover() {
-		return this.cached_context.isHovered(this);
+		return this.window.getContext().isHovered(this);
 	}
 
 	/**
@@ -1557,7 +1562,7 @@ public abstract class Node implements Resizable {
 	 * @return
 	 */
 	public boolean isSelected() {
-		return this.cached_context.isSelected(this);
+		return this.window.getContext().isSelected(this);
 	}
 
 	/**
@@ -1565,6 +1570,6 @@ public abstract class Node implements Resizable {
 	 * @return
 	 */
 	public boolean isClicked() {
-		return this.isHover() && this.cached_context.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT;
+		return this.isHover() && this.window.getMouseHandler().isButtonPressed(0);
 	}
 }

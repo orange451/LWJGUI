@@ -223,8 +223,8 @@ public class GearsDemo extends LWJGUIApplication {
 		public void render(Context context) {
 			angle += 1.0e-1f;
 			
-			int w = (int)context.getWidth();
-			int h = (int)context.getHeight();
+			int w = (int)context.getWindow().getWidth();
+			int h = (int)context.getWindow().getHeight();
 			if ( calledFrom != null ) {
 				w = (int) calledFrom.getWidth();
 				h = (int) calledFrom.getHeight();

@@ -15,6 +15,7 @@ import lwjgui.event.EventHelper;
 import lwjgui.event.TabDragEvent;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
+import lwjgui.glfw.input.MouseHandler;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
@@ -172,7 +173,7 @@ public class TabPane extends Control {
 			return;
 		boolean stored = false;
 		if ( currentTab != null ) {
-			Node selected = cached_context.getSelected();
+			Node selected = window.getContext().getSelected();
 			if ( selected != null && selected.isDescendentOf(this) ) {
 				currentTab.lastSelected = selected;
 				stored = true;
@@ -191,7 +192,7 @@ public class TabPane extends Control {
 		currentTabIndex = getTabIndex(tab);
 		
 		if ( stored && currentTab.lastSelected != null ) {
-			cached_context.setSelected(currentTab.lastSelected);
+			window.getContext().setSelected(currentTab.lastSelected);
 		}
 		
 		for (int i = 0; i < 2; i++) {
@@ -230,9 +231,10 @@ public class TabPane extends Control {
 			// Get the tab index we're dragging to
 			for (int i = 0; i < tabs.size(); i++) {
 				Tab tab = tabs.get(i);
-				if ( context.getMouseX() > tab.button.getX() )
+				MouseHandler mh = window.getMouseHandler();
+				if ( mh.getX() > tab.button.getX() )
 					tabDragIndex = i;
-				if ( context.getMouseX() > tab.button.getX()+tab.button.getWidth()/2 )
+				if ( mh.getX() > tab.button.getX()+tab.button.getWidth()/2 )
 					tabDragIndex = i+1;
 			}
 

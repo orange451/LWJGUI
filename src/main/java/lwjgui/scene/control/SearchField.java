@@ -56,9 +56,7 @@ public class SearchField extends CustomTextFieldBase {
 				EventHelper.fireEvent(searchEvent, new ActionEvent());
 			}
 			
-			LWJGUI.runLater(()->{
-				SearchField.this.cached_context.setSelected(null);
-			});
+			window.getContext().setSelected(null);
 		});
 		
 		// Search Node color changing
@@ -76,7 +74,7 @@ public class SearchField extends CustomTextFieldBase {
 					if ( this.searchEvent != null ) {
 						EventHelper.fireEvent(searchEvent, new ActionEvent());
 					}
-					SearchField.this.cached_context.setSelected(null);
+					window.getContext().setSelected(null);
 				}
 			}
 		});

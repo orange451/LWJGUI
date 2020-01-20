@@ -18,7 +18,6 @@ public abstract class PopupWindow extends FloatingPane {
 		// Make sure the popup window is properly sized (i.e. buffer)
 		for (int i = 0; i < 2; i++) {
 			this.position(scene);
-			this.render(null);
 		}
 		this.setAbsolutePosition((int)absoluteX, (int)absoluteY);
 		this.position(scene);

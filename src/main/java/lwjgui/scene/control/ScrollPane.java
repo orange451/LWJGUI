@@ -15,10 +15,10 @@ import lwjgui.collections.ObservableList;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Orientation;
 import lwjgui.geometry.Pos;
+import lwjgui.glfw.input.MouseHandler;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.scene.Window;
 import lwjgui.scene.layout.Pane;
 import lwjgui.style.BorderStyle;
 import lwjgui.theme.Theme;
@@ -111,22 +111,20 @@ public class ScrollPane extends Pane {
 	private void updateBars() {
 		
 		// Get mouse coordinates
-		Context context = cached_context;
-		if ( context == null )
-			return;
-		double mx = context.getMouseX();
-		double my = context.getMouseY();
+		MouseHandler mh = window.getMouseHandler();
+		double mx = mh.getX();
+		double my = mh.getY();
 		
 		// Get mouse pressed
-		int mouse = GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		boolean mouse = window.getMouseHandler().isButtonPressed(0);
 		
 		// Check if we're clicking
-		if (!click && mouse == GLFW.GLFW_PRESS && released )
+		if (!click && mouse && released )
 			click = true;
-		else if ( click && mouse == GLFW.GLFW_PRESS) {
+		else if ( click && mouse) {
 			released = false;
 			click = false;
-		} else if (mouse != GLFW.GLFW_PRESS) {
+		} else if (!mouse ) {
 			released = true;
 		}
 		
@@ -140,7 +138,7 @@ public class ScrollPane extends Pane {
 		}
 		
 		// If mouse not pressed, not holding divider
-		if ( mouse != GLFW.GLFW_PRESS ) {
+		if ( !mouse ) {
 			holdingBar = null;
 			return;
 		}
@@ -164,10 +162,9 @@ public class ScrollPane extends Pane {
 	}
 	
 	private ScrollBar getBarUnderMouse() {
-		Window window = LWJGUI.getWindowFromContext(GLFW.glfwGetCurrentContext());
-		Context context = window.getContext();
-		double mx = context.getMouseX();
-		double my = context.getMouseY();
+		MouseHandler mh = window.getMouseHandler();
+		double mx = mh.getX();
+		double my = mh.getY();
 		
 		for (int i = 0; i < scrollBars.size(); i++) {
 			ScrollBar d = scrollBars.get(i);
@@ -330,7 +327,6 @@ public class ScrollPane extends Pane {
 		
 		@Override
 		public void render(Context context) {
-			ScrollPaneCanvas.this.cached_context = ScrollPane.this.cached_context;
 			this.clip(context, -16);
 			super.render(context);
 		}

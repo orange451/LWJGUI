@@ -12,6 +12,7 @@ import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Orientation;
+import lwjgui.glfw.input.MouseHandler;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
@@ -288,12 +289,13 @@ public class Slider extends Control {
 			}
 			
 			if ( dragged ) {
+				MouseHandler mh = window.getMouseHandler();
 				double mousePos;
 				
 				if ( orientation == HORIZONTAL ) 
-					mousePos = context.getMouseX();
+					mousePos = mh.getX();
 				else
-					mousePos = context.getMouseY();
+					mousePos = mh.getY();
 				
 				double t = mouseSpaceToTrackSpace(mousePos-bOff);
 				setValue(t);

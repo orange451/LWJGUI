@@ -1,4 +1,4 @@
-package lwjgui.callbacks;
+package lwjgui.glfw;
 
 import java.util.ArrayList;
 import java.util.List;

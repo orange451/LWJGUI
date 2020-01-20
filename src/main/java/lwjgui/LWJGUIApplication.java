@@ -5,7 +5,9 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
 import org.lwjgl.glfw.GLFW;
 
+import lwjgui.glfw.ClientSync;
 import lwjgui.scene.Window;
+import lwjgui.scene.WindowManager;
 
 /**
  * A utility class that quickly assembles a LWJGUI program. To implement this into your project, simply extend this class and call startProgram() in the main method.
@@ -43,17 +45,14 @@ public abstract class LWJGUIApplication {
 		if (callingClassName == null) {
 			throw new RuntimeException("Error: unable to determine main class");
 		}
-
+		Object object = null;
 		try {
 			Class<?> theClass = Class.forName(callingClassName, true, Thread.currentThread().getContextClassLoader());
-			launch((LWJGUIApplication) theClass.newInstance(),args);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+			object = theClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		launch((LWJGUIApplication) object,args);
 	}
 	
 	/**
@@ -71,13 +70,20 @@ public abstract class LWJGUIApplication {
 		//Fail to start the program if GLFW can't be initialized
 		if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
-		Window window = LWJGUI.initialize(ModernOpenGL);
+		WindowManager.setMainThread(Thread.currentThread());
 		
-		//Initialize the program
-		program.start(args, window);
+		ManagedThread thread = new ManagedThread(100, 100, "lwjgui", !ModernOpenGL) {
+			@Override
+			protected void init(Window window) {
+				super.init(window);
+				//Initialize the program
+				program.start(args, window);
+			}
+		};
+		thread.start();
 		
 		//Run the program
-		program.loop(window);
+		program.loop();
 
 		program.dispose();
 
@@ -85,19 +91,20 @@ public abstract class LWJGUIApplication {
 		glfwTerminate();
 	}
 	
-	private void loop(Window window) {
+	private void loop() {
 		//Software loop
-		while (!GLFW.glfwWindowShouldClose(window.getContext().getWindowHandle())) {
+		ClientSync sync = new ClientSync();
+		while (!WindowManager.isEmpty()) {
 			//Run the program
-			run();
-			
-			//Render the program
-			LWJGUI.render();
+			//run();
+			WindowManager.update();
+			//LWJGUI.render();
+			sync.sync(120);
 		}
 	}
 
 	private void dispose() {
-		LWJGUI.dispose();
+		//LWJGUI.dispose();
 	}
 
 	/**

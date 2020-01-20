@@ -1,13 +1,18 @@
-package lwjgui.callbacks;
+package lwjgui.glfw;
 
 import org.lwjgl.glfw.GLFWCharCallbackI;
+import org.lwjgl.glfw.GLFWCharModsCallbackI;
+import org.lwjgl.glfw.GLFWCursorEnterCallbackI;
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI;
 import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.lwjgl.glfw.GLFWMouseButtonCallbackI;
 import org.lwjgl.glfw.GLFWScrollCallbackI;
 import org.lwjgl.glfw.GLFWWindowCloseCallbackI;
 import org.lwjgl.glfw.GLFWWindowFocusCallbackI;
 import org.lwjgl.glfw.GLFWWindowIconifyCallbackI;
+import org.lwjgl.glfw.GLFWWindowMaximizeCallbackI;
+import org.lwjgl.glfw.GLFWWindowPosCallbackI;
 import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 
 public final class Callbacks {
@@ -91,4 +96,52 @@ public final class Callbacks {
 				callback.invoke(window, iconified);
 		}
 	}
+
+	public static class FramebufferSizeCallback extends Callback<GLFWFramebufferSizeCallbackI>
+			implements GLFWFramebufferSizeCallbackI {
+		@Override
+		public void invoke(long window, int width, int height) {
+			for (GLFWFramebufferSizeCallbackI callback : callbacks)
+				callback.invoke(window, width, height);
+		}
+	}
+
+	public static class CursorEnterCallback extends Callback<GLFWCursorEnterCallbackI>
+			implements GLFWCursorEnterCallbackI {
+		@Override
+		public void invoke(long window, boolean entered) {
+			for (GLFWCursorEnterCallbackI callback : callbacks) {
+				callback.invoke(window, entered);
+			}
+		}
+	}
+
+	public static class CharModsCallback extends Callback<GLFWCharModsCallbackI> implements GLFWCharModsCallbackI {
+		@Override
+		public void invoke(long window, int codepoint, int mods) {
+			for (GLFWCharModsCallbackI callback : callbacks) {
+				callback.invoke(window, codepoint, mods);
+			}
+		}
+	}
+
+	public static class WindowPosCallback extends Callback<GLFWWindowPosCallbackI> implements GLFWWindowPosCallbackI {
+		@Override
+		public void invoke(long window, int xpos, int ypos) {
+			for (GLFWWindowPosCallbackI callback : callbacks) {
+				callback.invoke(window, xpos, ypos);
+			}
+		}
+	}
+
+	public static class WindowMaximizeCallback extends Callback<GLFWWindowMaximizeCallbackI>
+			implements GLFWWindowMaximizeCallbackI {
+		@Override
+		public void invoke(long window, boolean maximized) {
+			for (GLFWWindowMaximizeCallbackI callback : callbacks) {
+				callback.invoke(window, maximized);
+			}
+		}
+	}
+
 }

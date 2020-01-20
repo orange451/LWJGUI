@@ -30,22 +30,16 @@ public class OpenGLPane extends Pane {
 	
 	class OpenGLPaneContext extends Context {
 		public OpenGLPaneContext(long window) {
-			super(window);
-			this.windowWidth = (int) OpenGLPane.this.getWidth();
-			this.windowHeight = (int) OpenGLPane.this.getHeight();
+			super(null);
 		}
 		
 		@Override
 		public void refresh() {
-			this.windowWidth = (int) OpenGLPane.this.getWidth();
-			this.windowHeight = (int) OpenGLPane.this.getHeight();
 			this.updateContext();
 			super.refresh();
 		}
 		
 		public void refresh(Context other) {
-			this.mouseX = other.getMouseX() - OpenGLPane.this.getX();
-			this.mouseY = other.getMouseY() - OpenGLPane.this.getY();
 			this.refresh();
 		}
 	}
@@ -61,6 +55,7 @@ public class OpenGLPane extends Pane {
 	protected void init() {
 		super.init();
 		internalContext = new OpenGLPaneContext(-1);
+		internalContext.init();
 		buffer = new OffscreenBuffer((int)oldSize.x, (int)oldSize.y);
 	}
 	
@@ -73,13 +68,10 @@ public class OpenGLPane extends Pane {
 	
 	private void resizeBuffer() {
 		buffer.resize((int) oldSize.x, (int) oldSize.y);
-		if ( this.cached_context == null ) {
-			return;
-		}
-		if ( this.cached_context.isModernOpenGL() ) {
-			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.cached_context.getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+		if ( this.window.getContext().isModernOpenGL() ) {
+			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
 		} else {
-			nanoImage = NanoVGGL2.nvglCreateImageFromHandle(this.cached_context.getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+			nanoImage = NanoVGGL2.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
 		}
 	}
 
@@ -153,7 +145,7 @@ public class OpenGLPane extends Pane {
 					GL11.glViewport(0, 0, (int)getWidth(), (int)getHeight());
 					
 					// Drawing
-					NanoVG.nvgBeginFrame(internalContext.getNVG(), (int)getWidth(), (int)getHeight(), internalContext.getPixelRatio());
+					NanoVG.nvgBeginFrame(internalContext.getNVG(), (int)getWidth(), (int)getHeight(), window.getPixelRatio());
 					internalContext.refresh(context);
 					renderer.render(internalContext);
 					NanoVG.nvgEndFrame(internalContext.getNVG());

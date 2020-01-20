@@ -8,6 +8,7 @@ import org.lwjgl.glfw.GLFW;
 
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.WindowManager;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.StackPane;
 
@@ -23,7 +24,7 @@ public class HelloWorldManual {
 		long window = LWJGUIUtil.createOpenGLCoreWindow("Hello World", WIDTH, HEIGHT, true, false);
 		
 		// Initialize lwjgui for this window
-		Window lwjguiWindow = LWJGUI.initialize(window);
+		Window lwjguiWindow = WindowManager.generateWindow(window);
 		lwjguiWindow.show();
 		
 		// Add some components
@@ -32,7 +33,9 @@ public class HelloWorldManual {
 		// Game Loop
 		while (!GLFW.glfwWindowShouldClose(window)) {
 			// Render GUI
-			LWJGUI.render();
+			lwjguiWindow.render();
+			lwjguiWindow.updateDisplay(0);
+			WindowManager.update();
 		}
 		
 		// Stop GLFW

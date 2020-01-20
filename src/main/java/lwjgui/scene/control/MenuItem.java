@@ -80,7 +80,7 @@ public class MenuItem extends Node {
 	
 	@Override
 	protected void position(Node parent) {
-		if ( internalLabel != null && this.cached_context != null ) {
+		if ( internalLabel != null ) {
 			this.setMinSize(internalLabel.getWidth(), getPrefHeight());
 
 			if ( this.internalLabel instanceof Labeled ) {

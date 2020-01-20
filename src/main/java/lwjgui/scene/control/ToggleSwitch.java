@@ -127,11 +127,11 @@ public class ToggleSwitch extends Labeled implements Toggle {
 						if ( isSelected() ) {
 							double ox = (track.getWidth()-button.getWidth())/2;
 							double oy = track.getHeight()/2;
-							LWJGUIUtil.drawText("ON", Font.SANS, FontStyle.BOLD, 16, color, getX()+ox, getY()+oy, Pos.CENTER);
+							LWJGUIUtil.drawText(window.getContext(), "ON", Font.SANS, FontStyle.BOLD, 16, color, getX()+ox, getY()+oy, Pos.CENTER);
 						} else {
 							double ox = button.getWidth()+(track.getWidth()-button.getWidth())/2;
 							double oy = track.getHeight()/2;
-							LWJGUIUtil.drawText("OFF", Font.SANS, FontStyle.BOLD, 16, color, getX()+ox, getY()+oy, Pos.CENTER);
+							LWJGUIUtil.drawText(window.getContext(), "OFF", Font.SANS, FontStyle.BOLD, 16, color, getX()+ox, getY()+oy, Pos.CENTER);
 						}
 					}
 				}
@@ -152,9 +152,7 @@ public class ToggleSwitch extends Labeled implements Toggle {
 				if ( toggleEvent != null )
 					EventHelper.fireEvent(toggleEvent, new ActionEvent());
 				
-				LWJGUI.runLater(()->{
-					cached_context.setSelected(button);
-				});
+				window.getContext().setSelected(button);
 			});
 			this.track.getChildren().add(button);
 		}

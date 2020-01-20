@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.WeakHashMap;
 
 import lwjgui.scene.Node;
 
@@ -30,7 +31,7 @@ public class Stylesheet {
 	 */
 	public void applyStyling(Node node) {
 		// Start list of operations
-		Map<String, StyleOperationValue> declarations = new HashMap<>();
+		Map<String, StyleOperationValue> declarations = new WeakHashMap<>();
 		
 		// JUST FOR NORMAL SELECTOR STYLING FIRST
 		{
@@ -65,6 +66,7 @@ public class Stylesheet {
 		}
 		
 		applyStyling(node, declarations);
+		declarations.clear();
 	}
 
 	/**
@@ -73,7 +75,7 @@ public class Stylesheet {
 	 * @param forceElementType
 	 */
 	public void applyStyling(Node node, String forceElementType) {
-		Map<String, StyleOperationValue> declarations = new HashMap<>();
+		Map<String, StyleOperationValue> declarations = new WeakHashMap<>();
 		computeStyling(node, StyleSelectorType.TAG, forceElementType, declarations, false);
 		computeStyling(node, StyleSelectorType.TAG, forceElementType, declarations, true);
 		applyStyling( node, declarations );
@@ -201,7 +203,7 @@ public class Stylesheet {
 	private void parseContent(List<StyleSelector> selectors, String content) {
 		System.out.println("Found selectors (" + selectors.size() + "): " + Arrays.toString(selectors.toArray()));
 
-		HashMap<Object, StyleVarArgs> data = new HashMap<>();
+		Map<Object, StyleVarArgs> data = new WeakHashMap<>();
 
 		// Parse out declaration data
 		String currentKey = null;
@@ -441,7 +443,7 @@ public class Stylesheet {
 	 */
 	class StyleData {
 
-		private HashMap<PseudoClass, List<StyleOperationValue>> routines = new HashMap<>();
+		private Map<PseudoClass, List<StyleOperationValue>> routines = new WeakHashMap<>();
 		private List<PseudoClass> routineOrder = new ArrayList<>();
 
 		public void addDeclarationData(PseudoClass pseudoClass, StyleOperationValue styleOperationValue) {
@@ -564,7 +566,7 @@ public class Stylesheet {
 			return;
 		
 		// System.out.println("("+sheets.size()+") Searching node " + parentNode + "("+parentNode.getClassList()+") / for operation: " + Arrays.toString(operations) + " \t\t" + applyNode + "\t" + parentNode.getParent());
-		Map<String, StyleOperationValue> declarations = new HashMap<>();
+		Map<String, StyleOperationValue> declarations = new WeakHashMap<>();
 		
 		for (int i = 0; i<sheets.size(); i++) {
 			Stylesheet sheet = sheets.get(i);

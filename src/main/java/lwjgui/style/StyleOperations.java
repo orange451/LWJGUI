@@ -19,6 +19,7 @@ public class StyleOperations {
 
 	@SuppressWarnings("unused")
 	private final static String AUTO = "auto";
+	private final static String ALL = "all";
 	private final static String NONE = "none";
 	
 	public static StyleOperation WIDTH = new StyleOperation("width") {
@@ -629,6 +630,17 @@ public class StyleOperations {
 				tran.play();
 				current.add(tran);
 			}
+		}
+	};
+	
+	public static StyleOperation POINTER_EVENTS = new StyleOperation("pointer-events") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			String evts = value.get(0).get(0).toString().toUpperCase();
+			if ( evts.equals(ALL) )
+				node.setMouseTransparent(false);
+			else if ( evts.equals(NONE) )
+				node.setMouseTransparent(true);
 		}
 	};
 	

@@ -65,6 +65,9 @@ public class TreeItem<E> extends TreeBase<E> {
 	}
 
 	protected void setTree(TreeView<E> treeView) {
+		if ( !treeView.equals(this.parentView) )
+			treeView.needsRefresh = true;
+		
 		this.parentView = treeView;
 		for (int i = 0; i < this.items.size(); i++) {
 			this.items.get(i).setTree(treeView);

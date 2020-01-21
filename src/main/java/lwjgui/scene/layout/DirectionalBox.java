@@ -2,7 +2,7 @@ package lwjgui.scene.layout;
 
 import lwjgui.geometry.Pos;
 
-public abstract class DirectionalBox extends Pane {
+public abstract class DirectionalBox extends Pane implements Spacable {
 	protected float spacing;
 	
 	public DirectionalBox() {

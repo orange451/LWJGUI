@@ -1,7 +1,13 @@
 package lwjgui.scene;
 
+import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_HRESIZE_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_IBEAM_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_VRESIZE_CURSOR;
 import static org.lwjgl.glfw.GLFW.glfwCreateCursor;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwCreateStandardCursor;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwDestroyCursor;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
@@ -26,7 +32,9 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -38,6 +46,8 @@ import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUI;
 import lwjgui.Task;
+import lwjgui.font.Font;
+import lwjgui.glfw.CustomCursor;
 import lwjgui.glfw.DecodeTextureException;
 import lwjgui.glfw.GLFWException;
 
@@ -46,6 +56,7 @@ public final class WindowManager {
 	private static List<Window> windows = new ArrayList<>();
 	private static List<Window> toRemove = new ArrayList<>();
 	private static Queue<Task<?>> tasks = new ConcurrentLinkedQueue<>();
+	private static Map<Cursor, Long> cursors = new HashMap<>();
 
 	private static long mainThread;
 
@@ -79,28 +90,6 @@ public final class WindowManager {
 			IntBuffer w = stack.mallocInt(1);
 			IntBuffer h = stack.mallocInt(1);
 			IntBuffer comp = stack.mallocInt(1);
-
-			if (handle.cursor != null) {
-
-				ByteBuffer imageBuffer;
-				try {
-					imageBuffer = Context.ioResourceToByteBuffer(handle.cursor.getPath(), 1 * 1024);
-				} catch (IOException e) {
-					throw new GLFWException(e);
-				}
-
-				if (!stbi_info_from_memory(imageBuffer, w, h, comp))
-					throw new DecodeTextureException("Failed to read image information: " + stbi_failure_reason());
-
-				ByteBuffer image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
-				if (image == null)
-					throw new DecodeTextureException("Failed to load image: " + stbi_failure_reason());
-
-				GLFWImage img = GLFWImage.mallocStack(stack).set(w.get(0), h.get(0), image);
-				glfwSetCursor(windowID, glfwCreateCursor(img, handle.cursor.getHotX(), handle.cursor.getHotY()));
-				memFree(imageBuffer);
-				stbi_image_free(image);
-			}
 
 			if (handle.icons.size() != 0) {
 				Buffer iconsbuff = GLFWImage.mallocStack(handle.icons.size(), stack);
@@ -206,6 +195,52 @@ public final class WindowManager {
 		return null;
 	}
 
+	private static void addCursor(Cursor cursor, int shape) {
+		cursors.put(cursor, glfwCreateStandardCursor(shape));
+	}
+
+	public static void addCursor(Cursor cursor, CustomCursor customCursor) {
+		runLater(() -> {
+			try (MemoryStack stack = stackPush()) {
+				IntBuffer w = stack.mallocInt(1);
+				IntBuffer h = stack.mallocInt(1);
+				IntBuffer comp = stack.mallocInt(1);
+
+				ByteBuffer imageBuffer;
+				try {
+					imageBuffer = Context.ioResourceToByteBuffer(customCursor.getPath(), 1 * 1024);
+				} catch (IOException e) {
+					throw new GLFWException(e);
+				}
+
+				if (!stbi_info_from_memory(imageBuffer, w, h, comp))
+					throw new DecodeTextureException("Failed to read image information: " + stbi_failure_reason());
+
+				ByteBuffer image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
+				if (image == null)
+					throw new DecodeTextureException("Failed to load image: " + stbi_failure_reason());
+
+				GLFWImage img = GLFWImage.mallocStack(stack).set(w.get(0), h.get(0), image);
+				long custom = glfwCreateCursor(img, customCursor.getHotX(), customCursor.getHotY());
+
+				memFree(imageBuffer);
+				stbi_image_free(image);
+
+				Long prev = cursors.put(cursor, custom);
+				if (prev != null)
+					glfwDestroyCursor(prev);
+			}
+		});
+	}
+
+	public static void setCursor(Window window, Cursor cursor) {
+		runLater(() -> {
+			Long handle = cursors.get(cursor);
+			if (handle != null)
+				glfwSetCursor(window.getID(), handle);
+		});
+	}
+
 	public static void update() {
 		while (!tasks.isEmpty())
 			tasks.poll().callI();
@@ -223,6 +258,20 @@ public final class WindowManager {
 			windows.remove(window);
 		}
 		glfwPollEvents();
+	}
+
+	public static void init() {
+		mainThread = Thread.currentThread().getId();
+		addCursor(Cursor.NORMAL, GLFW_ARROW_CURSOR);
+		addCursor(Cursor.VRESIZE, GLFW_VRESIZE_CURSOR);
+		addCursor(Cursor.HRESIZE, GLFW_HRESIZE_CURSOR);
+		addCursor(Cursor.IBEAM, GLFW_IBEAM_CURSOR);
+	}
+
+	public static void dispose() {
+		for (long cursor : cursors.values())
+			glfwDestroyCursor(cursor);
+		Font.dispose();
 	}
 
 	public static double getTime() {
@@ -255,10 +304,6 @@ public final class WindowManager {
 		else
 			tasks.add(t);
 		return t;
-	}
-
-	public static void setMainThread(Thread mainThread) {
-		WindowManager.mainThread = mainThread.getId();
 	}
 
 }

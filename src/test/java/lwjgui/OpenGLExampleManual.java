@@ -23,6 +23,7 @@ import lwjgui.gl.GenericShader;
 import lwjgui.paint.Color;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.WindowManager;
 import lwjgui.scene.control.CheckBox;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.control.Slider;
@@ -49,10 +50,12 @@ public class OpenGLExampleManual {
 		// Create a standard opengl 3.2 window. You can do this yourself.
 		long handle = LWJGUIUtil.createOpenGLCoreWindow("Hello World", WIDTH, HEIGHT, true, false);
 		
+		// Initialize window manager
+		WindowManager.init();
+		
 		// Initialize lwjgui for this window
-		Window window = LWJGUI.initialize(handle);
+		Window window = WindowManager.generateWindow(handle);
 		window.setWindowAutoClear(false); // We must call glClear ourselves.
-		window.setWindowAutoDraw(false); // We must call glfwSwapBuffers ourselves.
 		window.show(); // Display window if it's invisible.
 		
 		// Add some components
@@ -63,6 +66,9 @@ public class OpenGLExampleManual {
 		
 		// Game Loop
 		while (!GLFW.glfwWindowShouldClose(handle)) {
+			// Tick window manager for any input or windowing commands
+			WindowManager.update();
+
 			// Clear back buffer
 			glClearColor(0,0,0,1);
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -71,12 +77,14 @@ public class OpenGLExampleManual {
 			renderOpenGL();
 			
 			// Render GUI
-			LWJGUI.render();
+			window.render();
 			
 			// Swap buffers
 			GLFW.glfwSwapBuffers(handle);
 		}
-		
+
+		// Clear global window resources
+		WindowManager.dispose();
 		// Stop GLFW
 		glfwTerminate();
 	}

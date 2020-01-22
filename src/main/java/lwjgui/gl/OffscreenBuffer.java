@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL30;
 
+import lwjgui.LWJGUI;
 import lwjgui.scene.Context;
 
 public class OffscreenBuffer {
@@ -122,9 +123,10 @@ public class OffscreenBuffer {
 		if (quadShader == null) {
 			quadShader = new GenericShader();
 		}
-		x *= context.getPixelRatio();
-		y *= context.getPixelRatio();
-		GL11.glViewport(x, y, w*context.getPixelRatio(), h*context.getPixelRatio());
+		float pixelRatio = LWJGUI.getThreadWindow().getPixelRatio();
+		x *= pixelRatio;
+		y *= pixelRatio;
+		GL11.glViewport(x, y,(int) (w*pixelRatio),(int) (h*pixelRatio));
 		quadShader.bind();
 		quadShader.projectOrtho(0, 0, w, h);
 		

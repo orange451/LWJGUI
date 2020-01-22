@@ -22,6 +22,9 @@ public class HelloWorldManualNoUtil {
 	public static void main(String[] args) {
 		if ( !glfwInit() )
 			throw new IllegalStateException("Unable to initialize GLFW");
+		
+		// Initialize window manager
+		WindowManager.init();
 
 		// Configure GLFW
 		glfwDefaultWindowHints();
@@ -44,7 +47,6 @@ public class HelloWorldManualNoUtil {
 		
 		// Initialize LWJGUI for this window
 		Window window = WindowManager.generateWindow(handle);
-		window.setWindowAutoDraw(false); // Turn off automatic buffer swapping, we want to do it ourself!
 		
 		// Add some components
 		StackPane pane = new StackPane();
@@ -59,7 +61,7 @@ public class HelloWorldManualNoUtil {
 			// Set context
 			GLFW.glfwMakeContextCurrent(handle);
 			
-			// Poll inputs
+			// Tick window manager for any input or windowing commands
 			WindowManager.update();
 			
 			// Render UI
@@ -68,7 +70,8 @@ public class HelloWorldManualNoUtil {
 			// Swap buffers
 			glfwSwapBuffers(handle);
 		}
-		
+		// Clear global window resources
+		WindowManager.dispose();
 		// Stop GLFW
 		glfwTerminate();
 	}

@@ -52,7 +52,7 @@ public class OpenGLPaneExample extends LWJGUIApplication {
 	static class RenderingCallbackTest implements Renderer {
 
 		@Override
-		public void render(Context context) {
+		public void render(Context context, int width, int height) {
 			
 			// Disable culling (just in case)
 			GL11.glDisable(GL11.GL_CULL_FACE);

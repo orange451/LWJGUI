@@ -11,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOD_ALT;
 import static org.lwjgl.glfw.GLFW.GLFW_MOD_CONTROL;
 import static org.lwjgl.glfw.GLFW.GLFW_MOD_SHIFT;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_MOD_SUPER;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
@@ -30,6 +30,8 @@ import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwMaximizeWindow;
 import static org.lwjgl.glfw.GLFW.glfwRestoreWindow;
 import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetCharModsCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorEnterCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
@@ -39,8 +41,10 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowAttrib;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowCloseCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowFocusCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowIconifyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowMaximizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
@@ -90,8 +94,6 @@ import lwjgui.event.listener.WindowCloseListener;
 import lwjgui.event.listener.WindowFocusListener;
 import lwjgui.event.listener.WindowSizeListener;
 import lwjgui.gl.Renderer;
-import lwjgui.glfw.DisplayUtils;
-import lwjgui.glfw.IWindow;
 import lwjgui.glfw.Callbacks.CharCallback;
 import lwjgui.glfw.Callbacks.CharModsCallback;
 import lwjgui.glfw.Callbacks.CursorEnterCallback;
@@ -106,6 +108,8 @@ import lwjgui.glfw.Callbacks.WindowIconifyCallback;
 import lwjgui.glfw.Callbacks.WindowMaximizeCallback;
 import lwjgui.glfw.Callbacks.WindowPosCallback;
 import lwjgui.glfw.Callbacks.WindowSizeCallback;
+import lwjgui.glfw.DisplayUtils;
+import lwjgui.glfw.IWindow;
 import lwjgui.glfw.input.KeyboardHandler;
 import lwjgui.glfw.input.MouseHandler;
 import lwjgui.paint.Color;
@@ -183,6 +187,7 @@ public class Window implements IWindow {
 		this.visible = getWindowAttribute(GLFW_VISIBLE);
 		context = new Context(this);
 		this.setCallbacks();
+		WindowManager.setCursor(this, Cursor.NORMAL);
 	}
 
 	protected void setCallbacks() {
@@ -275,7 +280,8 @@ public class Window implements IWindow {
 	}
 
 	/**
-	 * Calls {@link GLFW#glfwSwapBuffers(long)} and then optional throttles the thread
+	 * Calls {@link GLFW#glfwSwapBuffers(long)} and then optional throttles the
+	 * thread
 	 * 
 	 * @param fps Target FPS, 0 disables it
 	 */
@@ -508,7 +514,8 @@ public class Window implements IWindow {
 	 * SwapBuffers method after drawing.
 	 * 
 	 * @param autoDraw
-	 * @deprecated Does nothing, for buffer swap and thread throttling use {@link #updateDisplay(int)}
+	 * @deprecated Does nothing, for buffer swap and thread throttling use
+	 *             {@link #updateDisplay(int)}
 	 */
 	@Deprecated
 	public void setWindowAutoDraw(boolean autoDraw) {
@@ -536,7 +543,8 @@ public class Window implements IWindow {
 	 * Using {@link LWJGUI#initialize(long)} will create an unmanaged window.
 	 * 
 	 * @return
-	 * @deprecated Replaced by {@link ManagedThread} object, default return value is true
+	 * @deprecated Replaced by {@link ManagedThread} object, default return value is
+	 *             true
 	 */
 	@Deprecated
 	public boolean isManaged() {
@@ -547,25 +555,25 @@ public class Window implements IWindow {
 		while (!tasks.isEmpty())
 			tasks.poll().callI();
 		if (!iconified) {
+			// Set correct sizes
+			scene.setMinSize(width, height);
+			scene.setPrefSize(width, height);
+			scene.setMaxSize(width, height);
+
+			// Update context
+			context.updateContext();
+
+			// Begin rendering prepass
+			context.refresh();
+
 			// Clear screen
 			if (isWindowAutoClear()) {
 				Color c = Theme.current().getPane();
 				glClearColor(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, 1);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			}
-
-			// Update context
-			context.updateContext();
-
-			// Set correct sizes
-			scene.setMinSize(width, height);
-			scene.setPrefSize(width, height);
-			scene.setMaxSize(width, height);
-
-			// Begin rendering prepass
-			context.refresh();
 			if (this.renderCallback != null) {
-				this.renderCallback.render(context);
+				this.renderCallback.render(context, width, height);
 			}
 
 			// Do NVG frame

@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
-import lwjgui.glfw.Cursor;
 import lwjgui.glfw.PixelBufferHandle;
 
 public final class WindowHandle {
@@ -19,7 +18,6 @@ public final class WindowHandle {
 	protected int width, height;
 	protected String title;
 	protected List<Icon> icons = new ArrayList<>();
-	protected Cursor cursor;
 	protected boolean legacyGL;
 
 	protected WindowHandle(int width, int height, String title, boolean legacyGL) {
@@ -37,9 +35,9 @@ public final class WindowHandle {
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 		} else {
-			// Set the window to use OpenGL 3.3 Core with forward compatibility
+			// Set the window to use OpenGL 3.2 Core with forward compatibility
 			this.setWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
-			this.setWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
+			this.setWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
 			this.setWindowHint(GLFW.GLFW_CLIENT_API, GLFW.GLFW_OPENGL_API);
 			this.setWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 			this.setWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, true);
@@ -110,11 +108,6 @@ public final class WindowHandle {
 
 	public WindowHandle setIcon(Icon... icons) {
 		this.icons.addAll(Arrays.asList(icons));
-		return this;
-	}
-
-	public WindowHandle setCursor(Cursor cursor) {
-		this.cursor = cursor;
 		return this;
 	}
 

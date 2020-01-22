@@ -3,6 +3,7 @@ package lwjgui.scene.layout;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
 import org.joml.Vector2i;
+import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL2;
@@ -24,7 +25,7 @@ import lwjgui.style.Background;
 import lwjgui.style.BackgroundSolid;
 
 public class BlurPane extends StackPane {
-	private Vector2i oldSize = new Vector2i(1,1);
+	private Vector2i oldSize = new Vector2i(2,2);
 	private float blurRadius = 52;
 	private Background internalBackground;
 
@@ -33,9 +34,27 @@ public class BlurPane extends StackPane {
 	private int nanoImage = -1;
 
 	public BlurPane() {
-		resizeBuffer();
-		
 		this.setBackground(new BackgroundSolid(new Color(150,150,150,255)));
+	}
+	
+	@Override
+	protected void init() {
+		super.init();
+		bufferTemp = new OffscreenBuffer((int)oldSize.x, (int)oldSize.y);
+		buffer = new BlurBuffer(bufferTemp.getWidth(), bufferTemp.getHeight(), bufferTemp);
+		if ( this.window.getContext().isModernOpenGL() ) {
+			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+		} else {
+			nanoImage = NanoVGGL2.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+		}
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		bufferTemp.cleanup();
+		buffer.cleanup();
+		NanoVG.nvgDeleteImage(window.getContext().getNVG(), nanoImage);
 	}
 	
 	@Override
@@ -44,21 +63,13 @@ public class BlurPane extends StackPane {
 	}
 
 	private void resizeBuffer() {
-		if ( buffer == null ) {
-			bufferTemp = new OffscreenBuffer((int)oldSize.x, (int)oldSize.y);
-			buffer = new BlurBuffer(bufferTemp.getWidth(), bufferTemp.getHeight(), bufferTemp);
+		NanoVG.nvgDeleteImage(this.window.getContext().getNVG(), nanoImage);
+		buffer.resize((int)oldSize.x, (int)oldSize.y);
+		bufferTemp.resize(buffer.getWidth(), buffer.getHeight());
+		if ( this.window.getContext().isModernOpenGL() ) {
+			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
 		} else {
-			buffer.resize((int)oldSize.x, (int)oldSize.y);
-			bufferTemp.resize(buffer.getWidth(), buffer.getHeight());
-		}
-		if ( this.cached_context == null ) {
-			return;
-		}
-
-		if ( this.cached_context.isModernOpenGL() ) {
-			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.cached_context.getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
-		} else {
-			nanoImage = NanoVGGL2.nvglCreateImageFromHandle(this.cached_context.getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+			nanoImage = NanoVGGL2.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
 		}
 	}
 
@@ -135,7 +146,7 @@ public class BlurPane extends StackPane {
 
 	private void blit(Context context) {
 		// Source
-		int ratio = context.getPixelRatio();
+		float ratio = window.getPixelRatio();
 		int srcfbo = GL11.glGetInteger(GL30.GL_FRAMEBUFFER_BINDING);
 		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, srcfbo);
 		
@@ -144,10 +155,10 @@ public class BlurPane extends StackPane {
 		int destwid = bufferTemp.getWidth();
 		int desthei = bufferTemp.getHeight();
 		
-		int sx1 = (int)getX()*ratio;
-		int sy1 = (int)getY()*ratio;
-		int sx2 = sx1 + destwid*ratio;
-		int sy2 = sy1 + desthei*ratio;
+		int sx1 = (int)(getX()*ratio);
+		int sy1 = (int)(getY()*ratio);
+		int sx2 = sx1 + (int) (destwid*ratio);
+		int sy2 = sy1 + (int) (desthei*ratio);
 		
 		// Blit
 		GL30.glBlitFramebuffer( sx1,sy1,sx2,sy2,
@@ -171,7 +182,7 @@ public class BlurPane extends StackPane {
 			}
 			
 			this.source = source;
-			if ( LWJGUI.getCurrentContext().isCoreOpenGL() ) {
+			if ( LWJGUI.getThreadWindow().getContext().isCoreOpenGL() ) {
 				this.quadShader = new BlurShader();
 			} else {
 				this.quadShader = new BlurShaderOld();

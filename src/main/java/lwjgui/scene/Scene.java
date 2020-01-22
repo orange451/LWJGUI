@@ -118,7 +118,7 @@ public class Scene extends Node {
 
 	private Cursor lastCursor = Cursor.NORMAL;
 	public void setCursor(Cursor cursor) {
-		//GLFW.glfwSetCursor(cached_context.getWindowHandle(), cursor.getCursor(cached_context.getWindowHandle()));
+		WindowManager.setCursor(window, cursor);
 		lastCursor = cursor;
 	}
 

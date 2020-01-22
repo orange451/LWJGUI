@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 
+import lwjgui.LWJGUI;
 import lwjgui.scene.Context;
 
 public class GenericShader {
@@ -199,8 +200,8 @@ public class GenericShader {
 	 * @param context
 	 */
 	public void project(Context context) {
-		int width = context.getWidth();
-		int height = context.getHeight();
+		int width = LWJGUI.getThreadWindow().getWidth();
+		int height = LWJGUI.getThreadWindow().getWidth();
 
 		projectOrtho(0, 0, width, height);
 	}

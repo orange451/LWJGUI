@@ -1,11 +1,11 @@
 package lwjgui.glfw;
 
-public class Cursor {
+public class CustomCursor {
 
 	private String path;
 	private int hotX, hotY;
 
-	public Cursor(String path, int hotX, int hotY) {
+	public CustomCursor(String path, int hotX, int hotY) {
 		this.path = path;
 		this.hotX = hotX;
 		this.hotY = hotY;

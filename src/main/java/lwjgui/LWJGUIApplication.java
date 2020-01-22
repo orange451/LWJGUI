@@ -3,8 +3,6 @@ package lwjgui;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
-import org.lwjgl.glfw.GLFW;
-
 import lwjgui.glfw.ClientSync;
 import lwjgui.scene.Window;
 import lwjgui.scene.WindowManager;
@@ -69,9 +67,9 @@ public abstract class LWJGUIApplication {
 		
 		//Fail to start the program if GLFW can't be initialized
 		if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
-
-		WindowManager.setMainThread(Thread.currentThread());
 		
+		WindowManager.init();
+
 		ManagedThread thread = new ManagedThread(100, 100, "lwjgui", !ModernOpenGL) {
 			@Override
 			protected void init(Window window) {
@@ -98,13 +96,12 @@ public abstract class LWJGUIApplication {
 			//Run the program
 			//run();
 			WindowManager.update();
-			//LWJGUI.render();
 			sync.sync(120);
 		}
 	}
 
 	private void dispose() {
-		//LWJGUI.dispose();
+		WindowManager.dispose();
 	}
 
 	/**

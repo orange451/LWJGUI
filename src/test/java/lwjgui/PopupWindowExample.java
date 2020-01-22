@@ -1,10 +1,11 @@
 package lwjgui;
 
-import lwjgui.LWJGUI;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.WindowHandle;
+import lwjgui.scene.WindowManager;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.BorderPane;
@@ -46,27 +47,37 @@ public class PopupWindowExample extends LWJGUIApplication {
 	
 	protected static void popup(String popup) {
 		// Create a popup window
-		Window newWindow = LWJGUI.initialize();
-		newWindow.setCanUserClose(false); // Prevent user from xing out of window
-		
-		// Create root pane
-		BorderPane root = new BorderPane();
-		root.setPadding(new Insets(4,4,4,4));
-		
-		// Create a label
-		Label l = new Label("Congratulations, You've won!");
-		root.setCenter(l);
-		
-		// Create a button
-		Button b = new Button("Claim prize");
-		root.setBottom(b);
-		b.setOnAction((event)-> {
-			newWindow.close();
+		WindowManager.runLater(() -> {
+			new ManagedThread(300, 100, "Save") {
+				@Override
+				protected void setupHandle(WindowHandle handle) {
+					super.setupHandle(handle);
+					handle.canResize(false);
+				}
+				@Override
+				protected void init(Window window) {
+					super.init(window);
+					// Create root pane
+					BorderPane root = new BorderPane();
+					root.setPadding(new Insets(4,4,4,4));
+					
+					// Create a label
+					Label l = new Label("Congratulations, You've won!");
+					root.setCenter(l);
+					
+					// Create a button
+					Button b = new Button("Claim prize");
+					root.setBottom(b);
+					b.setOnAction((event)-> {
+						window.close();
+					});
+					
+					// Display window
+					window.setScene(new Scene(root, 250, 75));
+					window.show();
+				}
+			}.start();
 		});
-		
-		// Display window
-		newWindow.setScene(new Scene(root, 250, 75));
-		newWindow.show();
 	}
 
 	@Override

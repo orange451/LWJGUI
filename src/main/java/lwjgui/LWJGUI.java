@@ -6,10 +6,6 @@ import lwjgui.scene.Window;
 public class LWJGUI {
 	private static ThreadLocal<Window> window = new ThreadLocal<>();
 
-	public static void dispose() {
-		Font.dispose();
-	}
-
 	public static void runLater(Runnable runnable) {
 		submitTask(new Task<Void>() {
 			@Override

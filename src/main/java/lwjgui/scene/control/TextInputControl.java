@@ -9,7 +9,6 @@ import org.lwjgl.nanovg.NVGGlyphPosition;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryStack;
 
-import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.collections.StateStack;
@@ -28,6 +27,7 @@ import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Cursor;
 import lwjgui.scene.Node;
+import lwjgui.scene.WindowManager;
 import lwjgui.scene.layout.Pane;
 import lwjgui.style.Background;
 import lwjgui.style.BackgroundSolid;
@@ -194,23 +194,21 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			this.glyphData.clear();
 		}
 		this.caretPosition = 0;
-		if (!text.isEmpty()) {
-			String trail = "[!$*]T!R@A#I$L%I^N&G[!$*]"; // Naive fix to allow trailing blank lines to still be parsed
-			text = text.replace("\r", "");
-			this.source = text;
+		String trail = "[!$*]T!R@A#I$L%I^N&G[!$*]"; // Naive fix to allow trailing blank lines to still be parsed
+		text = text.replace("\r", "");
+		this.source = text;
 
-			String temp = text + trail; // Add tail
-			String[] split = temp.split("\n");
-			for (int i = 0; i < split.length; i++) {
-				String tt = split[i];
-				tt = tt.replace(trail, ""); // Remove tail
-				if (i < split.length - 1) {
-					tt += "\n";
-				}
-				addRow(tt);
+		String temp = text + trail; // Add tail
+		String[] split = temp.split("\n");
+		for (int i = 0; i < split.length; i++) {
+			String tt = split[i];
+			tt = tt.replace(trail, ""); // Remove tail
+			if (i < split.length - 1) {
+				tt += "\n";
 			}
-			setCaretPosition(oldCaret);
+			addRow(tt);
 		}
+		setCaretPosition(oldCaret);
 		
 		// Fire on text change event
 		if ( onTextChange != null && changed ) {
@@ -429,7 +427,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	public void copy() {
 		String text = getSelectedText();
 		
-		LWJGUI.runLater(() -> {
+		WindowManager.runLater(() -> {
 			GLFW.glfwSetClipboardString(window.getID(), text);
 		});
 	}
@@ -443,7 +441,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	public void paste() {
 		saveState();
 		deleteSelection();
-		LWJGUI.runLater(()-> {
+		WindowManager.runLater(()-> {
 			String str = GLFW.glfwGetClipboardString(window.getID());
 			insertText(caretPosition, str);
 			caretPosition += str.length();
@@ -1099,7 +1097,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 					setCaretPosition(getCaretAtMouse());
 					selectionEndPosition = caretPosition;
 					
-					if ( window.getKeyboardHandler().isShiftPressed() ) {
+					if ( !window.getKeyboardHandler().isShiftPressed() ) {
 						selectionStartPosition = caretPosition;
 					}
 				} else if ( event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT && clickTime - lastClickTime <= DOUBLE_CLICK_SPEED ) {

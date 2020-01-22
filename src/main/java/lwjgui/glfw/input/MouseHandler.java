@@ -1,10 +1,13 @@
 package lwjgui.glfw.input;
 
+import org.lwjgl.glfw.GLFW;
+
 import lwjgui.glfw.input.callbacks.MouseButtonCallback;
 import lwjgui.glfw.input.callbacks.MouseEnterCallback;
 import lwjgui.glfw.input.callbacks.MousePosCallback;
 import lwjgui.glfw.input.callbacks.MouseScrollCallback;
 import lwjgui.scene.Window;
+import lwjgui.scene.WindowManager;
 
 public class MouseHandler {
 
@@ -71,5 +74,10 @@ public class MouseHandler {
 
 	public float getXWheel() {
 		return (float) this.scrollCallback.getXWheel();
+	}
+
+	public static void setGrabbed(long windowID, boolean grab) {
+		WindowManager.runLater(() -> GLFW.glfwSetInputMode(windowID, GLFW.GLFW_CURSOR,
+				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_NORMAL));
 	}
 }

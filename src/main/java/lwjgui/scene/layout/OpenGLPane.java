@@ -57,6 +57,11 @@ public class OpenGLPane extends Pane {
 		internalContext = new OpenGLPaneContext(-1);
 		internalContext.init();
 		buffer = new OffscreenBuffer((int)oldSize.x, (int)oldSize.y);
+		if ( this.window.getContext().isModernOpenGL() ) {
+			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+		} else {
+			nanoImage = NanoVGGL2.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+		}
 	}
 	
 	@Override
@@ -64,9 +69,11 @@ public class OpenGLPane extends Pane {
 		super.dispose();
 		internalContext.dispose();
 		buffer.cleanup();
+		NanoVG.nvgDeleteImage(window.getContext().getNVG(), nanoImage);
 	}
 	
 	private void resizeBuffer() {
+		NanoVG.nvgDeleteImage(window.getContext().getNVG(), nanoImage);
 		buffer.resize((int) oldSize.x, (int) oldSize.y);
 		if ( this.window.getContext().isModernOpenGL() ) {
 			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
@@ -146,8 +153,8 @@ public class OpenGLPane extends Pane {
 					
 					// Drawing
 					NanoVG.nvgBeginFrame(internalContext.getNVG(), (int)getWidth(), (int)getHeight(), window.getPixelRatio());
-					internalContext.refresh(context);
-					renderer.render(internalContext);
+					//internalContext.refresh(context);
+					renderer.render(internalContext, (int)getWidth(), (int)getHeight());
 					NanoVG.nvgEndFrame(internalContext.getNVG());
 				}
 				this.buffer.unbind();

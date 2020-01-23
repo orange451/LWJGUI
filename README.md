@@ -38,13 +38,8 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 - [NanoVG](https://github.com/memononen/nanovg) (Can download with [LWJGL](https://www.lwjgl.org/customize))
 - [TinyFD](https://github.com/native-toolkit/tinyfiledialogs) (Can download with [LWJGL](https://www.lwjgl.org/customize))
 
-# Setup with gradle/maven/sbt/leiningen
-1. Open https://jitpack.io/
-2. Insert to 'search' field string `orange451/LWJGUI`
-![screenshot](https://i.imgur.com/yq5SHBH.png "screenshot")
-3. Press "Look up"
-4. Follow simple steps
-![screenshot](https://i.imgur.com/pTpsNKv.png "screenshot")
+# Setup with maven
+https://dzone.com/articles/how-to-convert-maven-to-gradle-and-vice-versa
 
 # Projects That Use LWJGUI
 - [Anarchy Engine - 3D Java/lua game engine](https://github.com/orange451/AnarchyEngine)

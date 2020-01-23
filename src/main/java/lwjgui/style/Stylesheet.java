@@ -291,7 +291,7 @@ public class Stylesheet {
 	 * @return
 	 */
 	private StyleVarArgs parseArgs(String content) {
-		content = content.replace(", ", ",");
+		content = content.replace(", ", ",").replace(") ", ")").replace("( ", "(");
 		
 		StyleVarArgs arguments = new StyleVarArgs();
 		

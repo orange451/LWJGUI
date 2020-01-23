@@ -48,12 +48,14 @@ public class CSSExample extends LWJGUIApplication {
 				+ "");
 		test.setStylesheet(""
 				+ ".clacker {"
-				+ "		transition: box-shadow 0.2s;"
-				+ "		box-shadow:	4px 4px 6px 0px rgba(0,0,0,1.0) inset;"
+				+ "		transition: box-shadow 0.1s;"
+				+ "		box-shadow: 3px 3px 8px 0px rgba(0, 0, 0, 0.5),"
+				+ "					4px 4px 8px 0px BLACK inset;"
 				+ "}"
 				+ ""
 				+ ".clacker:hover {"
-				+ "		box-shadow:	-4px -4px 6px 0px rgba(0,0,0,1.0) inset;"
+				+ "		box-shadow: 3px 3px 8px 0px rgba(0, 0, 0, 0.5),"
+				+ "					-4px -4px 8px 0px BLACK inset;"
 				+ "}");
 		flow.getItems().add(test);
 		

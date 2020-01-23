@@ -369,7 +369,7 @@ public class StyleOperations {
 				for (int i = 0; i < value.size(); i++) {
 					StyleParams params = value.get(i);
 					
-					if ( value.size() == 2 ) {
+					if ( params.size() == 2 ) {
 						newShadows.add(new BoxShadow(toNumber(params.get(0)), toNumber(params.get(1)), 0));
 					} else if ( params.size() == 3 ) {
 						boolean isNumber = isNumber(params.get(2));
@@ -441,6 +441,7 @@ public class StyleOperations {
 				// Transition already existing shadows
 				for (int i = 0; i < Math.max(newShadows.size(), t.getBoxShadowList().size()); i++) {
 					
+					// Source shadow (copying TO)
 					BoxShadow st = null;
 					if ( i < t.getBoxShadowList().size() ) {
 						st = t.getBoxShadowList().get(i);
@@ -448,14 +449,22 @@ public class StyleOperations {
 						st = new BoxShadow(0, 0, 0, Color.TRANSPARENT);
 						t.getBoxShadowList().add(st);
 					}
+					
+					// Destination shadow (copying FROM)
 					BoxShadow dt = null;
 					if ( i < newShadows.size() ) {
 						dt = newShadows.get(i);
 					} else {
 						dt = new BoxShadow(0, 0, 0, Color.TRANSPARENT);
+						dt.setInset(st.isInset());
 					}
+					
+					// Finalize them (needed for below methods)
 					final BoxShadow sourceShadow = st;
 					final BoxShadow destShadow = dt;
+					
+					// No way to transition inset
+					st.setInset(dt.isInset());
 					
 					// Position transition
 					if ( sourceShadow.getXOffset() != destShadow.getXOffset() || sourceShadow.getYOffset() != destShadow.getYOffset() ) {

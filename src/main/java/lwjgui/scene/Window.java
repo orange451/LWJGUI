@@ -221,6 +221,14 @@ public class Window implements IWindow {
 		windowSizeCallback = new WindowSizeCallback();
 		windowSizeCallback.addCallback(glfwSetWindowSizeCallback(windowID, windowSizeCallback));
 		windowSizeCallback.addCallback(this::sizeCallback);
+		windowSizeCallback.addCallback((window, width, height) -> {
+			if (width == 0 || height == 0 || this.framebufferWidth == 0 || this.framebufferHeight == 0)
+				return;
+			pixelRatio = (this.framebufferWidth <= width) ? 1 : this.framebufferWidth / width;
+			this.width = width;
+			this.height = height;
+			resized = true;
+		});
 
 		scrollCallback = new ScrollCallback();
 		scrollCallback.addCallback(glfwSetScrollCallback(windowID, scrollCallback));
@@ -250,15 +258,6 @@ public class Window implements IWindow {
 
 		mouseHandler = new MouseHandler(this);
 		keyboardHandler = new KeyboardHandler(this);
-
-		windowSizeCallback.addCallback((window, width, height) -> {
-			if (width == 0 || height == 0 || this.framebufferWidth == 0 || this.framebufferHeight == 0)
-				return;
-			pixelRatio = (this.framebufferWidth <= width) ? 1 : this.framebufferWidth / width;
-			this.width = width;
-			this.height = height;
-			resized = true;
-		});
 
 		windowPosCallback = new WindowPosCallback();
 		windowPosCallback.addCallback(glfwSetWindowPosCallback(windowID, windowPosCallback));

@@ -13,6 +13,7 @@ import org.lwjgl.glfw.GLFWWindowFocusCallbackI;
 import org.lwjgl.glfw.GLFWWindowIconifyCallbackI;
 import org.lwjgl.glfw.GLFWWindowMaximizeCallbackI;
 import org.lwjgl.glfw.GLFWWindowPosCallbackI;
+import org.lwjgl.glfw.GLFWWindowRefreshCallbackI;
 import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 
 public final class Callbacks {
@@ -110,27 +111,24 @@ public final class Callbacks {
 			implements GLFWCursorEnterCallbackI {
 		@Override
 		public void invoke(long window, boolean entered) {
-			for (GLFWCursorEnterCallbackI callback : callbacks) {
+			for (GLFWCursorEnterCallbackI callback : callbacks)
 				callback.invoke(window, entered);
-			}
 		}
 	}
 
 	public static class CharModsCallback extends Callback<GLFWCharModsCallbackI> implements GLFWCharModsCallbackI {
 		@Override
 		public void invoke(long window, int codepoint, int mods) {
-			for (GLFWCharModsCallbackI callback : callbacks) {
+			for (GLFWCharModsCallbackI callback : callbacks)
 				callback.invoke(window, codepoint, mods);
-			}
 		}
 	}
 
 	public static class WindowPosCallback extends Callback<GLFWWindowPosCallbackI> implements GLFWWindowPosCallbackI {
 		@Override
 		public void invoke(long window, int xpos, int ypos) {
-			for (GLFWWindowPosCallbackI callback : callbacks) {
+			for (GLFWWindowPosCallbackI callback : callbacks)
 				callback.invoke(window, xpos, ypos);
-			}
 		}
 	}
 
@@ -138,9 +136,17 @@ public final class Callbacks {
 			implements GLFWWindowMaximizeCallbackI {
 		@Override
 		public void invoke(long window, boolean maximized) {
-			for (GLFWWindowMaximizeCallbackI callback : callbacks) {
+			for (GLFWWindowMaximizeCallbackI callback : callbacks)
 				callback.invoke(window, maximized);
-			}
+		}
+	}
+
+	public static class WindowRefreshCallback extends Callback<GLFWWindowRefreshCallbackI>
+			implements GLFWWindowRefreshCallbackI {
+		@Override
+		public void invoke(long window) {
+			for (GLFWWindowRefreshCallbackI callback : callbacks)
+				callback.invoke(window);
 		}
 	}
 

@@ -1,6 +1,5 @@
 package lwjgui;
 
-import lwjgui.font.Font;
 import lwjgui.scene.Window;
 
 public class LWJGUI {

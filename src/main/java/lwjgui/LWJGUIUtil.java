@@ -33,6 +33,8 @@ import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL32;
+import org.lwjgl.system.MemoryStack;
+
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
 import lwjgui.geometry.HPos;
@@ -530,12 +532,14 @@ public class LWJGUIUtil {
 			r = averageCorner - boxShadow.getSpread();
 		
 		if ( boxShadow.isInset() ) {
-			NVGPaint paint = NanoVG.nvgBoxGradient(context.getNVG(), xx, yy, ww, hh, r, f, boxShadow.getToColor().getNVG(), boxShadow.getFromColor().getNVG(), NVGPaint.create());
-			NanoVG.nvgBeginPath(context.getNVG());
-			NanoVG.nvgRoundedRectVarying(context.getNVG(), (float)x, (float)y, (float)width, (float)height, cornerRadii[0], cornerRadii[1], cornerRadii[2], cornerRadii[3]);
-			NanoVG.nvgFillPaint(context.getNVG(), paint);
-			NanoVG.nvgFill(context.getNVG());
-			NanoVG.nvgClosePath(context.getNVG());
+			try(MemoryStack stack = MemoryStack.stackPush()) {
+				NVGPaint paint = NanoVG.nvgBoxGradient(context.getNVG(), xx, yy, ww, hh, r, f, boxShadow.getToColor().getNVG(), boxShadow.getFromColor().getNVG(), NVGPaint.mallocStack(stack));
+				NanoVG.nvgBeginPath(context.getNVG());
+				NanoVG.nvgRoundedRectVarying(context.getNVG(), (float)x, (float)y, (float)width, (float)height, cornerRadii[0], cornerRadii[1], cornerRadii[2], cornerRadii[3]);
+				NanoVG.nvgFillPaint(context.getNVG(), paint);
+				NanoVG.nvgFill(context.getNVG());
+				NanoVG.nvgClosePath(context.getNVG());
+			}
 		} else {
 			if ( context.isCoreOpenGL() ) {
 				// Save NANOVG
@@ -582,12 +586,14 @@ public class LWJGUIUtil {
 				NanoVG.nvgRestore(context.getNVG());
 				context.refresh();
 			} else {
-				NVGPaint paint = NanoVG.nvgBoxGradient(context.getNVG(), xx, yy, ww, hh, r, f, boxShadow.getFromColor().getNVG(), boxShadow.getToColor().getNVG(), NVGPaint.create());
-				NanoVG.nvgBeginPath(context.getNVG());
-				NanoVG.nnvgRect(context.getNVG(), xx - boxShadow.getBlurRadius(), yy - boxShadow.getBlurRadius(), ww + boxShadow.getBlurRadius()*2, hh + boxShadow.getBlurRadius()*2);
-				NanoVG.nvgFillPaint(context.getNVG(), paint);
-				NanoVG.nvgFill(context.getNVG());
-				NanoVG.nvgClosePath(context.getNVG());
+				try(MemoryStack stack = MemoryStack.stackPush()) {
+					NVGPaint paint = NanoVG.nvgBoxGradient(context.getNVG(), xx, yy, ww, hh, r, f, boxShadow.getFromColor().getNVG(), boxShadow.getToColor().getNVG(), NVGPaint.mallocStack(stack));
+					NanoVG.nvgBeginPath(context.getNVG());
+					NanoVG.nnvgRect(context.getNVG(), xx - boxShadow.getBlurRadius(), yy - boxShadow.getBlurRadius(), ww + boxShadow.getBlurRadius()*2, hh + boxShadow.getBlurRadius()*2);
+					NanoVG.nvgFillPaint(context.getNVG(), paint);
+					NanoVG.nvgFill(context.getNVG());
+					NanoVG.nvgClosePath(context.getNVG());
+				}
 			}
 		}
 	}	

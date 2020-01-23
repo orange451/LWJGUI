@@ -77,6 +77,11 @@ public abstract class LWJGUIApplication {
 				//Initialize the program
 				program.start(args, window);
 			}
+			@Override
+			protected void update() {
+				super.update();
+				program.run();
+			}
 		};
 		thread.start();
 		
@@ -93,8 +98,6 @@ public abstract class LWJGUIApplication {
 		//Software loop
 		ClientSync sync = new ClientSync();
 		while (!WindowManager.isEmpty()) {
-			//Run the program
-			//run();
 			WindowManager.update();
 			sync.sync(120);
 		}

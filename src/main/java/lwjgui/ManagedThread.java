@@ -26,15 +26,19 @@ public class ManagedThread extends Thread {
 	protected void init(Window window) {
 	}
 
+	protected void update() {
+	}
+
 	protected void dispose() {
 	}
 
 	@Override
 	public void run() {
-		LWJGUI.setThreadWindow(window); 
+		LWJGUI.setThreadWindow(window);
 		WindowManager.createWindow(handle, window, true);
 		init(window);
 		while (!window.isCloseRequested()) {
+			update();
 			window.render();
 			window.updateDisplay(0);
 		}

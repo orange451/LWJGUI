@@ -7,12 +7,10 @@ import java.util.HashMap;
 
 import org.joml.Vector2d;
 import org.joml.Vector4d;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryStack;
 
-import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ElementCallback;
 import lwjgui.geometry.Orientation;
@@ -136,15 +134,15 @@ public class SplitPane extends Control {
 	private void grabDividers() {
 
 		// Get mouse pressed
-		int mouse = GLFW.glfwGetMouseButton(GLFW.glfwGetCurrentContext(), GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		MouseHandler mh = window.getMouseHandler();
 
 		// Check if we're clicking
-		if ( !click && mouse == GLFW.GLFW_PRESS && released )
+		if ( !click && mh.isButtonPressed(0) && released )
 			click = true;
-		else if ( click && mouse == GLFW.GLFW_PRESS) {
+		else if ( click && mh.isButtonPressed(0)) {
 			released = false;
 			click = false;
-		} else if ( mouse != GLFW.GLFW_PRESS )
+		} else if ( !mh.isButtonPressed(0) )
 			released = true;
 
 		if ( click ) {
@@ -155,13 +153,12 @@ public class SplitPane extends Control {
 			return;
 
 		// If mouse not pressed, not holding divider
-		if ( mouse != GLFW.GLFW_PRESS ) {
+		if ( !mh.isButtonPressed(0) ) {
 			grabbedDivider = null;
 			return;
 		}
 
 		// Get mouse coordinates
-		MouseHandler mh = window.getMouseHandler();
 		double mx = mh.getX() - mouseGrabLocation.x;
 		double my = mh.getY() - mouseGrabLocation.y;
 

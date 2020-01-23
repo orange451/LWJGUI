@@ -21,6 +21,10 @@ public class BoxShadow {
 		this.inset = inset;
 	}
 	
+	public BoxShadow clone() {
+		return new BoxShadow(getXOffset(), getYOffset(), getBlurRadius(), getSpread(), getFromColor(), isInset());
+	}
+	
 	public BoxShadow(float xOffset, float yOffset, float blurRadius, float spread, Color fromColor) {
 		this(xOffset, yOffset, blurRadius, spread, fromColor, false);
 	}

@@ -39,6 +39,24 @@ public class CSSExample extends LWJGUIApplication {
 		testBox.setValue(testBox.getItems().get(0));
 		flow.getItems().add(testBox);
 		
+		StackPane test = new StackPane();
+		test.setPrefSize(100, 32);
+		test.getClassList().add("clacker");
+		test.setStyle(""
+				+ "background-color:orange;"
+				+ "border-radius:8px;"
+				+ "");
+		test.setStylesheet(""
+				+ ".clacker {"
+				+ "		transition: box-shadow 0.2s;"
+				+ "		box-shadow:	4px 4px 6px 0px rgba(0,0,0,1.0) inset;"
+				+ "}"
+				+ ""
+				+ ".clacker:hover {"
+				+ "		box-shadow:	-4px -4px 6px 0px rgba(0,0,0,1.0) inset;"
+				+ "}");
+		flow.getItems().add(test);
+		
 		// Apply some style!
 		pane.setStylesheet(""
 				+ "flowpane {"

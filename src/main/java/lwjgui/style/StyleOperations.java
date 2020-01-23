@@ -21,6 +21,7 @@ public class StyleOperations {
 	private final static String AUTO = "auto";
 	private final static String ALL = "all";
 	private final static String NONE = "none";
+	private final static String INSET = "inset";
 	
 	public static StyleOperation WIDTH = new StyleOperation("width") {
 		@Override
@@ -362,24 +363,24 @@ public class StyleOperations {
 			StyleBoxShadow t = (StyleBoxShadow)node;
 			
 			// Generate the box shadow
-			List<BoxShadow> shadows = new ArrayList<BoxShadow>();
+			List<BoxShadow> newShadows = new ArrayList<BoxShadow>();
 			if ( !value.get(0).get(0).equals(NONE) ) {
 				
 				for (int i = 0; i < value.size(); i++) {
 					StyleParams params = value.get(i);
 					
 					if ( value.size() == 2 ) {
-						shadows.add(new BoxShadow(toNumber(params.get(0)), toNumber(params.get(1)), 0));
+						newShadows.add(new BoxShadow(toNumber(params.get(0)), toNumber(params.get(1)), 0));
 					} else if ( params.size() == 3 ) {
 						boolean isNumber = isNumber(params.get(2));
 						if ( isNumber ) {
-							shadows.add(new BoxShadow(
+							newShadows.add(new BoxShadow(
 									toNumber(params.get(0)),
 									toNumber(params.get(1)),
 									toNumber(params.get(2))
 							));
 						} else {
-							shadows.add(new BoxShadow(
+							newShadows.add(new BoxShadow(
 									toNumber(params.get(0)),
 									toNumber(params.get(1)),
 									0,
@@ -389,14 +390,14 @@ public class StyleOperations {
 					} else if ( params.size() == 4 ) {
 						boolean isNumber = isNumber(params.get(3));
 						if ( isNumber ) {
-							shadows.add(new BoxShadow(
+							newShadows.add(new BoxShadow(
 									toNumber(params.get(0)),
 									toNumber(params.get(1)),
 									toNumber(params.get(2)),
 									toNumber(params.get(3))
 							));
 						} else {
-							shadows.add(new BoxShadow(
+							newShadows.add(new BoxShadow(
 									toNumber(params.get(0)),
 									toNumber(params.get(1)),
 									toNumber(params.get(2)),
@@ -404,12 +405,21 @@ public class StyleOperations {
 							));
 						}
 					} else if ( params.size() == 5 ) {
-						shadows.add(new BoxShadow(
+						newShadows.add(new BoxShadow(
 								toNumber(params.get(0)),
 								toNumber(params.get(1)),
 								toNumber(params.get(2)),
 								toNumber(params.get(3)),
 								getColor(params.get(4))
+						));
+					} else if ( params.size() == 6 ) {
+						newShadows.add(new BoxShadow(
+								toNumber(params.get(0)),
+								toNumber(params.get(1)),
+								toNumber(params.get(2)),
+								toNumber(params.get(3)),
+								getColor(params.get(4)),
+								params.get(5).toString().equalsIgnoreCase(INSET)
 						));
 					}
 				}
@@ -420,18 +430,32 @@ public class StyleOperations {
 			// If no transition, directly copy in shadows.
 			if ( transition == null ) {
 				t.getBoxShadowList().clear();
-				for (int i = 0; i < shadows.size(); i++) {
-					t.getBoxShadowList().add(shadows.get(i));
+				for (int i = 0; i < newShadows.size(); i++) {
+					t.getBoxShadowList().add(newShadows.get(i));
 				}
 			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
 				// Transition already existing shadows
-				for (int i = 0; i < Math.min(shadows.size(), t.getBoxShadowList().size()); i++) {
-					List<Transition> current = transition.getTransitions();
-					if ( current.size() > 0 )
-						continue;
+				for (int i = 0; i < Math.max(newShadows.size(), t.getBoxShadowList().size()); i++) {
 					
-					BoxShadow sourceShadow = t.getBoxShadowList().get(i);
-					BoxShadow destShadow = shadows.get(i);
+					BoxShadow st = null;
+					if ( i < t.getBoxShadowList().size() ) {
+						st = t.getBoxShadowList().get(i);
+					} else {
+						st = new BoxShadow(0, 0, 0, Color.TRANSPARENT);
+						t.getBoxShadowList().add(st);
+					}
+					BoxShadow dt = null;
+					if ( i < newShadows.size() ) {
+						dt = newShadows.get(i);
+					} else {
+						dt = new BoxShadow(0, 0, 0, Color.TRANSPARENT);
+					}
+					final BoxShadow sourceShadow = st;
+					final BoxShadow destShadow = dt;
 					
 					// Position transition
 					if ( sourceShadow.getXOffset() != destShadow.getXOffset() || sourceShadow.getYOffset() != destShadow.getYOffset() ) {
@@ -479,15 +503,16 @@ public class StyleOperations {
 					
 					// Color transition
 					if ( !sourceShadow.getFromColor().equals(destShadow.getFromColor()) ) {
-						sourceShadow.getFromColor().immutable(false);
-						Transition tran = new FillTransition(transition.getDurationMillis(), new Color(sourceShadow.getFromColor()), destShadow.getFromColor(), sourceShadow.getFromColor());
+						Color tt = new Color(sourceShadow.getFromColor()).immutable(false);
+						Transition tran = new FillTransition(transition.getDurationMillis(), new Color(sourceShadow.getFromColor()), destShadow.getFromColor(), tt);
+						sourceShadow.setFromColor(tt);
 						tran.play();
 						current.add(tran);
 					}
 				}
 			}
 			
-			shadows.clear();
+			newShadows.clear();
 		}
 	};
 	
@@ -772,7 +797,7 @@ public class StyleOperations {
 		// Color by name
 		Color color = Color.match(string);
 		if ( color != null )
-			return color;
+			return new Color(color);
 		
 		// Fallback
 		return Color.PINK;

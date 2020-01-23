@@ -31,7 +31,7 @@ public class Stylesheet {
 	 */
 	public void applyStyling(Node node) {
 		// Start list of operations
-		Map<String, StyleOperationValue> declarations = new WeakHashMap<>();
+		Map<String, StyleOperationValue> declarations = new HashMap<>();
 		
 		// JUST FOR NORMAL SELECTOR STYLING FIRST
 		{
@@ -75,7 +75,7 @@ public class Stylesheet {
 	 * @param forceElementType
 	 */
 	public void applyStyling(Node node, String forceElementType) {
-		Map<String, StyleOperationValue> declarations = new WeakHashMap<>();
+		Map<String, StyleOperationValue> declarations = new HashMap<>();
 		computeStyling(node, StyleSelectorType.TAG, forceElementType, declarations, false);
 		computeStyling(node, StyleSelectorType.TAG, forceElementType, declarations, true);
 		applyStyling( node, declarations );
@@ -204,7 +204,7 @@ public class Stylesheet {
 	private void parseContent(List<StyleSelector> selectors, String content) {
 		System.out.println("Found selectors (" + selectors.size() + "): " + Arrays.toString(selectors.toArray()));
 
-		Map<Object, StyleVarArgs> data = new WeakHashMap<>();
+		Map<Object, StyleVarArgs> data = new HashMap<>();
 
 		// Parse out declaration data
 		String currentKey = null;
@@ -281,6 +281,8 @@ public class Stylesheet {
 				}
 			});
 		}
+		
+		data.clear();
 	}
 	
 	/**
@@ -444,7 +446,7 @@ public class Stylesheet {
 	 */
 	class StyleData {
 
-		private Map<PseudoClass, List<StyleOperationValue>> routines = new WeakHashMap<>();
+		private Map<PseudoClass, List<StyleOperationValue>> routines = new HashMap<>();
 		private List<PseudoClass> routineOrder = new ArrayList<>();
 
 		public void addDeclarationData(PseudoClass pseudoClass, StyleOperationValue styleOperationValue) {

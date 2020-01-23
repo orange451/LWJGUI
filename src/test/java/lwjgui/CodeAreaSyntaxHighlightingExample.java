@@ -28,10 +28,6 @@ public class CodeAreaSyntaxHighlightingExample extends LWJGUIApplication {
 		// Create code area
 		CodeArea c = new CodeArea();
 		c.setPrefSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
-		c.setText("print(\"Hello World\")\n"
-				+ "\n"
-				+ "var a = 10\n"
-				+ "var test = \"I'm a string\"");
 		pane.setCenter(c);
 		
 		// Syntax highlighting variables
@@ -66,7 +62,10 @@ public class CodeAreaSyntaxHighlightingExample extends LWJGUIApplication {
 		});
 		
 		// Force syntax highlighting (triggers change event)
-		c.appendText("");
+		c.setText("print(\"Hello World\")\n"
+				+ "\n"
+				+ "var a = 10\n"
+				+ "var test = \"I'm a string\"");
 		
 		// Set the scene
 		window.setScene(new Scene(pane, WIDTH, HEIGHT));

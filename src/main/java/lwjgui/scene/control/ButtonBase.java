@@ -241,6 +241,10 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	public void setOnAction(EventHandler<ActionEvent> event) {
 		this.buttonEvent = event;
 	}
+	
+	public EventHandler<ActionEvent> getOnAction() {
+		return this.buttonEvent;
+	}
 
 	protected void setOnActionInternal(EventHandler<ActionEvent> event) {
 		this.buttonInternalEvent = event;

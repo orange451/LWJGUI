@@ -26,6 +26,7 @@ public class GridPaneExample2 extends LWJGUIApplication {
 		StackPane root = new StackPane();
 		
 		GridPane grid = new GridPane();
+		grid.setFillToParentWidth(true);
 		grid.setPrefWidth(200);
 		grid.setColumnConstraint(1, new ColumnConstraint(16, Priority.ALWAYS));
 		grid.setHgap(6);
@@ -53,15 +54,11 @@ public class GridPaneExample2 extends LWJGUIApplication {
 		f.setPrefSize(0, 0);
 		f.setFillToParentWidth(true);
 		f.setFillToParentHeight(true);
+		f.setBorderRadii(12);
 		grid.add(f, 1, 2);
 		
 		// Set the scene
 		window.setScene(new Scene(root, WIDTH, HEIGHT));
 		window.show();
-	}
-
-	@Override
-	protected void run() {
-		//
 	}
 }

@@ -13,10 +13,10 @@ import lwjgui.scene.FillableRegion;
 
 public abstract class Pane extends FillableRegion implements BlockPaneRenderer {
 	
-	private Background background;
 	private Color borderColor;
 	private float[] borderRadii;
 	private BorderStyle borderStyle;
+	private ObservableList<Background> backgrounds = new ObservableList<>();
 	private ObservableList<BoxShadow> boxShadows = new ObservableList<>();
 	
 	public Pane() {
@@ -78,7 +78,14 @@ public abstract class Pane extends FillableRegion implements BlockPaneRenderer {
 	 * @param color
 	 */	
 	public void setBackground(Background color) {
-		this.background = color;
+		for (int i = 0; i < backgrounds.size(); i++) {
+			if ( backgrounds.get(i) instanceof BackgroundSolid ) {
+				backgrounds.remove(i--);
+			}
+		}
+		
+		if ( color != null )
+			getBackgrounds().add(0, color);
 	}
 	
 	/**
@@ -86,7 +93,17 @@ public abstract class Pane extends FillableRegion implements BlockPaneRenderer {
 	 * @return
 	 */
 	public Background getBackground() {
-		return this.background;
+		if ( this.backgrounds.size() == 0 )
+			return null;
+		
+		return this.backgrounds.get(0);
+	}
+	
+	/**
+	 * Get list of backgrounds used for drawing.
+	 */
+	public ObservableList<Background> getBackgrounds() {
+		return this.backgrounds;
 	}
 	
 	@Override

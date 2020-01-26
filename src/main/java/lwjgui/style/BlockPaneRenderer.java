@@ -1,6 +1,7 @@
 package lwjgui.style;
 
 import lwjgui.LWJGUIUtil;
+import lwjgui.collections.ObservableList;
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Context;
 
@@ -28,8 +29,14 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 		}
 		
 		// Draw background
-		if ( node.getBackground() != null ) {
+		ObservableList<Background> backgrounds = node.getBackgrounds();
+		if ( backgrounds.size() == 0 && node.getBackground() != null ) { // Legacy SINGLE background rendering
 			node.getBackground().render(context, node.getX()+border.getLeft(), node.getY()+border.getTop(), node.getWidth()-border.getWidth(), node.getHeight()-border.getHeight(), node.getBorderRadii());
+		} else {
+			// New multibackground rendering
+			for (int i = 0; i < backgrounds.size(); i++) {
+				backgrounds.get(i).render(context, node.getX()+border.getLeft(), node.getY()+border.getTop(), node.getWidth()-border.getWidth(), node.getHeight()-border.getHeight(), node.getBorderRadii());
+			}
 		}
 		
 		// Draw inset shadows

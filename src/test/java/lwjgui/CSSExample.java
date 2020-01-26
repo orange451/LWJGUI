@@ -30,15 +30,18 @@ public class CSSExample extends LWJGUIApplication {
 		flow.setFillToParentHeight(true);
 		pane.getChildren().add(flow);
 
+		// Fancy custom buttons
 		createButton(flow, "Click Me!");
 		createButton(flow, "Success!", "button-success");
 		
+		// Custom combo box
 		ComboBox<String> testBox = new ComboBox<>();
 		testBox.getItems().add("Hello1");
 		testBox.getItems().add("Hello2");
 		testBox.setValue(testBox.getItems().get(0));
 		flow.getItems().add(testBox);
 		
+		// box shadow test
 		StackPane test = new StackPane();
 		test.setPrefSize(100, 32);
 		test.getClassList().add("clacker");
@@ -58,6 +61,25 @@ public class CSSExample extends LWJGUIApplication {
 				+ "					-4px -4px 8px 0px BLACK inset;"
 				+ "}");
 		flow.getItems().add(test);
+		
+		// Complex linear gradient
+		{
+			StackPane linearGradientTest = new StackPane();
+			linearGradientTest.setPrefSize(100, 100);
+			linearGradientTest.setStyle(""
+					+ "background-image: linear-gradient(red 40%, green, yellow, blue 60%);");
+			flow.getItems().add(linearGradientTest);
+		}
+		
+		// Simple linear gradient
+		{
+
+			StackPane linearGradientTest = new StackPane();
+			linearGradientTest.setPrefSize(100, 100);
+			linearGradientTest.setStyle(""
+					+ "background-image: linear-gradient(#e66465, #9198e5);");
+			flow.getItems().add(linearGradientTest);
+		}
 		
 		// Apply some style!
 		pane.setStylesheet(""

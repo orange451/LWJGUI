@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import lwjgui.collections.ObservableList;
 import lwjgui.geometry.Insets;
 import lwjgui.paint.Color;
 import lwjgui.scene.Node;
@@ -354,6 +355,39 @@ public class StyleOperations {
 		}
 	};
 	
+	public static StyleOperation BACKGROUND_IMAGE = new StyleOperation("background-image") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof StyleBackground) )
+				return;
+			
+			StyleBackground t = (StyleBackground)node;
+			ObservableList<Background> backgrounds = t.getBackgrounds();
+			
+			// Clear all NON solid backgrounds
+			for (int i = 0; i < backgrounds.size(); i++) {
+				Background b = backgrounds.get(i);
+				if ( b instanceof BackgroundSolid )
+					continue;
+				
+				backgrounds.remove(i--);
+			}
+			
+			// Parse bacgkrounds
+			for (int i = 0; i < value.size(); i++) {
+				StyleParams params = value.get(i);
+				if ( params.size() == 0 )
+					continue;
+				
+				Background back = getBackground(params.get(0));
+				if ( back == null )
+					continue;
+				
+				backgrounds.add(back);
+			}
+		}
+	};
+	
 	public static StyleOperation BOX_SHADOW = new StyleOperation("box-shadow") {
 		@Override
 		public void process(Node node, StyleVarArgs value) {
@@ -455,7 +489,7 @@ public class StyleOperations {
 					if ( i < newShadows.size() ) {
 						dt = newShadows.get(i);
 					} else {
-						dt = new BoxShadow(0, 0, 0, Color.TRANSPARENT);
+						dt = new BoxShadow(st.getXOffset(), st.getYOffset(), st.getBlurRadius(), Color.TRANSPARENT);
 						dt.setInset(st.isInset());
 					}
 					
@@ -779,6 +813,122 @@ public class StyleOperations {
 			return false;
 		}
 	}
+	
+	protected static Background getBackground(Object arg) {
+		
+		if ( arg instanceof StyleFunction ) {
+			StyleFunction func = (StyleFunction)arg;
+
+			if ( func.getName().equals("linear-gradient") ) {
+				// Must have at least 2 args!
+				if ( func.size() < 2 )
+					return null;
+				
+				// Get direction
+				float direction = 90;
+				int a = 0;
+				boolean firstArgIsDirection = false;
+				if ( isNumber(func.get(0)) ) {
+					firstArgIsDirection = true;
+					direction = toNumber(func.get(0)) - 90;
+					a++;
+				}
+				
+				// Must have 2 colors
+				int amtColors = func.size() - (firstArgIsDirection?1:0);
+				if ( amtColors < 2 )
+					return null;
+
+				ColorStop[] colors = new ColorStop[amtColors];
+				int t = 0;
+
+				// Parse exact color stops first
+				for (int i = a; i < func.size(); i++) {
+					Object arg1 = func.get(i);
+					ColorStop stop = null;
+					
+					if ( arg1.toString().contains("%") )
+						stop = parseColorStop(arg1);
+					
+					if ( stop == null )
+						continue;
+					
+					colors[i-a] = stop;
+					t++;
+				}
+				
+				// Make sure first color stop is defined
+				if ( colors[0] == null )
+					colors[0] = parseColorStop(func.get(a) + " 0%");
+				
+				// Make sure last color stop is defined
+				if ( colors[colors.length-1] == null )
+					colors[colors.length-1] = parseColorStop(func.get(func.size()-1) + " 100%");
+				
+				// Parse non precomputed stops... (Does not contain %)
+				if ( t != colors.length ) {
+					ColorStop[] colorsFinal = new ColorStop[amtColors];
+					int leftMost = 0;
+					int rightMost = -1; // Most likely will end up being the last color
+
+					for (int i = 0; i < colors.length; i++) {
+						ColorStop tempStop = colors[i];
+						
+						// Define left most stop if it's not null
+						if ( tempStop != null ) {
+							leftMost = i;
+							if ( leftMost == rightMost )
+								rightMost = -1;
+							
+							colorsFinal[i] = colors[i];
+						}
+						
+						if ( tempStop == null ) {
+							
+							Object arg1 = func.get(i+a);
+							Color color = getColor(arg1);
+							
+							// Search for right most stop
+							if ( rightMost == -1 ) {
+								for (int j = i; j < colors.length; j++) {
+									ColorStop aaaa = colors[j];
+									if ( aaaa != null ) {
+										rightMost = j;
+									}
+								}
+							}
+							
+							// Compute color stop with our own percent
+							float lowerRatio = colors[leftMost].getRatio();
+							float higherRatio = colors[rightMost].getRatio();
+							float percent = lowerRatio + ((i-leftMost) / (float)(rightMost-leftMost))*(higherRatio-lowerRatio);
+							ColorStop stop = new ColorStop(color, percent);
+							
+							// Store to final
+							colorsFinal[i] = stop;
+						}
+					}
+					
+					// Overwrite colors
+					colors = colorsFinal;
+				}
+				
+				// Return gradient
+				return new BackgroundLinearGradient(direction, colors);
+			}
+		}
+		
+		return null;
+	}
+
+	private static ColorStop parseColorStop(Object arg) {
+		String[] split = arg.toString().split(" ");
+		if ( split.length != 2 )
+			return null;
+		
+		double percent = toNumber(split[1].replace("%", "")) / 100d;
+		return new ColorStop(getColor(split[0]), (float)percent);
+	}
 
 	protected static Color getColor(Object arg) {
 		if ( arg == null )
@@ -787,13 +937,12 @@ public class StyleOperations {
 		// Color by function
 		if ( arg instanceof StyleFunction ) {
 			StyleFunction func = (StyleFunction)arg;
-			StyleVarArgs funcArgs = func.getArgs();
 			
 			if ( func.getName().equals("rgb") )
-				return new Color(toNumber(funcArgs.get(0).get(0))/255d, toNumber(funcArgs.get(0).get(1))/255d, toNumber(funcArgs.get(0).get(2))/255d);
+				return new Color(toNumber(func.get(0))/255d, toNumber(func.get(1))/255d, toNumber(func.get(2))/255d);
 			
-			if ( func.getName().equals("rgba") )
-				return new Color(toNumber(funcArgs.get(0).get(0))/255d, toNumber(funcArgs.get(0).get(1))/255d, toNumber(funcArgs.get(0).get(2))/255d, toNumber(funcArgs.get(0).get(3)));
+			if ( func.getName().equals("rgba") ) 
+				return new Color(toNumber(func.get(0))/255d, toNumber(func.get(1))/255d, toNumber(func.get(2))/255d, toNumber(func.get(3)));
 		}
 		
 		String string = arg.toString();

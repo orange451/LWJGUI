@@ -52,6 +52,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	private Color borderColor;
 	private float[] borderRadii;
 	private BorderStyle borderStyle;
+	private ObservableList<Background> backgrounds = new ObservableList<>();
 	private ObservableList<BoxShadow> boxShadows = new ObservableList<>();
 	
 	private boolean wordWrap;
@@ -876,6 +877,14 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 	 */
 	public Background getBackground() {
 		return this.background;
+	}
+
+	/**
+	 * Get list of backgrounds.
+	 */
+	@Deprecated
+	public ObservableList<Background> getBackgrounds() {
+		return this.backgrounds;
 	}
 	
 	@Override

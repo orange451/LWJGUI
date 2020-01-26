@@ -192,7 +192,7 @@ public class Stylesheet {
 			return true;
 		} catch(Exception e) {
 			e.printStackTrace();
-			throw new StylesheetCompileError();
+			throw new StylesheetCompileError(e.toString() + " / " + Arrays.toString(e.getStackTrace()));
 		}
 	}
 
@@ -285,85 +285,157 @@ public class Stylesheet {
 		data.clear();
 	}
 	
+	private ParsedStyleFunction parseFunction(String functionName, String text) {
+		StyleFunction sFunc = new StyleFunction(functionName);
+		
+		text = text.replace(", ", ",").replace(") ", ")").replace("( ", "(");
+		String current = "";
+		String currentWord = "";
+		
+		boolean success = false;
+
+		int readLen = 0;
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			readLen += 1;
+			
+			// Parse nested function
+			if ( c == '(' ) {
+				ParsedStyleFunction func = parseFunction(currentWord.trim(), text.substring(i+1));
+
+				currentWord = "";
+				current = "";
+				
+				if ( func != null ) {
+					i += func.len;
+					readLen += func.len;
+					sFunc.add(func.function);
+				}
+				continue;
+			}
+			
+			// Add value or end function
+			if ( c == ',' || c == ')' ) {
+				if ( current.length() > 0 ) {
+					Object value = parseVal(current.trim());
+					if ( value != null )
+						sFunc.add(value);
+				}
+				current = "";
+				if ( c == ')') {
+					success = true;
+					break;
+				}
+			} else {
+				current += c;
+			}
+			
+			currentWord += c;
+			if ( c == ' ' || c == ',' || c == '\t')
+				currentWord = "";
+		}
+		
+		if ( success ) {
+			ParsedStyleFunction ret = new ParsedStyleFunction();
+			ret.len = readLen;
+			ret.function = sFunc;
+			return ret;
+		}
+		
+		return null;
+	}
+	
+	private class ParsedStyleFunction {
+		int len;
+		StyleFunction function;
+	}
+	
 	/**
 	 * Take a css value and parse it into a list of args
 	 * @param content
 	 * @return
 	 */
 	private StyleVarArgs parseArgs(String content) {
-		content = content.replace(", ", ",").replace(") ", ")").replace("( ", "(");
 		
 		StyleVarArgs arguments = new StyleVarArgs();
 		
+		content = content.replace(", ", ",").replace(") ", ")").replace("( ", "(");
 		ArrayList<Object> temp = new ArrayList<Object>();
 		String current = "";
-		boolean inFunction = false;
-		StyleFunction sFunc = null;
+		String currentWord = "";
+		
 		for (int i = 0; i < content.length(); i++) {
 			char c = content.charAt(i);
+			boolean isLastChar = i+1 >= content.length();
 			
-			boolean isLastChar = i+1 == content.length();
+			// Parse function
+			if ( c == '(' ) {
+				ParsedStyleFunction func = parseFunction(currentWord.trim(), content.substring(i+1));
+				current = "";
+				currentWord = "";
+				if ( func != null ) {
+					i += func.len-1;
+					temp.add(func.function);
+				}
+				continue;
+			}
 			
-			if ( (c == ' ' || i+1 == content.length()) && !inFunction ) {
-				if ( isLastChar && !inFunction )
-					current += c;
+			// Break param to new vararg
+			if ( c == ',' ) {
 				
 				// Get the value from the param
-				String t = current.trim();
-				current = "";
-				Object o = parseVal(t);
-				
-				// Add current params as an argument, and reset.
-				if ( o != null )
-					temp.add(o);
-				
-				// If this is the last character, Add current params as an argument, and reset.
-				if ( isLastChar && !inFunction ) {
-					StyleParams params = new StyleParams(temp.toArray(new Object[temp.size()]));
-					if ( params.size() > 0 ) {
-						arguments.add(params);
-						temp.clear();
-					}
-				}
-			} else {
-				if ( c == '(' ) {
-					inFunction = true;
-					sFunc = new StyleFunction(current.trim());
-					current = "";
-					continue;
-				} else if ( c == ')' ) {
-					inFunction = false;
-					StyleVarArgs argFunc = parseArgs(current.trim().replace(" ", "").replace(",", " "));
-					if ( argFunc.size() > 0 ) {
-						sFunc.args = argFunc;
-						temp.add(sFunc);
-						sFunc = null;
-					}
-					current = "";
-					
-					if ( isLastChar ) {
-						arguments.add(new StyleParams(temp.toArray(new Object[temp.size()])));
-						temp.clear();
-					}
-					continue;
-				} else if ( c == ',' && !inFunction ) { // Add current params as an argument, and reset.
-					// Get the value from the param
+				if ( current.trim().length() > 0 ) {
 					String t = current.trim();
 					current = "";
 					Object o = parseVal(t);
-					
-					// Add current params as an argument, and reset.
 					if ( o != null )
 						temp.add(o);
-					
-					arguments.add(new StyleParams(temp.toArray(new Object[temp.size()])));
+				}
+				
+				StyleParams params = new StyleParams(temp.toArray(new Object[temp.size()]));
+				if ( params.size() > 0 ) {
+					arguments.add(params);
 					temp.clear();
+				}
+				current = "";
+				continue;
+			}
+			
+			// Parse Value
+			if ( c == ' ' || isLastChar ) {
+				if ( isLastChar )
+					current += c;
+				
+				// Get the value from the param
+				if ( current.trim().length() > 1 ) {
+					String t = current.trim();
+					Object o = parseVal(t);
+					if ( o != null )
+						temp.add(o);
+
 					current = "";
-				} else {
-					current = current + c;
+				}
+				
+				// If this is the last character, Add current params as an argument, and reset.
+				if ( isLastChar ) {
+					StyleParams params = new StyleParams(temp.toArray(new Object[temp.size()]));
+					if ( params.size() > 0 ) {
+						arguments.add(params);
+						break; // We can't continue anymore
+					}
 				}
 			}
+			
+			
+			// Add character
+			current = current + c;
+
+			// Update current word
+			currentWord = currentWord + c;
+			if ( c == ' ' || c == ',' || c == '\t' )
+				currentWord = "";
 		}
+
 		return arguments;
 	}
 
@@ -392,10 +464,14 @@ public class Stylesheet {
 	 * @return
 	 */
 	private Number parseNumber(String value) {
-		if (!value.endsWith("px") && !value.endsWith("pt"))
+		if (!value.endsWith("px") && !value.endsWith("pt") && !value.endsWith("deg"))
 			return null;
 		
+		
 		value = value.substring(0,value.length()-2);
+		if ( value.endsWith("deg") )
+			value = value.substring(0,value.length()-3);
+		
 		try {
 			Number t = Double.parseDouble(value);
 			return t;
@@ -623,25 +699,20 @@ abstract class DataCallback<T, E> {
  * @author Andrew
  *
  */
-class StyleFunction {
-	protected StyleVarArgs args;
+class StyleFunction extends StyleParams {
 	private String name;
 	
 	public StyleFunction(String name) {
 		this.name = name;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
 	
-	public StyleVarArgs getArgs() {
-		return this.args;
-	}
-	
 	@Override
 	public String toString() {
-		return name + "(" + args + ")";
+		return name + "(" + super.toString() + ")";
 	}
 }
 
@@ -700,6 +771,10 @@ class StyleParams {
 		for (int i = 0; i < objects.length; i++) {
 			values.add(objects[i]);
 		}
+	}
+
+	public void add(Object param) {
+		values.add(param);
 	}
 	
 	public int size() {

@@ -31,6 +31,7 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	private Color borderColor;
 	private float[] borderRadii;
 	private BorderStyle borderStyle;
+	private ObservableList<Background> backgrounds = new ObservableList<>();
 	private ObservableList<BoxShadow> boxShadows = new ObservableList<>();
 	
 	public ButtonBase(String name) {
@@ -99,6 +100,14 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	 */
 	public Background getBackground() {
 		return this.background;
+	}
+	
+	/**
+	 * Get list of backgrounds.
+	 */
+	@Deprecated
+	public ObservableList<Background> getBackgrounds() {
+		return this.backgrounds;
 	}
 	
 	@Override

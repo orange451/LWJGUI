@@ -9,6 +9,11 @@ import lwjgui.glfw.input.callbacks.MouseScrollCallback;
 import lwjgui.scene.Window;
 import lwjgui.scene.WindowManager;
 
+/**
+ * 
+ * Thread-safe object used to query Mouse input data from a {@link Window}.
+ * 
+ */
 public class MouseHandler {
 
 	private final MouseEnterCallback enterCallback;

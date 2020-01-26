@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWImage.Buffer;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -63,6 +64,18 @@ public final class WindowManager {
 	private WindowManager() {
 	}
 
+	/**
+	 * Generates a {@link WindowHandle}.
+	 * 
+	 * <p>
+	 * This function must only be called from the main thread.
+	 * </p>
+	 * 
+	 * @param width
+	 * @param height
+	 * @param title
+	 * @return
+	 */
 	public static WindowHandle generateHandle(int width, int height, String title) {
 		return new WindowHandle(width, height, title, false);
 	}
@@ -71,12 +84,34 @@ public final class WindowManager {
 		return new WindowHandle(width, height, title, legacyGL);
 	}
 
+	/**
+	 * Generates a {@link Window} given a {@link WindowHandle}.
+	 * 
+	 * <p>
+	 * This function must only be called from the main thread.
+	 * </p>
+	 * 
+	 * @param handle
+	 * @return
+	 */
 	public static Window generateWindow(WindowHandle handle) {
 		return generateWindow(handle, NULL);
 	}
 
+	/**
+	 * Generates a {@link Window} given a {@link WindowHandle} and a parent window.
+	 * 
+	 * <p>
+	 * This function must only be called from the main thread.
+	 * </p>
+	 * 
+	 * @param handle
+	 * @param parentID
+	 * @return
+	 */
 	public static Window generateWindow(WindowHandle handle, long parentID) {
 		System.out.println("Creating new Window '" + handle.title + "'");
+		handle.applyHints();
 		long windowID = glfwCreateWindow(handle.width, handle.height, (handle.title == null ? "" : handle.title), NULL,
 				parentID);
 		if (windowID == NULL)
@@ -136,7 +171,7 @@ public final class WindowManager {
 	}
 
 	/**
-	 * Method provied for migration of project into the new multi-thread system.
+	 * Method provided for migration of project into the new multi-thread system.
 	 * Generates a {@link Window} from a native glfwWindow
 	 * 
 	 * <p>
@@ -167,6 +202,13 @@ public final class WindowManager {
 		return window;
 	}
 
+	/**
+	 * Creates OpenGL and NanoVG contexts in the caller's thread.
+	 * 
+	 * @param handle
+	 * @param window
+	 * @param vsync
+	 */
 	public static void createWindow(WindowHandle handle, Window window, boolean vsync) {
 		long windowID = window.getID();
 
@@ -199,6 +241,12 @@ public final class WindowManager {
 		cursors.put(cursor, glfwCreateStandardCursor(shape));
 	}
 
+	/**
+	 * Adds or replaces a cursor.
+	 * 
+	 * @param cursor       Cursor to be replaced
+	 * @param customCursor Cursor image
+	 */
 	public static void addCursor(Cursor cursor, CustomCursor customCursor) {
 		runLater(() -> {
 			try (MemoryStack stack = stackPush()) {
@@ -233,6 +281,12 @@ public final class WindowManager {
 		});
 	}
 
+	/**
+	 * Sets the current active cursor for a {@link Window}
+	 * 
+	 * @param window Target Window
+	 * @param cursor Cursor to use
+	 */
 	public static void setCursor(Window window, Cursor cursor) {
 		runLater(() -> {
 			Long handle = cursors.get(cursor);
@@ -241,6 +295,14 @@ public final class WindowManager {
 		});
 	}
 
+	/**
+	 * Executes any scheduled {@link Task}, removes closed {@link Window}s and calls
+	 * into {@link GLFW#glfwPollEvents()}.
+	 * 
+	 * <p>
+	 * This function must only be called from the main thread.
+	 * </p>
+	 */
 	public static void update() {
 		while (!tasks.isEmpty())
 			tasks.poll().callI();
@@ -260,6 +322,13 @@ public final class WindowManager {
 		glfwPollEvents();
 	}
 
+	/**
+	 * Initializes Window Manager objects.
+	 * 
+	 * <p>
+	 * This function must only be called from the main thread.
+	 * </p>
+	 */
 	public static void init() {
 		mainThread = Thread.currentThread().getId();
 		addCursor(Cursor.NORMAL, GLFW_ARROW_CURSOR);
@@ -268,6 +337,13 @@ public final class WindowManager {
 		addCursor(Cursor.IBEAM, GLFW_IBEAM_CURSOR);
 	}
 
+	/**
+	 * Disposes Window Manager objects.
+	 * 
+	 * <p>
+	 * This function must only be called from the main thread.
+	 * </p>
+	 */
 	public static void dispose() {
 		for (long cursor : cursors.values())
 			glfwDestroyCursor(cursor);
@@ -286,6 +362,12 @@ public final class WindowManager {
 		return windows.isEmpty();
 	}
 
+	/**
+	 * Executes code at the beginning of the next frame or if the caller's thread is
+	 * the main thread it is executed immediately.
+	 * 
+	 * @param runnable
+	 */
 	public static void runLater(Runnable runnable) {
 		submitTask(new Task<Void>() {
 			@Override
@@ -296,6 +378,14 @@ public final class WindowManager {
 		});
 	}
 
+	/**
+	 * Submits a {@link Task} to be execute at the beginning of the next frame if
+	 * the caller's thread is the main thread it is executed immediately.
+	 * 
+	 * @param <T> Return value
+	 * @param t   Task
+	 * @return A {@link Task} with the specificed return value
+	 */
 	public static <T> Task<T> submitTask(Task<T> t) {
 		if (t == null)
 			return null;

@@ -45,6 +45,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowMaximizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
@@ -107,9 +108,9 @@ import lwjgui.glfw.Callbacks.WindowFocusCallback;
 import lwjgui.glfw.Callbacks.WindowIconifyCallback;
 import lwjgui.glfw.Callbacks.WindowMaximizeCallback;
 import lwjgui.glfw.Callbacks.WindowPosCallback;
+import lwjgui.glfw.Callbacks.WindowRefreshCallback;
 import lwjgui.glfw.Callbacks.WindowSizeCallback;
 import lwjgui.glfw.DisplayUtils;
-import lwjgui.glfw.IWindow;
 import lwjgui.glfw.input.KeyboardHandler;
 import lwjgui.glfw.input.MouseHandler;
 import lwjgui.paint.Color;
@@ -117,7 +118,7 @@ import lwjgui.scene.control.PopupWindow;
 import lwjgui.scene.layout.StackPane;
 import lwjgui.theme.Theme;
 
-public class Window implements IWindow {
+public class Window {
 
 	protected final long windowID;
 
@@ -135,6 +136,7 @@ public class Window implements IWindow {
 	protected boolean destroy = false;
 
 	private boolean autoClear = true;
+	private boolean autoClose = true;
 	private Renderer renderCallback;
 
 	protected int oldPosX = 0, oldPosY = 0, oldWidth = 0, oldHeight = 0;
@@ -172,6 +174,7 @@ public class Window implements IWindow {
 	private CharModsCallback charModsCallback;
 	private WindowPosCallback windowPosCallback;
 	private WindowMaximizeCallback windowMaximizeCallback;
+	private WindowRefreshCallback windowRefreshCallback;
 
 	private MouseHandler mouseHandler;
 	private KeyboardHandler keyboardHandler;
@@ -215,6 +218,9 @@ public class Window implements IWindow {
 		});
 
 		windowCloseCallback = new WindowCloseCallback();
+		windowCloseCallback.addCallback((window) -> {
+			glfwSetWindowShouldClose(window, autoClose);
+		});
 		windowCloseCallback.addCallback(glfwSetWindowCloseCallback(windowID, windowCloseCallback));
 		windowCloseCallback.addCallback(this::closeCallback);
 
@@ -228,6 +234,23 @@ public class Window implements IWindow {
 			this.width = width;
 			this.height = height;
 			resized = true;
+			/*
+			 * submitTask(new Task<Void>() {
+			 * 
+			 * @Override protected Void call() { GL.setCapabilities(null);
+			 * glfwMakeContextCurrent(NULL); return null; }
+			 * 
+			 * }).get(); glfwMakeContextCurrent(window); GL.setCapabilities(capabilities);
+			 * Window prev = LWJGUI.getThreadWindow(); LWJGUI.setThreadWindow(this);
+			 * renderInternal(); glfwSwapBuffers(window); GL.setCapabilities(null);
+			 * glfwMakeContextCurrent(NULL); LWJGUI.setThreadWindow(prev); submitTask(new
+			 * Task<Void>() {
+			 * 
+			 * @Override protected Void call() { glfwMakeContextCurrent(window);
+			 * GL.setCapabilities(capabilities); return null; }
+			 * 
+			 * }).get();
+			 */
 		});
 
 		scrollCallback = new ScrollCallback();
@@ -271,11 +294,54 @@ public class Window implements IWindow {
 		windowMaximizeCallback.addCallback((window, maximized) -> {
 			this.maximized = maximized;
 		});
+
+		windowRefreshCallback = new WindowRefreshCallback();
+		windowRefreshCallback.addCallback(glfwSetWindowRefreshCallback(windowID, windowRefreshCallback));
 	}
 
 	public void init() {
 		context.init();
 		scene = new Scene(new StackPane());
+	}
+
+	public void render() {
+		while (!tasks.isEmpty())
+			tasks.poll().callI();
+		if (!iconified/* && !resized */) {
+			renderInternal();
+		}
+	}
+
+	private void renderInternal() {
+		// Set correct sizes
+		scene.setMinSize(width, height);
+		scene.setPrefSize(width, height);
+		scene.setMaxSize(width, height);
+
+		// Update context
+		context.updateContext();
+
+		// Begin rendering prepass
+		context.refresh();
+
+		// Clear screen
+		if (isWindowAutoClear()) {
+			Color c = Theme.current().getPane();
+			glClearColor(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, 1);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		}
+		if (this.renderCallback != null) {
+			this.renderCallback.render(context, width, height);
+		}
+
+		// Do NVG frame
+		context.refresh();
+		nvgBeginFrame(context.getNVG(), width, height, pixelRatio);
+		context.setClipBounds(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
+		scene.render(context);
+
+		nvgRestore(context.getNVG());
+		nvgEndFrame(context.getNVG());
 	}
 
 	/**
@@ -284,13 +350,12 @@ public class Window implements IWindow {
 	 * 
 	 * @param fps Target FPS, 0 disables it
 	 */
-	@Override
 	public void updateDisplay(int fps) {
+		// if (!resized)
 		glfwSwapBuffers(this.windowID);
 		this.displayUtils.sync(fps);
 	}
 
-	@Override
 	public void setVisible(boolean flag) {
 		WindowManager.runLater(() -> {
 			if (flag)
@@ -336,9 +401,11 @@ public class Window implements IWindow {
 		oldPosY = posY;
 		oldWidth = width;
 		oldHeight = height;
-		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		WindowManager.runLater(() -> glfwSetWindowMonitor(windowID, glfwGetPrimaryMonitor(), 0, 0, vidmode.width(),
-				vidmode.height(), vidmode.refreshRate()));
+		WindowManager.runLater(() -> {
+			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			glfwSetWindowMonitor(windowID, glfwGetPrimaryMonitor(), 0, 0, vidmode.width(), vidmode.height(),
+					vidmode.refreshRate());
+		});
 		fullscreen = true;
 	}
 
@@ -350,21 +417,12 @@ public class Window implements IWindow {
 		fullscreen = false;
 	}
 
-	@Override
 	public float getDelta() {
 		double time = WindowManager.getTime();
 		float delta = (float) (time - this.lastLoopTime);
 		this.lastLoopTime = time;
 		this.timeCount += delta;
 		return delta;
-	}
-
-	public float getTimeCount() {
-		return this.timeCount;
-	}
-
-	public void setTimeCount(float timeCount) {
-		this.timeCount = timeCount;
 	}
 
 	public boolean isWindowCreated() {
@@ -375,6 +433,11 @@ public class Window implements IWindow {
 		return this.dirty;
 	}
 
+	/**
+	 * <p>
+	 * This function must only be called from the main thread.
+	 * </p>
+	 */
 	public boolean isResizable() {
 		return this.getWindowAttribute(GLFW_RESIZABLE);
 	}
@@ -443,6 +506,11 @@ public class Window implements IWindow {
 		return destroy;
 	}
 
+	/**
+	 * <p>
+	 * This function must only be called from the main thread.
+	 * </p>
+	 */
 	private boolean getWindowAttribute(int attribute) {
 		return (glfwGetWindowAttrib(this.windowID, attribute) == GLFW_TRUE ? true : false);
 	}
@@ -451,7 +519,12 @@ public class Window implements IWindow {
 		return this.capabilities;
 	}
 
-	@Override
+	/**
+	 * Freeds callbacks and destroys the window.
+	 * <p>
+	 * This function must only be called from the main thread.
+	 * </p>
+	 */
 	public void closeDisplay() {
 		if (!this.created)
 			return;
@@ -460,7 +533,13 @@ public class Window implements IWindow {
 		this.created = false;
 	}
 
-	@Override
+	/**
+	 * Unloads any native resource, destroys the OpenGL context and it's data.
+	 * 
+	 * <p>
+	 * This function must only be called from the window thread.
+	 * </p>
+	 */
 	public void dispose() {
 		scene.dispose();
 		context.dispose();
@@ -548,42 +627,6 @@ public class Window implements IWindow {
 	@Deprecated
 	public boolean isManaged() {
 		return true;
-	}
-
-	public void render() {
-		while (!tasks.isEmpty())
-			tasks.poll().callI();
-		if (!iconified) {
-			// Set correct sizes
-			scene.setMinSize(width, height);
-			scene.setPrefSize(width, height);
-			scene.setMaxSize(width, height);
-
-			// Update context
-			context.updateContext();
-
-			// Begin rendering prepass
-			context.refresh();
-
-			// Clear screen
-			if (isWindowAutoClear()) {
-				Color c = Theme.current().getPane();
-				glClearColor(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, 1);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			}
-			if (this.renderCallback != null) {
-				this.renderCallback.render(context, width, height);
-			}
-
-			// Do NVG frame
-			context.refresh();
-			nvgBeginFrame(context.getNVG(), width, height, pixelRatio);
-			context.setClipBounds(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
-			scene.render(context);
-
-			nvgRestore(context.getNVG());
-			nvgEndFrame(context.getNVG());
-		}
 	}
 
 	/**
@@ -680,7 +723,7 @@ public class Window implements IWindow {
 	 * @param close
 	 */
 	public void setCanUserClose(boolean close) {
-		glfwSetWindowShouldClose(windowID, close);
+		this.autoClose = close;
 	}
 
 	/**
@@ -816,6 +859,10 @@ public class Window implements IWindow {
 
 	public KeyboardHandler getKeyboardHandler() {
 		return keyboardHandler;
+	}
+
+	public WindowRefreshCallback getWindowRefreshCallback() {
+		return windowRefreshCallback;
 	}
 
 	public void runLater(Runnable runnable) {

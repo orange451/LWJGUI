@@ -1,24 +1,25 @@
 package lwjgui.scene;
 
-import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
-import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
-import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
-import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
 
 import lwjgui.glfw.PixelBufferHandle;
 
+/**
+ * Used to setup GLFW hints for use in the window creation.
+ */
 public final class WindowHandle {
 
 	protected int width, height;
 	protected String title;
 	protected List<Icon> icons = new ArrayList<>();
 	protected boolean legacyGL;
+	private Map<Integer, Integer> hints = new HashMap<>();
 
 	protected WindowHandle(int width, int height, String title, boolean legacyGL) {
 		System.out.println("Creating WindowHandle for '" + title + "'");
@@ -27,13 +28,10 @@ public final class WindowHandle {
 		this.title = title;
 		this.legacyGL = legacyGL;
 
-		// Reset the window hints
-		GLFW.glfwDefaultWindowHints();
-
 		if (legacyGL) {
-			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_ANY_PROFILE);
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+			this.setWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_ANY_PROFILE);
+			this.setWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 2);
+			this.setWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 1);
 		} else {
 			// Set the window to use OpenGL 3.2 Core with forward compatibility
 			this.setWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -42,6 +40,14 @@ public final class WindowHandle {
 			this.setWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 			this.setWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, true);
 		}
+	}
+
+	protected void applyHints() {
+		GLFW.glfwDefaultWindowHints();
+		hints.forEach((key, value) -> {
+			GLFW.glfwWindowHint(key, value);
+		});
+		hints.clear();
 	}
 
 	public WindowHandle canResize(boolean flag) {
@@ -76,7 +82,6 @@ public final class WindowHandle {
 
 	public WindowHandle useDebugContext(boolean flag) {
 		this.setWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, flag);
-
 		return this;
 	}
 
@@ -102,17 +107,18 @@ public final class WindowHandle {
 	}
 
 	public WindowHandle setWindowHint(int hint, boolean flag) {
-		GLFW.glfwWindowHint(hint, (flag ? 1 : 0));
+		hints.put(hint, (flag ? 1 : 0));
+		return this;
+	}
+
+	public WindowHandle setWindowHint(int hint, int value) {
+		hints.put(hint, value);
 		return this;
 	}
 
 	public WindowHandle setIcon(Icon... icons) {
 		this.icons.addAll(Arrays.asList(icons));
 		return this;
-	}
-
-	public void setWindowHint(int hint, int value) {
-		GLFW.glfwWindowHint(hint, value);
 	}
 
 }

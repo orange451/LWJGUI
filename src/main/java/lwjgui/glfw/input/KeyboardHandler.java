@@ -7,6 +7,11 @@ import lwjgui.glfw.input.callbacks.KeyboardCharModsCallback;
 import lwjgui.glfw.input.callbacks.KeyboardKeyCallback;
 import lwjgui.scene.Window;
 
+/**
+ * 
+ * Thread-safe object used to query Keyboard input data from a {@link Window}.
+ * 
+ */
 public final class KeyboardHandler {
 
 	private final KeyboardKeyCallback keyCallback;
@@ -87,6 +92,15 @@ public final class KeyboardHandler {
 			return input;
 	}
 
+	/**
+	 * <p>
+	 * This function must only be called from the main thread.
+	 * </p>
+	 * 
+	 * @param windowID
+	 * @param keycode
+	 * @return
+	 */
 	public static boolean isKeyPressedRaw(long windowID, int keycode) {
 		return GLFW.glfwGetKey(windowID, keycode) == GLFW.GLFW_PRESS;
 	}

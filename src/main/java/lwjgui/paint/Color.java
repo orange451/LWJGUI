@@ -175,6 +175,18 @@ public class Color {
 			set(Integer.valueOf(hex.substring(1, 3), 16), Integer.valueOf(hex.substring(3, 5), 16), Integer.valueOf(hex.substring(5, 7), 16), Integer.valueOf(hex.substring(7, 9), 16));
 		} else if ( hex.length() >= 7 ) {
 			set(Integer.valueOf(hex.substring(1, 3), 16), Integer.valueOf(hex.substring(3, 5), 16), Integer.valueOf(hex.substring(5, 7), 16), 255);
+		} else if ( hex.length() >= 4 ) {
+			String hexr = hex.substring(1,2);
+			hexr += hexr;
+			String hexg = hex.substring(2,3);
+			hexg += hexg;
+			String hexb = hex.substring(3,4);
+			hexb += hexb;
+			
+			set(Integer.valueOf(hexr, 16),
+				Integer.valueOf(hexg, 16),
+				Integer.valueOf(hexb, 16),
+				255);
 		} else {
 			throw new NumberFormatException("Cannot parse hex code: \"" + hex + "\"");
 		}

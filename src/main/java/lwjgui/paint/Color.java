@@ -21,13 +21,15 @@ public class Color {
 	public static final Color YELLOW = new Color(255, 255, 0).immutable(true);
 	public static final Color LIGHT_YELLOW = new Color(255, 238, 158).immutable(true);
 	public static final Color LIGHT_BLUE = new Color(158, 238, 255).immutable(true);
-	public static final Color GREEN = new Color(0, 255, 0).immutable(true);
+	public static final Color LIME = new Color(0, 255, 0).immutable(true);
+	public static final Color GREEN = new Color("#008000").immutable(true);
 	public static final Color MAGENTA = new Color(255, 0, 255).immutable(true);
 	public static final Color CYAN = new Color(0, 255, 255).immutable(true);
 	public static final Color BLUE = new Color(0, 0, 255).immutable(true);
 	public static final Color AQUA = new Color(3, 158, 211).immutable(true);
 	public static final Color CORAL = new Color("#FF7F50").immutable(true);
-	public static final Color VIOLET = new Color("#8A2BE2").immutable(true);
+	public static final Color VIOLET = new Color("#ee82ee").immutable(true);
+	public static final Color INDIGO = new Color("#4b0082").immutable(true);
 	public static final Color TRANSPARENT = new Color(255, 255, 255, 0).immutable(true);
 
 	private int rgba;

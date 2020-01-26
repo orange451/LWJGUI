@@ -67,13 +67,12 @@ public class CSSExample extends LWJGUIApplication {
 			StackPane linearGradientTest = new StackPane();
 			linearGradientTest.setPrefSize(100, 100);
 			linearGradientTest.setStyle(""
-					+ "background-image: linear-gradient(red 40%, green, yellow, blue 60%);");
+					+ "background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);");
 			flow.getItems().add(linearGradientTest);
 		}
 		
 		// Simple linear gradient
 		{
-
 			StackPane linearGradientTest = new StackPane();
 			linearGradientTest.setPrefSize(100, 100);
 			linearGradientTest.setStyle(""

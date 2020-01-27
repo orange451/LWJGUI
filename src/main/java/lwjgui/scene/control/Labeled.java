@@ -198,10 +198,14 @@ public abstract class Labeled extends Control {
 				int remove = 0;
 				while ( (curWid > this.getAvailableSize().x) && (remove < text.length()) ) {
 					remove++;
-					useString = useString.substring(0, text.length()-remove)+ELIPSES;
-					float[] bounds = font.getTextBounds( window.getContext(), useString, fontStyle, fontSize, garbage);
-					curWid = (bounds[2]-bounds[0])+graphicWid;
-					cachedWidth = -1;
+					try {
+						useString = useString.substring(0, text.length()-remove)+ELIPSES;
+						float[] bounds = font.getTextBounds( window.getContext(), useString, fontStyle, fontSize, garbage);
+						curWid = (bounds[2]-bounds[0])+graphicWid;
+						cachedWidth = -1;
+					} catch(Exception e) {
+						//
+					}
 				}
 				this.size.x = curWid;
 			}

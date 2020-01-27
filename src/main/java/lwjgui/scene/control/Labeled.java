@@ -158,7 +158,7 @@ public abstract class Labeled extends Control {
 		super.resize();
 		
 		// Get some font CSS from ancestors!
-		Stylesheet.findAndApplyStyle(this.window.getContext().getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE, StyleOperations.FONT_COLOR);
+		Stylesheet.findAndApplyStyle(this.window.getContext().getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE, StyleOperations.COLOR);
 		
 		// Dont check for resizing
 		boolean checkResize = false;

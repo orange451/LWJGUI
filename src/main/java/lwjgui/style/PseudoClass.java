@@ -9,7 +9,7 @@ import lwjgui.scene.control.Control;
  *
  */
 public enum PseudoClass {
-	NORMAL("normal", new DataCallback<Boolean, Node>() {
+	DEFAULT("default", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
 			return true;

@@ -744,7 +744,7 @@ public class StyleOperations {
 		}
 	};
 	
-	public static StyleOperation FONT_COLOR = new StyleOperation("color") {
+	public static StyleOperation COLOR = new StyleOperation("color") {
 		@Override
 		public void process(Node node, StyleVarArgs value) {
 			if ( !(node instanceof Labeled) )

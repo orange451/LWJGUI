@@ -114,7 +114,7 @@ public class Stylesheet {
 			List<PseudoClass> pseudoClasses = data.getPseudoClassOrder();
 			for (int i = 0; i < pseudoClasses.size(); i++) {
 				PseudoClass pseudoClass = pseudoClasses.get(i);
-				if ( pseudoClass == PseudoClass.NORMAL )
+				if ( pseudoClass == PseudoClass.DEFAULT )
 					continue;
 				
 				// Add this pseudoClasses declarations to the combined list
@@ -122,8 +122,8 @@ public class Stylesheet {
 					addPseudoClassStyle(data, pseudoClass, combinedDeclarations);
 			}
 		} else {
-			if ( PseudoClass.NORMAL.isActive(node) ) {
-				addPseudoClassStyle(data, PseudoClass.NORMAL, combinedDeclarations);
+			if ( PseudoClass.DEFAULT.isActive(node) ) {
+				addPseudoClassStyle(data, PseudoClass.DEFAULT, combinedDeclarations);
 			}
 		}
 		
@@ -569,7 +569,7 @@ public class Stylesheet {
 	class StyleSelector {
 		private String selector;
 		private StyleSelectorType type;
-		private PseudoClass modifier = PseudoClass.NORMAL; // Useful for :hover support
+		private PseudoClass modifier = PseudoClass.DEFAULT; // Useful for :hover support
 
 		public StyleSelector(String selector) {
 			// Parse out event

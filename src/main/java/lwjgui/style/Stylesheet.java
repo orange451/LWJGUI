@@ -782,6 +782,8 @@ class StyleParams {
 	}
 	
 	public Object get(int index) {
+		if ( index < 0 || index > values.size() )
+			return null;
 		return values.get(index);
 	}
 	

@@ -795,6 +795,9 @@ public class StyleOperations {
 	}
 
 	protected static float toNumber(Object value) {
+		if ( value == null )
+			return 0;
+		
 		if ( value instanceof Number )
 			return ((Number)value).floatValue();
 		
@@ -806,6 +809,9 @@ public class StyleOperations {
 	}
 	
 	protected static boolean isNumber(Object value) {
+		if ( value == null )
+			return false;
+		
 		try {
 			Double.parseDouble(value.toString());
 			return true;

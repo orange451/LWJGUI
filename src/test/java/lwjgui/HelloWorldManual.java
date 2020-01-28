@@ -23,9 +23,6 @@ public class HelloWorldManual {
 		// Create a standard opengl 3.2 window. You can do this yourself.
 		long window = LWJGUIUtil.createOpenGLCoreWindow("Hello World", WIDTH, HEIGHT, true, false);
 
-		// Initialize window manager
-		WindowManager.init();
-
 		// Initialize lwjgui for this window
 		Window lwjguiWindow = WindowManager.generateWindow(window);
 		lwjguiWindow.show();

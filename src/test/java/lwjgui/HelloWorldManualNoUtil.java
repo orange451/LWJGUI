@@ -22,9 +22,6 @@ public class HelloWorldManualNoUtil {
 	public static void main(String[] args) {
 		if ( !glfwInit() )
 			throw new IllegalStateException("Unable to initialize GLFW");
-		
-		// Initialize window manager
-		WindowManager.init();
 
 		// Configure GLFW
 		glfwDefaultWindowHints();

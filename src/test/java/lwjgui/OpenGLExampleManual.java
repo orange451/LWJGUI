@@ -55,9 +55,6 @@ public class OpenGLExampleManual {
 		// Create a standard opengl 3.2 window. You can do this yourself.
 		long handle = LWJGUIUtil.createOpenGLCoreWindow("Hello World", WIDTH, HEIGHT, true, false);
 		
-		// Initialize window manager
-		WindowManager.init();
-		
 		// Initialize lwjgui for this window
 		Window window = WindowManager.generateWindow(handle);
 		window.setWindowAutoClear(false); // We must call glClear ourselves.

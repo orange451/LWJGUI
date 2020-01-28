@@ -59,7 +59,7 @@ public final class WindowManager {
 	private static Queue<Task<?>> tasks = new ConcurrentLinkedQueue<>();
 	private static Map<Cursor, Long> cursors = new HashMap<>();
 
-	private static long mainThread;
+	private static long mainThread = -1;
 
 	private WindowManager() {
 	}
@@ -182,6 +182,11 @@ public final class WindowManager {
 	 * @return
 	 */
 	public static Window generateWindow(long windowID) {
+
+		// Initialize window manager
+		if ( mainThread == -1 )
+			WindowManager.init();
+		
 		Window window = new Window(windowID, 0, 0, "");
 		LWJGUI.setThreadWindow(window);
 		window.capabilities = GL.getCapabilities();
@@ -330,6 +335,9 @@ public final class WindowManager {
 	 * </p>
 	 */
 	public static void init() {
+		if ( mainThread > -1 )
+			return;
+		
 		mainThread = Thread.currentThread().getId();
 		addCursor(Cursor.NORMAL, GLFW_ARROW_CURSOR);
 		addCursor(Cursor.VRESIZE, GLFW_VRESIZE_CURSOR);

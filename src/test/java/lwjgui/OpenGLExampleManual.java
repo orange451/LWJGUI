@@ -44,6 +44,11 @@ public class OpenGLExampleManual {
 	private static int vbo;
 
 	public static void main(String[] args) {
+		// Restarts the JVM if necessary on the first thread to ensure Mac compatibility 
+		if (LWJGUIUtil.restartJVMOnFirstThread(true, args))
+			return;
+		
+		// Initialize GLFW
 		if ( !glfwInit() )
 			throw new IllegalStateException("Unable to initialize GLFW");
 

@@ -1,7 +1,5 @@
 package lwjgui.scene.control;
 
-import java.util.List;
-
 import org.joml.Vector2f;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -13,7 +11,7 @@ import lwjgui.geometry.VPos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
-import lwjgui.style.StyleOperation;
+import lwjgui.style.Shadow;
 import lwjgui.style.StyleOperations;
 import lwjgui.style.Stylesheet;
 import lwjgui.theme.Theme;
@@ -26,6 +24,8 @@ public abstract class Labeled extends Control {
 	private Font font = Font.SANS;
 	private FontStyle fontStyle = FontStyle.REGULAR;
 	private Color textColor;
+	
+	private ObservableList<Shadow> textShadow = new ObservableList<>();
 	
 	private ContentDisplay contentDisplay = ContentDisplay.LEFT;
 	private double contentGap = 4;
@@ -148,6 +148,14 @@ public abstract class Labeled extends Control {
 			display = ContentDisplay.LEFT;
 		
 		this.contentDisplay = display;
+	}
+	
+	/**
+	 * Return the list of text shadows.
+	 * @return
+	 */
+	public ObservableList<Shadow> getTextShadowList() {
+		return this.textShadow;
 	}
 	
 	private Node lastParent = null;
@@ -290,10 +298,19 @@ public abstract class Labeled extends Control {
 		NanoVG.nvgFontSize(vg, fontSize);
 		NanoVG.nvgFontFace(vg, font.getFont(fontStyle));
 		NanoVG.nvgTextAlign(vg,NanoVG.NVG_ALIGN_LEFT|NanoVG.NVG_ALIGN_TOP);
+		
+		for (int i = 0; i < textShadow.size(); i++) {
+			Shadow shadow = textShadow.get(i);
+			NanoVG.nvgFontBlur(vg, shadow.getBlurRadius());
+			NanoVG.nvgBeginPath(vg);
+			NanoVG.nvgFillColor(vg, shadow.getFromColor().getNVG());
+			NanoVG.nvgText(vg, absX+shadow.getXOffset(), absY+shadow.getYOffset(), useString);
+			
+		}
 
 		// Draw
+		NanoVG.nvgFontBlur(vg, 0);
 		NanoVG.nvgBeginPath(vg);
-		NanoVG.nvgFontBlur(vg,0);
 		NanoVG.nvgFillColor(vg, isDisabled()?Theme.current().getShadow().getNVG():this.getTextFill().getNVG());
 		NanoVG.nvgText(vg, absX, absY, useString);
 	}

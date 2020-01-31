@@ -559,6 +559,144 @@ public class StyleOperations {
 		}
 	};
 	
+	public static StyleOperation TEXT_SHADOW = new StyleOperation("text-shadow") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof Labeled) )
+				return;
+			
+			Labeled t = (Labeled)node;
+			
+			// Generate the box shadow
+			List<Shadow> newShadows = new ArrayList<Shadow>();
+			if ( !value.get(0).get(0).equals(NONE) ) {
+				
+				for (int i = 0; i < value.size(); i++) {
+					StyleParams params = value.get(i);
+					
+					if ( params.size() == 2 ) {
+						newShadows.add(new Shadow(toNumber(params.get(0)), toNumber(params.get(1)), 0));
+					} else if ( params.size() == 3 ) {
+						boolean isNumber = isNumber(params.get(2));
+						if ( isNumber ) {
+							newShadows.add(new Shadow(
+									toNumber(params.get(0)),
+									toNumber(params.get(1)),
+									toNumber(params.get(2))
+							));
+						} else {
+							newShadows.add(new Shadow(
+									toNumber(params.get(0)),
+									toNumber(params.get(1)),
+									0,
+									getColor(params.get(2))
+							));
+						}
+					} else if ( params.size() == 4 ) {
+						newShadows.add(new Shadow(
+								toNumber(params.get(0)),
+								toNumber(params.get(1)),
+								toNumber(params.get(2)),
+								getColor(params.get(3))
+						));
+					} else if ( params.size() == 5 ) {
+						newShadows.add(new Shadow(
+								toNumber(params.get(0)),
+								toNumber(params.get(1)),
+								toNumber(params.get(2)),
+								getColor(params.get(3)),
+								params.get(4).toString().equalsIgnoreCase(INSET)
+						));
+					}
+				}
+			}
+			// Get the style transition for this node with this transition name
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			
+			// If no transition, directly copy in shadows.
+			if ( transition == null ) {
+				t.getTextShadowList().clear();
+				for (int i = 0; i < newShadows.size(); i++) {
+					t.getTextShadowList().add(newShadows.get(i));
+				}
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				// Transition already existing shadows
+				for (int i = 0; i < Math.max(newShadows.size(), t.getTextShadowList().size()); i++) {
+					
+					// Source shadow (copying TO)
+					Shadow st = null;
+					if ( i < t.getTextShadowList().size() ) {
+						st = t.getTextShadowList().get(i);
+					} else {
+						st = new Shadow(0, 0, 0, Color.TRANSPARENT);
+						t.getTextShadowList().add(st);
+					}
+					
+					// Destination shadow (copying FROM)
+					Shadow dt = null;
+					if ( i < newShadows.size() ) {
+						dt = newShadows.get(i);
+					} else {
+						dt = new Shadow(st.getXOffset(), st.getYOffset(), st.getBlurRadius(), Color.TRANSPARENT);
+						dt.setInset(st.isInset());
+					}
+					
+					// Finalize them (needed for below methods)
+					final Shadow sourceShadow = st;
+					final Shadow destShadow = dt;
+					
+					// No way to transition inset
+					st.setInset(dt.isInset());
+					
+					// Position transition
+					if ( sourceShadow.getXOffset() != destShadow.getXOffset() || sourceShadow.getYOffset() != destShadow.getYOffset() ) {
+						float sx = sourceShadow.getXOffset();
+						float sy = sourceShadow.getYOffset();
+						
+						Transition tran = new Transition(transition.getDurationMillis()) {
+							@Override
+							public void tick(double progress) {
+								sourceShadow.setXOffset(tween(sx, destShadow.getXOffset(), progress));
+								sourceShadow.setYOffset(tween(sy, destShadow.getYOffset(), progress));
+							}
+						};
+						tran.play();
+						current.add(tran);
+					}
+					
+					// Blur transition
+					if ( sourceShadow.getBlurRadius() != destShadow.getBlurRadius() ) {
+						float a = sourceShadow.getBlurRadius();
+						
+						Transition tran = new Transition(transition.getDurationMillis()) {
+							@Override
+							public void tick(double progress) {
+								sourceShadow.setBlurRadius(tween(a, destShadow.getBlurRadius(), progress));
+							}
+						};
+						tran.play();
+						current.add(tran);
+					}
+					
+					// Color transition
+					if ( !sourceShadow.getFromColor().equals(destShadow.getFromColor()) ) {
+						Color tt = new Color(sourceShadow.getFromColor()).immutable(false);
+						Transition tran = new FillTransition(transition.getDurationMillis(), new Color(sourceShadow.getFromColor()), destShadow.getFromColor(), tt);
+						sourceShadow.setFromColor(tt);
+						tran.play();
+						current.add(tran);
+					}
+				}
+			}
+			
+			newShadows.clear();
+		}
+	};
+	
 	public static StyleOperation PADDING = new StyleOperation("padding") {
 		@Override
 		public void process(Node node, StyleVarArgs value) {

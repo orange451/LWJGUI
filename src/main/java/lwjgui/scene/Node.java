@@ -147,6 +147,10 @@ public abstract class Node implements Resizable {
 			children.get(i).setWindow(window);
 		}
 	}
+	
+	public Window getWindow() {
+		return this.window;
+	}
 
 	public void setLocalPosition(Node parent, double x, double y) {
 		//double changex = x-this.getX();

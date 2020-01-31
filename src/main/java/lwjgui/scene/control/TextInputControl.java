@@ -706,6 +706,11 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		
 		super.resize();
 		
+		// Force select this if rendering pane or scroll pane is selected
+		if ( this.internalRenderingPane.isSelected() || this.internalScrollPane.isSelected() || this.internalScrollPane.getViewport().isSelected() ) {
+			window.getContext().setSelected(this);
+		}
+		
 		//TODO: Move htis into an actual input callback
 		if ( this.isDescendentSelected() && editable && !this.isDisabled() ) {
 			if ( !editing && onSelectEvent != null ) {

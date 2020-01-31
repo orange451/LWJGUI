@@ -955,7 +955,11 @@ public class StyleOperations {
 		
 		// Color by hex
 		if ( string.startsWith("#") ) {
-			return new Color(string);
+			try {
+				return new Color(string);
+			} catch(Exception e) {
+				//
+			}
 		}
 
 		// Color by name

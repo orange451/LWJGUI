@@ -655,7 +655,8 @@ public class Window {
 	 * Attempts to show this Window by setting visibility to true
 	 */
 	public void show() {
-		WindowManager.runLater(() -> glfwShowWindow(windowID));
+		setVisible(true);
+		focus();
 		// focusHack();
 	}
 

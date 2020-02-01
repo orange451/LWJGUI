@@ -370,6 +370,14 @@ public class Window {
 		WindowManager.runLater(() -> glfwSetWindowPos(this.windowID, x, y));
 	}
 
+	public void setAlwaysOnTop(boolean ontop) {
+		WindowManager.runLater(() -> GLFW.glfwSetWindowAttrib(this.windowID, GLFW.GLFW_FLOATING, ontop?GLFW.GLFW_TRUE:GLFW.GLFW_FALSE));
+	}
+	
+	public boolean isAlwaysOnTop() {
+		return GLFW.glfwGetWindowAttrib(this.windowID, GLFW.GLFW_FLOATING)==GLFW_TRUE;
+	}
+
 	public void setSize(int width, int height) {
 		WindowManager.runLater(() -> glfwSetWindowSize(this.windowID, width, height));
 	}
@@ -648,7 +656,6 @@ public class Window {
 	 */
 	public void show() {
 		WindowManager.runLater(() -> glfwShowWindow(windowID));
-		focus();
 		// focusHack();
 	}
 

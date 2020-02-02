@@ -163,6 +163,9 @@ public abstract class Labeled extends Control {
 	
 	@Override
 	protected void resize() {
+		if ( this.window == null )
+			return;
+		
 		super.resize();
 		
 		// Get some font CSS from ancestors!
@@ -379,6 +382,9 @@ public abstract class Labeled extends Control {
 
 	private float[] garbage = new float[4];
 	private double getTextWidthWithGraphic(String string) {
+		if ( this.window == null )
+			return 0;
+		
 		if ( cachedWidth != -1 )
 			return cachedWidth;
 		
@@ -389,6 +395,9 @@ public abstract class Labeled extends Control {
 	}
 
 	private double getTextHeightWithGraphic(String string) {
+		if ( this.window == null )
+			return 0;
+		
 		if ( cachedHeight != -1 )
 			return cachedHeight;
 		

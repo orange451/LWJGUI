@@ -66,6 +66,9 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 		// If the button is selected, and enter is pressed. Fire the click event
 		this.setOnKeyPressedInternal( (event) -> {
 			if ( event.getKey() == GLFW.GLFW_KEY_ENTER ) {
+				if ( this.window == null || this.window.getContext() == null )
+					return;
+				
 				if ( this.window.getContext().isSelected(this) ) {
 					EventHelper.fireEvent(buttonInternalEvent, new ActionEvent());
 					EventHelper.fireEvent(buttonEvent, new ActionEvent());
@@ -173,6 +176,9 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 	}
 	
 	private void defaultStyle() {
+		if ( this.window == null )
+			return;
+		
 		Context context = this.window.getContext();
 		
 		// Text color?

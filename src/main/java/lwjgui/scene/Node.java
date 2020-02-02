@@ -347,6 +347,9 @@ public abstract class Node implements Resizable {
 	 * Apply our style to the current stack
 	 */
 	protected void stylePush() {
+		if ( window == null )
+			return;
+		
 		Context context = window.getContext();
 		if ( context != null ) {
 			
@@ -369,6 +372,9 @@ public abstract class Node implements Resizable {
 	 * Remove out style from the current stack
 	 */
 	protected void stylePop() {
+		if ( window == null )
+			return;
+		
 		Context context = window.getContext();
 		// Remove our sheet from the stack
 		if ( context != null ) {

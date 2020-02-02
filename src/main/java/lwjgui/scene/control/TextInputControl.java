@@ -1000,11 +1000,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		if ( context == null )
 			return;
 		
-		if (source == null)
-			return;
-		if (source.isEmpty())
-			return;
-		
 		long vg = context.getNVG();
 		// Draw Prompt
 		if ( getLength() == 0 && prompt != null && prompt.length() > 0 ) {

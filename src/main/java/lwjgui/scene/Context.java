@@ -457,7 +457,7 @@ public class Context {
 		} else {
 			int size = 0;
 			buffer = memAlloc(bufferSize);
-			try (InputStream source = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource)) {
+			try (InputStream source = Context.class.getClassLoader().getResourceAsStream(resource)) {
 				if (source == null)
 					throw new FileNotFoundException(resource);
 				try (ReadableByteChannel rbc = Channels.newChannel(source)) {

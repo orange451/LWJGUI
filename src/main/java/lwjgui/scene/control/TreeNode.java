@@ -182,6 +182,9 @@ public class TreeNode<E> extends HBox {
 		if ( root == null )
 			return;
 		
+		if ( window == null )
+			return;
+		
 		// Set appropriate background color
 		boolean selected = root.isItemSelected(item);
 		boolean active = window.isFocused();

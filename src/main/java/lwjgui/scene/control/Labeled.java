@@ -308,7 +308,6 @@ public abstract class Labeled extends Control {
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgFillColor(vg, shadow.getFromColor().getNVG());
 			NanoVG.nvgText(vg, absX+shadow.getXOffset(), absY+shadow.getYOffset(), useString);
-			
 		}
 
 		// Draw

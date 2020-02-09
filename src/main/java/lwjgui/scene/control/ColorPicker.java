@@ -9,6 +9,7 @@ import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryStack;
 
 import lwjgui.event.ActionEvent;
+import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
@@ -31,6 +32,9 @@ public class ColorPicker extends ButtonBase {
 	private Color cancelColor;
 	private ColorPopup2 context;
 	private boolean supportsAlpha;
+	
+	protected EventHandler<ActionEvent> colorUpdateEvent;
+	protected EventHandler<ActionEvent> colorApplyEvent;
 
 	public ColorPicker(Color color) {
 		super(color.toString());
@@ -93,6 +97,22 @@ public class ColorPicker extends ButtonBase {
 
 	public Color getColor() {
 		return this.color;
+	}
+	
+	public void setOnColorUpdate(EventHandler<ActionEvent> event) {
+		this.colorUpdateEvent = event;
+	}
+	
+	public EventHandler<ActionEvent> getOnColorUpdate() {
+		return this.colorUpdateEvent;
+	}
+	
+	public void setOnColorApply(EventHandler<ActionEvent> event) {
+		this.colorApplyEvent = event;
+	}
+	
+	public EventHandler<ActionEvent> getOnColorApply() {
+		return this.colorApplyEvent;
 	}
 
 	class ColorPopup2 extends PopupWindow {
@@ -236,8 +256,8 @@ public class ColorPicker extends ButtonBase {
 			if (col.equals(internalCircle.getFill()))
 				return internalCircle.getFill();
 
-			if (buttonEvent != null)
-				EventHelper.fireEvent(buttonEvent, new ActionEvent());
+			if (colorUpdateEvent != null)
+				EventHelper.fireEvent(colorUpdateEvent, new ActionEvent());
 
 			if ( !ignoreUpdateRGBA )
 				updateRGBAText();
@@ -252,10 +272,11 @@ public class ColorPicker extends ButtonBase {
 		public void close() {
 			super.close();
 			setColor(cancelColor);
+			
 			try {
 
-				if (buttonEvent != null) {
-					EventHelper.fireEvent(buttonEvent, new ActionEvent());
+				if (colorUpdateEvent != null) {
+					EventHelper.fireEvent(colorUpdateEvent, new ActionEvent());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -265,6 +286,15 @@ public class ColorPicker extends ButtonBase {
 		private void apply() {
 			setColor(internalCircle.getFill());
 			cancelColor.set(getColor());
+			
+			try {
+
+				if (colorApplyEvent != null) {
+					EventHelper.fireEvent(colorApplyEvent, new ActionEvent());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		private float tween(float a, float b, float ratio) {

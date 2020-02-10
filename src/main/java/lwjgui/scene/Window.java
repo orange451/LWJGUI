@@ -305,11 +305,14 @@ public class Window {
 	}
 
 	public void render() {
+		
+		// Render Window
+		if (!iconified/* && !resized */)
+			renderInternal();
+
+		// Perform deferred tasks
 		while (!tasks.isEmpty())
 			tasks.poll().callI();
-		if (!iconified/* && !resized */) {
-			renderInternal();
-		}
 	}
 
 	private void renderInternal() {
@@ -1130,7 +1133,7 @@ public class Window {
 			((CursorPositionListener) listeners.get(i)).invoke(window, x, y);
 		}
 
-		runLater(() -> {
+		//runLater(() -> {
 			/*
 			 * Call scene node listeners
 			 */
@@ -1149,7 +1152,7 @@ public class Window {
 							new MouseEvent(x, y, GLFW_MOUSE_BUTTON_LEFT));
 				}
 			}
-		});
+		//});
 	}
 
 	public void scrollCallback(long window, double dx, double dy) {
@@ -1182,9 +1185,9 @@ public class Window {
 		double[] values = new double[2];
 		values[0] = dx;
 		values[1] = dy;
-		runLater(() -> {
+		//runLater(() -> {
 			notifyScroll(scene, values[0], values[1]);
-		});
+		//});
 	}
 
 	private void notifyScroll(Node t, double x, double y) {

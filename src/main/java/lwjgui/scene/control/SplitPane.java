@@ -4,6 +4,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.joml.Vector2d;
 import org.joml.Vector4d;
@@ -32,7 +33,7 @@ public class SplitPane extends Control {
 	private StackPane divider_holder;
 	private int dividerThickness = 6;
 
-	protected static HashMap<Node,Boolean> divider_resize = new HashMap<Node,Boolean>();
+	protected static Map<Node,Boolean> divider_resize = new HashMap<>();
 
 	private Divider grabbedDivider;
 	private Divider hovered;
@@ -464,6 +465,13 @@ public class SplitPane extends Control {
 		d.position = position;
 	}
 
+	/**
+	 * Marks if a divider should be resized with its parent.
+	 * If true, the ratio of the divider position stays the same no matter what size.
+	 * If false, the divider stays in the same absolute position when parent is resized.
+	 * @param node
+	 * @param bool
+	 */
 	public static void setResizableWithParent(Node node, boolean bool) {
 		divider_resize.put(node, bool);
 	}

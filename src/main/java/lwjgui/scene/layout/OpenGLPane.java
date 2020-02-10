@@ -54,13 +54,15 @@ public class OpenGLPane extends Pane {
 	@Override
 	protected void init() {
 		super.init();
-		internalContext = new OpenGLPaneContext(-1);
-		internalContext.init();
-		buffer = new OffscreenBuffer((int)oldSize.x, (int)oldSize.y);
-		if ( this.window.getContext().isModernOpenGL() ) {
-			nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
-		} else {
-			nanoImage = NanoVGGL2.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+		if ( internalContext == null ) {
+			internalContext = new OpenGLPaneContext(-1);
+			internalContext.init();
+			buffer = new OffscreenBuffer((int)oldSize.x, (int)oldSize.y);
+			if ( this.window.getContext().isModernOpenGL() ) {
+				nanoImage = NanoVGGL3.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+			} else {
+				nanoImage = NanoVGGL2.nvglCreateImageFromHandle(this.window.getContext().getNVG(), buffer.getTexId(), oldSize.x, oldSize.y, NanoVG.NVG_IMAGE_FLIPY);
+			}
 		}
 	}
 	
@@ -68,8 +70,10 @@ public class OpenGLPane extends Pane {
 	public void dispose() {
 		super.dispose();
 		internalContext.dispose();
+		internalContext = null;
 		buffer.cleanup();
 		NanoVG.nvgDeleteImage(window.getContext().getNVG(), nanoImage);
+		nanoImage = -1;
 	}
 	
 	private void resizeBuffer() {

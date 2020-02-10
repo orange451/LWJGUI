@@ -1185,9 +1185,9 @@ public class Window {
 		double[] values = new double[2];
 		values[0] = dx;
 		values[1] = dy;
-		//runLater(() -> {
+		runLater(() -> {
 			notifyScroll(scene, values[0], values[1]);
-		//});
+		});
 	}
 
 	private void notifyScroll(Node t, double x, double y) {

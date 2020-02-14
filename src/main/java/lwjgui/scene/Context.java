@@ -16,7 +16,9 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL2;
@@ -55,7 +57,7 @@ public class Context {
 
 	private List<ByteBuffer> fontBuffers = new ArrayList<>();
 	
-	private List<Font> loadedFonts = new ArrayList<>();
+	private Set<Font> loadedFonts = new HashSet<>();
 
 	private List<Image> loadedImages = new ArrayList<>();
 
@@ -408,7 +410,7 @@ public class Context {
 	}
 
 	public void loadFont(Font font, boolean loadFallbacks) {
-		if ( loadedFonts.contains(font) )
+		if ( isFontLoaded(font) )
 			return;
 		
 		loadFont(font.getFontPath(), font.getFontNameRegular(), loadFallbacks);

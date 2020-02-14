@@ -142,6 +142,9 @@ public class Font {
 		if (context == null)
 			return bounds;
 		
+		if (!context.isFontLoaded(this) )
+			context.loadFont(this);
+		
 		String font = getFont(style);
 		if (font == null)
 			return bounds;

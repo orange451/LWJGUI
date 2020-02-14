@@ -3,6 +3,7 @@ package lwjgui.scene.control;
 import org.joml.Vector2f;
 import org.lwjgl.nanovg.NanoVG;
 
+import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
 import lwjgui.font.Font;
 import lwjgui.font.FontStyle;
@@ -296,6 +297,14 @@ public abstract class Labeled extends Control {
 		if ( context == null )
 			return;
 		long vg = context.getNVG();
+		
+		// Make sure font is loaded
+		if ( !context.isFontLoaded(font) ) {
+			LWJGUI.runLater(()->{
+				context.loadFont(font);
+			});
+			return;
+		}
 
 		// Setup font
 		NanoVG.nvgFontSize(vg, fontSize);

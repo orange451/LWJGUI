@@ -54,6 +54,8 @@ public class Context {
 	private List<Stylesheet> currentSheets = new ArrayList<>();
 
 	private List<ByteBuffer> fontBuffers = new ArrayList<>();
+	
+	private List<Font> loadedFonts = new ArrayList<>();
 
 	private List<Image> loadedImages = new ArrayList<>();
 
@@ -90,6 +92,7 @@ public class Context {
 		for (Image image : loadedImages) {
 			image.dispose();
 		}
+		loadedFonts.clear();
 		fontBuffers.clear();
 		loadedImages.clear();
 		currentSheets.clear();
@@ -395,12 +398,30 @@ public class Context {
 	public Window getWindow() {
 		return window;
 	}
+	
+	public void loadFont(Font font) {
+		this.loadFont(font, true);
+	}
+	
+	public boolean isFontLoaded(Font font) {
+		return loadedFonts.contains(font);
+	}
 
 	public void loadFont(Font font, boolean loadFallbacks) {
+		if ( loadedFonts.contains(font) )
+			return;
+		
 		loadFont(font.getFontPath(), font.getFontNameRegular(), loadFallbacks);
 		loadFont(font.getFontPath(), font.getFontNameBold(), loadFallbacks);
 		loadFont(font.getFontPath(), font.getFontNameLight(), loadFallbacks);
 		loadFont(font.getFontPath(), font.getFontNameItalic(), loadFallbacks);
+		
+		// Fallback for fonts loaded via bytebuffer
+		if ( font.getFontPath() == null && font.getInternalByteBuffer() != null )
+			loadFont(font.getFontNameRegular(), font.getInternalByteBuffer(), loadFallbacks);
+		
+		// Mark this font as loaded in this context.
+		loadedFonts.add(font);
 	}
 
 	/**
@@ -411,19 +432,36 @@ public class Context {
 	 * @param suffix
 	 * @param map
 	 */
-	public void loadFont(String fontPath, String loadName, boolean loadFallbacks) {
-		if (loadName == null) {
+	private void loadFont(String fontPath, String loadName, boolean loadFallbacks) {
+		if (loadName == null || fontPath == null)
 			return;
-		}
-		int fontCallback;
 
 		try {
 			String path = fontPath + loadName;
 
 			// Create normal font
 			ByteBuffer buf = ioResourceToByteBuffer(path, 1024 * 1024);
-			fontCallback = nvgCreateFontMem(nvgContext, loadName, buf, 0);
-			fontBuffers.add(buf);
+			
+			// Load the font
+			loadFont(loadName, buf, loadFallbacks);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Loads a given Font.
+	 * 
+	 * @param fontName
+	 * @param fontData
+	 * @param loadFallbacks
+	 */
+	private void loadFont(String fontName, ByteBuffer fontData, boolean loadFallbacks) {
+		int fontCallback;
+		try {
+			// Create normal font
+			fontCallback = nvgCreateFontMem(nvgContext, fontName, fontData, 0);
+			fontBuffers.add(fontData);
 
 			// Fallback emoji fonts
 			if (loadFallbacks) {

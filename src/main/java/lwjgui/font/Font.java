@@ -7,6 +7,7 @@ import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryUtil;
 
 import lwjgui.scene.Context;
+import lwjgui.util.FileUtils;
 
 public class Font {
 	public static Font SANS = new Font("lwjgui/scene/layout/", "Roboto-Regular.ttf", "Roboto-Bold.ttf", "Roboto-Italic.ttf", "Roboto-Light.ttf");
@@ -24,8 +25,7 @@ public class Font {
 	static {
 		try {
 			fallbackSansEmoji = Context.ioResourceToByteBuffer("lwjgui/scene/layout/OpenSansEmoji.ttf", 1024 * 1024);
-			fallbackRegularEmoji = Context.ioResourceToByteBuffer("lwjgui/scene/layout/NotoEmoji-Regular.ttf",
-					1024 * 1024);
+			fallbackRegularEmoji = Context.ioResourceToByteBuffer("lwjgui/scene/layout/NotoEmoji-Regular.ttf", 1024 * 1024);
 			fallbackArial = Context.ioResourceToByteBuffer("lwjgui/scene/layout/Arial-Unicode.ttf", 1024 * 1024);
 			fallbackEntypo = Context.ioResourceToByteBuffer("lwjgui/scene/layout/entypo.ttf", 1024 * 1024);
 		} catch (Exception e) {
@@ -45,6 +45,7 @@ public class Font {
 	private String fontNameBold;
 	private String fontNameLight;
 	private String fontNameItalic;
+	private ByteBuffer preloadedData;
 	
 	/**
 	 * Creates a new font with the given settings.
@@ -62,16 +63,36 @@ public class Font {
 		this.fontNameLight = lightFileName;
 		this.fontNameItalic = italicFileName;
 	}	
+	
 	/**
 	 * Creates a new font with the given settings. Only the regular font is set and made available.
 	 * 
 	 * @param fontPath - the folder path of the font files
 	 * @param regularFileName - the filename of the regular font TTF (e.g. fontName.ttf)
 	 */
-	
 	public Font(String fontPath, String regularFileName) {
 		this.fontPath = fontPath;
 		this.fontNameRegular = regularFileName;
+		
+		System.out.println(fontPath + " :: " + regularFileName);
+	}
+	
+	/**
+	 * Creates a new font with the given settings. Only the regular font is set and made available.
+	 * @param fontFile
+	 */
+	public Font(String fontFile) {
+		this(FileUtils.getFileDirectoryFromPath(fontFile), FileUtils.getFileNameFromPath(fontFile));
+	}
+	
+	/**
+	 * Creates a new font with the given settings. Only the regular font is set and made available.
+	 * @param fontName
+	 * @param data
+	 */
+	public Font(String fontName, ByteBuffer data) {
+		this.fontPath = null;
+		this.preloadedData = data;
 	}
 
 	public String getFontPath() {
@@ -106,29 +127,26 @@ public class Font {
 	 */
 	public String getFont(FontStyle style) {
 		switch (style) {
-		case BOLD:
-			return fontNameBold;
-		case ITALIC:
-			return fontNameItalic;
-		case LIGHT:
-			return fontNameLight;
-		case REGULAR:
-			return fontNameRegular;
+			case BOLD:
+				return fontNameBold;
+			case ITALIC:
+				return fontNameItalic;
+			case LIGHT:
+				return fontNameLight;
+			case REGULAR:
+				return fontNameRegular;
 		}
 
 		return fontNameRegular;
 	}
 	
 	public float[] getTextBounds(Context context, String string, FontStyle style, double size, float[] bounds) {		
-		if (context == null) {
+		if (context == null)
 			return bounds;
-		}
 		
 		String font = getFont(style);
-		
-		if (font == null) {
+		if (font == null)
 			return bounds;
-		}
 		
 		NanoVG.nvgFontSize(context.getNVG(), (float)size);
 		NanoVG.nvgFontFace(context.getNVG(), font);
@@ -139,5 +157,9 @@ public class Font {
 		}
 		
 		return bounds;
+	}
+
+	public ByteBuffer getInternalByteBuffer() {
+		return this.preloadedData;
 	}
 }

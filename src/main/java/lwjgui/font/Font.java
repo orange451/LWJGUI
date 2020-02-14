@@ -73,8 +73,6 @@ public class Font {
 	public Font(String fontPath, String regularFileName) {
 		this.fontPath = fontPath;
 		this.fontNameRegular = regularFileName;
-		
-		System.out.println(fontPath + " :: " + regularFileName);
 	}
 	
 	/**

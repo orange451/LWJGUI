@@ -12,7 +12,7 @@ public abstract class StyleOperation {
 	
 	public StyleOperation(String key) {
 		this.name = key;
-		StyleOperations.operations.put(key, this);
+		StyleOperationDefinitions.operations.put(key, this);
 	}
 	
 	public String getName() {

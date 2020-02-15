@@ -13,7 +13,7 @@ import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.style.Shadow;
-import lwjgui.style.StyleOperations;
+import lwjgui.style.StyleOperationDefinitions;
 import lwjgui.style.Stylesheet;
 import lwjgui.theme.Theme;
 
@@ -170,7 +170,7 @@ public abstract class Labeled extends Control {
 		super.resize();
 		
 		// Get some font CSS from ancestors!
-		Stylesheet.findAndApplyStyle(this.window.getContext().getCurrentStyling(), this, this.getParent(), StyleOperations.FONT_SIZE, StyleOperations.COLOR);
+		Stylesheet.findAndApplyStyle(this.window.getContext().getCurrentStyling(), this, this.getParent(), StyleOperationDefinitions.FONT_SIZE, StyleOperationDefinitions.COLOR);
 		
 		// Dont check for resizing
 		boolean checkResize = false;

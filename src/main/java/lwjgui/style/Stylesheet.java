@@ -273,7 +273,7 @@ public class Stylesheet {
 
 			data.entrySet().forEach(entry -> {
 				System.out.println(selector.selector + " :: '" + entry.getKey() + "' = '" + entry.getValue() + "'");
-				StyleOperation op = StyleOperations.match(entry.getKey().toString());
+				StyleOperation op = StyleOperationDefinitions.match(entry.getKey().toString());
 				
 				if ( op != null ) {
 					StyleOperationValue operation = new StyleOperationValue(op, entry.getValue());

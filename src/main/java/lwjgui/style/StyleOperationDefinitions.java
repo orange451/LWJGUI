@@ -15,7 +15,7 @@ import lwjgui.scene.layout.Spacable;
 import lwjgui.transition.FillTransition;
 import lwjgui.transition.Transition;
 
-public class StyleOperations {
+public class StyleOperationDefinitions {
 	protected static HashMap<String, StyleOperation> operations = new HashMap<>();
 
 	@SuppressWarnings("unused")

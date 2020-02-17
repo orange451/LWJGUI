@@ -554,7 +554,7 @@ public class ColorPicker extends ButtonBase {
 					- (h / 2f);
 
 			BackgroundLinearGradient b = new BackgroundLinearGradient(0, Color.RED, Color.MAGENTA, Color.BLUE,
-					Color.CYAN, Color.GREEN, Color.YELLOW, Color.RED);
+					Color.CYAN, Color.LIME, Color.YELLOW, Color.RED);
 
 			b.render(context, x, y, w, h, new float[] { 3, 3, 3, 3 });
 		}

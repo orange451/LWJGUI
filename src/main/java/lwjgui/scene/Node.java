@@ -111,8 +111,6 @@ public abstract class Node implements Resizable {
 	
 	public Node() {
 		window = LWJGUI.getThreadWindow();
-		if (window == null)
-			System.out.println(window);
 		children.setAddCallback((element) -> {
 			if (!element.initialized)
 				element.init();
@@ -1573,6 +1571,14 @@ public abstract class Node implements Resizable {
 	 */
 	public boolean isSelected() {
 		return this.window.getContext().isSelected(this);
+	}
+	
+	/**
+	 * Returns true if this node is currently selected or any descendents of this node are currently selected.
+	 * @return
+	 */
+	public boolean isSelectedOrDescendentSelected() {
+		return this.isSelected() || this.isDescendentSelected();
 	}
 
 	/**

@@ -7,6 +7,14 @@ public class WindowThread extends Thread {
 
 	private Window window;
 	private WindowHandle handle;
+	
+	public WindowThread() {
+		this("Window");
+	}
+	
+	public WindowThread(String title) {
+		this(100, 100, title);
+	}
 
 	public WindowThread(int width, int height, String title) {
 		this(width, height, title, false);

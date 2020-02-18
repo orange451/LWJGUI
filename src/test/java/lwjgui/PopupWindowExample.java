@@ -6,6 +6,7 @@ import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.WindowHandle;
 import lwjgui.scene.WindowManager;
+import lwjgui.scene.WindowThread;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.BorderPane;
@@ -50,7 +51,7 @@ public class PopupWindowExample extends LWJGUIApplication {
 		WindowManager.runLater(() -> {
 			// ManagedThread constructor must run in the main thread, we schedule it's
 			// execution using the WindowManager.runLater function
-			new ManagedThread(300, 100, "Popup") {
+			new WindowThread(300, 100, "Popup") {
 				@Override
 				protected void setupHandle(WindowHandle handle) {
 					super.setupHandle(handle);

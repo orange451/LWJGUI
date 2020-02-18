@@ -6,6 +6,7 @@ import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.WindowHandle;
 import lwjgui.scene.WindowManager;
+import lwjgui.scene.WindowThread;
 import lwjgui.scene.control.Button;
 import lwjgui.scene.control.Label;
 import lwjgui.scene.layout.BorderPane;
@@ -45,7 +46,7 @@ public class PopupWindowExampleExtends extends LWJGUIApplication {
 		window.show();
 	}
 	
-	static class Popup extends ManagedThread {
+	static class Popup extends WindowThread {
 
 		public Popup(String title) {
 			super(300, 100, title);

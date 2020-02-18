@@ -77,7 +77,6 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
 import lwjgui.LWJGUI;
-import lwjgui.ManagedThread;
 import lwjgui.Task;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.EventHelper;
@@ -632,7 +631,7 @@ public class Window {
 	 * Using {@link LWJGUI#initialize(long)} will create an unmanaged window.
 	 * 
 	 * @return
-	 * @deprecated Replaced by {@link ManagedThread} object, default return value is
+	 * @deprecated Replaced by {@link WindowThread} object, default return value is
 	 *             true
 	 */
 	@Deprecated

@@ -1,19 +1,18 @@
-package lwjgui;
+package lwjgui.scene;
 
-import lwjgui.scene.Window;
-import lwjgui.scene.WindowHandle;
-import lwjgui.scene.WindowManager;
+import lwjgui.LWJGUI;
+import lwjgui.Task;
 
-public class ManagedThread extends Thread {
+public class WindowThread extends Thread {
 
 	private Window window;
 	private WindowHandle handle;
 
-	public ManagedThread(int width, int height, String title) {
+	public WindowThread(int width, int height, String title) {
 		this(width, height, title, false);
 	}
 
-	public ManagedThread(int width, int height, String title, boolean legacyGL) {
+	public WindowThread(int width, int height, String title, boolean legacyGL) {
 		handle = WindowManager.generateHandle(width, height, title, legacyGL);
 		handle.isVisible(false);
 		setupHandle(handle);

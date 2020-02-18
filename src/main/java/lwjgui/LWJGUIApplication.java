@@ -6,6 +6,7 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import lwjgui.glfw.ClientSync;
 import lwjgui.scene.Window;
 import lwjgui.scene.WindowManager;
+import lwjgui.scene.WindowThread;
 
 /**
  * A utility class that quickly assembles a LWJGUI program. To implement this into your project, simply extend this class and call startProgram() in the main method.
@@ -70,7 +71,7 @@ public abstract class LWJGUIApplication {
 		
 		WindowManager.init();
 
-		ManagedThread thread = new ManagedThread(100, 100, "lwjgui", !ModernOpenGL) {
+		WindowThread thread = new WindowThread(100, 100, "lwjgui", !ModernOpenGL) {
 			@Override
 			protected void init(Window window) {
 				super.init(window);

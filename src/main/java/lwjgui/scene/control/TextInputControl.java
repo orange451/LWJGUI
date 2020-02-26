@@ -306,6 +306,11 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		deselect();
 	}
 	
+	public void setSelection(IndexRange range) {
+		this.selectionStartPosition = range.getStart();
+		this.selectionEndPosition = range.getEnd();
+	}
+	
 	protected boolean deleteSelection() {
 		IndexRange selection = getSelection();
 		if ( selection.getLength() > 0 ) {

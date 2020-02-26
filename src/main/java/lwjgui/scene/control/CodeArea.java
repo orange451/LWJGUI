@@ -1,14 +1,17 @@
 package lwjgui.scene.control;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.LWJGUIUtil;
+import lwjgui.event.KeyEvent;
 import lwjgui.font.Font;
 import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
+import lwjgui.scene.control.TextInputControl.TextInputControlShortcuts;
 import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.VBox;
 import lwjgui.theme.Theme;
@@ -29,6 +32,70 @@ public class CodeArea extends TextArea {
 		// Add line counter to scrollpane
 		this.lineCounter = new LineCounterNode();
 		this.internalRenderingPane.getChildren().add(lineCounter);
+		
+		this.shortcuts = new TextAreaShortcutsCode();
+	}
+	
+	class TextAreaShortcutsCode extends TextAreaShortcuts {
+		@Override
+		public void process(TextInputControl tic, KeyEvent event) {
+			if ( event.isConsumed() )
+				return;
+			
+			if ( !tic.isEditing() )
+				return;
+			
+			// Tab
+			if (event.key == GLFW.GLFW_KEY_TAB ) {
+				IndexRange selection = tic.getSelection().normalize();
+				if ( selection.getLength() == 0 )
+					selection = new IndexRange(CodeArea.this.getCaretPosition(), CodeArea.this.getCaretPosition());
+				
+				// Special tab
+				if ( selection.getLength() != 0 || event.isShiftDown ) {
+					if ( event.isShiftDown ) {
+						// Tab down
+						int lineStart = CodeArea.this.getRowFromCaret(selection.getStart());
+						int lineEnd = CodeArea.this.getRowFromCaret(selection.getEnd());
+						for (int i = lineStart; i <= lineEnd; i++) {
+							final int line = i;
+							int startPos = CodeArea.this.getCaretFromRowLine(line, 0);
+							
+							// remove tab
+							if ( CodeArea.this.getText(startPos, startPos+1).equals("\t") ) {
+								CodeArea.this.deleteText(startPos, startPos+1);
+							
+								// Update selection
+								if ( startPos < selection.getStart() )
+									selection.setStart(selection.getStart()-1);
+								selection.setEnd(selection.getEnd()-1);
+							}
+						}
+						CodeArea.this.setSelection(selection);
+					} else {
+						// Tab up
+						int lineStart = CodeArea.this.getRowFromCaret(selection.getStart());
+						int lineEnd = CodeArea.this.getRowFromCaret(selection.getEnd());
+						for (int i = lineStart; i <= lineEnd; i++) {
+							final int line = i;
+							int startPos = CodeArea.this.getCaretFromRowLine(line, 0);
+							
+							// Add tab
+							CodeArea.this.insertText(startPos, "\t");
+							
+							// Update selection
+							if ( startPos < selection.getStart() )
+								selection.setStart(selection.getStart()+1);
+							selection.setEnd(selection.getEnd()+1);
+						}
+						CodeArea.this.setSelection(selection);
+					}
+					event.consume();
+				}
+			}
+			
+			super.process(tic, event);
+		}
 	}
 	
 	public CodeArea() {

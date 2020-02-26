@@ -9,12 +9,13 @@ public class IndexRange {
 		this.end = end;
 	}
 	
-	public void normalize() {
+	public IndexRange normalize() {
 		if ( end < start ) {
 			int temp = start;
 			start = end;
 			end = temp;
 		}
+		return this;
 	}
 	
 	public int getLength() {
@@ -41,5 +42,13 @@ public class IndexRange {
 			return false;
 		
 		return true;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
+	
+	public void setStart(int start) {
+		this.start = start;
 	}
 }

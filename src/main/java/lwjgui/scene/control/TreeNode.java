@@ -134,7 +134,7 @@ public class TreeNode<E> extends HBox {
 					ContextMenu context = item.context;
 					System.out.println(context);
 					if ( context != null ) {
-						context.show(getScene(), getX(), getY()+getHeight());
+						context.show(getScene(), event.getMouseX(), event.getMouseY());
 					}
 				}
 				window.getContext().setSelected(TreeNode.this);

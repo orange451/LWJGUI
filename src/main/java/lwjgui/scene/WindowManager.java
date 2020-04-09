@@ -321,10 +321,10 @@ public final class WindowManager {
 				toRemove.add(window);
 			}
 		}
+		glfwPollEvents();
 		for (Window window : toRemove) {
 			windows.remove(window);
 		}
-		glfwPollEvents();
 	}
 
 	/**

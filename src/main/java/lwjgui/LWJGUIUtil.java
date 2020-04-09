@@ -606,6 +606,9 @@ public class LWJGUIUtil {
 		float yy = (int) y;
 		float ww = (int) width;
 		float hh = (int) height;
+		long nvg = context.getNVG();
+		if ( nvg <= 0 )
+			return;
 
 		float boundsTopLeft = (float) (border.getTop()+border.getLeft())/2f;
 		float boundsTopRight = (float) (border.getTop()+border.getRight())/2f;
@@ -622,16 +625,16 @@ public class LWJGUIUtil {
 		
 		// Force scissor
 		Bounds bounds = context.getClipBounds();
-		NanoVG.nvgScissor(context.getNVG(), (int)x, (int)y, (int)width, (int)height);
+		NanoVG.nvgScissor(nvg, (int)x, (int)y, (int)width, (int)height);
 		
-		NanoVG.nvgBeginPath(context.getNVG());
-		NanoVG.nvgFillColor(context.getNVG(), borderColor.getNVG());
+		NanoVG.nvgBeginPath(nvg);
+		NanoVG.nvgFillColor(nvg, borderColor.getNVG());
 
 		float b1 = Math.max((borderRadii[0]) + boundsTopLeft, 0);
 		float b2 = Math.max((borderRadii[1]) + boundsTopRight, 0);
 		float b3 = Math.max((borderRadii[2]) + boundsBottomRight, 0);
 		float b4 = Math.max((borderRadii[3]) + boundsBottomLeft, 0);
-		NanoVG.nvgRoundedRectVarying(context.getNVG(), xx, yy, ww, hh, b1, b2, b3, b4);
+		NanoVG.nvgRoundedRectVarying(nvg, xx, yy, ww, hh, b1, b2, b3, b4);
 		
 		if ( background == null ) {
 			xx += border.getLeft();
@@ -639,15 +642,15 @@ public class LWJGUIUtil {
 			ww -= border.getWidth();
 			hh -= border.getHeight();
 			
-			NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CW);
-			NanoVG.nvgRoundedRectVarying(context.getNVG(), xx, yy, ww, hh, borderRadii[0], borderRadii[1], borderRadii[2], borderRadii[3]);
-			NanoVG.nvgPathWinding(context.getNVG(), NanoVG.NVG_CCW);
+			NanoVG.nvgPathWinding(nvg, NanoVG.NVG_CW);
+			NanoVG.nvgRoundedRectVarying(nvg, xx, yy, ww, hh, borderRadii[0], borderRadii[1], borderRadii[2], borderRadii[3]);
+			NanoVG.nvgPathWinding(nvg, NanoVG.NVG_CCW);
 		}
 		
-		NanoVG.nvgFill(context.getNVG());
-		NanoVG.nnvgClosePath(context.getNVG());
+		NanoVG.nvgFill(nvg);
+		NanoVG.nnvgClosePath(nvg);
 
 		// Reset scissor
-		NanoVG.nvgScissor(context.getNVG(), (float)bounds.getX(), (float)bounds.getY(), (float)bounds.getWidth(), (float)bounds.getHeight());
+		NanoVG.nvgScissor(nvg, (float)bounds.getX(), (float)bounds.getY(), (float)bounds.getWidth(), (float)bounds.getHeight());
 	}
 }

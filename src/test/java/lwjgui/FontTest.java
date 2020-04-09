@@ -21,17 +21,13 @@ public class FontTest extends LWJGUIApplication {
 		// Create a simple root pane
 		StackPane pane = new StackPane();
 		
-		Pane t =new StackPane();
-		t.setBackground(new BackgroundSolid(Color.RED));
 		Font font = new Font("lwjgui/dungeonfont.TTF");
 		
 		// Put a label in the pane
-		Label label = new Label("Hello World!");
+		Labeled label = new Button("Hello World!");
 		label.setFontSize(32);
 		label.setFont(font);
-		t.getChildren().add(label);
-		
-		pane.getChildren().add(t);
+		pane.getChildren().add(label);
 		
 		// Create a new scene
 		window.setScene(new Scene(pane, WIDTH, HEIGHT));

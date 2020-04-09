@@ -1253,77 +1253,82 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 			}
 			
 			// Draw text
-			for (int i = 0; i < this.textInputControl.linesDraw.size(); i++) {
-				int mx = (int)(startX);
-				int my = (int)(startY) + (this.textInputControl.fontSize*i);
-				
-				// Quick bounds check
-				if ( my < this.textInputControl.internalScrollPane.getY()-(this.textInputControl.fontSize*i))
-					continue;
-				if ( my > this.textInputControl.internalScrollPane.getY()+this.textInputControl.internalScrollPane.getHeight())
-					continue;
-				
-				String text = this.textInputControl.linesDraw.get(i);
-				
-				// Setup font
-				this.textInputControl.bindFont();
-				
-				// Inefficient Draw. Thanks NanoVG refusing to implement \t Very cool
-				if ( this.textInputControl.glyphData.size() > 0 ) {
-					ArrayList<GlyphData> dat = this.textInputControl.glyphData.get(i);
-					if ( dat.size() > 0 ) {
-						
-						for (int j = 0; j < text.length(); j++) {
-							boolean draw = true;
-							String c = text.substring(j, j+1);
+			synchronized(this.textInputControl.linesDraw) {
+				for (int i = 0; i < this.textInputControl.linesDraw.size(); i++) {
+					if ( i >= this.textInputControl.linesDraw.size() )
+						continue;
+					
+					int mx = (int)(startX);
+					int my = (int)(startY) + (this.textInputControl.fontSize*i);
+					
+					// Quick bounds check
+					if ( my < this.textInputControl.internalScrollPane.getY()-(this.textInputControl.fontSize*i))
+						continue;
+					if ( my > this.textInputControl.internalScrollPane.getY()+this.textInputControl.internalScrollPane.getHeight())
+						continue;
+					
+					String text = this.textInputControl.linesDraw.get(i);
+					
+					// Setup font
+					this.textInputControl.bindFont();
+					
+					// Inefficient Draw. Thanks NanoVG refusing to implement \t Very cool
+					if ( this.textInputControl.glyphData.size() > 0 ) {
+						ArrayList<GlyphData> dat = this.textInputControl.glyphData.get(i);
+						if ( dat.size() > 0 ) {
 							
-							// Manual fix for drawing boxes of special characters of certain fonts
-							// NanoVG author ALSO refuses to fix this. Cheers.
-							if ( c.length() == 1 ) {
-								if ( c.charAt(0) < 32 )
-									draw = false;
-							}
-							GlyphData g = dat.get(j);
-							
-							if ( draw ) {
-								final int currentPosition = textInputControl.getCaretFromRowLine(i, j);
-								TextHighlighter highlight = textInputControl.getHighlighting(currentPosition);
-								Color color = textInputControl.fontFill;
-								Color background = null;
-								if ( highlight == null ) {
-									textInputControl.bindFont();
-								} else {
-									textInputControl.bindFont(highlight.getMetaData());
-									if ( highlight.getMetaData().getColor() != null )
-										color = highlight.getMetaData().getColor();
-									
-									background = highlight.getMetaData().getBackground();
-								}
-								if ( context == null )
-									continue;
-								long vg = context.getNVG();
+							for (int j = 0; j < text.length(); j++) {
+								boolean draw = true;
+								String c = text.substring(j, j+1);
 								
-								// Fill a background behind the letter if necessary.
-								if ( background != null ) {
-									float wid = g.width();
-									if ( j < text.length() - 1 ) {
-										GlyphData nextGlyph = dat.get(j+1);
-										wid = nextGlyph.x()-g.x();
+								// Manual fix for drawing boxes of special characters of certain fonts
+								// NanoVG author ALSO refuses to fix this. Cheers.
+								if ( c.length() == 1 ) {
+									if ( c.charAt(0) < 32 )
+										draw = false;
+								}
+								GlyphData g = dat.get(j);
+								
+								if ( draw ) {
+									final int currentPosition = textInputControl.getCaretFromRowLine(i, j);
+									TextHighlighter highlight = textInputControl.getHighlighting(currentPosition);
+									Color color = textInputControl.fontFill;
+									Color background = null;
+									if ( highlight == null ) {
+										textInputControl.bindFont();
+									} else {
+										textInputControl.bindFont(highlight.getMetaData());
+										if ( highlight.getMetaData().getColor() != null )
+											color = highlight.getMetaData().getColor();
+										
+										background = highlight.getMetaData().getBackground();
+									}
+									if ( context == null )
+										continue;
+									long vg = context.getNVG();
+									
+									// Fill a background behind the letter if necessary.
+									if ( background != null ) {
+										float wid = g.width();
+										if ( j < text.length() - 1 ) {
+											GlyphData nextGlyph = dat.get(j+1);
+											wid = nextGlyph.x()-g.x();
+										}
+										
+										// NVG Background
+										NanoVG.nvgBeginPath(context.getNVG());
+										NanoVG.nvgRect(context.getNVG(), mx+g.x(), my, wid, (int)this.textInputControl.fontSize);
+										NanoVG.nvgFillColor(context.getNVG(), background.getNVG());
+										NanoVG.nvgFill(context.getNVG());
+										NanoVG.nvgClosePath(context.getNVG());
 									}
 									
-									// NVG Background
-									NanoVG.nvgBeginPath(context.getNVG());
-									NanoVG.nvgRect(context.getNVG(), mx+g.x(), my, wid, (int)this.textInputControl.fontSize);
-									NanoVG.nvgFillColor(context.getNVG(), background.getNVG());
-									NanoVG.nvgFill(context.getNVG());
-									NanoVG.nvgClosePath(context.getNVG());
+									// Draw character
+									NanoVG.nvgBeginPath(vg);
+									NanoVG.nvgFontBlur(vg,0);
+									NanoVG.nvgFillColor(vg, color.getNVG());
+									NanoVG.nvgText(vg, mx+g.x(), my, c);
 								}
-								
-								// Draw character
-								NanoVG.nvgBeginPath(vg);
-								NanoVG.nvgFontBlur(vg,0);
-								NanoVG.nvgFillColor(vg, color.getNVG());
-								NanoVG.nvgText(vg, mx+g.x(), my, c);
 							}
 						}
 					}

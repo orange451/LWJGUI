@@ -20,6 +20,7 @@ public class MouseHandler {
 	private final MousePosCallback posCallback;
 	private final MouseButtonCallback buttonCallback;
 	private final MouseScrollCallback scrollCallback;
+	private static boolean isGrabbed;
 
 	public MouseHandler(Window window) {
 		this.enterCallback = new MouseEnterCallback();
@@ -58,10 +59,14 @@ public class MouseHandler {
 	}
 
 	public float getDX() {
+		if ( !isGrabbed )
+			return 0;
 		return (float) this.posCallback.getDX();
 	}
 
 	public float getDY() {
+		if ( !isGrabbed )
+			return 0;
 		return (float) -this.posCallback.getDY();
 	}
 
@@ -82,7 +87,13 @@ public class MouseHandler {
 	}
 
 	public static void setGrabbed(long windowID, boolean grab) {
-		WindowManager.runLater(() -> GLFW.glfwSetInputMode(windowID, GLFW.GLFW_CURSOR,
-				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_NORMAL));
+		WindowManager.runLater(() -> {
+			GLFW.glfwSetInputMode(windowID, GLFW.GLFW_CURSOR, grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_NORMAL);
+			isGrabbed = grab;
+		});
+	}
+
+	public static boolean isGrabbed() {
+		return isGrabbed;
 	}
 }

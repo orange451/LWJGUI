@@ -435,6 +435,14 @@ public class SplitPane extends Control {
 		NanoVG.nvgStrokeWidth(vg, 1f);
 		NanoVG.nvgStroke(vg);
 	}
+	
+	public double getDividerThickness() {
+		return this.dividerThickness;
+	}
+	
+	public void setDividerThickness(double thickness) {
+		this.dividerThickness = (int)thickness;
+	}
 
 	public void setDividerPosition( int index, double position ) {
 		Divider d = dividers.get(index);

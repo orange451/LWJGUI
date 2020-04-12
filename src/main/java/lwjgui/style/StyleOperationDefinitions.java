@@ -11,6 +11,7 @@ import lwjgui.scene.Node;
 import lwjgui.scene.Region;
 import lwjgui.scene.control.Labeled;
 import lwjgui.scene.control.ScrollPane;
+import lwjgui.scene.control.SplitPane;
 import lwjgui.scene.layout.Gappable;
 import lwjgui.scene.layout.Spacable;
 import lwjgui.transition.FillTransition;
@@ -863,6 +864,37 @@ public class StyleOperationDefinitions {
 					@Override
 					public void tick(double progress) {
 						t.setScrollBarThickness(tween(source1, dest1, progress));
+					}
+				};
+				tran.play();
+				current.add(tran);
+			}
+		}
+	};
+	
+	public static StyleOperation DIVIDER_WIDTH = new StyleOperation("divider-width") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof SplitPane) )
+				return;
+			
+			SplitPane t = (SplitPane)node;
+			float dest1 = (float)toNumber(value.get(0).get(0));
+			float source1 = (float) t.getDividerThickness();
+			
+			// Transition
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			if ( dest1 == source1 || transition == null ) {
+				t.setDividerThickness(dest1);
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				Transition tran = new Transition(transition.getDurationMillis()) {
+					@Override
+					public void tick(double progress) {
+						t.setDividerThickness(tween(source1, dest1, progress));
 					}
 				};
 				tran.play();

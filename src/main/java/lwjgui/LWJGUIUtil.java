@@ -568,7 +568,13 @@ public class LWJGUIUtil {
 		            	f = 0.5f;
 					
 		            // Apply uniforms
+		            Bounds scissor = context.getScissor();
 					GL20.glUniform4f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "box"), xx, yy, xx+ww, yy+hh );
+					GL20.glUniform4f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "scissor"),
+							(float)scissor.getX(),
+							(float)scissor.getY(),
+							(float)scissor.getX()+(float)scissor.getWidth(),
+							(float)scissor.getY()+(float)scissor.getHeight());
 					GL20.glUniform2f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "window"), LWJGUI.getThreadWindow().getWidth(), LWJGUI.getThreadWindow().getHeight());
 					GL20.glUniform1f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "sigma"), f/2f);
 					GL20.glUniform1f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "corner"), Math.max(f/2, r));
@@ -624,8 +630,8 @@ public class LWJGUIUtil {
 			boundsBottomLeft = 0;
 		
 		// Force scissor
-		Bounds bounds = context.getClipBounds();
-		NanoVG.nvgScissor(nvg, (int)x, (int)y, (int)width, (int)height);
+		//Bounds bounds = context.getClipBounds();
+		//NanoVG.nvgScissor(nvg, (int)x, (int)y, (int)width, (int)height);
 		
 		NanoVG.nvgBeginPath(nvg);
 		NanoVG.nvgFillColor(nvg, borderColor.getNVG());
@@ -651,6 +657,6 @@ public class LWJGUIUtil {
 		NanoVG.nnvgClosePath(nvg);
 
 		// Reset scissor
-		NanoVG.nvgScissor(nvg, (float)bounds.getX(), (float)bounds.getY(), (float)bounds.getWidth(), (float)bounds.getHeight());
+		//NanoVG.nvgScissor(nvg, (float)bounds.getX(), (float)bounds.getY(), (float)bounds.getWidth(), (float)bounds.getHeight());
 	}
 }

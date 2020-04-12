@@ -33,6 +33,7 @@ import lwjgui.event.Event;
 import lwjgui.event.EventHelper;
 import lwjgui.font.Font;
 import lwjgui.glfw.input.MouseHandler;
+import lwjgui.scene.Node.LayoutBounds;
 import lwjgui.scene.control.PopupWindow;
 import lwjgui.scene.image.Image;
 import lwjgui.style.Stylesheet;
@@ -385,18 +386,6 @@ public class Context {
 		this.lastPressed = node;
 	}
 
-	public void setClipBounds(double x, double y, double width, double height) {
-		this.clipBounds = new Bounds(x, y, x + width, y + height);
-	}
-
-	public void setClipBounds(Bounds bounds) {
-		this.clipBounds = bounds;
-	}
-
-	public Bounds getClipBounds() {
-		return this.clipBounds;
-	}
-
 	public Window getWindow() {
 		return window;
 	}
@@ -522,4 +511,15 @@ public class Context {
 		loadedImages.add(image);
 	}
 
+	private Bounds scissor = new Bounds(0, 0, 0, 0);
+
+	public void setScissor(double x, double y, double w, double h) {
+		Context context = this.getWindow().getContext();
+		scissor.set(x, y, x+w, y+h);
+		NanoVG.nvgScissor(context.getNVG(), (int)x, (int)y, (int)w, (int)h);
+	}
+	
+	public Bounds getScissor() {
+		return this.scissor;
+	}
 }

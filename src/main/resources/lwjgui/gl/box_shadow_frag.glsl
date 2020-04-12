@@ -1,6 +1,7 @@
 #version 330
 
 uniform vec4 box;
+uniform vec4 scissor;
 uniform vec4 boxColor;
 uniform float sigma;
 uniform float corner;
@@ -58,4 +59,7 @@ float roundedBoxShadow(vec2 lower, vec2 upper, vec2 point, float sigma, float co
 void main() {
   outColor = boxColor;
   outColor.a *= roundedBoxShadow(box.xy, box.zw, vertex, sigma, corner);
+  
+  if ( vertex.x < scissor.x || vertex.y < scissor.y || vertex.x > scissor.x + scissor.z || vertex.y > scissor.y + scissor.w )
+  	outColor.a = 0;
 }

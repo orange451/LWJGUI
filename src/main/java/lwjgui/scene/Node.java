@@ -748,7 +748,7 @@ public abstract class Node implements Resizable {
 	protected void clip(Context context) {
 		clip(context, 0);
 	}
-	
+
 	private LayoutBounds LAYOUT_CACHE = new LayoutBounds(0,0,0,0);
 	
 	/**
@@ -760,22 +760,22 @@ public abstract class Node implements Resizable {
 		if ( context == null )
 			return;
 		
-		LayoutBounds clipBoundsTemp = new LayoutBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+		LayoutBounds clipBoundsTemp = new LayoutBounds(0, 0, (int)getScene().getWidth(), (int)getScene().getHeight());
 		LayoutBounds tempBounds = LAYOUT_CACHE;
 		
-		Node par = this;
-		while ( par != null ) {
-			if ( par.flag_clip ) {
+		Node current = this;
+		while ( current != null ) {
+			if ( current.flag_clip ) {
 				
 				// Update temp bounds
-				LayoutBounds inner = par.getInnerBounds();
-				tempBounds.minX = (int)(par.getX()+inner.getX());
-				tempBounds.minY = (int)(par.getY()+inner.getY());
-				tempBounds.maxX = (int)(par.getX()+inner.getWidth()+1);
-				tempBounds.maxY = (int)(par.getY()+inner.getHeight()+1);
+				LayoutBounds inner = current.getInnerBounds();
+				tempBounds.minX = (int)(current.getX()+inner.getX());
+				tempBounds.minY = (int)(current.getY()+inner.getY());
+				tempBounds.maxX = (int)(current.getX()+inner.getWidth()+1);
+				tempBounds.maxY = (int)(current.getY()+inner.getHeight()+1);
 				
-				if ( par instanceof Region ) {
-					Insets pad = ((Region)par).getPadding();
+				if ( current instanceof Region ) {
+					Insets pad = ((Region)current).getPadding();
 					tempBounds.minX += pad.getLeft();
 					tempBounds.maxX -= pad.getRight();
 					tempBounds.minY += pad.getTop();
@@ -793,11 +793,11 @@ public abstract class Node implements Resizable {
 					clipBoundsTemp.maxY = tempBounds.maxY;
 			}
 			
-			par = par.parent;
+			current = current.parent;
 		}
 		
 		//TEMP_CACHE.setClipBounds(clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
-		NanoVG.nvgScissor(context.getNVG(), clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
+		context.setScissor(clipBoundsTemp.minX-padding, clipBoundsTemp.minY-padding, clipBoundsTemp.getWidth()+padding*2, clipBoundsTemp.getHeight()+padding*2);
 	}
 	
 	public boolean isDescendentSelected() {

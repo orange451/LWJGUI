@@ -1,5 +1,7 @@
 package lwjgui.scene;
 
+import org.lwjgl.nanovg.NanoVG;
+
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.control.PopupWindow;
 import lwjgui.transition.TransitionManager;

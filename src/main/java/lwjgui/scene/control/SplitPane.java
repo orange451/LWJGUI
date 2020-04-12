@@ -513,5 +513,11 @@ public class SplitPane extends Control {
 		public boolean isResizeable() {
 			return false;
 		}
+		
+		@Override
+		public void render(Context context) {
+			this.clip(context, 0);
+			super.render(context);
+		}
 	}
 }

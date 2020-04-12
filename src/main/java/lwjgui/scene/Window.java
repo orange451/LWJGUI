@@ -340,7 +340,7 @@ public class Window {
 		// Do NVG frame
 		context.refresh();
 		nvgBeginFrame(context.getNVG(), width, height, pixelRatio);
-		context.setClipBounds(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
+		context.setScissor(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
 		scene.render(context);
 
 		nvgRestore(context.getNVG());

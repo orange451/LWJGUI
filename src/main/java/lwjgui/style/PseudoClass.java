@@ -9,36 +9,59 @@ import lwjgui.scene.control.Control;
  *
  */
 public enum PseudoClass {
+	/**
+	 * Default pseudo class. Does not need to be explicitly mentioned.
+	 */
 	DEFAULT("default", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
 			return true;
 		}
 	}),
+	
+	/**
+	 * Hover pseudo class. Active when the node is hovered.
+	 */
 	HOVER("hover", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
 			return node.isHover();
 		}
 	}),
+	
+	/**
+	 * Focus pseudo class. Active when node is selected or clicked.
+	 */
 	FOCUS("focus", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
 			return node.isSelected() || node.isClicked();
 		}
 	}),
+	
+	/**
+	 * Select pseudo class. Active when node is just selected.
+	 */
 	SELECT("select", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
 			return node.isSelected();
 		}
 	}),
+	
+	/**
+	 * Active pseudo class. Active when node is just clicked.
+	 */
 	ACTIVE("active", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
 			return node.isClicked();
 		}
 	}),
+	
+	/**
+	 * Disabled pseudo class. Active when node is disabled. Only nodes descendant of {@link Control} can be disabled.
+	 */
 	DISABLED("disabled", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {

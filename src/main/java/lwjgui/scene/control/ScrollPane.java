@@ -201,6 +201,10 @@ public class ScrollPane extends Pane {
 		return this.hBar.policy;
 	}
 	
+	public double getScrollBarThickness() {
+		return this.thickness;
+	}
+	
 	public void setScrollBarThickness(double thickness) {
 		this.thickness = thickness;
 	}

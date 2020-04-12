@@ -4,10 +4,14 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGL2;
+import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUIUtil;
+import lwjgui.gl.OffscreenBuffer;
 import lwjgui.scene.Context;
+import lwjgui.scene.Window;
 
 public class BackgroundNVGImage extends Background {
 
@@ -19,6 +23,14 @@ public class BackgroundNVGImage extends Background {
 	
 	public BackgroundNVGImage(int nvgImage) {
 		this.setNVGImage(nvgImage);
+	}
+	
+	public static BackgroundNVGImage fromOffscreenBuffer(Window window, OffscreenBuffer buffer) {
+		if ( window.getContext().isModernOpenGL() ) {
+			return new BackgroundNVGImage(NanoVGGL3.nvglCreateImageFromHandle(window.getContext().getNVG(), buffer.getTexId(), buffer.getWidth(), buffer.getHeight(), NanoVG.NVG_IMAGE_FLIPY));
+		} else {
+			return new BackgroundNVGImage(NanoVGGL2.nvglCreateImageFromHandle(window.getContext().getNVG(), buffer.getTexId(), buffer.getWidth(), buffer.getHeight(), NanoVG.NVG_IMAGE_FLIPY));
+		}
 	}
 
 	public int getNVGImage() {

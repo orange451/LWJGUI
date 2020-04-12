@@ -2,9 +2,11 @@ package lwjgui.gl;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL30;
 
 import lwjgui.LWJGUI;
+import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 
 public class OffscreenBuffer {
@@ -137,8 +139,32 @@ public class OffscreenBuffer {
 			}
 			quad = new TexturedQuad(0, 0, w, h, texId);
 		}
-		if ( quad != null ) {
-			quad.render();
+		if ( context.isCoreOpenGL() ) {
+			if ( quad != null ) {
+				quad.render();
+			}
+		} else {
+
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
+			
+			GL11.glBegin(GL11.GL_QUADS);
+				GL11.glColor3f(1.0f, 1.0f, 1.0f);
+				GL11.glTexCoord2f(0, 0);
+				GL11.glVertex2f(0, 0);
+
+				GL11.glColor3f(1.0f, 1.0f, 1.0f);
+				GL11.glTexCoord2f(1, 0);
+				GL11.glVertex2f(w, 0);
+
+				GL11.glColor3f(1.0f, 1.0f, 1.0f);
+				GL11.glTexCoord2f(1, 1);
+				GL11.glVertex2f(w, h);
+
+				GL11.glColor3f(1.0f, 1.0f, 1.0f);
+				GL11.glTexCoord2f(0, 1);
+				GL11.glVertex2f(0, h);
+			GL11.glEnd();
 		}
 	}
 	
@@ -157,5 +183,19 @@ public class OffscreenBuffer {
 
 	public TexturedQuad getQuad() {
 		return quad;
+	}
+
+	public void drawClearColor(Color violet) {
+		GL11.glClearColor(violet.getRedF(), violet.getGreenF(), violet.getBlueF(), violet.getAlphaF());
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+	}
+
+	public void drawClearColorDepth(Color violet) {
+		GL11.glClearColor(violet.getRedF(), violet.getGreenF(), violet.getBlueF(), violet.getAlphaF());
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
+	}
+	
+	public void drawClearDepth() {
+		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 	}
 }

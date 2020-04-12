@@ -33,14 +33,28 @@ public class OffscreenBuffer {
 		resize(width, height);
 	}
 	
+	/**
+	 * Width of the buffer
+	 * @return
+	 */
 	public int getWidth() {
 		return width;
 	}
 	
+	/**
+	 * Height of the buffer
+	 * @return
+	 */
 	public int getHeight() {
 		return height;
 	}
 	
+	/**
+	 * Resize the buffer to desired width/height
+	 * @param width
+	 * @param height
+	 * @return
+	 */
 	public boolean resize(int width, int height) {
 		if (this.width == width && this.height == height) {
 			return false;
@@ -93,20 +107,34 @@ public class OffscreenBuffer {
 		return true;
 	}
 	
+	/**
+	 * OpenGL Texture ID
+	 * @return
+	 */
 	public int getTexId() {
 		return texId;
 	}
 	
+	/**
+	 * OpenGL FBO ID
+	 * @return
+	 */
 	public int getFboId() {
 		return fboId;
 	}
 	
+	/**
+	 * Bind buffer
+	 */
 	private int unbindTo = -1;
 	public void bind() {
 		unbindTo = GL11.glGetInteger(GL30.GL_FRAMEBUFFER_BINDING);
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, getFboId());
 	}
 	
+	/**
+	 * Unbind the buffer
+	 */
 	public void unbind() {
 		if ( unbindTo == -1 )
 			return;
@@ -185,13 +213,13 @@ public class OffscreenBuffer {
 		return quad;
 	}
 
-	public void drawClearColor(Color violet) {
-		GL11.glClearColor(violet.getRedF(), violet.getGreenF(), violet.getBlueF(), violet.getAlphaF());
+	public void drawClearColor(Color color) {
+		GL11.glClearColor(color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 	}
 
-	public void drawClearColorDepth(Color violet) {
-		GL11.glClearColor(violet.getRedF(), violet.getGreenF(), violet.getBlueF(), violet.getAlphaF());
+	public void drawClearColorDepth(Color color) {
+		GL11.glClearColor(color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 	}
 	

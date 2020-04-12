@@ -1133,7 +1133,7 @@ public class Window {
 			((CursorPositionListener) listeners.get(i)).invoke(window, x, y);
 		}
 
-		//runLater(() -> {
+		runLater(() -> {
 			/*
 			 * Call scene node listeners
 			 */
@@ -1152,7 +1152,7 @@ public class Window {
 							new MouseEvent(x, y, GLFW_MOUSE_BUTTON_LEFT));
 				}
 			}
-		//});
+		});
 	}
 
 	public void scrollCallback(long window, double dx, double dy) {

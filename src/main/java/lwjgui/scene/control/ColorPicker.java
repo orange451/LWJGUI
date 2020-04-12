@@ -49,7 +49,6 @@ public class ColorPicker extends ButtonBase {
 			context.setAutoHide(false);
 
 			context.position(getScene());
-			//context.render(null);
 
 			double desiredX = getX() + getWidth() / 2 - context.getWidth() / 2;
 			double desiredY = getY() + getHeight() + 2;

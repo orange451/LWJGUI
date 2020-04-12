@@ -4,31 +4,67 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGL2;
+import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.system.MemoryStack;
 
 import lwjgui.LWJGUIUtil;
+import lwjgui.gl.OffscreenBuffer;
 import lwjgui.scene.Context;
+import lwjgui.scene.Window;
 
 public class BackgroundNVGImage extends Background {
 
 	private int nvgImage;
 	
+	/**
+	 * Creats a blank BackgroundNVGImage
+	 */
 	public BackgroundNVGImage() {
 		this(-1);
 	}
 	
+	/**
+	 * Creates a new BackgroundNVGImage from a NanoVG image handle
+	 * @param nvgImage
+	 */
 	public BackgroundNVGImage(int nvgImage) {
 		this.setNVGImage(nvgImage);
 	}
+	
+	/**
+	 * Creates a new BackgroundNVGImage from a Offscreen Buffer. Window object is used to detect OpenGL Version.
+	 * @param window
+	 * @param buffer
+	 * @return
+	 */
+	public static BackgroundNVGImage fromOffscreenBuffer(Window window, OffscreenBuffer buffer) {
+		if ( window.getContext().isModernOpenGL() ) {
+			return new BackgroundNVGImage(NanoVGGL3.nvglCreateImageFromHandle(window.getContext().getNVG(), buffer.getTexId(), buffer.getWidth(), buffer.getHeight(), NanoVG.NVG_IMAGE_FLIPY));
+		} else {
+			return new BackgroundNVGImage(NanoVGGL2.nvglCreateImageFromHandle(window.getContext().getNVG(), buffer.getTexId(), buffer.getWidth(), buffer.getHeight(), NanoVG.NVG_IMAGE_FLIPY));
+		}
+	}
 
+	/**
+	 * Return the NanoVG Image handle.
+	 * @return
+	 */
 	public int getNVGImage() {
 		return this.nvgImage;
 	}
 
+	/**
+	 * Sets the NanoVG Image handle.
+	 * @param image
+	 */
 	public void setNVGImage(int image) {
 		this.nvgImage = image;
 	}
-
+	
+	/**
+	 * Renders the Background.
+	 */
 	@Override
 	public void render(Context context, double x, double y, double width, double height, float[] cornerRadii) {
 		if ( context == null )

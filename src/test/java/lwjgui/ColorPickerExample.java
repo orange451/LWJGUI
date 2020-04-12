@@ -18,12 +18,6 @@ public class ColorPickerExample extends LWJGUIApplication {
 	
 	@Override
 	public void start(String[] args, Window window) {
-		float[] hsb;
-		Color.RGBtoHSB(255, 255, 255, hsb = new float[3]);
-		int rgb = Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
-		Color c = new Color(rgb);
-		System.out.println(c);
-		
 		// Create a simple root pane
 		StackPane pane = new StackPane();
 		pane.setPadding(new Insets(8,0,0,0));

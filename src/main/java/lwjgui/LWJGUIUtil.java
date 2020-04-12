@@ -557,7 +557,6 @@ public class LWJGUIUtil {
 					boxShadowShader.bind();
 					
 					// Flip the y :shrug:
-					//yy -= boxShadow.getYOffset() * 2;
 					yy = LWJGUI.getThreadWindow().getHeight() - yy - hh;
 					
 					// Enable blending
@@ -569,12 +568,13 @@ public class LWJGUIUtil {
 					
 		            // Apply uniforms
 		            Bounds scissor = context.getScissor();
+		            float scissorFlippedY = (float) (LWJGUI.getThreadWindow().getHeight() - scissor.getY());
 					GL20.glUniform4f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "box"), xx, yy, xx+ww, yy+hh );
 					GL20.glUniform4f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "scissor"),
 							(float)scissor.getX(),
-							(float)scissor.getY(),
+							(float)scissorFlippedY-(float)scissor.getHeight(),
 							(float)scissor.getX()+(float)scissor.getWidth(),
-							(float)scissor.getY()+(float)scissor.getHeight());
+							(float)scissorFlippedY);
 					GL20.glUniform2f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "window"), LWJGUI.getThreadWindow().getWidth(), LWJGUI.getThreadWindow().getHeight());
 					GL20.glUniform1f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "sigma"), f/2f);
 					GL20.glUniform1f(GL20.glGetUniformLocation(boxShadowShader.getProgram(), "corner"), Math.max(f/2, r));

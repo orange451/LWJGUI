@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.joml.Vector2d;
-import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;

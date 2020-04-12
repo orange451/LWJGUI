@@ -60,6 +60,6 @@ void main() {
   outColor = boxColor;
   outColor.a *= roundedBoxShadow(box.xy, box.zw, vertex, sigma, corner);
   
-  if ( vertex.x < scissor.x || vertex.y < scissor.y || vertex.x > scissor.x + scissor.z || vertex.y > scissor.y + scissor.w )
+  if ( vertex.x < scissor.x || vertex.y < scissor.y || vertex.x > scissor.z || vertex.y > scissor.w )
   	outColor.a = 0;
 }

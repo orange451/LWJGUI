@@ -16,7 +16,8 @@ import lwjgui.scene.Window;
 public class BackgroundNVGImage extends Background {
 
 	private int nvgImage;
-	
+	private boolean fitParentSize;
+
 	/**
 	 * Creats a blank BackgroundNVGImage
 	 */
@@ -30,8 +31,8 @@ public class BackgroundNVGImage extends Background {
 	 */
 	public BackgroundNVGImage(int nvgImage) {
 		this.setNVGImage(nvgImage);
+		this.setFitParentSize(true);
 	}
-	
 	/**
 	 * Creates a new BackgroundNVGImage from a Offscreen Buffer. Window object is used to detect OpenGL Version.
 	 * @param window
@@ -61,7 +62,23 @@ public class BackgroundNVGImage extends Background {
 	public void setNVGImage(int image) {
 		this.nvgImage = image;
 	}
-	
+
+	/**
+	 * Gets whether the image will be deformed to match the size of the parent
+	 * @return	true if the image resizes to parent's dimensions, false otherwise
+	 */
+	public boolean fitsParentSize() {
+		return fitParentSize;
+	}
+
+	/**
+	 * Gets whether the image will be deformed to match the size of the parent
+	 * @param fitParentSize
+	 */
+	public void setFitParentSize(boolean fitParentSize) {
+		this.fitParentSize = fitParentSize;
+	}
+
 	/**
 	 * Renders the Background.
 	 */
@@ -69,12 +86,19 @@ public class BackgroundNVGImage extends Background {
 	public void render(Context context, double x, double y, double width, double height, float[] cornerRadii) {
 		if ( context == null )
 			return;
-		
+
 		if ( this.getNVGImage() < 0 )
 			return;
-		
+
 		try (MemoryStack stack = stackPush()) {
 			long vg = context.getNVG();
+			if(!fitParentSize) {
+				int[] w = new int[1];
+				int[] h = new int[1];
+				NanoVG.nvgImageSize(vg, this.getNVGImage(), w, h);
+				width = w[0];
+				height = h[0];
+			}
 			NVGPaint imagePaint = NanoVG.nvgImagePattern(vg,  (int) x, (int) y, (int) width, (int) height, 0, getNVGImage(), 1, NVGPaint.callocStack(stack));
 			NanoVG.nvgFillPaint(vg, imagePaint);
 			LWJGUIUtil.fillRoundRect(context, (int) x, (int) y, width, height, cornerRadii[0], cornerRadii[1], cornerRadii[2], cornerRadii[3], null);

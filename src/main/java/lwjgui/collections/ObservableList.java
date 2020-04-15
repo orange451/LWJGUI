@@ -2,6 +2,7 @@ package lwjgui.collections;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import lwjgui.event.ElementCallback;
 
@@ -102,5 +103,13 @@ public class ObservableList<E> {
 
 	public boolean contains(E element) {
 		return internal.contains(element);
+	}
+
+	public Stream<E> stream() {
+		return this.internal.stream();
+	}
+
+	public Stream<E> parallelStream() {
+		return this.internal.parallelStream();
 	}
 }

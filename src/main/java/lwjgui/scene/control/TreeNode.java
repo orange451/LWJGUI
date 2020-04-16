@@ -37,7 +37,12 @@ public class TreeNode<E> extends HBox {
 		this.setAlignment(Pos.CENTER_LEFT);
 		getChildren().add(inset);
 		
-		StackPane stateButton = new StackPane();
+		StackPane stateButton = new StackPane() {
+			@Override
+			public String getElementType() {
+				return "treeitem";
+			}
+		};
 		stateButton.setAlignment(Pos.CENTER);
 		stateButton.setPrefSize(20, 20);
 		stateButton.setBackgroundLegacy(null);
@@ -200,5 +205,10 @@ public class TreeNode<E> extends HBox {
 			this.clip(context);
 			LWJGUIUtil.outlineRect(context, getX(), getY()+1, getWidth()-1, getHeight()-3, Theme.current().getSelectionAlt());
 		}
+	}
+	
+	@Override
+	public String getElementType() {
+		return "treeitem";
 	}
 }

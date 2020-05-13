@@ -1446,8 +1446,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 						tic.selectionEndPosition = tic.caretPosition;
 					}
 				}
-				
-				event.consume();
 			}
 			
 			// Right
@@ -1463,8 +1461,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 						tic.selectionEndPosition = tic.caretPosition;
 					}
 				}
-				
-				event.consume();
 			}
 			
 			// Up
@@ -1487,8 +1483,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 					tic.selectionStartPosition = tic.caretPosition;
 					tic.selectionEndPosition = tic.caretPosition;
 				}
-				
-				event.consume();
 			}
 			
 			// Down
@@ -1511,8 +1505,6 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 					tic.selectionStartPosition = tic.caretPosition;
 					tic.selectionEndPosition = tic.caretPosition;
 				}
-				
-				event.consume();
 			}
 			
 			

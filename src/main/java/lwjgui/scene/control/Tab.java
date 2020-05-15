@@ -2,7 +2,6 @@ package lwjgui.scene.control;
 
 import static org.lwjgl.system.MemoryStack.stackPush;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryStack;
@@ -113,12 +112,12 @@ public class Tab {
 			this.internal = new HBox() {
 				{
 					this.setOnMousePressedInternal((event)->{
-						TabButton.this.onMousePressed(event.getMouseX(), event.getMouseY(), event.getButton());
+						TabButton.this.onMousePressed(event);
 						window.getContext().setSelected(TabButton.this);
 					});
 					
 					this.setOnMouseReleasedInternal((event)->{
-						TabButton.this.onMouseReleased(event.getMouseX(), event.getMouseY(), event.getButton());
+						TabButton.this.onMouseReleased(event);
 					});
 
 					this.setOnMouseDraggedInternal((event)->{

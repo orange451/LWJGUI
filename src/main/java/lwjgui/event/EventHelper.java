@@ -11,6 +11,7 @@ public class EventHelper {
 	public static <T extends Event> boolean fireEvent(EventHandler<T> eventHandler, T event) {
 		if ( eventHandler == null )
 			return false;
+		
 		eventHandler.handle(event);
 		return event.isConsumed();
 	}

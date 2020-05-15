@@ -1216,15 +1216,13 @@ public abstract class Node implements Resizable {
 	
 	public abstract String getElementType();
 	
-	protected void onMousePressed(double mouseX, double mouseY, int button) {
+	protected void onMousePressed(MouseEvent event) {
 		mousePressed = true;
 		
 		Context context = window.getContext();
 		if ( context != null ) {
 			context.setLastPressed(this);
 		}
-		
-		MouseEvent event = new MouseEvent(mouseX, mouseY, button);
 		
 		if (mousePressedEventInternal != null) {
 			EventHelper.fireEvent(mousePressedEventInternal, event);
@@ -1238,7 +1236,7 @@ public abstract class Node implements Resizable {
 	private long _lastClick = 0;
 	private int _flag_clicks = 0;
 	
-	protected boolean onMouseReleased(double mouseX, double mouseY, int button) {
+	protected boolean onMouseReleased(MouseEvent event) {
 		if (!mousePressed) return false;
 		mousePressed = false;
 		
@@ -1253,23 +1251,25 @@ public abstract class Node implements Resizable {
 			_flag_clicks++;
 			_lastClick = System.currentTimeMillis();
 			
+			event.clicks = _flag_clicks;
+			
 			if (mouseClickedEventInternal != null) {
-				EventHelper.fireEvent(mouseClickedEventInternal, new MouseEvent(mouseX, mouseY, button, _flag_clicks));
+				EventHelper.fireEvent(mouseClickedEventInternal, event);
 			}
 			
 			if (mouseClickedEvent != null) {
-				EventHelper.fireEvent(mouseClickedEvent, new MouseEvent(mouseX, mouseY, button, _flag_clicks));
+				EventHelper.fireEvent(mouseClickedEvent, event);
 			}
 		}
 		
 		// Released
 		boolean consumed = false;
 		
-		if (mouseReleasedEventInternal != null && EventHelper.fireEvent(mouseReleasedEventInternal, new MouseEvent(mouseX, mouseY, button))) {
+		if (mouseReleasedEventInternal != null && EventHelper.fireEvent(mouseReleasedEventInternal, event)) {
 			consumed = true;
 		}
 		
-		if (mouseReleasedEvent != null && EventHelper.fireEvent(mouseReleasedEvent, new MouseEvent(mouseX, mouseY, button))) {
+		if (mouseReleasedEvent != null && EventHelper.fireEvent(mouseReleasedEvent, event)) {
 			consumed = true;
 		}
 		

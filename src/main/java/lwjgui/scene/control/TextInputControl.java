@@ -1383,7 +1383,8 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		public void process(TextInputControl tic, KeyEvent event) {
 			
 			// Return if consumed
-			if (event.isConsumed()) return;
+			if (event.isConsumed())
+				return;
 			
 			// Select All
 			if (event.key == GLFW.GLFW_KEY_A && event.isCtrlDown && tic.isDescendentSelected()) {

@@ -952,70 +952,66 @@ public class Window {
 		}
 
 		/*
-		 * Call scene node listeners
+		 * Call scene node listeners (in lwjgui thread)
 		 */
 		runLater(() -> {
-			notifyKeyInput(scene, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+			KeyEvent event = new KeyEvent(key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+			
+			notifyKeyInput(scene, event);
 
 			ObservableList<PopupWindow> popups = scene.getPopups();
 			for (int i = 0; i < popups.size(); i++) {
 				Node root = popups.get(i);
-				notifyKeyInput(root, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
+				notifyKeyInput(root, event);
 			}
 		});
 	}
 
-	private void notifyKeyInput(Node root, int key, int scancode, int action, int mods, boolean isCtrlDown,
-			boolean isAltDown, boolean isShiftDown) {
-		runLater(() -> {
-			if (root == null)
+	private void notifyKeyInput(Node root, KeyEvent event) {
+		if (root == null)
+			return;
+
+		ObservableList<Node> children = root.getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			notifyKeyInput(children.get(i), event);
+		}
+
+		/*
+		 * Key pressed
+		 */
+		if (event.action == GLFW_PRESS) {
+			if (root.keyPressedEventInternal != null && EventHelper.fireEvent(root.keyPressedEventInternal, event)) {
 				return;
-
-			ObservableList<Node> children = root.getChildren();
-			for (int i = 0; i < children.size(); i++) {
-				notifyKeyInput(children.get(i), key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
 			}
 
-			KeyEvent event = new KeyEvent(key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
-			/*
-			 * Key pressed
-			 */
-			if (event.action == GLFW_PRESS) {
-				if (root.keyPressedEventInternal != null
-						&& EventHelper.fireEvent(root.keyPressedEventInternal, event)) {
-					return;
-				}
-
-				if (root.keyPressedEvent != null && EventHelper.fireEvent(root.keyPressedEvent, event)) {
-					return;
-				}
+			if (root.keyPressedEvent != null && EventHelper.fireEvent(root.keyPressedEvent, event)) {
+				return;
 			}
-			/*
-			 * Key repeat (e.g. holding backspace to "spam" it)
-			 */
-			if (event.action == GLFW_REPEAT) {
-				if (root.keyRepeatEventInternal != null && EventHelper.fireEvent(root.keyRepeatEventInternal, event)) {
-					return;
-				}
-
-				if (root.keyRepeatEvent != null && EventHelper.fireEvent(root.keyRepeatEvent, event)) {
-					return;
-				}
+		}
+		/*
+		 * Key repeat (e.g. holding backspace to "spam" it)
+		 */
+		if (event.action == GLFW_REPEAT) {
+			if (root.keyRepeatEventInternal != null && EventHelper.fireEvent(root.keyRepeatEventInternal, event)) {
+				return;
 			}
-			/*
-			 * Key released
-			 */
-			if (event.action == GLFW_RELEASE) {
-				if (root.keyReleasedEventInternal != null
-						&& EventHelper.fireEvent(root.keyReleasedEventInternal, event)) {
-					return;
-				}
 
-				if (root.keyReleasedEvent != null && EventHelper.fireEvent(root.keyReleasedEvent, event)) {
-					return;
-				}
+			if (root.keyRepeatEvent != null && EventHelper.fireEvent(root.keyRepeatEvent, event)) {
+				return;
 			}
-		});
+		}
+		/*
+		 * Key released
+		 */
+		if (event.action == GLFW_RELEASE) {
+			if (root.keyReleasedEventInternal != null && EventHelper.fireEvent(root.keyReleasedEventInternal, event)) {
+				return;
+			}
+
+			if (root.keyReleasedEvent != null && EventHelper.fireEvent(root.keyReleasedEvent, event)) {
+				return;
+			}
+		}
 	}
 
 	private void charCallback(long window, int codepoint) {
@@ -1067,9 +1063,10 @@ public class Window {
 			/*
 			 * Call scene node/etc listeners
 			 */
-
+			
 			float mouseX = mouseHandler.getX();
 			float mouseY = mouseHandler.getY();
+			MouseEvent event = new MouseEvent(mouseX, mouseY, button);
 
 			if (downup == 1) { // Press
 				if (!context.hoveringOverPopup && context.getPopups().size() > 0) {
@@ -1079,14 +1076,14 @@ public class Window {
 
 				Node hovered = context.getHovered();
 				if (hovered != null) {
-					hovered.onMousePressed(mouseX, mouseY, button);
+					hovered.onMousePressed(event);
 				}
 			} else { // Release
 				Node lastPressed = context.getLastPressed();
 
 				Node hovered = context.getHovered();
 				if (hovered != null && hovered.mousePressed) {
-					boolean consumed = hovered.onMouseReleased(mouseX, mouseY, button);
+					boolean consumed = hovered.onMouseReleased(event);
 
 					// If not consumed, set selected
 					if (button == GLFW_MOUSE_BUTTON_LEFT && !consumed) {

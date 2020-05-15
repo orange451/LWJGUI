@@ -3,7 +3,7 @@ package lwjgui.event;
 public class MouseEvent extends Event {
 	public final double mouseX, mouseY;
 	public final int button;
-	private final int clicks;
+	public int clicks;
 
 	public MouseEvent(double mouseX, double mouseY, int button) {
 		this(mouseX, mouseY, button, 0);

@@ -1,9 +1,9 @@
 package lwjgui;
 
-import lwjgui.LWJGUIApplication;
-import lwjgui.scene.*;
-import lwjgui.scene.layout.*;
-import lwjgui.scene.control.*;
+import lwjgui.scene.Scene;
+import lwjgui.scene.Window;
+import lwjgui.scene.control.Label;
+import lwjgui.scene.layout.StackPane;
 
 public class HelloWorld extends LWJGUIApplication {
 	public static final int WIDTH   = 320;
@@ -19,20 +19,7 @@ public class HelloWorld extends LWJGUIApplication {
 		StackPane pane = new StackPane();
 		
 		// Put a label in the pane
-		//pane.getChildren().add(new Label("Hello World!"));
-		
-		VBox a = new VBox();
-		a.setOnKeyPressed((event) -> {
-		    System.out.println("a=" + event + ", consumed=" + event.isConsumed());
-		    event.consume();
-		});
-		TextField b = new TextField();
-		b.setOnKeyPressed((event) -> {
-		    System.out.println("b=" + event + ", consumed=" + event.isConsumed());
-		    event.consume();
-		});
-		a.getChildren().add(b);
-		pane.getChildren().add(a);
+		pane.getChildren().add(new Label("Hello World!"));
 		
 		// Create a new scene
 		window.setScene(new Scene(pane, WIDTH, HEIGHT));

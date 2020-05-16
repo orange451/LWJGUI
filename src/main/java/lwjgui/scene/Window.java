@@ -947,8 +947,7 @@ public class Window {
 		ArrayList<EventListener> listeners = getEventListenersForType(KEY_LISTENER);
 
 		for (int i = 0; i < listeners.size(); i++) {
-			((KeyListener) listeners.get(i)).invoke(handle, key, scancode, action, mods, isCtrlDown, isAltDown,
-					isShiftDown);
+			((KeyListener) listeners.get(i)).invoke(handle, key, scancode, action, mods, isCtrlDown, isAltDown, isShiftDown);
 		}
 
 		/*
@@ -968,13 +967,18 @@ public class Window {
 	}
 
 	private void notifyKeyInput(Node root, KeyEvent event) {
-		if (root == null)
+		Node selected = Window.this.getContext().getSelected();
+		if (root == null || selected == null)
 			return;
 
 		ObservableList<Node> children = root.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			notifyKeyInput(children.get(i), event);
 		}
+		
+		// Key presses are only sent to ancestors of selected node, and node itself.
+		if ( !root.equals(selected) && !selected.isDescendentOf(root) )
+			return;
 
 		/*
 		 * Key pressed
@@ -1029,7 +1033,8 @@ public class Window {
 	private void notifyTextInput(Node root, TypeEvent event) {
 		boolean consumed = false;
 
-		if (root == null)
+		Node selected = Window.this.getContext().getSelected();
+		if (root == null || selected == null)
 			return;
 
 		if (root.textInputEventInternal != null && EventHelper.fireEvent(root.textInputEventInternal, event)) {
@@ -1041,6 +1046,11 @@ public class Window {
 		}
 
 		if (consumed)
+			return;
+		
+
+		// Key presses are only sent to ancestors of selected node, and node itself.
+		if ( !root.equals(selected) && !selected.isDescendentOf(root) )
 			return;
 
 		ObservableList<Node> children = root.getChildren();

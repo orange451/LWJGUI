@@ -39,4 +39,9 @@ public class MousePosCallback extends CursorPosCallback {
 		return dy;
 	}
 
+	public void dropInput() {
+		this.dx = 0;
+		this.dy = 0;
+	}
+
 }

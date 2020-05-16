@@ -3,8 +3,6 @@ package lwjgui.scene;
 import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_HRESIZE_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_IBEAM_CURSOR;
-import static org.lwjgl.glfw.GLFW.GLFW_RAW_MOUSE_MOTION;
-import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VRESIZE_CURSOR;
 import static org.lwjgl.glfw.GLFW.glfwCreateCursor;
 import static org.lwjgl.glfw.GLFW.glfwCreateStandardCursor;
@@ -17,9 +15,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwRawMouseMotionSupported;
 import static org.lwjgl.glfw.GLFW.glfwSetCursor;
-import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
@@ -124,8 +120,6 @@ public final class WindowManager {
 		Window window = new Window(windowID, handle.width, handle.height, handle.title);
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(windowID, (vidmode.width() - window.width) / 2, (vidmode.height() - window.height) / 2);
-		if (glfwRawMouseMotionSupported()) // Use raw motion, fixes mouse movement when disabled
-			glfwSetInputMode(windowID, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
 		try (MemoryStack stack = stackPush()) {
 			IntBuffer w = stack.mallocInt(1);
@@ -328,9 +322,10 @@ public final class WindowManager {
 			}
 		}
 		glfwPollEvents();
-		for (Window window : toRemove) {
+		for (Window window : windows)
+			window.getMouseHandler().dropInput();
+		for (Window window : toRemove) 
 			windows.remove(window);
-		}
 	}
 
 	/**

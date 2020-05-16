@@ -20,9 +20,12 @@ public class MouseHandler {
 	private final MousePosCallback posCallback;
 	private final MouseButtonCallback buttonCallback;
 	private final MouseScrollCallback scrollCallback;
-	private static boolean isGrabbed;
+	private final Window window;
+	private boolean isGrabbed;
+	private boolean dropInput;
 
 	public MouseHandler(Window window) {
+		this.window = window;
 		this.enterCallback = new MouseEnterCallback();
 		this.posCallback = new MousePosCallback();
 		this.buttonCallback = new MouseButtonCallback();
@@ -36,6 +39,15 @@ public class MouseHandler {
 
 	public void update() {
 		this.posCallback.update();
+	}
+
+	public void dropInput() {
+		// Drop first frame of input after disabling due to windows generating evens
+		// with wrong positions
+		if (dropInput) {
+			dropInput = false;
+			this.posCallback.dropInput();
+		}
 	}
 
 	public boolean isInside() {
@@ -59,13 +71,13 @@ public class MouseHandler {
 	}
 
 	public float getDX() {
-		if ( !isGrabbed )
+		if (!isGrabbed)
 			return 0;
 		return (float) this.posCallback.getDX();
 	}
 
 	public float getDY() {
-		if ( !isGrabbed )
+		if (!isGrabbed)
 			return 0;
 		return (float) -this.posCallback.getDY();
 	}
@@ -86,14 +98,17 @@ public class MouseHandler {
 		return (float) this.scrollCallback.getXWheel();
 	}
 
-	public static void setGrabbed(long windowID, boolean grab) {
+	public void setGrabbed(boolean grab) {
 		WindowManager.runLater(() -> {
-			GLFW.glfwSetInputMode(windowID, GLFW.GLFW_CURSOR, grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_NORMAL);
+			GLFW.glfwSetInputMode(window.getID(), GLFW.GLFW_CURSOR,
+					grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_NORMAL);
+			if (isGrabbed != grab)
+				dropInput = true;
 			isGrabbed = grab;
 		});
 	}
 
-	public static boolean isGrabbed() {
+	public boolean isGrabbed() {
 		return isGrabbed;
 	}
 }

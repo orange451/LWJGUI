@@ -188,9 +188,10 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 			this.setTextFill(Theme.current().getText());
 		}
 		
-		
 		// SETUP BUTTON COLOR
-		Color buttonColor = isPressed()?Theme.current().getControlOutline():((context.isHovered(this)&&!isDisabled())?Theme.current().getControlHover():Theme.current().getControl());
+		Color buttonColor = isPressed() ? Theme.current().getControlHover()
+				: ((context.isHovered(this) && !isDisabled()) ? Theme.current().getControlHover()
+						: Theme.current().getControl());
 		this.setBackground(new BackgroundLinearGradient(90, new ColorStop(buttonColor, 0), new ColorStop(Theme.current().getControlOutline(), 3)));
 		
 		// SETUP BUTTON OUTLINE
@@ -199,14 +200,8 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 		
 		// Weird inset outline???
 		this.getBoxShadowList().clear();
-		if ( !this.isDisabled() ) {
-			Color c2 = Theme.current().getControlAlt();
-			if ( context.isHovered(this) )
-				c2 = Theme.current().getControlHover().darker();
-			if ( isPressed() )
-				c2 = buttonColor.darker();
-			this.getBoxShadowList().add(new BoxShadow(0, 0, 2, 1, c2, true));
-		}
+		if ( !this.isDisabled() && isPressed() )
+			this.getBoxShadowList().add(new BoxShadow(0, 1, 5, 0, Theme.current().getControlOutline(), true));
 		
 		// SETUP SELECTION GRAPHIC
 		if ( context.isSelected(this) && window.isFocused() ) {

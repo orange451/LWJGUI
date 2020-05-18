@@ -77,6 +77,6 @@ public class ThemeWhite extends Theme {
 
 	@Override
 	public Color getControlHover() {
-		return new Color(250, 250, 250);
+		return new Color(225, 225, 225);
 	}
 }

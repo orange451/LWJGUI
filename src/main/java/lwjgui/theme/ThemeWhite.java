@@ -72,7 +72,7 @@ public class ThemeWhite extends Theme {
 
 	@Override
 	public Color getControlOutline() {
-		return Color.DIM_GRAY;
+		return new Color(180, 180, 180);
 	}
 
 	@Override

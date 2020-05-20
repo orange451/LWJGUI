@@ -357,6 +357,41 @@ public class StyleOperationDefinitions {
 		}
 	};
 	
+	public static StyleOperation FILL_COLOR = new StyleOperation("fill-color") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof StyleFillColor) )
+				return;
+			
+			StyleFillColor t = (StyleFillColor)node;
+			Color destColor = getColor(value.get(0).get(0));
+			Color currentBackground = t.getFill();
+			
+			StyleTransition transition = node.getStyleTransition(this.getName());
+			if ( transition == null || currentBackground == null || !(currentBackground instanceof Color) ) {
+				t.setFill(new Color(destColor));
+			} else {
+				List<Transition> current = transition.getTransitions();
+				if ( current.size() > 0 )
+					return;
+				
+				Color sourceColor = new Color(currentBackground);
+				if ( sourceColor.equals(destColor) )
+					return;
+				
+				Color fillColor = new Color(sourceColor);
+				
+				// Color transition
+				FillTransition tran = new FillTransition(transition.getDurationMillis(), sourceColor, destColor, fillColor);
+				tran.play();
+				current.add(tran);
+
+				// Apply fill color
+				t.setFill(fillColor);
+			}
+		}
+	};
+	
 	public static StyleOperation BACKGROUND_IMAGE = new StyleOperation("background-image") {
 		@Override
 		public void process(Node node, StyleVarArgs value) {

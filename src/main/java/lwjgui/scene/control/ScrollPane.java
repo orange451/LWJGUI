@@ -6,10 +6,8 @@ import java.util.List;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
 import org.joml.Vector4d;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
-import lwjgui.LWJGUI;
 import lwjgui.LWJGUIUtil;
 import lwjgui.collections.ObservableList;
 import lwjgui.geometry.Insets;
@@ -73,7 +71,9 @@ public class ScrollPane extends Pane {
 	protected void position(Node node) {
 		super.position(node);
 		//this.internalCanvas.position(this);
-		
+	}
+	
+	private void updateScrollPane() {
 		this.viewport.set((float)this.getInnerBounds().getWidth(), (float)this.getInnerBounds().getHeight());
 		if ( hBar.active )
 			this.viewport.y -= (thickness+barPadding*2);
@@ -261,6 +261,7 @@ public class ScrollPane extends Pane {
 	public void render(Context context) {
 		if ( !isVisible() )
 			return;
+		updateScrollPane();
 		
 		super.render(context);
 		

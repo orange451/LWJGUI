@@ -759,6 +759,9 @@ public abstract class Node implements Resizable {
 		if ( context == null )
 			return;
 		
+		if ( getScene() == null )
+			return;
+		
 		LayoutBounds clipBoundsTemp = new LayoutBounds(0, 0, (int)getScene().getWidth(), (int)getScene().getHeight());
 		LayoutBounds tempBounds = LAYOUT_CACHE;
 		

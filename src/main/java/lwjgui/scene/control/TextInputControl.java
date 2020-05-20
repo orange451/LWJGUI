@@ -717,7 +717,7 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 		}
 		
 		//TODO: Move htis into an actual input callback
-		if ( this.isDescendentSelected() && editable && !this.isDisabled() ) {
+		if ( (this.isSelected() || this.isDescendentSelected()) && editable && !this.isDisabled() ) {
 			if ( !editing && onSelectEvent != null ) {
 				EventHelper.fireEvent(onSelectEvent, new Event());
 			}

@@ -146,6 +146,9 @@ public class TreeNode<E> extends HBox {
 			}
 			
 		});
+
+		item.label.setOnMouseClicked(this.getOnMouseClicked());
+		item.label.setOnMousePressed(this.getMousePressedEvent());
 	}
 	
 	@Override

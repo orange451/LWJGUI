@@ -33,7 +33,6 @@ import lwjgui.event.Event;
 import lwjgui.event.EventHelper;
 import lwjgui.font.Font;
 import lwjgui.glfw.input.MouseHandler;
-import lwjgui.scene.Node.LayoutBounds;
 import lwjgui.scene.control.PopupWindow;
 import lwjgui.scene.image.Image;
 import lwjgui.style.Stylesheet;
@@ -52,12 +51,14 @@ public class Context {
 	private Node hovered = null;
 	private Node lastPressed = null;
 
+	private List<Node> hoveredNodes = new ArrayList<>();
+
 	protected Bounds clipBounds;
 
 	private List<Stylesheet> currentSheets = new ArrayList<>();
 
 	private List<ByteBuffer> fontBuffers = new ArrayList<>();
-	
+
 	private Set<Font> loadedFonts = new HashSet<>();
 
 	private List<Image> loadedImages = new ArrayList<>();
@@ -136,7 +137,6 @@ public class Context {
 		mouseHover();
 	}
 
-	private Node lastHovered = null;
 	protected boolean hoveringOverPopup;
 
 	private void mouseHover() {
@@ -162,14 +162,24 @@ public class Context {
 			}
 		}
 
-		// Mouse hovered event
-		if (hovered != null && (lastHovered == null || !lastHovered.equals(hovered))) {
-			hovered.onMouseEntered();
+		// Check all hovered nodes to see if no longer hovered
+		for (int i = 0; i < hoveredNodes.size(); i++) {
+			if ( i >= hoveredNodes.size() )
+				continue;
+			Node node = hoveredNodes.get(i);
+			if ( node == null )
+				continue;
+			
+			MouseHandler mh = window.getMouseHandler();
+			float mouseX = mh.getX();
+			float mouseY = mh.getY();
+			Bounds rootBounds = node.getNodeBounds();
+			
+			if (mouseX <= rootBounds.getX() || mouseX > rootBounds.getX() + rootBounds.getWidth() || mouseY <= rootBounds.getY() || mouseY > rootBounds.getY() + rootBounds.getHeight()) {
+				hoveredNodes.remove(node);
+				node.onMouseExited();
+			}
 		}
-		if (lastHovered != null && (hovered == null || !lastHovered.equals(hovered))) {
-			lastHovered.onMouseExited();
-		}
-		lastHovered = hovered;
 	}
 
 	private Node calculateHoverPopups(Scene scene) {
@@ -208,17 +218,15 @@ public class Context {
 		float mouseX = mh.getX();
 		float mouseY = mh.getY();
 
-		// If mouse is out of our bounds, we're not clickable
+		// If mouse is out of our bounds, ignore.
 		if (mouseX <= rootBounds.getX() || mouseX > rootBounds.getX() + rootBounds.getWidth()
 				|| mouseY <= rootBounds.getY() || mouseY > rootBounds.getY() + rootBounds.getHeight()) {
-
-			/*
-			 * System.err.println(parent + " " + root + " -> " + "\n" + rootBounds.getX() +
-			 * " " + rootBounds.getY() + " " + rootBounds.getWidth() + " " +
-			 * rootBounds.getHeight() + "\n" + root.getX() + " " + root.getY() + " " +
-			 * root.getWidth() + " " + root.getHeight());
-			 */
 			return parent;
+		}
+
+		if (!hoveredNodes.contains(root)) {
+			hoveredNodes.add(root);
+			root.onMouseEntered();
 		}
 
 		// Check children
@@ -389,28 +397,28 @@ public class Context {
 	public Window getWindow() {
 		return window;
 	}
-	
+
 	public void loadFont(Font font) {
 		this.loadFont(font, true);
 	}
-	
+
 	public boolean isFontLoaded(Font font) {
 		return loadedFonts.contains(font);
 	}
 
 	public void loadFont(Font font, boolean loadFallbacks) {
-		if ( isFontLoaded(font) )
+		if (isFontLoaded(font))
 			return;
-		
+
 		loadFont(font.getFontPath(), font.getFontNameRegular(), loadFallbacks);
 		loadFont(font.getFontPath(), font.getFontNameBold(), loadFallbacks);
 		loadFont(font.getFontPath(), font.getFontNameLight(), loadFallbacks);
 		loadFont(font.getFontPath(), font.getFontNameItalic(), loadFallbacks);
-		
+
 		// Fallback for fonts loaded via bytebuffer
-		if ( font.getFontPath() == null && font.getInternalByteBuffer() != null )
+		if (font.getFontPath() == null && font.getInternalByteBuffer() != null)
 			loadFont(font.getFontNameRegular(), font.getInternalByteBuffer(), loadFallbacks);
-		
+
 		// Mark this font as loaded in this context.
 		loadedFonts.add(font);
 	}
@@ -432,14 +440,14 @@ public class Context {
 
 			// Create normal font
 			ByteBuffer buf = ioResourceToByteBuffer(path, 1024 * 1024);
-			
+
 			// Load the font
 			loadFont(loadName, buf, loadFallbacks);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Loads a given Font.
 	 * 
@@ -515,10 +523,10 @@ public class Context {
 
 	public void setScissor(double x, double y, double w, double h) {
 		Context context = this.getWindow().getContext();
-		scissor.set(x, y, x+w, y+h);
-		NanoVG.nvgScissor(context.getNVG(), (int)x, (int)y, (int)w, (int)h);
+		scissor.set(x, y, x + w, y + h);
+		NanoVG.nvgScissor(context.getNVG(), (int) x, (int) y, (int) w, (int) h);
 	}
-	
+
 	public Bounds getScissor() {
 		return this.scissor;
 	}

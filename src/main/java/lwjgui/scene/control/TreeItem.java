@@ -3,7 +3,7 @@ package lwjgui.scene.control;
 import lwjgui.font.Font;
 import lwjgui.geometry.Pos;
 import lwjgui.scene.Node;
-import lwjgui.scene.layout.Pane;
+import lwjgui.scene.layout.HBox;
 
 public class TreeItem<E> extends TreeBase<E> {
 	private E root;
@@ -75,7 +75,7 @@ public class TreeItem<E> extends TreeBase<E> {
 	}
 }
 
-class TreeItemLabel extends Pane {
+class TreeItemLabel extends HBox {
 	protected Label label;
 	private Node graphic;
 	
@@ -86,7 +86,7 @@ class TreeItemLabel extends Pane {
 		this.label.setFontSize(16);
 		this.label.setPrefHeight(23);
 		this.label.setAlignment(Pos.CENTER_LEFT);
-		this.setMouseTransparent(true);
+		this.label.setMouseTransparent(true);
 		this.setBackgroundLegacy(null);
 		setText(text);
 		

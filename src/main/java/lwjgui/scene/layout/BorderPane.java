@@ -118,23 +118,26 @@ public class BorderPane extends Pane {
 		this.internalVBox.setSpacing(spacing);
 		
 		// Top
-		if ( top != null ) {
+		if ( top != null )
 			this.internalVBox.getChildren().add(top);
-		}
 		
 		// Center box
 		this.internalVBox.getChildren().add(this.internalHBox);
+		
+		// Left side
 		if ( left != null )
 			this.internalHBox.getChildren().add(sp(left, false));
-		if ( center != null )
-			this.internalHBox.getChildren().add(sp(center, true));
+		
+		// Center
+		this.internalHBox.getChildren().add(sp(center, true));
+		
+		// Right side
 		if ( right != null )
 			this.internalHBox.getChildren().add(sp(right, false));
 		
 		// Bottom
-		if ( bottom != null ) {
+		if ( bottom != null )
 			this.internalVBox.getChildren().add(bottom);
-		}
 	}
 
 	private StackPane sp(Node node, boolean fitWid) {

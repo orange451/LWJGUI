@@ -48,6 +48,7 @@ JavaFX simply does not have the capability to be incoroperated into custom OpenG
 
 # Projects That Use LWJGUI
 - [Anarchy Engine - 3D Java/lua game engine](https://github.com/orange451/AnarchyEngine)
+- [HarryPlotter - Differential Geometry Plotter](https://github.com/artemgl/HarryPlotter)
 - [Lime - 2D game engine](https://github.com/cozmic185/Lime)
 - [BumboEditoni - Minecraft 1.14+ World Editor](https://github.com/DaNetNavern0/BumboEditoni)
 

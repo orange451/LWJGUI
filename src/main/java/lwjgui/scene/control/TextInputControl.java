@@ -1119,20 +1119,23 @@ public abstract class TextInputControl extends Control implements BlockPaneRende
 					if (clickTime - lastLastClickTime <= TRIPLE_CLICK_SPEED && lastLastClickTime != 0) {
 						// Triple clicked.
 						String line = lines.get(getRowFromCaret(caretPosition));
-						int rowStart = getCaretFromRowLine(getRowFromCaret(caretPosition), 0);
 
-						int lineLength = line.length();
+						if (!line.isEmpty()) {
+							int rowStart = getCaretFromRowLine(getRowFromCaret(caretPosition), 0);
 
-						if (line.charAt(lineLength-1) == '\n' || line.charAt(lineLength-1) == '\r') {
-							lineLength--;
+							int lineLength = line.length();
+
+							if (line.charAt(lineLength - 1) == '\n' || line.charAt(lineLength - 1) == '\r') {
+								lineLength--;
+							}
+
+							int rowEnd = rowStart + lineLength;
+
+							selectionStartPosition = rowStart;
+							selectionEndPosition = rowEnd;
+
+							lastLastClickTime = 0;
 						}
-
-						int rowEnd = rowStart + lineLength;
-
-						selectionStartPosition = rowStart;
-						selectionEndPosition = rowEnd;
-
-						lastLastClickTime = 0;
 					} else {
 						lastLastClickTime = lastClickTime;
 						// Double clicked.

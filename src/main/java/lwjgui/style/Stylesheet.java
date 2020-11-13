@@ -155,7 +155,7 @@ public class Stylesheet {
 	}
 
 	/**
-	 * Compule Stylesheet
+	 * Compile Stylesheet
 	 */
 	public boolean compile() throws StylesheetCompileError {
 		String newSource = source.replaceAll("[?<=\\/\\*](.*)[?=\\*\\/]", "");

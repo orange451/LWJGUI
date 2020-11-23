@@ -10,12 +10,14 @@ import java.util.stream.*;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 
 import lwjgui.LWJGUI;
 import lwjgui.scene.Context;
+import lwjgui.util.OperatingSystem;
 
 public class GenericShader {
 	private final int id;
@@ -33,13 +35,12 @@ public class GenericShader {
 
 	public GenericShader() {
 		this(
-				GenericShader.class.getResource("vertex.glsl"),
-				GenericShader.class.getResource("fragment.glsl")
+				Thread.currentThread().getContextClassLoader().getResource("lwjgui/gl/vertex.glsl"),
+				Thread.currentThread().getContextClassLoader().getResource("lwjgui/gl/fragment.glsl")
 			);
 	}
 
 	public GenericShader(URL vertexShader, URL fragmentShader) {
-
 		// make the shader
 		vertexId = compileShader(vertexShader, true);
 		fragmentId = compileShader(fragmentShader, false);
@@ -108,13 +109,23 @@ public class GenericShader {
 	}
 
 	protected static int compileShader(URL url, boolean isVertex) {
-		if ( url == null )
+		if (url == null)
 			return -1;
-		
-		try (InputStream in = url.openStream();
-				InputStreamReader isr = new InputStreamReader(in);
-				BufferedReader br = new BufferedReader(isr)) {
-			String source = br.lines().collect(Collectors.joining("\n"));
+
+		try {
+			InputStream in = url.openStream();
+			InputStreamReader isr = new InputStreamReader(in);
+			BufferedReader br = new BufferedReader(isr);
+
+			String source = "";
+			String st;
+			while ((st = br.readLine()) != null)
+				source += st + "\n";
+			
+			br.close();
+			isr.close();
+			in.close();	 
+			
 			return compileShader(source, isVertex);
 		} catch (IOException ex) {
 			throw new RuntimeException("can't compile shader at: " + url, ex);
@@ -130,10 +141,15 @@ public class GenericShader {
 			type = GL20.GL_FRAGMENT_SHADER;
 		}
 
-		// try to massage JavaFX shaders into modern OpenG
-		if (source.startsWith("#ifdef GL_ES\n")) {
+		// try to massage JavaFX shaders into modern OpenGL
+		if (source.startsWith("#ifdef GL_ES\n")) 
 			source = modernizeShader(source, isVertex);
-		}
+		
+		// If ES
+        String glVersion = new String(GL11.glGetString(GL11.GL_VERSION));
+        boolean isOpenGLES = glVersion.contains("OpenGL ES");
+        if ( isOpenGLES )
+        	source = source.replace("#version 330", "#version 300 es\r\nprecision highp float;\r\nprecision highp sampler2DShadow;\r\n");
 
 		int id = GL20.glCreateShader(type);
 		GL20.glShaderSource(id, source);

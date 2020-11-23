@@ -67,9 +67,9 @@ import static org.lwjgl.opengl.GL11C.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.List;
 
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -122,7 +122,7 @@ public class Window {
 
 	protected final long windowID;
 
-	private Queue<Task<?>> tasks = new ConcurrentLinkedQueue<>();
+	private List<Task<?>> tasks = Collections.synchronizedList(new ArrayList<>());
 
 	protected DisplayUtils displayUtils;
 
@@ -181,16 +181,24 @@ public class Window {
 
 	private HashMap<EventListenerType, ArrayList<EventListener>> eventListeners = new HashMap<>();
 
-	protected Window(long windowID, int width, int height, String title) {
+	public Window(long windowID, int width, int height, String title) {
 		this.windowID = windowID;
 		this.displayUtils = new DisplayUtils();
 		this.width = width;
 		this.height = height;
 		this.title = title;
 		this.visible = getWindowAttribute(GLFW_VISIBLE);
-		context = new Context(this);
 		this.setCallbacks();
 		WindowManager.setCursor(this, Cursor.NORMAL);
+		
+		newContext();
+	}
+	
+	private void newContext() {
+		if ( context != null )
+			return;
+		
+		context = new Context(this);
 	}
 
 	protected void setCallbacks() {
@@ -271,6 +279,7 @@ public class Window {
 			pixelRatio = (width <= this.width) ? 1 : width / this.width;
 			framebufferWidth = width;
 			framebufferHeight = height;
+			System.out.println("Framebuffer call back fired: " + width + " / " + height);
 		});
 
 		cursorEnterCallback = new CursorEnterCallback();
@@ -300,6 +309,8 @@ public class Window {
 	}
 
 	public void init() {
+		newContext();
+		
 		context.init();
 		scene = new Scene(new StackPane());
 	}
@@ -311,8 +322,13 @@ public class Window {
 			renderInternal();
 
 		// Perform deferred tasks
-		while (!tasks.isEmpty())
-			tasks.poll().callI();
+		//while (!tasks.isEmpty())
+			//tasks.poll().callI();
+		synchronized(tasks) {
+			for (Task task : tasks)
+				task.callI();
+			tasks.clear();
+		}
 	}
 
 	private void renderInternal() {
@@ -889,7 +905,11 @@ public class Window {
 	public <T> Task<T> submitTask(Task<T> t) {
 		if (t == null)
 			return null;
-		tasks.add(t);
+		
+		synchronized(tasks) {
+			tasks.add(t);
+		}
+		
 		return t;
 	}
 

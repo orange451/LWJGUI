@@ -275,7 +275,7 @@ public class Tab {
 				NanoVG.nvgStrokeColor(vg, col.getNVG());
 				NanoVG.nvgStrokeWidth(vg, inset*1.25f);
 				NanoVG.nvgStroke(vg);
-				NanoVG.nnvgClosePath(vg);
+				NanoVG.nvgClosePath(vg);
 			}
 			
 			for (int i = 0; i < children.size(); i++) {

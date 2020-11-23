@@ -35,8 +35,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
@@ -56,7 +54,7 @@ public final class WindowManager {
 
 	private static List<Window> windows = new ArrayList<>();
 	private static List<Window> toRemove = new ArrayList<>();
-	private static Queue<Task<?>> tasks = new ConcurrentLinkedQueue<>();
+	private static List<Task<?>> tasks = Collections.synchronizedList(new ArrayList<>());
 	private static Map<Cursor, Long> cursors = new HashMap<>();
 
 	private static long mainThread = -1;
@@ -309,8 +307,12 @@ public final class WindowManager {
 	 * </p>
 	 */
 	public static void update() {
-		while (!tasks.isEmpty())
-			tasks.poll().callI();
+		synchronized(tasks) {
+			for (Task task : tasks)
+				task.callI();
+			tasks.clear();
+		}
+		
 		toRemove.clear();
 		for (Window window : windows) {
 			window.dirty = false;
@@ -340,6 +342,7 @@ public final class WindowManager {
 			return;
 		
 		mainThread = Thread.currentThread().getId();
+		System.out.println("Main thread: " + mainThread);
 		addCursor(Cursor.NORMAL, GLFW_ARROW_CURSOR);
 		addCursor(Cursor.VRESIZE, GLFW_VRESIZE_CURSOR);
 		addCursor(Cursor.HRESIZE, GLFW_HRESIZE_CURSOR);
@@ -400,8 +403,11 @@ public final class WindowManager {
 			return null;
 		if (Thread.currentThread().getId() == mainThread)
 			t.callI();
-		else
-			tasks.add(t);
+		else {
+			synchronized(tasks) {
+				tasks.add(t);
+			}
+		}
 		return t;
 	}
 

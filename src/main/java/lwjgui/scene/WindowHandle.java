@@ -13,7 +13,7 @@ import lwjgui.glfw.PixelBufferHandle;
 /**
  * Used to setup GLFW hints for use in the window creation.
  */
-public final class WindowHandle {
+public class WindowHandle {
 
 	protected int width, height;
 	protected String title;
@@ -21,7 +21,7 @@ public final class WindowHandle {
 	protected boolean legacyGL;
 	private Map<Integer, Integer> hints = new HashMap<>();
 
-	protected WindowHandle(int width, int height, String title, boolean legacyGL) {
+	public WindowHandle(int width, int height, String title, boolean legacyGL) {
 		System.out.println("Creating WindowHandle for '" + title + "'");
 		this.width = width;
 		this.height = height;

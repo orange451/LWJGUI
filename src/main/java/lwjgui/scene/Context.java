@@ -2,19 +2,18 @@ package lwjgui.scene;
 
 import static org.lwjgl.glfw.GLFW.GLFW_DONT_CARE;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeLimits;
-import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
 import static org.lwjgl.system.MemoryUtil.memAlloc;
-import static org.lwjgl.system.MemoryUtil.memRealloc;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
+import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -459,7 +458,7 @@ public class Context {
 		int fontCallback;
 		try {
 			// Create normal font
-			fontCallback = nvgCreateFontMem(nvgContext, fontName, fontData, 0);
+			fontCallback = NanoVG.nvgCreateFontMem(nvgContext, fontName, fontData, 0);
 			fontBuffers.add(fontData);
 
 			// Fallback emoji fonts
@@ -476,43 +475,48 @@ public class Context {
 	}
 
 	private void addFallback(int fontCallback, String name, ByteBuffer fontData) {
-		NanoVG.nvgAddFallbackFontId(nvgContext, fontCallback, nvgCreateFontMem(nvgContext, name, fontData, 0));
+		NanoVG.nvgAddFallbackFontId(nvgContext, fontCallback, NanoVG.nvgCreateFontMem(nvgContext, name, fontData, 0));
+	}
+	
+	private static InputStream inputStream(String path) throws IOException {
+		InputStream stream;
+		File file = new File(path);
+		if (file.exists() && file.isFile()) {
+			stream = new FileInputStream(file);
+		} else {
+			stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+		}
+		return stream;
+	}
+	
+	private static byte[] toByteArray(InputStream stream, int bufferSize) {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+		int nRead;
+		byte[] data = new byte[bufferSize];
+
+		try {
+			while ((nRead = stream.read(data, 0, data.length)) != -1) {
+				buffer.write(data, 0, nRead);
+			}
+			buffer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return buffer.toByteArray();
 	}
 
 	public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
-		ByteBuffer buffer;
-
-		File file = new File(resource);
-		if (file.isFile()) {
-			try (FileInputStream fis = new FileInputStream(file)) {
-				try (FileChannel fc = fis.getChannel()) {
-					buffer = memAlloc((int) fc.size() + 1);
-					while (fc.read(buffer) != -1)
-						;
-				}
-			}
-		} else {
-			int size = 0;
-			buffer = memAlloc(bufferSize);
-			try (InputStream source = Context.class.getClassLoader().getResourceAsStream(resource)) {
-				if (source == null)
-					throw new FileNotFoundException(resource);
-				try (ReadableByteChannel rbc = Channels.newChannel(source)) {
-					while (true) {
-						int bytes = rbc.read(buffer);
-						if (bytes == -1)
-							break;
-						size += bytes;
-						if (!buffer.hasRemaining())
-							buffer = memRealloc(buffer, size * 2);
-					}
-				}
-			}
-			buffer = memRealloc(buffer, size + 1);
+		ByteBuffer data = null;
+		InputStream stream = inputStream(resource);
+		if (stream == null) {
+			throw new FileNotFoundException(resource);
 		}
-		buffer.put((byte) 0);
-		buffer.flip();
-		return buffer;
+		byte[] bytes = toByteArray(stream, bufferSize);
+		data = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder()).put(bytes);
+		data.flip();
+		return data;
 	}
 
 	public void loadImage(Image image) {

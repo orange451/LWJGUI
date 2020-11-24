@@ -288,9 +288,6 @@ public class Window {
 		charModsCallback = new CharModsCallback();
 		charModsCallback.addCallback(glfwSetCharModsCallback(windowID, charModsCallback));
 
-		mouseHandler = new MouseHandler(this);
-		keyboardHandler = new KeyboardHandler(this);
-
 		windowPosCallback = new WindowPosCallback();
 		windowPosCallback.addCallback(glfwSetWindowPosCallback(windowID, windowPosCallback));
 		windowPosCallback.addCallback((window, xpos, ypos) -> {
@@ -306,6 +303,9 @@ public class Window {
 
 		windowRefreshCallback = new WindowRefreshCallback();
 		windowRefreshCallback.addCallback(glfwSetWindowRefreshCallback(windowID, windowRefreshCallback));
+
+		mouseHandler = new MouseHandler(this);
+		keyboardHandler = new KeyboardHandler(this);
 	}
 
 	public void init() {

@@ -6,18 +6,14 @@ import java.io.*;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.stream.*;
-
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 
 import lwjgui.LWJGUI;
 import lwjgui.scene.Context;
-import lwjgui.util.OperatingSystem;
 
 public class GenericShader {
 	private final int id;

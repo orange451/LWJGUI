@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.joml.Vector2d;
+import org.lwjgl.glfw.GLFW;
 
 import lwjgui.LWJGUI;
 import lwjgui.collections.ObservableList;
@@ -1588,6 +1589,6 @@ public abstract class Node implements Resizable {
 	 * @return
 	 */
 	public boolean isClicked() {
-		return this.isHover() && this.window.getMouseHandler().isButtonPressed(0);
+		return this.isHover() && this.window.getMouseHandler().isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_LEFT);
 	}
 }

@@ -14,6 +14,10 @@ public abstract class PopupWindow extends FloatingPane {
 	protected boolean autoHide;
 	private boolean open;
 	
+	public PopupWindow() {
+		this.setBackgroundLegacy(Theme.current().getPane());
+	}
+	
 	public void show(Scene scene, double absoluteX, double absoluteY) {
 		// Make sure the popup window is properly sized (i.e. buffer)
 		for (int i = 0; i < 2; i++) {
@@ -21,8 +25,6 @@ public abstract class PopupWindow extends FloatingPane {
 		}
 		this.setAbsolutePosition((int)absoluteX, (int)absoluteY);
 		this.position(scene);
-		
-		this.setBackgroundLegacy(Theme.current().getPane());
 		
 		scene.showPopup(this);
 		mouseEntered = false;

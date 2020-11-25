@@ -25,8 +25,8 @@ void main(void) {
    vec4 result = vec4(0.0);
    
    vec2 hlim = vec2(float(-uBlurSize) * 0.5 + 0.5);
-   for (int i = 0; i < uBlurSize; ++i) {
-      for (int j = 0; j < uBlurSize; ++j) {
+   for (int i = 0; i < int(uBlurSize); ++i) {
+      for (int j = 0; j < int(uBlurSize); ++j) {
          vec2 offset = (hlim + vec2(float(i), float(j))) * uTexelSize;
          result += vec4(texture(colorSampler, passTexCoord + offset).rgb,1.0);
       }
@@ -45,7 +45,7 @@ void main(void) {
 			min(
 				roundCorner( vec2(0.0, 1.0), vec2(0, 1.0 / uTexelSize.y) - vec2( -uCornerRadii.x, uCornerRadii.x ), uCornerRadii.x, passTexCoord ),
 				min(
-					roundCorner( vec2(1.0, 0), vec2(1.0 / uTexelSize.x, 0) - vec2( uCornerRadii.z, -uCornerRadii.z ), uCornerRadii.z, passTexCoord ),
+					roundCorner( vec2(1.0, 0.0), vec2(1.0 / uTexelSize.x, 0.0) - vec2( uCornerRadii.z, -uCornerRadii.z ), uCornerRadii.z, passTexCoord ),
 					roundCorner( vec2(1.0), (1.0 / uTexelSize) - vec2( uCornerRadii.y ), uCornerRadii.y, passTexCoord )
 				)
 			)

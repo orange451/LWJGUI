@@ -4,6 +4,8 @@ public enum OperatingSystem {
 	WINDOWS,
 	MAC,
 	LINUX,
+	ANDROID,
+	IOS,
 	OTHER;
 	
 	/**
@@ -11,6 +13,12 @@ public enum OperatingSystem {
 	 */
 	public static OperatingSystem detect() {
 		String os = System.getProperty("os.name").toLowerCase();
+		
+		if ( os.indexOf("ios") >= 0 )
+			return IOS;
+		
+		if ( os.indexOf("android") >= 0 )
+			return ANDROID;
 		
 		if (os.indexOf("win") >= 0) {
 			return WINDOWS;
@@ -25,5 +33,13 @@ public enum OperatingSystem {
 		}
 		
 		return OTHER;
+	}
+	
+	public static boolean isMobile() {
+		return detect() == IOS || detect() == ANDROID;
+	}
+	
+	public static boolean isDesktop() {
+		return detect() == WINDOWS || detect() == MAC || detect() == LINUX;
 	}
 }

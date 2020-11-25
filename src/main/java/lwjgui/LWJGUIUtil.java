@@ -537,6 +537,9 @@ public class LWJGUIUtil {
 		if ( startOnFirstThread != null && startOnFirstThread.equals("true") )
 			return false;
 		
+		if ( OperatingSystem.detect() == OperatingSystem.IOS )
+			return false;
+		
 		// Figure out the right class to call
 		StackTraceElement[] cause = Thread.currentThread().getStackTrace();
 
@@ -590,6 +593,10 @@ public class LWJGUIUtil {
 		// If we're already on the first thread, return
 		String startOnFirstThread = System.getProperty("XstartOnFirstThread");
 		if ( startOnFirstThread != null && startOnFirstThread.equals("true") )
+			return false;
+		
+		// Force return if we're on ios.
+		if ( OperatingSystem.detect() == OperatingSystem.IOS )
 			return false;
 
 		// if not a mac then we're already on first thread, return.

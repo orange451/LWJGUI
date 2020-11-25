@@ -202,7 +202,7 @@ public class Stylesheet {
 	 * @param content
 	 */
 	private void parseContent(List<StyleSelector> selectors, String content) {
-		System.out.println("Found selectors (" + selectors.size() + "): " + Arrays.toString(selectors.toArray()));
+		//System.out.println("Found selectors (" + selectors.size() + "): " + Arrays.toString(selectors.toArray()));
 
 		Map<Object, StyleVarArgs> data = new HashMap<>();
 
@@ -272,7 +272,7 @@ public class Stylesheet {
 			final StyleData sDataFinal = sData;
 
 			data.entrySet().forEach(entry -> {
-				System.out.println(selector.selector + " :: '" + entry.getKey() + "' = '" + entry.getValue() + "'");
+				//System.out.println(selector.selector + " :: '" + entry.getKey() + "' = '" + entry.getValue() + "'");
 				StyleOperation op = StyleOperationDefinitions.match(entry.getKey().toString());
 				
 				if ( op != null ) {

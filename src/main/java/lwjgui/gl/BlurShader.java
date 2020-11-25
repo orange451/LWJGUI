@@ -4,8 +4,8 @@ public class BlurShader extends GenericShader {
 
 	public BlurShader() {
 		super(
-			BlurShader.class.getResource("blur_vert.glsl"),
-			BlurShader.class.getResource("blur_frag.glsl")
+			Thread.currentThread().getContextClassLoader().getResource("lwjgui/gl/blur_vert.glsl"),
+			Thread.currentThread().getContextClassLoader().getResource("lwjgui/gl/blur_frag.glsl")
 		);
 	}
 }

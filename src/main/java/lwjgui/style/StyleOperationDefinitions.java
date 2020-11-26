@@ -14,7 +14,6 @@ import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.control.SplitPane;
 import lwjgui.scene.layout.Gappable;
 import lwjgui.scene.layout.Spacable;
-import lwjgui.style.Stylesheet.Percentage;
 import lwjgui.transition.FillTransition;
 import lwjgui.transition.Transition;
 
@@ -71,6 +70,8 @@ public class StyleOperationDefinitions {
 			Object x = value.get(0).get(0);
 			if ( x instanceof Percentage ) {
 				node.setPrefHeightRatio(((Percentage)x));
+			} else if ( x instanceof StyleFunction ) {
+				// TODO implement generic style function resolver
 			} else {
 				node.setPrefHeight(toNumber(x));
 			}

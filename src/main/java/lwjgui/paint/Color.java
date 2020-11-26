@@ -88,7 +88,6 @@ public class Color {
 	 * color space available for a particular output device.
 	 *
 	 * @param rgba the combined RGBA components
-	 * @see java.awt.image.ColorModel#getRGBdefault
 	 * @see #getRed
 	 * @see #getGreen
 	 * @see #getBlue
@@ -504,7 +503,6 @@ public class Color {
 	 * available for a particular output device.
 	 *
 	 * @param rgba the combined RGBA components
-	 * @see java.awt.image.ColorModel#getRGBdefault
 	 * @see #getRed
 	 * @see #getGreen
 	 * @see #getBlue
@@ -635,7 +633,6 @@ public class Color {
 	 * 
 	 * @return the RGB value of the color in the default sRGB
 	 *         <code>ColorModel</code>.
-	 * @see java.awt.image.ColorModel#getRGBdefault
 	 * @see #getRed
 	 * @see #getGreen
 	 * @see #getBlue
@@ -682,7 +679,6 @@ public class Color {
 	 * 
 	 * @return a new <code>Color</code> object that is a brighter version of this
 	 *         <code>Color</code> with the same {@code alpha} value.
-	 * @see java.awt.Color#darker
 	 * @since JDK1.0
 	 */
 	public Color brighter() {
@@ -702,7 +698,6 @@ public class Color {
 	 * 
 	 * @return a new <code>Color</code> object that is a darker version of this
 	 *         <code>Color</code> with the same {@code alpha} value.
-	 * @see java.awt.Color#brighter
 	 * @since JDK1.0
 	 */
 	public Color darker() {

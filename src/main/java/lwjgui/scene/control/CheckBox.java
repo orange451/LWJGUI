@@ -1,6 +1,6 @@
 package lwjgui.scene.control;
 
-import java.awt.Point;
+import org.joml.Vector2d;
 
 import lwjgui.LWJGUIUtil;
 import lwjgui.event.ActionEvent;
@@ -63,8 +63,8 @@ public class CheckBox extends ButtonBase {
 	}
 	
 	@Override
-	protected Point getDrawSize() {
-		return new Point( size, size );
+	protected Vector2d getDrawSize() {
+		return new Vector2d( size, size );
 	}
 	
 	public void setSize(int size) {

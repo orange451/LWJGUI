@@ -21,9 +21,9 @@ import lwjgui.geometry.Insets;
 import lwjgui.geometry.Pos;
 import lwjgui.geometry.Resizable;
 import lwjgui.geometry.VPos;
+import lwjgui.style.Percentage;
 import lwjgui.style.StyleTransition;
 import lwjgui.style.Stylesheet;
-import lwjgui.style.Stylesheet.Percentage;
 import lwjgui.style.StylesheetCompileError;
 import lwjgui.util.Bounds;
 

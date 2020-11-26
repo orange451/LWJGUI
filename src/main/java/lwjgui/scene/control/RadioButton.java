@@ -1,7 +1,6 @@
 package lwjgui.scene.control;
 
-import java.awt.Point;
-
+import org.joml.Vector2d;
 import org.lwjgl.nanovg.NanoVG;
 
 import lwjgui.geometry.Insets;
@@ -49,8 +48,8 @@ public class RadioButton extends ToggleButton {
 	}
 	
 	@Override
-	protected Point getDrawSize() {
-		return new Point( size, size );
+	protected Vector2d getDrawSize() {
+		return new Vector2d( size, size );
 	}
 
 	@Override

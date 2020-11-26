@@ -1,7 +1,6 @@
 package lwjgui.scene.control;
 
-import java.awt.Point;
-
+import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFW;
 import lwjgui.collections.ObservableList;
 import lwjgui.event.ActionEvent;
@@ -238,8 +237,8 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 		this.stylePop();
 	}
 	
-	protected Point getDrawSize() {
-		return new Point((int)getWidth(), (int)getHeight());
+	protected Vector2d getDrawSize() {
+		return new Vector2d((int)getWidth(), (int)getHeight());
 	}
 
 	public void setOnAction(EventHandler<ActionEvent> event) {

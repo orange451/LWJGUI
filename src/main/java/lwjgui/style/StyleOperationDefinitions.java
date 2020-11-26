@@ -14,6 +14,7 @@ import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.control.SplitPane;
 import lwjgui.scene.layout.Gappable;
 import lwjgui.scene.layout.Spacable;
+import lwjgui.style.Stylesheet.Percentage;
 import lwjgui.transition.FillTransition;
 import lwjgui.transition.Transition;
 
@@ -32,7 +33,12 @@ public class StyleOperationDefinitions {
 			if ( value.size() == 0 )
 				value = new StyleVarArgs(new StyleParams(0));
 			
-			node.setPrefWidth(toNumber(value.get(0).get(0)));
+			Object x = value.get(0).get(0);
+			if ( x instanceof Percentage ) {
+				node.setPrefWidthRatio(((Percentage)x));
+			} else {
+				node.setPrefWidth(toNumber(x));
+			}
 		}
 	};
 	
@@ -61,8 +67,13 @@ public class StyleOperationDefinitions {
 		public void process(Node node, StyleVarArgs value) {
 			if ( value.size() == 0 )
 				value = new StyleVarArgs(new StyleParams(0));
-			
-			node.setPrefHeight(toNumber(value.get(0).get(0)));
+						
+			Object x = value.get(0).get(0);
+			if ( x instanceof Percentage ) {
+				node.setPrefHeightRatio(((Percentage)x));
+			} else {
+				node.setPrefHeight(toNumber(x));
+			}
 		}
 	};
 	

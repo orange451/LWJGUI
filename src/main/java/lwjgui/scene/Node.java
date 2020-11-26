@@ -23,6 +23,7 @@ import lwjgui.geometry.Resizable;
 import lwjgui.geometry.VPos;
 import lwjgui.style.StyleTransition;
 import lwjgui.style.Stylesheet;
+import lwjgui.style.Stylesheet.Percentage;
 import lwjgui.style.StylesheetCompileError;
 import lwjgui.util.Bounds;
 
@@ -38,6 +39,8 @@ public abstract class Node implements Resizable {
 	private Vector2d localPosition = new Vector2d(); // ONLY USER INTERNALLY DONT TOUCH
 	protected Vector2d size = new Vector2d();
 	protected Vector2d prefsize = new Vector2d();
+	protected Percentage prefwidthRatio;
+	protected Percentage prefheightRatio;
 	protected LayoutBounds layoutBounds = new LayoutBounds(0,0,Integer.MAX_VALUE,Integer.MAX_VALUE);
 	protected Insets padding = new Insets(0,0,0,0);
 	protected Pos alignment = Pos.CENTER;
@@ -620,17 +623,26 @@ public abstract class Node implements Resizable {
 	}
 	
 	protected void resize() {
-		
-		// Size up to pref size
-		if ( size.x < this.getPrefWidth() )
-			size.x = this.getPrefWidth();
-		if ( size.y < this.getPrefHeight() )
-			size.y = this.getPrefHeight();
 
 		// Get available size
 		Vector2d available = this.getAvailableSize();
 		double availableWidth = available.x;
 		double availableHeight = available.y;
+		
+		double prefWidth = this.getPrefWidth();
+		double prefHeight = this.getPrefHeight();
+		
+		// Percentage sizes (Adjust pref size)
+		if ( this.prefheightRatio != null )
+			prefHeight = availableHeight * this.prefheightRatio.getValueClamped();
+		if ( this.prefwidthRatio != null )
+			prefWidth = availableWidth * this.prefwidthRatio.getValueClamped();
+		
+		// Size up to pref size
+		if ( size.x < prefWidth )
+			size.x = prefWidth;
+		if ( size.y < prefHeight )
+			size.y = prefHeight;
 
 		// Cap size to available size
 		if ( size.x > availableWidth )
@@ -1072,6 +1084,16 @@ public abstract class Node implements Resizable {
 	}
 	
 	/**
+	 * Set the preferred width ratio of this node.
+	 * 1.0 will be the size of the parent nodes width.
+	 * 0.5 will be half the size of the parent nodes width.
+	 * @param ratio
+	 */
+	public void setPrefWidthRatio( Percentage ratio ) {
+		this.prefwidthRatio = ratio;
+	}
+	
+	/**
 	 * Set the preferred height of this node.
 	 * <br>
 	 * This size is not guaranteed.
@@ -1086,6 +1108,16 @@ public abstract class Node implements Resizable {
 			height = Math.max(layoutBounds.minY, Math.min(layoutBounds.maxY, height));
 		}
 		this.size.y = height;
+	}
+	
+	/**
+	 * Set the preferred height ratio of this node.
+	 * 1.0 will be the size of the parent nodes height.
+	 * 0.5 will be half the size of the parent nodes height.
+	 * @param ratio
+	 */
+	public void setPrefHeightRatio( Percentage ratio ) {
+		this.prefheightRatio = ratio;
 	}
 	
 	/**

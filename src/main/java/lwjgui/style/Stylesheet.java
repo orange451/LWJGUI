@@ -546,7 +546,7 @@ public class Stylesheet {
 		}
 	}
 
-	class Percentage {
+	public class Percentage {
 		private double percent;
 
 		public Percentage(double percent) {
@@ -563,6 +563,10 @@ public class Stylesheet {
 		
 		public String toString() {
 			return percent + "%";
+		}
+
+		public double getValueClamped() {
+			return Math.min(1, Math.max(0, getValue()));
 		}
 	}
 

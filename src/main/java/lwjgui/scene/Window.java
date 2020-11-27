@@ -28,7 +28,6 @@ import static org.lwjgl.glfw.GLFW.glfwHideWindow;
 import static org.lwjgl.glfw.GLFW.glfwIconifyWindow;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwMaximizeWindow;
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwRestoreWindow;
 import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCharModsCallback;
@@ -122,7 +121,7 @@ public class Window {
 
 	protected final long windowID;
 
-	private List<Task<?>> tasks = Collections.synchronizedList(new ArrayList<>());
+	private List<Task<?>> tasks = new ArrayList<>();
 
 	protected DisplayUtils displayUtils;
 
@@ -324,9 +323,17 @@ public class Window {
 		// Perform deferred tasks
 		//while (!tasks.isEmpty())
 			//tasks.poll().callI();
+		
 		synchronized(tasks) {
-			for (Task task : tasks)
+			for (int i = 0; i < tasks.size(); i++) {
+				if ( i >= tasks.size() )
+					continue;
+				Task<?> task = tasks.get(i);
+				if ( task == null )
+					continue;
+				
 				task.callI();
+			}
 			tasks.clear();
 		}
 	}

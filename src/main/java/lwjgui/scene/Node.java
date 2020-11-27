@@ -44,6 +44,8 @@ public abstract class Node implements Resizable {
 	protected LayoutBounds layoutBounds = new LayoutBounds(0,0,Integer.MAX_VALUE,Integer.MAX_VALUE);
 	protected Insets padding = new Insets(0,0,0,0);
 	protected Pos alignment = Pos.CENTER;
+	
+	protected boolean doubleBuffer;
 
 	protected Bounds nodeBounds = new Bounds(0, 0, 0, 0);
 	
@@ -308,6 +310,8 @@ public abstract class Node implements Resizable {
 			// Perform actual sizing/positioning
 			updateChildren();
 			resize();
+			if (doubleBuffer)
+				updateChildren();
 			computeAbsolutePosition();
 		}
 		stylePop();
@@ -669,7 +673,7 @@ public abstract class Node implements Resizable {
 		
 		while ( p != null ) {
 			double use = p.getMaxWidth();
-			if ( use > Double.MAX_VALUE*0.9 )
+			if ( use > Double.MAX_VALUE*0.5 )
 				use = p.getWidth();
 			
 			max = Math.min(max, use);
@@ -687,7 +691,7 @@ public abstract class Node implements Resizable {
 		
 		while ( p != null ) {
 			double use = p.getMaxHeight();
-			if ( use > Double.MAX_VALUE*0.9 )
+			if ( use > Double.MAX_VALUE*0.5 )
 				use = p.getHeight();
 			
 			max = Math.min(max, use);
@@ -1129,11 +1133,27 @@ public abstract class Node implements Resizable {
 	}
 	
 	/**
+	 * Returns the preferred width ratio of this node as a percentage.
+	 * @return
+	 */
+	public Percentage getPrefWidthRatio() {
+		return this.prefwidthRatio;
+	}
+	
+	/**
 	 * Returns the preferred height of this node.
 	 * @return
 	 */
 	public double getPrefHeight() {
 		return prefsize.y;
+	}
+	
+	/**
+	 * Returns the preferred height ratio of this node as a percentage.
+	 * @return
+	 */
+	public Percentage getPrefHeightRatio() {
+		return this.prefheightRatio;
 	}
 	
 	/**

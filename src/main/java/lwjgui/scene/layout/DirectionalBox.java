@@ -11,6 +11,7 @@ public abstract class DirectionalBox extends Pane implements Spacable {
 		this.setPrefSize(0, 0);
 		this.setAlignment(Pos.TOP_LEFT);
 		this.flag_clip = false;
+		this.doubleBuffer = true;
 	}
 	
 	public void setSpacing(double d) {

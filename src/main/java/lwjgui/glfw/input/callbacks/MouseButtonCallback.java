@@ -12,9 +12,12 @@ public class MouseButtonCallback extends lwjgui.glfw.Callbacks.MouseButtonCallba
 
 	@Override
 	public void invoke(long windowID, int button, int action, int mods) {
+		if (this.button == null || this.ignore == null)
+			return;
+		
 		this.button.put(button, (action != GLFW.GLFW_RELEASE));
 		
-		if (action == GLFW.GLFW_RELEASE && this.ignore.get(button))
+		if (action == GLFW.GLFW_RELEASE && this.ignore.containsKey(button) && this.ignore.get(button))
 			this.ignore.put(button, false);
 	}
 

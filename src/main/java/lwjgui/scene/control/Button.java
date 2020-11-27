@@ -29,8 +29,8 @@ public class Button extends ButtonBase {
 		return false;
 	}
 	
-	@Override
+	/*@Override
 	public Vector2d getAvailableSize() {
 		return new Vector2d(getMaxWidth(),getMaxHeight());
-	}
+	}*/
 }

@@ -1,7 +1,5 @@
 package lwjgui.scene;
 
-import org.lwjgl.nanovg.NanoVG;
-
 import lwjgui.collections.ObservableList;
 import lwjgui.scene.control.PopupWindow;
 import lwjgui.transition.TransitionManager;
@@ -85,7 +83,7 @@ public class Scene extends Node {
 		}
 		
 		// Position elements
-		for (int i = 0; i < (first?20:2); i++) {
+		for (int i = 0; i < (first?20:1); i++) {
 			position(null);
 		}
 		root.updateChildrenLocalRecursive();

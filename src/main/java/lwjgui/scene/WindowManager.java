@@ -310,8 +310,8 @@ public final class WindowManager {
 		synchronized(tasks) {
 			for (Task task : tasks)
 				task.callI();
-			tasks.clear();
 		}
+		tasks.clear();
 		
 		toRemove.clear();
 		for (Window window : windows) {

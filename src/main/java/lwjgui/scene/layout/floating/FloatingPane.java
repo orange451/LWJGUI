@@ -94,39 +94,17 @@ public class FloatingPane extends Pane {
 		}
 		
 		return runningY;
-	}
-	
-	protected double getPotentialWidth() {
-		float totalWidth = 0;
-		for (int i = 0; i < children.size(); i++) {
-			Node child = children.get(i);
-			double childWid = (child.getX()-getX())+child.getWidth();
-
-			if ( child instanceof FillableRegion && ((FillableRegion)child).isFillToParentWidth() ) {
-				childWid = 0;
-			}
-			
-			totalWidth += childWid;
-		}
-		
-		return totalWidth;
-	}
-	
-	protected double getPotentialHeight() {
-		float totalHeight = 0;
-		for (int i = 0; i < children.size(); i++) {
-			Node child = children.get(i);
-			double temp = (child.getY()-getY())+child.getHeight();
-
-			if ( child instanceof FillableRegion && ((FillableRegion)child).isFillToParentHeight() ) {
-				temp = 0;
-			}
-			
-			totalHeight += temp;
-		}
-		
-		return totalHeight;
 	}*/
+
+	@Override
+	protected double getMaxPotentialWidth() {
+		return this.getWindow().getWidth();
+	}
+	
+	@Override
+	protected double getMaxPotentialHeight() {
+		return this.getWindow().getHeight();
+	}
 
 	@Override
 	public void setAbsolutePosition(double x, double y) {

@@ -21,4 +21,8 @@ public class Percentage {
 	public double getValueClamped() {
 		return Math.min(1, Math.max(0, getValue()));
 	}
+
+	public static Percentage fromRatio(double ratio) {
+		return new Percentage(ratio*100);
+	}
 }

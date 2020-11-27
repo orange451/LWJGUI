@@ -41,6 +41,14 @@ public class ObservableList<E> {
 	public void setRemoveCallback( ElementCallback<E> e ) {
 		this.removeCallbacks.add(e);
 	}
+	
+	public void clearAddCallbacks() {
+		this.addCallbacks.clear();
+	}
+	
+	public void clearRemoveCallbacks() {
+		this.removeCallbacks.clear();
+	}
 
 	@SuppressWarnings("unchecked")
 	public void addAll(E... elements) {

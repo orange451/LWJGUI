@@ -310,8 +310,10 @@ public abstract class Node implements Resizable {
 			// Perform actual sizing/positioning
 			updateChildren();
 			resize();
-			if (doubleBuffer)
+			if (doubleBuffer) {
 				updateChildren();
+				resize();
+			}
 			computeAbsolutePosition();
 		}
 		stylePop();
@@ -627,7 +629,23 @@ public abstract class Node implements Resizable {
 	}
 	
 	protected void resize() {
+		// Preferred size routine
+		this.resizePreferred();
 
+		// Cap size to min size
+		if ( size.x < this.getMinWidth() )
+			size.x = this.getMinWidth();
+		if ( size.y < this.getMinHeight() )
+			size.y = this.getMinHeight();
+
+		// Cap size to max size
+		if ( size.x > this.getMaxWidth() )
+			size.x = this.getMaxWidth();
+		if ( size.y > this.getMaxHeight() )
+			size.y = this.getMaxHeight();
+	}
+	
+	protected void resizePreferred() {
 		// Get available size
 		Vector2d available = this.getAvailableSize();
 		double availableWidth = available.x;
@@ -653,18 +671,6 @@ public abstract class Node implements Resizable {
 			size.x = availableWidth;
 		if ( size.y > availableHeight )
 			size.y = availableHeight;
-
-		// Cap size to min size
-		if ( size.x < this.getMinWidth() )
-			size.x = this.getMinWidth();
-		if ( size.y < this.getMinHeight() )
-			size.y = this.getMinHeight();
-
-		// Cap size to max size
-		if ( size.x > this.getMaxWidth() )
-			size.x = this.getMaxWidth();
-		if ( size.y > this.getMaxHeight() )
-			size.y = this.getMaxHeight();
 	}
 	
 	protected double getMaxPotentialWidth() {

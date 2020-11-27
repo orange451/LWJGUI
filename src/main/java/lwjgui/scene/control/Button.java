@@ -1,7 +1,5 @@
 package lwjgui.scene.control;
 
-import org.joml.Vector2d;
-
 import lwjgui.geometry.Insets;
 import lwjgui.scene.Node;
 

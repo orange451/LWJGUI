@@ -226,6 +226,8 @@ public abstract class Labeled extends Control {
 			// Compute preferred height
 			this.size.y = Math.max(Math.max(this.getPrefHeight(), this.getHeight()), getTextHeightWithGraphic(useString)+getPadding().getHeight());
 		}
+		
+		resizePreferred();
 	}
 	
 	@Override

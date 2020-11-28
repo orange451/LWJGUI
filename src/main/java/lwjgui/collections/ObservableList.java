@@ -1,12 +1,13 @@
 package lwjgui.collections;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
 import lwjgui.event.ElementCallback;
 
-public class ObservableList<E> {
+public class ObservableList<E> implements Iterable<E> {
 	private List<E> internal;
 	
 	private List<ElementCallback<E>> addCallbacks; 
@@ -119,5 +120,22 @@ public class ObservableList<E> {
 
 	public Stream<E> parallelStream() {
 		return this.internal.parallelStream();
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return new Iterator<E>() {
+			private int index;
+
+			@Override
+			public boolean hasNext() {
+				return index < internal.size()-1;
+			}
+
+			@Override
+			public E next() {
+				return internal.get(index++);
+			}
+		};
 	}
 }

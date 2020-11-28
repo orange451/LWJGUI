@@ -1,6 +1,12 @@
 package lwjgui.style;
 public class Percentage {
-	private double percent;
+	public static final Percentage ONE_HUNDRED = new Percentage(100);
+	public static final Percentage SEVENTY_FIVE = new Percentage(75);
+	public static final Percentage FIFTY = new Percentage(50);
+	public static final Percentage TWENTY_FIVE = new Percentage(25);
+	public static final Percentage ZERO = new Percentage(0);
+	
+	private final double percent;
 
 	public Percentage(double percent) {
 		this.percent = percent;

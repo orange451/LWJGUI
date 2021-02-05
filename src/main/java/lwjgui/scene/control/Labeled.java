@@ -190,7 +190,9 @@ public abstract class Labeled extends Control {
 			useString = text;
 			
 			// Get max width of parent element
-			double graphicWid = graphic == null ? 0 : (graphic.getWidth()+contentGap);
+			double graphicWid = graphic == null ? 0 : graphic.getWidth();
+			if ( text != null && text.length() > 0 )
+				graphicWid += contentGap;
 			
 			// Get some text bounds
 			double curWid = getTextWidthWithGraphic(text) + (this.getWidth()-this.getInnerBounds().getWidth());
@@ -275,7 +277,7 @@ public abstract class Labeled extends Control {
 			double graphicOffsetY = (graphic.getHeight()-fontSize)*yMult;
 			
 			if ( contentDisplay.equals(ContentDisplay.LEFT ) ) {
-				graphic.setAbsolutePosition(absX, absY+graphicOffsetY);
+				graphic.setAbsolutePosition(absX, absY-graphicOffsetY);
 				absX += gWid;
 			} else {
 				graphic.setAbsolutePosition(absX+textWidth-graphic.getWidth(), absY-graphicOffsetY);
@@ -359,7 +361,8 @@ public abstract class Labeled extends Control {
 			return gWid;
 		
 		if ( contentDisplay.equals(ContentDisplay.LEFT) || contentDisplay.equals(ContentDisplay.RIGHT) )
-			gWid += graphic.getWidth() + contentGap;
+			if ( text != null && text.length() > 0 )
+				gWid += graphic.getWidth() + contentGap;
 		
 		return gWid;	
 	}
@@ -370,7 +373,8 @@ public abstract class Labeled extends Control {
 			return gWid;
 		
 		if ( contentDisplay.equals(ContentDisplay.BOTTOM) || contentDisplay.equals(ContentDisplay.TOP) )
-			gWid += graphic.getHeight() + contentGap;
+			if ( text != null && text.length() > 0 )
+				gWid += graphic.getHeight() + contentGap;
 		
 		return gWid;	
 	}

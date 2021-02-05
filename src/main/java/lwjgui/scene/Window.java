@@ -278,7 +278,7 @@ public class Window {
 			pixelRatio = (width <= this.width) ? 1 : width / this.width;
 			framebufferWidth = width;
 			framebufferHeight = height;
-			System.out.println("Framebuffer call back fired: " + width + " / " + height);
+			//System.out.println("Framebuffer call back fired: " + width + " / " + height);
 		});
 
 		cursorEnterCallback = new CursorEnterCallback();

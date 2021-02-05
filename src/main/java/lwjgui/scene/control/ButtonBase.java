@@ -8,6 +8,7 @@ import lwjgui.event.EventHandler;
 import lwjgui.event.EventHelper;
 import lwjgui.event.MouseEvent;
 import lwjgui.geometry.Insets;
+import lwjgui.geometry.Pos;
 import lwjgui.paint.Color;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
@@ -44,6 +45,8 @@ public abstract class ButtonBase extends Labeled implements BlockPaneRenderer {
 		this.setBorderStyle(BorderStyle.SOLID);
 		this.setBorderWidth(1);
 		this.setBorderColor(Theme.current().getControlOutline());
+		
+		this.setAlignment(Pos.CENTER);
 		
 		this.setText(name);
 		this.setFontSize(16);
